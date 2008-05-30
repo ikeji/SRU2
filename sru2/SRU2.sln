@@ -1,7 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sru2", "sru2\sru2.csproj", "{721341B5-7124-4C3C-BB1E-3D7F04E2A00E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "srutest", "srutest\srutest.csproj", "{4E4329A6-81AD-413B-8A74-0F85416709B6}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{721341B5-7124-4C3C-BB1E-3D7F04E2A00E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{721341B5-7124-4C3C-BB1E-3D7F04E2A00E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{721341B5-7124-4C3C-BB1E-3D7F04E2A00E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{721341B5-7124-4C3C-BB1E-3D7F04E2A00E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E4329A6-81AD-413B-8A74-0F85416709B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E4329A6-81AD-413B-8A74-0F85416709B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E4329A6-81AD-413B-8A74-0F85416709B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E4329A6-81AD-413B-8A74-0F85416709B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

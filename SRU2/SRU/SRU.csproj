@@ -45,8 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SRU\Library.cs" />
+    <Compile Include="SRU\SRUArray.cs" />
+    <Compile Include="SRU\SRUBoolean.cs" />
+    <Compile Include="SRU\SRUClass.cs" />
+    <Compile Include="SRU\SRUEvaluator.cs" />
+    <Compile Include="SRU\SRUExpression.cs" />
+    <Compile Include="SRU\SRUHash.cs" />
+    <Compile Include="SRU\SRUNil.cs" />
+    <Compile Include="SRU\SRUNumber.cs" />
+    <Compile Include="SRU\SRUObject.cs" />
+    <Compile Include="SRU\SRUProc.cs" />
+    <Compile Include="SRU\SRUString.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace SRU
 {
-    class SRUHash : SRUObject
+    public class SRUHash : SRUObject
     {
         public static void RegesterHash(SRUObject Hash)
         {

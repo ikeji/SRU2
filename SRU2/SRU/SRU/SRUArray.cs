@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SRU
 {
-    class SRUArray : SRUObject
+    public class SRUArray : SRUObject
     {
         public static void RegesterArray(SRUObject Array)
         {

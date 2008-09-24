@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SRU
 {
-    class SRUBoolean
+    public class SRUBoolean
     {
         public static void RegesterBoolean(SRUObject Boolean)
         {

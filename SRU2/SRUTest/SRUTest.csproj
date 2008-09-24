@@ -1,17 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8E5E161B-E842-42EA-9C2D-FF7D0A42212B}</ProjectGuid>
+    <ProjectGuid>{519E4B17-575B-48E3-ADC5-518D6B8C4F98}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SRU</RootNamespace>
-    <AssemblyName>SRU</AssemblyName>
+    <RootNamespace>SRUTest</RootNamespace>
+    <AssemblyName>SRUTest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,36 +31,36 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SRU\Library.cs" />
-    <Compile Include="SRU\SRUArray.cs" />
-    <Compile Include="SRU\SRUBoolean.cs" />
-    <Compile Include="SRU\SRUClass.cs" />
-    <Compile Include="SRU\SRUEvaluator.cs" />
-    <Compile Include="SRU\SRUExpression.cs" />
-    <Compile Include="SRU\SRUHash.cs" />
-    <Compile Include="SRU\SRUNil.cs" />
-    <Compile Include="SRU\SRUNumber.cs" />
-    <Compile Include="SRU\SRUObject.cs" />
-    <Compile Include="SRU\SRUParser.cs" />
-    <Compile Include="SRU\SRUProc.cs" />
-    <Compile Include="SRU\SRUString.cs" />
+    <Compile Include="SRUArrayTest.cs" />
+    <Compile Include="SRUBooleanTest.cs" />
+    <Compile Include="SRUExpressionEvaluatorTest.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Content Include="AuthoringTests.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SRU\SRU.csproj">
+      <Project>{8E5E161B-E842-42EA-9C2D-FF7D0A42212B}</Project>
+      <Name>SRU</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

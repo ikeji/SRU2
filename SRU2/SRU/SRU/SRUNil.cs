@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SRU
 {
-    class SRUNil
+    public class SRUNil
     {
         public static void RegesterNil(SRUObject Nil)
         {

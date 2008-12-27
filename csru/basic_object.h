@@ -18,10 +18,6 @@ using std::string;
 
 namespace sru {
 
-namespace allocator {
-class ObjectPool;
-}
-
 class Value {
  public:
   virtual void Mark() = 0;

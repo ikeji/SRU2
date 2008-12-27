@@ -1,25 +1,27 @@
 OBJS	= basic_object.o object_pool.o
-TESTS   = object_pool_test.result
+TESTS   = object_pool.result basic_object.result
 CPP	= g++
 
-a.out: $(OBJS) main.o
-	$(CPP) -g -o $@ $(OBJS) main.o
+all: $(OBJS) main.o
+	$(CPP) -g -o sru $(OBJS) main.o
 
 .cc.o:
 	$(CPP) -g -c $<
 
 basic_object.o: basic_object.h object_pool.h
+basic_object.test: basic_object_test.o $(OBJS)
+	$(CPP) -g -o $@ basic_object_test.o $(OBJS)
+
 object_pool.o: basic_object.h object_pool.h
+object_pool.test: object_pool_test.o $(OBJS)
+	$(CPP) -g -o $@ object_pool_test.o $(OBJS)
 
 clean:
-	rm -f *.o a.out *.test *.result
+	rm -f *.o sru *.test *.result *~
 
 test: $(TESTS)
 
 .SUFFIXES: .test .result
 .test.result:
 	./$< | tee $@
-
-object_pool_test.test: object_pool_test.o $(OBJS)
-	$(CPP) -g -o $@ object_pool_test.o $(OBJS)
 

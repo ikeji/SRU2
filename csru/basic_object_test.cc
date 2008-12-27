@@ -1,16 +1,19 @@
+#include "testing.h"
+
 #include <iostream>
 #include <cassert>
 #include "basic_object.h"
 
 using namespace std;
+using namespace sru_test;
 using namespace sru;
 
-void createObjectTest(){
+TEST(BasicObject_CreateObjectTest){
   BasicObject *obj = BasicObject::New();
   assert(obj);
 }
 
-void objectPtrTest(){
+TEST(BasicObject_ObjectPtrTest){
   BasicObjectPtr p = BasicObject::New();
   BasicObjectPtr p2 = p.get();
   BasicObjectPtr p3;
@@ -21,8 +24,3 @@ void objectPtrTest(){
   assert( p4.get() == NULL );
 }
 
-int main(){
-  createObjectTest();
-  objectPtrTest();
-  cout<< "OK" << endl;
-}

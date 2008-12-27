@@ -1,3 +1,4 @@
+#include "testing.h"
 #include <iostream>
 #include <cassert>
 #include "basic_object.h"
@@ -18,10 +19,11 @@ class MyValue : public Value{
   BasicObject * MyObject;
 };
 
-
-int main(){
+TEST(ObjectPool_SizeTest){
   assert(ObjectPool::Instance()->Size() == 0);
+}
 
+TEST(ObjectPool_GCTest){
   // GC test
   BasicObject * obj = BasicObject::New();
   BasicObject * obj2 = BasicObject::New();
@@ -36,7 +38,9 @@ int main(){
   assert(ObjectPool::Instance()->Size() == 2);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
+}
 
+TEST(ObjectPool_RefTest){
   // RefTest
   BasicObjectPtr p = BasicObject::New();
   BasicObjectPtr p2 = BasicObject::New();
@@ -53,7 +57,9 @@ int main(){
   p3.reset();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
+}
 
+TEST(ObjectPool_ValueTest){
   // Value Test
   BasicObjectPtr pv = BasicObject::New();
   pv->SetData(new MyValue());
@@ -82,6 +88,5 @@ int main(){
   ((MyValue *)pr2->Data())->MyObject = pr.get();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
-
-  cout<< "OK" << endl;
 }
+

@@ -1,5 +1,5 @@
 OBJS	= basic_object.o object_pool.o
-TESTS   = object_pool.result basic_object.result
+TESTS   = basic_object_test.o object_pool_test.o
 CPP	= g++
 
 all: sru
@@ -10,20 +10,19 @@ sru: $(OBJS) main.o
 .cc.o:
 	$(CPP) -g -c $<
 
-basic_object.o: basic_object.h object_pool.h
-basic_object.test: basic_object_test.o $(OBJS)
-	$(CPP) -g -o $@ basic_object_test.o $(OBJS)
+basic_object.o: basic_object.cc basic_object.h object_pool.h
+basic_object_test.o: basic_object_test.cc basic_object.h testing.h
+object_pool.o: object_pool.cc basic_object.h object_pool.h
+object_pool_test.o: object_pool_test.cc basic_object.h object_pool.h testing.h
 
-object_pool.o: basic_object.h object_pool.h
-object_pool.test: object_pool_test.o $(OBJS)
-	$(CPP) -g -o $@ object_pool_test.o $(OBJS)
+testing.o: testing.cc testing.h
 
 clean:
-	rm -f *.o sru *.test *.result *~
+	rm -f *.o sru sru_test *~
 
-test: $(TESTS)
+test: sru_test
+	./sru_test
 
-.SUFFIXES: .test .result
-.test.result:
-	./$< | tee $@
+sru_test: testing.o $(TESTS) $(OBJS)
+	$(CPP) -g -o sru_test $(TESTS) testing.o $(OBJS)
 

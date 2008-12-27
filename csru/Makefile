@@ -2,7 +2,9 @@ OBJS	= basic_object.o object_pool.o
 TESTS   = object_pool.result basic_object.result
 CPP	= g++
 
-all: $(OBJS) main.o
+all: sru
+
+sru: $(OBJS) main.o
 	$(CPP) -g -o sru $(OBJS) main.o
 
 .cc.o:

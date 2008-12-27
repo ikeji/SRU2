@@ -18,10 +18,13 @@ using std::string;
 
 namespace sru {
 
+class BasicObject;
+
 class Value {
  public:
-  virtual void Mark() = 0;
-  virtual ~Value() = 0;
+  Value(){}
+  virtual ~Value(){}
+  virtual void Mark(){}
  private:
   Value(const Value& obj);
   Value &operator=(const Value& obj);
@@ -30,8 +33,13 @@ class Value {
 class BasicObject {
  public:
   static BasicObject* New();
-  void Set(const string& name,BasicObject *ref);
-  BasicObject* Get(const string& name) const;
+  void Mark();
+  void Set(const string& name,BasicObject *ref){
+    fields.insert(std::make_pair(name,ref));
+  }
+  BasicObject* Get(const std::string& name){
+    return fields[name];
+  };
   const std::map<std::string,BasicObject *>& Fields() const{
     return fields; 
   }

@@ -18,6 +18,7 @@ class ObjectPool{
   static ObjectPool* Instance(){ return &pool; }
   void Register(BasicObject * obj);
   void GarbageCollect();
+  void Mark(BasicObject * obj);
   int Size(){ return allocated.size(); }
 
  private:

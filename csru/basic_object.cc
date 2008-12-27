@@ -13,6 +13,11 @@ BasicObject* BasicObject::New(){
   allocator::ObjectPool::Instance()->Register(obj);
   return obj;
 }
+
+void BasicObject::Mark(){
+  if( GcCounter() < 0 )
+    allocator::ObjectPool::Instance()->Mark(this);
+}
  
 BasicObject::BasicObject(){
   fields.clear();
@@ -24,7 +29,6 @@ BasicObject::~BasicObject(){
   if(data != NULL)
     delete data;
 }
-
 
 BasicObjectPtr::BasicObjectPtr(BasicObject * p){
   ptr = p;

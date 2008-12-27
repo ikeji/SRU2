@@ -47,12 +47,13 @@ void ObjectPool::GarbageCollect(){
   }
 
   // Sweep
-  for(std::vector<BasicObject*>::iterator it = allocated.begin();
-      it != allocated.end();
-      it++) {
+  std::vector<BasicObject*>::iterator it = allocated.begin();
+  while( it != allocated.end() ){
     if( (*it)->GcCounter() < 0 ){
       delete *it;
       it = allocated.erase(it);
+    } else {
+      it++;
     }
   }
 }

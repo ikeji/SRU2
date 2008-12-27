@@ -3,6 +3,9 @@
 // 
 //
 
+#ifndef OBJECT_POOL_H_
+#define OBJECT_POOL_H_
+
 #include <vector>
 #include <string>
 
@@ -33,3 +36,5 @@ class ObjectPool{
 
 } // namespace allocator
 } // namespace sru
+
+#endif // OBJECT_POOL_H_

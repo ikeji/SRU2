@@ -11,6 +11,9 @@
 // You can't delete this object.
 //
 
+#ifndef BASIC_OBJECT_H_
+#define BASIC_OBJECT_H_
+
 #include <cassert>
 #include <string>
 #include <map>
@@ -86,3 +89,5 @@ class BasicObjectPtr {
 void swap(BasicObjectPtr &a, BasicObjectPtr &b);
 
 } // namespace sru
+
+#endif  // BASIC_OBJECT_H_

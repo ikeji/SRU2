@@ -41,10 +41,10 @@ class BasicObject {
   }
   int GcCounter() const { return gc_counter; }
   void SetGcCounter(int i) { gc_counter = i; }
-  void InclientGcCounter() { gc_counter++; }
+  void InclimentGcCounter() { gc_counter++; }
   void DeclimentGcCounter() {
     gc_counter--; 
-    assert(gc_counter > 0); 
+    assert(gc_counter >= 0); 
   }
   Value* Data(){ return data; }
   void SetData(Value* dat){ data = dat; }
@@ -60,5 +60,25 @@ class BasicObject {
   BasicObject(const BasicObject& obj);
   BasicObject &operator=(const BasicObject &obj);
 };
+
+class BasicObjectPtr {
+ public:
+  BasicObjectPtr(BasicObject * p = NULL);
+  ~BasicObjectPtr();
+
+  void reset(BasicObject * p = NULL);
+  BasicObject& operator*() const;
+  BasicObject * operator->() const;
+  BasicObject * get() const;
+
+  void swap(BasicObjectPtr &b);
+
+  BasicObjectPtr(const BasicObjectPtr& obj);
+  BasicObjectPtr &operator=(const BasicObjectPtr &obj);
+ private:
+  BasicObject* ptr;
+};
+
+void swap(BasicObjectPtr &a, BasicObjectPtr &b);
 
 } // namespace sru

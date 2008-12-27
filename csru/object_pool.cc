@@ -23,7 +23,7 @@ void ObjectPool::GarbageCollect(){
   for(std::vector<BasicObject*>::iterator it = allocated.begin();
       it != allocated.end();
       it++) {
-    if((*it)->GcCounter() > 1){
+    if((*it)->GcCounter() > 0){
       marking.push_back(*it);
     } else {
       (*it)->SetGcCounter(-1);
@@ -33,6 +33,7 @@ void ObjectPool::GarbageCollect(){
   // Mark
   while( !marking.empty() ){
     BasicObject * cur = marking.back();
+    marking.pop_back();
     if( cur->GcCounter() < 0 )
       cur->SetGcCounter(0);
     for(std::map<string,BasicObject*>::const_iterator it = cur->Fields().begin();

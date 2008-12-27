@@ -13,46 +13,46 @@ namespace sru {
 namespace allocator {
 
 void ObjectPool::Register(BasicObject * obj){
-  allocated_.push_back(obj);
+  allocated.push_back(obj);
 }
 
 void ObjectPool::GarbageCollect(){
  
   // Initialize 
   std::vector<BasicObject*> marking;
-  for(std::vector<BasicObject*>::iterator it = allocated_.begin();
-      it != allocated_.end();
+  for(std::vector<BasicObject*>::iterator it = allocated.begin();
+      it != allocated.end();
       it++) {
-    if((*it)->gc_counter() > 1){
+    if((*it)->GcCounter() > 1){
       marking.push_back(*it);
     } else {
-      (*it)->set_gc_counter(-1);
+      (*it)->SetGcCounter(-1);
     }
   }
 
   // Mark
   while( !marking.empty() ){
     BasicObject * cur = marking.back();
-    if( cur->gc_counter() < 0 )
-      cur->set_gc_counter(0);
-    for(std::map<string,BasicObject*>::const_iterator it = cur->fields().begin();
-        it != cur->fields().end();
+    if( cur->GcCounter() < 0 )
+      cur->SetGcCounter(0);
+    for(std::map<string,BasicObject*>::const_iterator it = cur->Fields().begin();
+        it != cur->Fields().end();
         it++){
-      if(it->second->gc_counter() < 0)
+      if(it->second->GcCounter() < 0)
         marking.push_back(it->second);
     }
     
-    if( cur->data() != NULL )
-      cur->data()->Mark();
+    if( cur->Data() != NULL )
+      cur->Data()->Mark();
   }
 
   // Sweep
-  for(std::vector<BasicObject*>::iterator it = allocated_.begin();
-      it != allocated_.end();
+  for(std::vector<BasicObject*>::iterator it = allocated.begin();
+      it != allocated.end();
       it++) {
-    if( (*it)->gc_counter() < 0 ){
+    if( (*it)->GcCounter() < 0 ){
       delete *it;
-      it = allocated_.erase(it);
+      it = allocated.erase(it);
     }
   }
 }
@@ -60,7 +60,7 @@ void ObjectPool::GarbageCollect(){
 ObjectPool::ObjectPool(){
 }
 
-ObjectPool ObjectPool::pool_;
+ObjectPool ObjectPool::pool;
 
 } // namespace allocator
 } // namespace sru

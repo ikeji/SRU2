@@ -10,19 +10,19 @@ namespace sru {
 
 BasicObject* BasicObject::New(){
   BasicObject* obj = new BasicObject();
-  allocator::ObjectPool::instance()->Register(obj);
+  allocator::ObjectPool::Instance()->Register(obj);
   return obj;
 }
  
 BasicObject::BasicObject(){
-  fields_.clear();
-  gc_counter_ = 0;
-  data_ = NULL;
+  fields.clear();
+  gc_counter = 0;
+  data = NULL;
 }
 
 BasicObject::~BasicObject(){
-  if(data_ != NULL)
-    delete data_;
+  if(data != NULL)
+    delete data;
 }
 
 } // namespace sru

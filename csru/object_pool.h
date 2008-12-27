@@ -15,16 +15,16 @@ namespace allocator {
 
 class ObjectPool{
  public:
-  static ObjectPool* instance(){ return &pool_; }
+  static ObjectPool* Instance(){ return &pool; }
   void Register(BasicObject * obj);
   void GarbageCollect();
-  int size(){ return allocated_.size(); }
+  int Size(){ return allocated.size(); }
 
  private:
   ObjectPool();
 
-  static ObjectPool pool_;
-  std::vector<BasicObject*> allocated_;
+  static ObjectPool pool;
+  std::vector<BasicObject*> allocated;
 
   ObjectPool(const ObjectPool& obj);
   ObjectPool &operator=(const BasicObject &obj);

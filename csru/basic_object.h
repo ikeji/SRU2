@@ -11,6 +11,7 @@
 // You can't delete this object.
 //
 
+#include <cassert>
 #include <string>
 #include <map>
 using std::string;
@@ -20,37 +21,44 @@ namespace sru {
 namespace allocator {
 class ObjectPool;
 }
-class Data {
+
+class Value {
  public:
   virtual void Mark() = 0;
-  virtual ~Data() = 0;
+  virtual ~Value() = 0;
  private:
-  Data(const Data& obj);
-  Data &operator=(const Data& obj);
+  Value(const Value& obj);
+  Value &operator=(const Value& obj);
 };
 
 class BasicObject {
  public:
   static BasicObject* New();
-  void set(const string& name,BasicObject *ref);
-  BasicObject* get(const string& name) const;
-  const std::map<std::string,BasicObject *>& fields() const { return fields(); };
-  int gc_counter() const { return gc_counter_; }
-  void set_gc_counter(int i) { gc_counter_ = i; }
-  Data * data(){ return data(); }
-  void set_data(Data * data){ data_ = data; }
-  virtual ~BasicObject();
+  void Set(const string& name,BasicObject *ref);
+  BasicObject* Get(const string& name) const;
+  const std::map<std::string,BasicObject *>& Fields() const{
+    return fields; 
+  }
+  int GcCounter() const { return gc_counter; }
+  void SetGcCounter(int i) { gc_counter = i; }
+  void InclientGcCounter() { gc_counter++; }
+  void DeclimentGcCounter() {
+    gc_counter--; 
+    assert(gc_counter > 0); 
+  }
+  Value* Data(){ return data; }
+  void SetData(Value* dat){ data = dat; }
+  ~BasicObject();
 
  private:
   BasicObject();
   
-  std::map<std::string,BasicObject* > fields_;
-  int gc_counter_;
-  Data* data_;
+  std::map<std::string,BasicObject* > fields;
+  int gc_counter;
+  Value* data;
 
   BasicObject(const BasicObject& obj);
   BasicObject &operator=(const BasicObject &obj);
 };
-
 
 } // namespace sru

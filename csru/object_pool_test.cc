@@ -2,5 +2,5 @@
 using namespace std;
 int main(){
   // TODO: need test
-  cout<< "OK";
+  cout<< "OK" << endl;
 }

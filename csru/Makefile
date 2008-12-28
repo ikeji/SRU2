@@ -14,15 +14,11 @@ sru: $(OBJS) main.o
 .cc.o:
 	$(CPP) -g -c $<
 
-basic_object.o: basic_object.cc basic_object.h object_pool.h
-basic_object_test.o: basic_object_test.cc basic_object.h testing.h
-object_pool.o: object_pool.cc basic_object.h object_pool.h
-object_pool_test.o: object_pool_test.cc basic_object.h object_pool.h testing.h
-
-testing.o: testing.cc testing.h
-
 clean:
 	rm -f *.o sru sru_test *~
+
+depend:
+	makedepend *.cc
 
 test: sru_test
 	./sru_test
@@ -30,3 +26,10 @@ test: sru_test
 sru_test: testing.o $(TESTS) $(OBJS)
 	$(CPP) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
+# DO NOT DELETE
+
+basic_object.o: basic_object.h object_pool.h
+basic_object_test.o: testing.h basic_object.h
+object_pool.o: object_pool.h basic_object.h
+object_pool_test.o: testing.h basic_object.h object_pool.h
+testing.o: testing.h

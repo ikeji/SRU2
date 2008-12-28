@@ -1,3 +1,7 @@
+# Programing Language SRU
+# Copyright(C) 2005-2008 IKeJI
+#
+
 OBJS	= basic_object.o object_pool.o
 TESTS   = basic_object_test.o object_pool_test.o
 CPP	= g++

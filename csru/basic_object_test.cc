@@ -1,5 +1,8 @@
-#include "testing.h"
+// Programing Language SRU
+// Copyright(C) 2005-2008 IKeJI
+// 
 
+#include "testing.h"
 #include <iostream>
 #include <cassert>
 #include "basic_object.h"

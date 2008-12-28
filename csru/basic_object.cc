@@ -1,5 +1,5 @@
 // Programing Language SRU
-// Copyright(C) 2001-2008 IKeJI
+// Copyright(C) 2005-2008 IKeJI
 // 
 #include "basic_object.h"
 

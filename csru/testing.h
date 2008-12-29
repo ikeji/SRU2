@@ -19,8 +19,8 @@ class TestCase;
 class TestCollection {
  public:
   static TestCollection * Instance(){
-    static TestCollection * instance = new TestCollection();
-    return instance;
+    static TestCollection instance;
+    return &instance;
   }
   void AddTestCase(const string& name, TestCase * test_case);
   int RunAllTests(const string& prog);

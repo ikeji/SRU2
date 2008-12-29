@@ -6,7 +6,7 @@
 #include <string>
 #include "object_pool.h"
 
-namespace sru {
+using namespace sru;
 
 BasicObject* BasicObject::New(){
   BasicObject* obj = new BasicObject();
@@ -19,34 +19,30 @@ void BasicObject::Mark(){
     allocator::ObjectPool::Instance()->Mark(this);
 }
  
-BasicObject::BasicObject(){
+BasicObject::BasicObject(): gc_counter(0),data(NULL){
   fields.clear();
-  gc_counter = 0;
-  data = NULL;
 }
 
 BasicObject::~BasicObject(){
-  if(data != NULL)
-    delete data;
+  delete data;
 }
 
-BasicObjectPtr::BasicObjectPtr(BasicObject * p){
-  ptr = p;
+BasicObjectPtr::BasicObjectPtr(BasicObject * p): ptr(p){
   if( ptr )
-    ptr->InclimentGcCounter();
+    ptr->IncrementGcCounter();
 }
 
 BasicObjectPtr::~BasicObjectPtr(){
   if( ptr )
-    ptr->DeclimentGcCounter();
+    ptr->DecrementGcCounter();
 }
 
 void BasicObjectPtr::reset(BasicObject * p){
   if( ptr )
-    ptr->DeclimentGcCounter();
+    ptr->DecrementGcCounter();
   ptr = p;
   if( ptr )
-    ptr->InclimentGcCounter();
+    ptr->IncrementGcCounter();
 }
 
 BasicObject& BasicObjectPtr::operator*() const{
@@ -62,15 +58,13 @@ BasicObject * BasicObjectPtr::get() const{
 }
 
 void BasicObjectPtr::swap(BasicObjectPtr &b){
-  BasicObject * work = ptr;
-  ptr = b.ptr;
-  b.ptr = work;
+  std::swap(ptr, b.ptr);
 }
 
 BasicObjectPtr::BasicObjectPtr(const BasicObjectPtr& obj){
   ptr = obj.ptr;
   if( ptr )
-    ptr->InclimentGcCounter();
+    ptr->IncrementGcCounter();
 }
 
 BasicObjectPtr & BasicObjectPtr::operator=(const BasicObjectPtr &obj){
@@ -78,16 +72,11 @@ BasicObjectPtr & BasicObjectPtr::operator=(const BasicObjectPtr &obj){
     return *this;
 
   if( ptr )
-    ptr->DeclimentGcCounter();
+    ptr->DecrementGcCounter();
   ptr = obj.ptr;
   if( ptr )
-    ptr->InclimentGcCounter();
+    ptr->IncrementGcCounter();
 
   return *this;
 }
 
-void swap(BasicObjectPtr &a, BasicObjectPtr &b){
-  a.swap(b);
-}
-
-} // namespace sru

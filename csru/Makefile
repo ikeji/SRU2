@@ -2,17 +2,14 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-OBJS	= basic_object.o object_pool.o
-TESTS   = basic_object_test.o object_pool_test.o
-CPP	= g++
+OBJS     = basic_object.o object_pool.o
+TESTS    = basic_object_test.o object_pool_test.o
+CXXFLAGS = -g
 
 all: sru
 
 sru: $(OBJS) main.o
-	$(CPP) -g -o sru $(OBJS) main.o
-
-.cc.o:
-	$(CPP) -g -c $<
+	$(CXX) -g -o sru $(OBJS) main.o
 
 clean:
 	rm -f *.o sru sru_test *~
@@ -24,7 +21,7 @@ test: sru_test
 	./sru_test
 
 sru_test: testing.o $(TESTS) $(OBJS)
-	$(CPP) -g -o sru_test $(TESTS) testing.o $(OBJS)
+	$(CXX) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 # DO NOT DELETE
 

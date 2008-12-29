@@ -6,9 +6,6 @@
 #ifndef OBJECT_POOL_H_
 #define OBJECT_POOL_H_
 
-#include <vector>
-#include <string>
-
 namespace sru {
 class BasicObject;
 }
@@ -18,17 +15,21 @@ namespace allocator {
 
 class ObjectPool{
  public:
-  static ObjectPool* Instance(){ return &pool; }
+  static ObjectPool* Instance(){
+    static ObjectPool pool;
+    return &pool; 
+  }
   void Register(BasicObject * obj);
   void GarbageCollect();
   void Mark(BasicObject * obj);
-  int Size(){ return allocated.size(); }
+  int Size();
 
  private:
   ObjectPool();
+  ~ObjectPool();
 
-  static ObjectPool pool;
-  std::vector<BasicObject*> allocated;
+  struct Impl;
+  Impl* pimpl;
 
   ObjectPool(const ObjectPool& obj);
   ObjectPool &operator=(const BasicObject &obj);

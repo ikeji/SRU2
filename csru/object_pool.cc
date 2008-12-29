@@ -12,16 +12,20 @@
 namespace sru {
 namespace allocator {
 
+struct ObjectPool::Impl {
+  std::vector<BasicObject*> allocated;
+};
+
 void ObjectPool::Register(BasicObject * obj){
-  allocated.push_back(obj);
+  pimpl->allocated.push_back(obj);
 }
 
 void ObjectPool::GarbageCollect(){
  
   // Initialize 
   std::vector<BasicObject*> root_object;
-  for(std::vector<BasicObject*>::iterator it = allocated.begin();
-      it != allocated.end();
+  for(std::vector<BasicObject*>::iterator it = pimpl->allocated.begin();
+      it != pimpl->allocated.end();
       it++) {
     if((*it)->GcCounter() > 0){
       root_object.push_back(*it);
@@ -39,11 +43,12 @@ void ObjectPool::GarbageCollect(){
   }
 
   // Sweep
-  std::vector<BasicObject*>::iterator it = allocated.begin();
-  while( it != allocated.end() ){
+  for(std::vector<BasicObject*>::iterator it = pimpl->allocated.begin();
+      it != pimpl->allocated.end();
+      ){
     if( (*it)->GcCounter() < 0 ){
       delete *it;
-      it = allocated.erase(it);
+      it = pimpl->allocated.erase(it);
     } else {
       it++;
     }
@@ -73,10 +78,16 @@ void ObjectPool::Mark(BasicObject * obj){
   }
 }
 
-ObjectPool::ObjectPool(){
+int ObjectPool::Size(){
+  return pimpl->allocated.size(); 
 }
 
-ObjectPool ObjectPool::pool;
+ObjectPool::ObjectPool() : pimpl(new Impl){
+}
+
+ObjectPool::~ObjectPool(){
+  delete pimpl;
+}
 
 } // namespace allocator
 } // namespace sru

@@ -49,8 +49,8 @@ class BasicObject {
   }
   int GcCounter() const { return gc_counter; }
   void SetGcCounter(int i) { gc_counter = i; }
-  void InclimentGcCounter() { gc_counter++; }
-  void DeclimentGcCounter() {
+  void IncrementGcCounter() { gc_counter++; }
+  void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
   }
@@ -86,8 +86,6 @@ class BasicObjectPtr {
  private:
   BasicObject* ptr;
 };
-
-void swap(BasicObjectPtr &a, BasicObjectPtr &b);
 
 } // namespace sru
 

@@ -66,7 +66,8 @@ void ObjectPool::Mark(BasicObject * obj){
 
     if( cur->GcCounter() < 0 )
       cur->SetGcCounter(0);
-    for(std::map<string,BasicObject*>::const_iterator it = cur->Fields().begin();
+    for(std::map<std::string,BasicObject*>::const_iterator it
+            = cur->Fields().begin();
         it != cur->Fields().end();
         it++){
       if(it->second->GcCounter() < 0)

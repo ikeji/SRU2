@@ -11,8 +11,6 @@
 
 namespace sru_test {
 
-using namespace std;
-
 class TestCase;
 
 // Collect and process tests.
@@ -24,9 +22,9 @@ class TestCollection {
     return &instance;
   }
 
-  void AddTestCase(const string& name, TestCase * test_case);
-  int RunAllTests(const string& prog);
-  int RunTest(const string& name);
+  void AddTestCase(const std::string& name, TestCase * test_case);
+  int RunAllTests(const std::string& prog);
+  int RunTest(const std::string& name);
  private:
   TestCollection();
   ~TestCollection();
@@ -42,7 +40,7 @@ class TestCollection {
 // This use in TEST macro.
 class TestCase {
  public:
-  TestCase(const string& name){
+  TestCase(const std::string& name){
     // If I make instance of TestCase. The case add to TestCollection.
     TestCollection::Instance()->AddTestCase(name,this);
   }
@@ -62,7 +60,7 @@ class TestCase {
 #define TEST(name) \
   class TEST_##name : public sru_test::TestCase{ \
    public: \
-    TEST_##name(const string& name) : TestCase(name){} \
+    TEST_##name(const std::string& name) : TestCase(name){} \
     void operator()(); \
   } test_##name(#name) ;\
   void TEST_##name::operator()()

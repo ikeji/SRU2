@@ -18,7 +18,6 @@
 #include <cassert>
 #include <string>
 #include <map>
-using std::string;
 
 namespace sru {
 
@@ -31,7 +30,7 @@ class BasicObject {
   static BasicObject* New(Value * value);
 
   // Setting or getting from this object's slot.
-  void Set(const string& name,BasicObject *ref){
+  void Set(const std::string& name,BasicObject *ref){
     fields.insert(std::make_pair(name,ref));
   }
   BasicObject* Get(const std::string& name){

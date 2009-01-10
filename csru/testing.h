@@ -5,7 +5,6 @@
 #ifndef TESTING_H_
 #define TESTING_H_
 
-#include <map>
 #include <string>
 #include <utility>
 #include <vector>
@@ -16,22 +15,35 @@ using namespace std;
 
 class TestCase;
 
+// Collect and process tests.
 class TestCollection {
  public:
+  // TestCollection is singleton.
   static TestCollection * Instance(){
     static TestCollection instance;
     return &instance;
   }
+
   void AddTestCase(const string& name, TestCase * test_case);
   int RunAllTests(const string& prog);
   int RunTest(const string& name);
  private:
-  map<string,TestCase *>  tests;
+  TestCollection();
+  ~TestCollection();
+
+  struct Impl;
+  Impl* pimpl;
+
+  TestCollection(const TestCollection& obj);
+  TestCollection& operator=(const TestCollection& obj);
 };
 
+// Base class for each test instane.
+// This use in TEST macro.
 class TestCase {
  public:
   TestCase(const string& name){
+    // If I make instance of TestCase. The case add to TestCollection.
     TestCollection::Instance()->AddTestCase(name,this);
   }
   virtual void operator()() = 0;
@@ -39,6 +51,14 @@ class TestCase {
 
 } // namespace sru_test
 
+// Convinience macro for tests.
+// Example:
+//   TEST(SampleTest){
+//     // test code.
+//   }
+//
+// You can use assert(2) or exit(3) inside test.
+//
 #define TEST(name) \
   class TEST_##name : public sru_test::TestCase{ \
    public: \

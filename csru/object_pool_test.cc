@@ -16,15 +16,23 @@ class MyValue : public Value{
  public:
   MyValue(){
     MyObject = BasicObject::New();
+    Count++;
+  }
+  ~MyValue(){
+    Count--;
   }
   void Mark(){
     MyObject->Mark();
   }
   BasicObject * MyObject;
+  static int Count;
 };
+
+int MyValue::Count;
 
 TEST(ObjectPool_SizeTest){
   assert(ObjectPool::Instance()->Size() == 0);
+  assert(MyValue::Count == 0);
 }
 
 TEST(ObjectPool_GCTest){
@@ -39,6 +47,7 @@ TEST(ObjectPool_GCTest){
   BasicObject * objr = BasicObject::New();
   BasicObject * objr2 = BasicObject::New();
   objr->Set(string("test"),objr2);
+  objr2->Set(string("test"),objr);
   assert(ObjectPool::Instance()->Size() == 2);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
@@ -65,32 +74,43 @@ TEST(ObjectPool_RefTest){
 
 TEST(ObjectPool_ValueTest){
   // Value Test
-  BasicObjectPtr pv = BasicObject::New();
-  pv->SetData(new MyValue());
+  BasicObjectPtr pv = BasicObject::New(new MyValue());
   assert(ObjectPool::Instance()->Size() == 2);
+  assert(MyValue::Count == 1);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 2);
+  assert(MyValue::Count == 1);
   // Multiple reference
-  BasicObjectPtr pv2 = BasicObject::New();
-  pv2->SetData(new MyValue());
+  BasicObjectPtr pv2 = BasicObject::New(new MyValue());
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 4);
+  assert(MyValue::Count == 2);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 4);
-  dynamic_cast<MyValue *>(pv2->Data())->MyObject = ((MyValue *)pv->Data())->MyObject;
+  assert(MyValue::Count == 2);
+  ObjectPool::Instance()->GarbageCollect();
+  dynamic_cast<MyValue *>(pv2->Data())->MyObject =
+      dynamic_cast<MyValue *>(pv->Data())->MyObject;
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
+  assert(MyValue::Count == 2);
+  ObjectPool::Instance()->GarbageCollect();
   pv.reset();
   pv2.reset();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
+  assert(MyValue::Count == 0);
   // Ring reference
-  BasicObjectPtr pr = BasicObject::New();
-  pr->SetData(new MyValue());
-  BasicObjectPtr pr2 = BasicObject::New();
-  pr2->SetData(new MyValue());
+  BasicObjectPtr pr = BasicObject::New(new MyValue());
+  BasicObjectPtr pr2 = BasicObject::New(new MyValue());
   dynamic_cast<MyValue *>(pr2->Data())->MyObject = pr.get();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
+  assert(MyValue::Count == 2);
+  pr.reset();
+  pr2.reset();
+  ObjectPool::Instance()->GarbageCollect();
+  assert(ObjectPool::Instance()->Size() == 0);
+  assert(MyValue::Count == 0);
 }
 

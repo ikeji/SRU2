@@ -16,6 +16,18 @@ TEST(BasicObject_CreateObjectTest){
   assert(obj);
 }
 
+TEST(BasicObject_WithoutValueTest){
+  BasicObject *obj = BasicObject::New();
+  assert(obj);
+  assert(obj->Data() == NULL);
+}
+
+TEST(BasicObject_WithValueTest){
+  BasicObject *obj = BasicObject::New(new Value());
+  assert(obj);
+  assert(obj->Data());
+}
+
 TEST(BasicObject_ObjectPtrTest){
   BasicObjectPtr p = BasicObject::New();
   BasicObjectPtr p2 = p.get();

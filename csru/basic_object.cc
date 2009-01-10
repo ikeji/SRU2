@@ -14,6 +14,12 @@ BasicObject* BasicObject::New(){
   return obj;
 }
 
+BasicObject* BasicObject::New(Value * data){
+  BasicObject * obj = New();
+  obj->SetData(data);
+  return obj;
+}
+
 void BasicObject::Mark(){
   allocator::ObjectPool::Instance()->Mark(this);
 }

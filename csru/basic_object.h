@@ -2,11 +2,11 @@
 // Copyright(C) 2005-2008 IKeJI
 // 
 
-// In SRU, all object is a instance of BasicObect.
+// In SRU, all object is a instance of BasicObject.
 // All class, nil, Integer and AST are instance of BasicObject.
 // 
 // BasicObject is controlled by GC.
-// If you use BasicObject from C++, You have to hold by BasicObjecyRef.
+// If you use BasicObject from C++, You have to hold by BasicObjectPtr.
 // If you hold BasicObject by Data field, You have to implementation
 // Mark method.
 // You can't delete this object.
@@ -28,6 +28,7 @@ class BasicObject {
  public:
   // Always use New method to allocate BasicObject instead of new operator.
   static BasicObject* New();
+  static BasicObject* New(Value * value);
 
   // Setting or getting from this object's slot.
   void Set(const string& name,BasicObject *ref){

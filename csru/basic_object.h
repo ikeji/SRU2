@@ -29,9 +29,6 @@ class Value {
   Value(){}
   virtual ~Value(){}
   virtual void Mark(){}
- private:
-  Value(const Value& obj);
-  Value &operator=(const Value& obj);
 };
 
 class BasicObject {

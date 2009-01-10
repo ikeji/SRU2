@@ -77,7 +77,7 @@ TEST(ObjectPool_ValueTest){
   assert(ObjectPool::Instance()->Size() == 4);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 4);
-  ((MyValue *)pv2->Data())->MyObject = ((MyValue *)pv->Data())->MyObject;
+  dynamic_cast<MyValue *>(pv2->Data())->MyObject = ((MyValue *)pv->Data())->MyObject;
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
   pv.reset();
@@ -89,7 +89,7 @@ TEST(ObjectPool_ValueTest){
   pr->SetData(new MyValue());
   BasicObjectPtr pr2 = BasicObject::New();
   pr2->SetData(new MyValue());
-  ((MyValue *)pr2->Data())->MyObject = pr.get();
+  dynamic_cast<MyValue *>(pr2->Data())->MyObject = pr.get();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
 }

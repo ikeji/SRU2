@@ -15,8 +15,7 @@ BasicObject* BasicObject::New(){
 }
 
 void BasicObject::Mark(){
-  if( GcCounter() < 0 )
-    allocator::ObjectPool::Instance()->Mark(this);
+  allocator::ObjectPool::Instance()->Mark(this);
 }
  
 BasicObject::BasicObject(): gc_counter(0),data(NULL){

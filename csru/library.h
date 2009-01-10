@@ -5,9 +5,9 @@
 #ifndef LIBRARY_H_
 #define LIBRARY_H_
 
-#include "basic_object.h"
-
 namespace sru {
+
+class BasicObject;
 
 class Library {
  public:

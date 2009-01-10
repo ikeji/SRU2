@@ -28,7 +28,7 @@ sru_test: testing.o $(TESTS) $(OBJS)
 basic_object.o: basic_object.h object_pool.h
 basic_object_test.o: testing.h basic_object.h
 library.o: library.h basic_object.h
-library_test.o: testing.h library.h basic_object.h
+library_test.o: testing.h library.h
 object_pool.o: object_pool.h basic_object.h
 object_pool_test.o: testing.h basic_object.h object_pool.h
 testing.o: testing.h

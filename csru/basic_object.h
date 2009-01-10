@@ -22,19 +22,14 @@ using std::string;
 
 namespace sru {
 
-class BasicObject;
-
-class Value {
- public:
-  Value(){}
-  virtual ~Value(){}
-  virtual void Mark(){}
-};
+class Value;
 
 class BasicObject {
  public:
+  // Always use New method to allocate BasicObject instead of new operator.
   static BasicObject* New();
-  void Mark();
+
+  // Setting or getting from this object's slot.
   void Set(const string& name,BasicObject *ref){
     fields.insert(std::make_pair(name,ref));
   }
@@ -42,8 +37,11 @@ class BasicObject {
     return fields[name];
   };
   const std::map<std::string,BasicObject *>& Fields() const{
-    return fields; 
+    return fields;
   }
+
+  // Follow is GC related method.
+  void Mark();
   int GcCounter() const { return gc_counter; }
   void SetGcCounter(int i) { gc_counter = i; }
   void IncrementGcCounter() { gc_counter++; }
@@ -51,6 +49,7 @@ class BasicObject {
     gc_counter--; 
     assert(gc_counter >= 0); 
   }
+
   Value* Data(){ return data; }
   void SetData(Value* dat){ data = dat; }
   ~BasicObject();
@@ -64,6 +63,13 @@ class BasicObject {
 
   BasicObject(const BasicObject& obj);
   BasicObject &operator=(const BasicObject &obj);
+};
+
+class Value {
+ public:
+  Value(){}
+  virtual ~Value(){}
+  virtual void Mark(){}
 };
 
 class BasicObjectPtr {

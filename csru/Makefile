@@ -6,7 +6,7 @@ OBJS     = basic_object.o object_pool.o library.o
 TESTS    = basic_object_test.o object_pool_test.o library_test.o
 CXXFLAGS = -g
 
-all: sru
+all: sru sru_test
 
 sru: $(OBJS) main.o
 	$(CXX) -g -o sru $(OBJS) main.o

@@ -12,19 +12,19 @@ using namespace sru_test;
 using namespace sru;
 
 TEST(BasicObject_CreateObjectTest){
-  BasicObject *obj = BasicObject::New();
-  assert(obj);
+  BasicObjectPtr obj = BasicObject::New();
+  assert(obj.get());
 }
 
 TEST(BasicObject_WithoutValueTest){
-  BasicObject *obj = BasicObject::New();
-  assert(obj);
+  BasicObjectPtr obj = BasicObject::New();
+  assert(obj.get());
   assert(obj->Data() == NULL);
 }
 
 TEST(BasicObject_WithValueTest){
-  BasicObject *obj = BasicObject::New(new Value());
-  assert(obj);
+  BasicObjectPtr obj = BasicObject::New(new Value());
+  assert(obj.get());
   assert(obj->Data());
 }
 

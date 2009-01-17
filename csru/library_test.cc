@@ -9,17 +9,17 @@
 using namespace sru;
 
 TEST(Library_GetPtrTest){
-  assert(Library::Instance()->Nil());
-  assert(Library::Instance()->Frame());
-  assert(Library::Instance()->Class());
-  assert(Library::Instance()->Object());
-  assert(Library::Instance()->Proc());
-  assert(Library::Instance()->Array());
-  assert(Library::Instance()->Hash());
-  assert(Library::Instance()->String());
-  assert(Library::Instance()->Number());
-  assert(Library::Instance()->Boolean());
-  assert(Library::Instance()->True());
-  assert(Library::Instance()->False());
+  assert(Library::Instance()->Nil().get());
+  assert(Library::Instance()->Frame().get());
+  assert(Library::Instance()->Class().get());
+  assert(Library::Instance()->Object().get());
+  assert(Library::Instance()->Proc().get());
+  assert(Library::Instance()->Array().get());
+  assert(Library::Instance()->Hash().get());
+  assert(Library::Instance()->String().get());
+  assert(Library::Instance()->Number().get());
+  assert(Library::Instance()->Boolean().get());
+  assert(Library::Instance()->True().get());
+  assert(Library::Instance()->False().get());
 }
 

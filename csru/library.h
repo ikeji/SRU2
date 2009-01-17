@@ -5,33 +5,33 @@
 #ifndef LIBRARY_H_
 #define LIBRARY_H_
 
-namespace sru {
+#include "basic_object.h"
 
-class BasicObject;
+namespace sru {
 
 class Library {
  public:
   static Library* Instance();
 
   // Nil is zen
-  BasicObject* Nil();
+  BasicObjectPtr Nil();
 
   // Class of Frame system
-  BasicObject* Frame();
+  BasicObjectPtr Frame();
 
   // Default Class System
-  BasicObject* Class();
-  BasicObject* Object();
-  BasicObject* Proc();
+  BasicObjectPtr Class();
+  BasicObjectPtr Object();
+  BasicObjectPtr Proc();
 
   // Default Classes
-  BasicObject* Array();
-  BasicObject* Hash();
-  BasicObject* String();
-  BasicObject* Number();
-  BasicObject* Boolean();
-  BasicObject* True();
-  BasicObject* False();
+  BasicObjectPtr Array();
+  BasicObjectPtr Hash();
+  BasicObjectPtr String();
+  BasicObjectPtr Number();
+  BasicObjectPtr Boolean();
+  BasicObjectPtr True();
+  BasicObjectPtr False();
 
  private:
   Library();

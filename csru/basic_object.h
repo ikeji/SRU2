@@ -22,19 +22,38 @@
 namespace sru {
 
 class Value;
+class BasicObject;
+
+class BasicObjectPtr {
+ public:
+  BasicObjectPtr(BasicObject * p = NULL);
+  ~BasicObjectPtr();
+
+  void reset(BasicObject * p = NULL);
+  BasicObject& operator*() const;
+  BasicObject * operator->() const;
+  BasicObject * get() const;
+
+  void swap(BasicObjectPtr &b);
+
+  BasicObjectPtr(const BasicObjectPtr& obj);
+  BasicObjectPtr &operator=(const BasicObjectPtr &obj);
+ private:
+  BasicObject* ptr;
+};
 
 class BasicObject {
  public:
   // Always use New method to allocate BasicObject instead of new operator.
-  static BasicObject* New();
-  static BasicObject* New(Value * value);
+  static BasicObjectPtr New();
+  static BasicObjectPtr New(Value * value);
 
   // Setting or getting from this object's slot.
-  void Set(const std::string& name,BasicObject *ref){
-    fields.insert(std::make_pair(name,ref));
+  void Set(const std::string& name,BasicObjectPtr ref){
+    fields.insert(std::make_pair(name,ref.get()));
   }
-  BasicObject* Get(const std::string& name){
-    return fields[name];
+  BasicObjectPtr Get(const std::string& name){
+    return BasicObjectPtr(fields[name]);
   };
   const std::map<std::string,BasicObject *>& Fields() const{
     return fields;
@@ -72,23 +91,6 @@ class Value {
   virtual void Mark(){}
 };
 
-class BasicObjectPtr {
- public:
-  BasicObjectPtr(BasicObject * p = NULL);
-  ~BasicObjectPtr();
-
-  void reset(BasicObject * p = NULL);
-  BasicObject& operator*() const;
-  BasicObject * operator->() const;
-  BasicObject * get() const;
-
-  void swap(BasicObjectPtr &b);
-
-  BasicObjectPtr(const BasicObjectPtr& obj);
-  BasicObjectPtr &operator=(const BasicObjectPtr &obj);
- private:
-  BasicObject* ptr;
-};
 
 } // namespace sru
 

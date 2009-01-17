@@ -15,7 +15,7 @@ using namespace sru::allocator;
 class MyValue : public Value{
  public:
   MyValue(){
-    MyObject = BasicObject::New();
+    MyObject = BasicObject::New().get();
     Count++;
   }
   ~MyValue(){
@@ -37,15 +37,15 @@ TEST(ObjectPool_SizeTest){
 
 TEST(ObjectPool_GCTest){
   // GC test
-  BasicObject * obj = BasicObject::New();
-  BasicObject * obj2 = BasicObject::New();
-  BasicObject * obj3 = BasicObject::New();
+  BasicObject * obj = BasicObject::New().get();
+  BasicObject * obj2 = BasicObject::New().get();
+  BasicObject * obj3 = BasicObject::New().get();
   assert(ObjectPool::Instance()->Size() == 3);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
   // ring test
-  BasicObject * objr = BasicObject::New();
-  BasicObject * objr2 = BasicObject::New();
+  BasicObject * objr = BasicObject::New().get();
+  BasicObject * objr2 = BasicObject::New().get();
   objr->Set(string("test"),objr2);
   objr2->Set(string("test"),objr);
   assert(ObjectPool::Instance()->Size() == 2);

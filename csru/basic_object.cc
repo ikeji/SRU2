@@ -8,14 +8,14 @@
 
 using namespace sru;
 
-BasicObject* BasicObject::New(){
-  BasicObject* obj = new BasicObject();
-  allocator::ObjectPool::Instance()->Register(obj);
+BasicObjectPtr BasicObject::New(){
+  BasicObjectPtr obj = new BasicObject();
+  allocator::ObjectPool::Instance()->Register(obj.get());
   return obj;
 }
 
-BasicObject* BasicObject::New(Value * data){
-  BasicObject * obj = New();
+BasicObjectPtr BasicObject::New(Value * data){
+  BasicObjectPtr obj = New();
   obj->SetData(data);
   return obj;
 }

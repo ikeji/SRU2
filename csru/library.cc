@@ -24,21 +24,21 @@ struct Library::Impl {
   void initialiseInteralClasses();
 };
 
-BasicObject* Library::Nil(){ return pimpl->Nil.get(); }
+BasicObjectPtr Library::Nil(){ return pimpl->Nil; }
 
-BasicObject* Library::Frame(){ return pimpl->Frame.get(); }
+BasicObjectPtr Library::Frame(){ return pimpl->Frame; }
 
-BasicObject* Library::Class(){ return pimpl->Class.get(); }
-BasicObject* Library::Object(){ return pimpl->Object.get(); }
-BasicObject* Library::Proc(){ return pimpl->Proc.get(); }
+BasicObjectPtr Library::Class(){ return pimpl->Class; }
+BasicObjectPtr Library::Object(){ return pimpl->Object; }
+BasicObjectPtr Library::Proc(){ return pimpl->Proc; }
 
-BasicObject* Library::Array(){ return pimpl->Array.get(); }
-BasicObject* Library::Hash(){ return pimpl->Hash.get(); }
-BasicObject* Library::String(){ return pimpl->String.get(); }
-BasicObject* Library::Number(){ return pimpl->Number.get(); }
-BasicObject* Library::Boolean(){ return pimpl->Boolean.get(); }
-BasicObject* Library::True(){ return pimpl->True.get(); }
-BasicObject* Library::False(){ return pimpl->False.get(); }
+BasicObjectPtr Library::Array(){ return pimpl->Array; }
+BasicObjectPtr Library::Hash(){ return pimpl->Hash; }
+BasicObjectPtr Library::String(){ return pimpl->String; }
+BasicObjectPtr Library::Number(){ return pimpl->Number; }
+BasicObjectPtr Library::Boolean(){ return pimpl->Boolean; }
+BasicObjectPtr Library::True(){ return pimpl->True; }
+BasicObjectPtr Library::False(){ return pimpl->False; }
 
 Library* Library::Instance(){
   static Library inst;
@@ -55,18 +55,18 @@ Library::~Library(){
 
 void Library::Impl::initialiseInteralClasses(){
   // Set new objects
-  Nil.reset(BasicObject::New());
-  Frame.reset(BasicObject::New());
-  Class.reset(BasicObject::New());
-  Object.reset(BasicObject::New());
-  Proc.reset(BasicObject::New());
-  Array.reset(BasicObject::New());
-  Hash.reset(BasicObject::New());
-  String.reset(BasicObject::New());
-  Number.reset(BasicObject::New());
-  Boolean.reset(BasicObject::New());
-  True.reset(BasicObject::New());
-  False.reset(BasicObject::New());
+  Nil = BasicObject::New();
+  Frame = BasicObject::New();
+  Class = BasicObject::New();
+  Object = BasicObject::New();
+  Proc = BasicObject::New();
+  Array = BasicObject::New();
+  Hash = BasicObject::New();
+  String = BasicObject::New();
+  Number = BasicObject::New();
+  Boolean = BasicObject::New();
+  True = BasicObject::New();
+  False = BasicObject::New();
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.

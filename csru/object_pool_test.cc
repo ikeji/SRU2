@@ -40,6 +40,9 @@ TEST(ObjectPool_GCTest){
   BasicObject * obj = BasicObject::New().get();
   BasicObject * obj2 = BasicObject::New().get();
   BasicObject * obj3 = BasicObject::New().get();
+  assert(obj);
+  assert(obj2);
+  assert(obj3);
   assert(ObjectPool::Instance()->Size() == 3);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);

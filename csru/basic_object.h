@@ -41,7 +41,10 @@ class BasicObjectPtr {
   void swap(BasicObjectPtr &b);
 
   BasicObjectPtr(const BasicObjectPtr& obj);
-  BasicObjectPtr &operator=(const BasicObjectPtr &obj);
+  BasicObjectPtr &operator=(const BasicObjectPtr& obj);
+  bool operator==(const BasicObjectPtr& obj){
+    return (ptr == obj.ptr);
+  }
  private:
   BasicObject* ptr;
 };

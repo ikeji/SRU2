@@ -4,7 +4,7 @@
 
 OBJS     = basic_object.o object_pool.o library.o string.o class.o
 TESTS    = basic_object_test.o object_pool_test.o library_test.o string_test.o class_test.o
-CXXFLAGS = -g
+CXXFLAGS = -g -Wall -Werror
 
 all: sru sru_test
 

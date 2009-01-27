@@ -19,6 +19,10 @@
 #include <string>
 #include <map>
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 namespace sru {
 
 class Value;
@@ -63,10 +67,18 @@ class BasicObject {
   void Mark();
   int GcCounter() const { return gc_counter; }
   void SetGcCounter(int i) { gc_counter = i; }
-  void IncrementGcCounter() { gc_counter++; }
+  void IncrementGcCounter() {
+    gc_counter++; 
+#ifdef DEBUG
+    std::cout <<"inc:" << (int)this << "->" << gc_counter << std::endl;
+#endif
+  }
   void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
+#ifdef DEBUG
+    std::cout <<"dec:" << (int)this << "->" << gc_counter << std::endl;
+#endif
   }
 
   Value* Data(){ return data; }

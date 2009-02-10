@@ -12,6 +12,10 @@
 using namespace sru;
 using namespace std;
 
+string InspectExpression(BasicObjectPtr obj){
+  return dynamic_cast<Expression*>(obj->Data())->Inspect();
+}
+
 /* -------------------- LetExpression -------------------- */
 
 struct LetExpression::Impl {
@@ -48,6 +52,16 @@ void LetExpression::Mark(){
   pimpl->rightvalue->Mark();
 }
 
+string LetExpression::Inspect(){
+  string rv = InspectExpression(pimpl->rightvalue);
+  if(pimpl->env){
+    return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name +
+           " = " + rv + ")";
+  }else{
+    return string("(") + pimpl->name + " = " + rv + ")";
+  }
+}
+
 /* -------------------- RefExpression -------------------- */
 
 struct RefExpression::Impl {
@@ -75,6 +89,14 @@ const string& RefExpression::Name(){
 }
 void RefExpression::Mark(){
   pimpl->env->Mark();
+}
+
+string RefExpression::Inspect(){
+  if(pimpl->env){
+    return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name;
+  }else{
+    return pimpl->name;
+  }
 }
 
 /* -------------------- CallExpression -------------------- */
@@ -111,6 +133,19 @@ void CallExpression::Mark(){
   }
 }
 
+string CallExpression::Inspect(){
+  string result = "";
+  object_vector::iterator it = pimpl->arg.begin();
+  while(true){
+    if(it == pimpl->arg.end()) break;
+    result += InspectExpression(*it);
+    it++;
+    if(it == pimpl->arg.end()) break;
+    result += ", ";
+  }
+  return InspectExpression(pimpl->proc) + "(" + result + ")";
+}
+
 /* -------------------- ProcExpression -------------------- */
 
 struct ProcExpression::Impl {
@@ -142,11 +177,34 @@ const object_vector& ProcExpression::Expressions(){
   return pimpl->expressions;
 }
 void ProcExpression::Mark(){
-  for(vector<BasicObject*>::iterator it = pimpl->expressions.begin();
+  for(object_vector::iterator it = pimpl->expressions.begin();
       it != pimpl->expressions.end();
       it++){
     (*it)->Mark();
   }
+}
+
+string ProcExpression::Inspect(){
+  string argv = "";
+  vector<string>::iterator i = pimpl->varg.begin();
+  while(true){
+    if(i == pimpl->varg.end()) break;
+    argv+= *i;
+    i++;
+    if(i == pimpl->varg.end()) break;
+    argv+= ",";
+  }
+  if(!pimpl->retval.empty())
+    argv+= ":" + pimpl->retval;
+  if(!argv.empty())
+    argv = "|" + argv + "|";
+  string main = "";
+  for(object_vector::iterator it = pimpl->expressions.begin();
+      it != pimpl->expressions.end();
+      it++){
+    main+= InspectExpression(*it) + ";";
+  }
+  return string("{") + argv + main + "}";
 }
 
 /* -------------------- StringExpression -------------------- */
@@ -169,3 +227,6 @@ const string& StringExpression::String(){
   return pimpl->str;
 }
 
+string StringExpression::Inspect(){
+  return string("\"") + pimpl->str + "\"";
+}

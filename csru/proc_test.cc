@@ -33,6 +33,9 @@ TEST(Proc_EvalTest){
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc,arg);
+  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+         "{Class;}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
   assert(r == Library::Instance()->Class());

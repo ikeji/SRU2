@@ -29,6 +29,7 @@ class Expression : public Value{
   Expression(){}
   // TODO: use template?
   virtual void Visit(Visitor* visitor,BasicObjectPtr obj) = 0;
+  virtual std::string Inspect() = 0;
  private:
   Expression(const Expression& obj);
   Expression* &operator=(const Expression& obj);
@@ -73,6 +74,8 @@ class LetExpression : public Expression{
   BasicObject* Env();
   const std::string& Name();
   BasicObject* RightValue();
+  
+  std::string Inspect();
  private:
   struct Impl;
   Impl* pimpl;
@@ -100,6 +103,8 @@ class RefExpression : public Expression{
 
   BasicObject* Env();
   const std::string& Name();
+  
+  std::string Inspect();
  private:
   struct Impl;
   Impl* pimpl;
@@ -128,6 +133,8 @@ class CallExpression : public Expression{
 
   BasicObject* Proc();
   const object_vector& Arg();
+
+  std::string Inspect();
  private:
   struct Impl;
   Impl* pimpl;
@@ -159,6 +166,8 @@ class ProcExpression : public Expression{
   const std::vector<std::string>& Varg();
   const std::string& RetVal();
   const object_vector& Expressions();
+  
+  std::string Inspect();
  private:
   struct Impl;
   Impl* pimpl;
@@ -183,6 +192,8 @@ class StringExpression : public Expression{
   }
  
   const std::string& String();
+  
+  std::string Inspect();
  private:
   struct Impl;
   Impl* pimpl;

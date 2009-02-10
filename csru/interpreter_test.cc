@@ -17,9 +17,16 @@
 using namespace sru;
 using namespace std;
 
+string Inspect(BasicObjectPtr obj){
+  return dynamic_cast<Expression*>(obj->Data())->Inspect();
+}
+
 TEST(Interpreter_StringExpressionTest){
   string str = "Hello";
-  BasicObjectPtr p = BasicObject::New(new StringExpression(str));
+  StringExpression* se = new StringExpression(str);
+  BasicObjectPtr p = BasicObject::New(se);
+  cout << se->Inspect() << endl;
+  assert(se->Inspect() == "\"Hello\"");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
@@ -46,6 +53,8 @@ TEST(Interpreter_ComplexExpressionTest){
     ),
     args
   );
+  cout << Inspect(p) << endl;
+  assert(Inspect(p) == "{\"Hello\";}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
@@ -59,6 +68,8 @@ TEST(Interpreter_ComplexExpressionTest){
 TEST(Interpreter_RefExpressionTest){
   // " Class "
   BasicObjectPtr p = RefExpression::New(NULL,"Class");
+  cout << Inspect(p) << endl;
+  assert(Inspect(p) == "Class");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r == Library::Instance()->Class());
@@ -68,11 +79,15 @@ TEST(Interpreter_LetExpressionTest){
   // " hoge = Class "
   BasicObjectPtr ref = RefExpression::New(NULL,"Class");
   BasicObjectPtr p = LetExpression::New(NULL,"hoge",ref);
+  cout << Inspect(p) << endl;
+  assert(Inspect(p) == "(hoge = Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r == Library::Instance()->Class());
   // " hoge "
   p = RefExpression::New(NULL,"hoge");
+  cout << Inspect(p) << endl;
+  assert(Inspect(p) == "hoge");
   r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r == Library::Instance()->Class());

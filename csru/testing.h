@@ -27,7 +27,7 @@ class TestCollection {
   int RunTest(const std::string& name);
  private:
   TestCollection();
-  ~TestCollection();
+  virtual ~TestCollection();
 
   struct Impl;
   Impl* pimpl;

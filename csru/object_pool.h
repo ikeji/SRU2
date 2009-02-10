@@ -1,6 +1,8 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
 // 
+// Memory management and GC.
+// All object are regestered to ObjectPool.
 //
 
 #ifndef OBJECT_POOL_H_

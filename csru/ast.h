@@ -6,7 +6,11 @@
 // In SRU, AST is an object.
 // User can make instance of AST.
 // All Expressions are an Value and need impliment Mark procedure.
-
+// Expression have thease 5 types.
+// LetExpression and RefExpression controll binding.
+// CallExpression make call function.
+// ProcExpression and StringExpression are seeds for Constants.
+//
 
 #ifndef AST_H_
 #define AST_H_
@@ -23,7 +27,7 @@ class Visitor;
 class Expression : public Value{
  public:
   Expression(){}
-  // TOOD: use template?
+  // TODO: use template?
   virtual void Visit(Visitor* visitor,BasicObjectPtr obj) = 0;
  private:
   Expression(const Expression& obj);

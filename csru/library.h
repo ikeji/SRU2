@@ -1,6 +1,10 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// Library class.
+// Library class have many default classes in SRU.
+// You can get pointer to these class from Library.
+//
 
 #ifndef LIBRARY_H_
 #define LIBRARY_H_

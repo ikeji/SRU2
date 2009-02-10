@@ -1,6 +1,11 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// StackFrame manage where evaluated now.
+// We can copy StackFrame.
+// Backup of StackFrame is named contination.
+// We can recover stackframe from backup and continue 
+// evaluation of this point.
 
 #ifndef STACK_FRAME_H_
 #define STACK_FRAME_H_

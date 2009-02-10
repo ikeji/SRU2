@@ -1,6 +1,10 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// Testing framework for C++.
+// We can write unit test follow way.
+// TEST(SomeTest) { test test }
+//
 
 #ifndef TESTING_H_
 #define TESTING_H_
@@ -22,7 +26,7 @@ class TestCollection {
     return &instance;
   }
 
-  void AddTestCase(const std::string& name, TestCase * test_case);
+  void AddTestCase(const std::string& name,TestCase * test_case);
   int RunAllTests(const std::string& prog);
   int RunTest(const std::string& name);
  private:

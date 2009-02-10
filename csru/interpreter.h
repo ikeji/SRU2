@@ -1,6 +1,9 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// Interpreter Class.
+// You can eval sru program and syntax tree.
+//
 
 #ifndef INTERPRETER_H_
 #define INTERPRETER_H_

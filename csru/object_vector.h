@@ -1,6 +1,9 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// Utility type object_vector and ptr_vector.
+// We can convert each type by Conv function.
+//
 
 #ifndef OBJECT_VECTOR_H_
 #define OBJECT_VECTOR_H_

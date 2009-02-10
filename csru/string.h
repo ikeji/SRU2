@@ -1,6 +1,8 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
 // 
+// SRUString class is all class of all string in SRU.
+//
 
 #ifndef SRU_STRING_H_
 #define SRU_STRING_H_

@@ -1,6 +1,7 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
+// Please see ast.h.
 
 #include "ast.h"
 

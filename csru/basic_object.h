@@ -1,7 +1,7 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
 // 
-
+//
 // In SRU, all object is a instance of BasicObject.
 // All class, nil, Integer and AST are instance of BasicObject.
 // 

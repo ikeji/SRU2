@@ -8,6 +8,20 @@
 using namespace sru;
 
 struct Library::Impl {
+  Impl():
+      Nil(),
+      Frame(),
+      Class(),
+      Object(),
+      Proc(),
+      Array(),
+      Hash(),
+      String(),
+      Number(),
+      Boolean(),
+      True(),
+      False() {}
+     
   BasicObjectPtr Nil;
   BasicObjectPtr Frame;
   BasicObjectPtr Class;
@@ -45,8 +59,7 @@ Library* Library::Instance(){
   return &inst;
 }
 
-Library::Library(){
-  pimpl = new Impl();
+Library::Library():pimpl(new Impl()){
   pimpl->initialiseInteralClasses();
 }
 Library::~Library(){

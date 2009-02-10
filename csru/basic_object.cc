@@ -24,7 +24,7 @@ void BasicObject::Mark(){
   allocator::ObjectPool::Instance()->Mark(this);
 }
  
-BasicObject::BasicObject(): gc_counter(0),data(NULL){
+BasicObject::BasicObject(): fields(),gc_counter(0),data(NULL){
   fields.clear();
 }
 
@@ -66,8 +66,8 @@ void BasicObjectPtr::swap(BasicObjectPtr &b){
   std::swap(ptr, b.ptr);
 }
 
-BasicObjectPtr::BasicObjectPtr(const BasicObjectPtr& obj){
-  ptr = obj.ptr;
+BasicObjectPtr::BasicObjectPtr(const BasicObjectPtr& obj):
+    ptr(obj.ptr){
   if( ptr )
     ptr->IncrementGcCounter();
 }

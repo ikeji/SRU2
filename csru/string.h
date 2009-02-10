@@ -17,8 +17,12 @@ class SRUString : public Value{
  private:
   SRUString(const std::string& val);
   ~SRUString();
+
   struct Impl;
   Impl* pimpl;
+
+  SRUString(const SRUString& obj);
+  SRUString* operator=(const SRUString& obj);
 };
 
 } // namespace sru

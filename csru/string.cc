@@ -12,6 +12,7 @@ using namespace sru;
 using namespace std;
 
 struct SRUString::Impl{
+  Impl(string value): value(value){}
   string value;
 };
 
@@ -29,9 +30,8 @@ string SRUString::GetValue(BasicObjectPtr obj){
   return s->pimpl->value;
 }
 
-SRUString::SRUString(const string& val){
-  pimpl = new Impl();
-  pimpl->value = val;
+SRUString::SRUString(const string& val):
+      pimpl(new Impl(val)){
 }
 
 SRUString::~SRUString(){

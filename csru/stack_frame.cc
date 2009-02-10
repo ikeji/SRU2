@@ -20,7 +20,9 @@ struct StackFrame::Impl {
     operations(),
     it(),
     local_stack(),
-    up_frame(NULL) {}
+    binding(BasicObject::New().get()),
+    up_frame(NULL)
+    {}
 
   object_vector expressions;
   object_vector::iterator tree_it;
@@ -29,7 +31,8 @@ struct StackFrame::Impl {
   object_vector::iterator it;
 
   object_vector local_stack;
-  
+ 
+  BasicObject* binding; 
   BasicObject* up_frame;
 
   bool SetupTree(BasicObjectPtr ast);
@@ -57,12 +60,14 @@ class TraceVisitor : public Visitor{
     dynamic_cast<Expression*>(obj->Data())->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
-    VisitTo(exp->Env());
+    if(exp->Env())
+      VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
-    VisitTo(exp->Env());
+    if(exp->Env())
+      VisitTo(exp->Env());
     result->push_back(obj.get());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
@@ -88,7 +93,8 @@ class TraceVisitor : public Visitor{
 
 class EvalVisitor : public Visitor{
  public:
-  EvalVisitor(object_vector* st): local_stack(st),noerror(true){}
+  EvalVisitor(object_vector* st,const BasicObjectPtr& binding):
+      local_stack(st),binding(binding),noerror(true){}
   BasicObjectPtr Pop(){
     assert(local_stack->size() > 0);
     BasicObjectPtr r = local_stack->back();
@@ -100,13 +106,23 @@ class EvalVisitor : public Visitor{
     local_stack->push_back(obj.get());
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
-    BasicObjectPtr rightValue = Pop();
-    BasicObjectPtr env = Pop();
+    const BasicObjectPtr& rightValue = Pop();
+    BasicObjectPtr env;
+    if(exp->Env()){
+      env = Pop();
+    }else{
+      env = binding;
+    }
     env->Set(exp->Name(),rightValue);
     Push(rightValue);
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
-    BasicObjectPtr env = Pop();
+    BasicObjectPtr env;
+    if(exp->Env()){
+      env = Pop();
+    }else{
+      env = binding;
+    }
     Push(env->Get(exp->Name()));
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
@@ -131,12 +147,15 @@ class EvalVisitor : public Visitor{
     // Caller must push return value.
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
-    Push(Proc::New(exp->Varg(),exp->RetVal(),Conv(exp->Expressions())));
+    Push(Proc::New(
+             exp->Varg(),exp->RetVal(),
+             Conv(exp->Expressions()),binding));
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
     Push(SRUString::New(exp->String()));
   }
   object_vector* local_stack;
+  BasicObjectPtr binding;
   bool noerror;
  private:
   EvalVisitor(const EvalVisitor& obj);
@@ -185,7 +204,7 @@ bool StackFrame::EvalNode(){
     pimpl->tree_it++;
     return ret;
   }
-  EvalVisitor visit(&(pimpl->local_stack));
+  EvalVisitor visit(&(pimpl->local_stack),pimpl->binding);
   // We need step forward before exec each code.
   BasicObjectPtr cur = *pimpl->it;
   pimpl->it++;
@@ -210,6 +229,14 @@ void MarkVector(object_vector* v){
       it != v->end();
       it++)
     (*it)->Mark();
+}
+
+BasicObjectPtr StackFrame::Binding(){
+  return pimpl->binding;
+}
+
+void StackFrame::SetBinding(const BasicObjectPtr& obj){
+  pimpl->binding = obj.get();
 }
 
 void StackFrame::Mark(){

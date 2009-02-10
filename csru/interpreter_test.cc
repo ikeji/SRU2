@@ -12,6 +12,7 @@
 #include "basic_object.h"
 #include "ast.h"
 #include "string.h"
+#include "library.h"
 
 using namespace sru;
 using namespace std;
@@ -55,3 +56,24 @@ TEST(Interpreter_ComplexExpressionTest){
   assert(str == rstr);
 }
 
+TEST(Interpreter_RefExpressionTest){
+  // " Class "
+  BasicObjectPtr p = RefExpression::New(NULL,"Class");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(p);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
+TEST(Interpreter_LetExpressionTest){
+  // " hoge = Class "
+  BasicObjectPtr ref = RefExpression::New(NULL,"Class");
+  BasicObjectPtr p = LetExpression::New(NULL,"hoge",ref);
+  BasicObjectPtr r = Interpreter::Instance()->Eval(p);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+  // " hoge "
+  p = RefExpression::New(NULL,"hoge");
+  r = Interpreter::Instance()->Eval(p);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}

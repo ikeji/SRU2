@@ -29,6 +29,9 @@ class StackFrame : public Value{
   BasicObjectPtr ReturnValue();
   void PushResult(const BasicObjectPtr& ptr);
 
+  BasicObjectPtr Binding();
+  void SetBinding(const BasicObjectPtr& obj);
+
   void Mark();
 
   StackFrame(const StackFrame& obj);

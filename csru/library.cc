@@ -84,3 +84,18 @@ void Library::Impl::initialiseInteralClasses(){
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
 }
+
+void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
+  frame->Set("nil",Instance()->Nil());
+  frame->Set("Frame",Instance()->Frame());
+  frame->Set("Class",Instance()->Class());
+  frame->Set("Object",Instance()->Object());
+  frame->Set("Proc",Instance()->Proc());
+  frame->Set("Array",Instance()->Array());
+  frame->Set("Hash",Instance()->Hash());
+  frame->Set("String",Instance()->String());
+  frame->Set("Number",Instance()->Number());
+  frame->Set("Boolean",Instance()->Boolean());
+  frame->Set("True",Instance()->True());
+  frame->Set("False",Instance()->False());
+}

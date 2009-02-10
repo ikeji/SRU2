@@ -25,24 +25,34 @@ class SRUProc : public Proc{
  public:
   SRUProc(const vector<string>& varg,
           const string retval,
-          const ptr_vector& expressions):
+          const ptr_vector& expressions,
+          const BasicObjectPtr& binding):
       varg(varg),
       retval(retval),
-      expressions(Conv(expressions)){
+      expressions(Conv(expressions)),
+      binding(binding.get()){
   }
   void Call(const ptr_vector& arg);
+  void Mark(){
+    binding->Mark();
+  }
  private:
   vector<string> varg;
   string retval;
   object_vector expressions;
+  BasicObject* binding;
+
+  SRUProc(const SRUProc& obj);
+  SRUProc* operator=(const SRUProc& obj);
 };
 }
 
 BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
              const std::string& retval,
-             const ptr_vector& expressions){
+             const ptr_vector& expressions,
+             const BasicObjectPtr& binding){
   BasicObjectPtr obj = BasicObject::New(
-      new SRUProc(varg,retval,expressions));
+      new SRUProc(varg,retval,expressions,binding));
   Initialize(obj);
   return obj;
 }

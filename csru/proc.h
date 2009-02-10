@@ -16,9 +16,11 @@ namespace sru {
 
 class Proc : public Value{
  public:
-  static BasicObjectPtr New(const std::vector<std::string>& varg,
+  static BasicObjectPtr New(
+             const std::vector<std::string>& varg,
              const std::string& retval,
-             const ptr_vector& expressions);
+             const ptr_vector& expressions,
+             const BasicObjectPtr& binding);
   virtual void Call(const ptr_vector& arg) = 0;
  protected:
   static void Initialize(const BasicObjectPtr& ptr);

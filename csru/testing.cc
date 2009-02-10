@@ -16,11 +16,11 @@ using namespace sru_test;
 using namespace std;
 
 struct TestCollection::Impl {
-  map<string,TestCase *>  tests;
+  Impl():tests(){}
+  map<string,TestCase *> tests;
 };
 
-TestCollection::TestCollection() {
-  pimpl = new Impl();
+TestCollection::TestCollection():pimpl(new Impl()){
 }
 
 TestCollection::~TestCollection(){

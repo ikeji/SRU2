@@ -44,6 +44,7 @@ class TestCase {
     // If I make instance of TestCase. The case add to TestCollection.
     TestCollection::Instance()->AddTestCase(name,this);
   }
+  virtual ~TestCase(){};
   virtual void operator()() = 0;
 };
 

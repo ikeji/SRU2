@@ -8,7 +8,7 @@ CXXFLAGS = -g -O0 -Wall -Werror -Weffc++
 
 all: sru sru_test tags
 
-test: sru_test tags
+test: all
 	./sru_test
 
 sru: $(OBJS) main.o

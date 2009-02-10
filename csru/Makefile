@@ -2,8 +2,8 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-OBJS     = basic_object.o object_pool.o library.o string.o class.o
-TESTS    = basic_object_test.o object_pool_test.o library_test.o string_test.o class_test.o
+OBJS     = basic_object.o object_pool.o library.o string.o class.o object_vector.o
+TESTS    = basic_object_test.o object_pool_test.o library_test.o string_test.o class_test.o object_vector_test.o
 CXXFLAGS = -g -Wall -Werror
 
 all: sru sru_test
@@ -33,6 +33,8 @@ library.o: library.h basic_object.h
 library_test.o: testing.h library.h basic_object.h
 object_pool.o: object_pool.h basic_object.h
 object_pool_test.o: testing.h basic_object.h object_pool.h
+object_vector.o: object_vector.h basic_object.h
+object_vector_test.o: testing.h object_vector.h
 string.o: string.h basic_object.h library.h class.h
 string_test.o: testing.h string.h basic_object.h library.h
 testing.o: testing.h

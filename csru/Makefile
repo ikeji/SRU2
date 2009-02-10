@@ -4,7 +4,9 @@
 
 OBJS     = ast.o basic_object.o class.o interpreter.o library.o native_proc.o object_pool.o object_vector.o proc.o stack_frame.o string.o
 TESTS    = ast_test.o basic_object_test.o class_test.o interpreter_test.o library_test.o native_proc_test.o object_pool_test.o object_vector_test.o proc_test.o stack_frame_test.o string_test.o
+GENFILES = testing_ast.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++
+ERB      = erb
 
 all: sru sru_test tags
 
@@ -18,13 +20,19 @@ sru_test: testing.o $(TESTS) $(OBJS)
 	$(CXX) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
-	rm -f *.o sru sru_test *~ Makefile.bak tags
+	rm -f *.o sru sru_test *~ Makefile.bak tags $(GENFILES)
 
-depend: 
+depend: $(GENFILES)
 	makedepend *.cc
 
 tags:
 	ctags *
+
+.SUFFIXES: .h .herb
+
+.herb.h:
+	$(ERB) < $< > $@.tmp
+	mv $@.tmp $@
 
 # DO NOT DELETE
 
@@ -51,7 +59,7 @@ object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
 proc.o: proc.h basic_object.h object_vector.h stack_frame.h interpreter.h
 proc.o: library.h
 proc_test.o: testing.h proc.h basic_object.h object_vector.h ast.h
-proc_test.o: interpreter.h library.h
+proc_test.o: interpreter.h testing_ast.h library.h
 stack_frame.o: stack_frame.h basic_object.h object_vector.h string.h ast.h
 stack_frame.o: proc.h
 stack_frame_test.o: testing.h stack_frame.h basic_object.h object_vector.h

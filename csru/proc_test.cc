@@ -10,10 +10,12 @@
 #include <vector>
 #include "ast.h"
 #include "interpreter.h"
+#include "testing_ast.h"
 #include "library.h"
 
 using namespace std;
 using namespace sru;
+using namespace sru_test;
 
 TEST(Proc_NewTest){
   vector<string> varg;
@@ -85,6 +87,39 @@ TEST(Proc_EvalTest3){
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc2,arg);
   BasicObjectPtr call2 = CallExpression::New(call,arg);
+  cout << dynamic_cast<Expression*>(call2->Data())->Inspect() << endl;
+  assert(dynamic_cast<Expression*>(call2->Data())->Inspect() == 
+         "{(a = Class);{a;};}()()");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
+TEST(Proc_NewEvalTest){
+  // " { Class }() "
+  BasicObjectPtr call = C(P(R("Class")));
+  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+         "{Class;}()");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(call);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
+TEST(Proc_NewEvalTest2){
+  // " {|a| a }(Class) "
+  BasicObjectPtr call = C(P("a",R("a")),R("Class"));
+  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+         "{|a|a;}(Class)");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(call);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
+TEST(Proc_NewEvalTest3){
+  // " { a = Class;{a} }()() "
+  BasicObjectPtr call2 = C(C(P(L("a",R("Class")),P(R("a")))));
   cout << dynamic_cast<Expression*>(call2->Data())->Inspect() << endl;
   assert(dynamic_cast<Expression*>(call2->Data())->Inspect() == 
          "{(a = Class);{a;};}()()");

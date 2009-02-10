@@ -1,0 +1,59 @@
+// Programing Language SRU
+// Copyright(C) 2005-2008 IKeJI
+// 
+
+#include <string>
+#include <vector>
+#include "ast.h"
+#include "object_vector.h"
+
+namespace sru {
+class BasicObjectPtr;
+}
+
+namespace sru_test {
+inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,const std::string& name,const sru::BasicObjectPtr& rv){
+  return sru::LetExpression::New(env,name,rv);
+}
+
+inline sru::BasicObjectPtr L(const std::string& name,const sru::BasicObjectPtr& rv){
+  return sru::LetExpression::New(NULL,name,rv);
+}
+
+inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,const std::string& name){
+  return sru::RefExpression::New(env,name);
+}
+
+inline sru::BasicObjectPtr R(const std::string& name){
+  return sru::RefExpression::New(NULL,name);
+}
+
+<% 10.times do |n| %>
+inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>,
+                      const sru::BasicObjectPtr arg<%= i %><% end %>){
+  sru::ptr_vector arg;
+<% n.times do |i| %>  arg.push_back(arg<%= i %>);
+<% end %>
+  return sru::CallExpression::New(proc,arg);
+}
+<% end %>
+
+<% 3.times do |e| %><% 3.times do |s| %>
+inline sru::BasicObjectPtr P(<% s.times do |i| if i != 0 %>,
+                      <% end %>const std::string& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
+                      <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
+  std::vector<std::string> varg;
+<% s.times do |i| %>  varg.push_back(varg<%= i %>);
+<% end %>
+  sru::ptr_vector expressions;
+<% e.times do |j| %>  expressions.push_back(expression<%= j %>);
+<% end %>
+  return sru::ProcExpression::New(varg,"",expressions);
+}
+<% end %><% end %>
+
+inline sru::BasicObjectPtr S(const std::string& str){
+  return sru::StringExpression::New(str);
+}
+
+}  // namespace sru_test

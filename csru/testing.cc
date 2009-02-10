@@ -27,7 +27,7 @@ TestCollection::~TestCollection(){
   delete pimpl;
 }
 
-void TestCollection::AddTestCase(const string& name, TestCase * test_case){
+void TestCollection::AddTestCase(const string& name,TestCase* test_case){
   pimpl->tests.insert(make_pair(name,test_case));
 }
 

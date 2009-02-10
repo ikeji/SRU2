@@ -3,9 +3,10 @@
 // 
 
 #include "testing.h"
+#include "basic_object.h"
+
 #include <iostream>
 #include <cassert>
-#include "basic_object.h"
 
 using namespace std;
 using namespace sru_test;

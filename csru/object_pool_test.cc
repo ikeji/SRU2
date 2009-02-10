@@ -38,6 +38,7 @@ TEST(ObjectPool_SizeTest){
 }
 
 TEST(ObjectPool_GCTest){
+  assert(ObjectPool::Instance()->Size() == 0);
   // GC test
   BasicObject * obj = BasicObject::New().get();
   BasicObject * obj2 = BasicObject::New().get();
@@ -59,6 +60,7 @@ TEST(ObjectPool_GCTest){
 }
 
 TEST(ObjectPool_RefTest){
+  assert(ObjectPool::Instance()->Size() == 0);
   // RefTest
   BasicObjectPtr p = BasicObject::New();
   BasicObjectPtr p2 = BasicObject::New();
@@ -78,6 +80,7 @@ TEST(ObjectPool_RefTest){
 }
 
 TEST(ObjectPool_ValueTest){
+  assert(ObjectPool::Instance()->Size() == 0);
   // Value Test
   BasicObjectPtr pv = BasicObject::New(new MyValue());
   assert(ObjectPool::Instance()->Size() == 2);

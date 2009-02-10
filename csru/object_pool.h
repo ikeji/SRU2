@@ -32,7 +32,7 @@ class ObjectPool{
   Impl* pimpl;
 
   ObjectPool(const ObjectPool& obj);
-  ObjectPool &operator=(const BasicObject &obj);
+  ObjectPool &operator=(const ObjectPool& obj);
 };
 
 } // namespace allocator

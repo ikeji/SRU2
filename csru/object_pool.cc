@@ -8,13 +8,22 @@
 #include <string>
 #include <vector>
 #include "basic_object.h"
+#include "object_vector.h"
 
 namespace sru {
 namespace allocator {
 
 struct ObjectPool::Impl {
-  std::vector<BasicObject*> allocated;
+  Impl():allocated() {}
+  object_vector allocated;
 };
+
+ObjectPool::ObjectPool() : pimpl(new Impl){
+}
+
+ObjectPool::~ObjectPool(){
+  delete pimpl;
+}
 
 void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
@@ -23,10 +32,10 @@ void ObjectPool::Register(BasicObject * obj){
 void ObjectPool::GarbageCollect(){
  
   // Initialize 
-  std::vector<BasicObject*> root_object;
-  for(std::vector<BasicObject*>::iterator it = pimpl->allocated.begin();
-      it != pimpl->allocated.end();
-      it++) {
+  object_vector root_object;
+  for( object_vector::iterator it = pimpl->allocated.begin();
+       it != pimpl->allocated.end();
+       it++ ){
     if((*it)->GcCounter() > 0){
       root_object.push_back(*it);
     } else {
@@ -35,16 +44,15 @@ void ObjectPool::GarbageCollect(){
   }
 
   // Mark
-  for( std::vector<BasicObject*>::iterator it = root_object.begin();
+  for( object_vector::iterator it = root_object.begin();
        it != root_object.end();
-       it++
-      ){
+       it++ ){
     Mark(*it);
   }
 
   // Sweep
-  for(std::vector<BasicObject*>::iterator it = pimpl->allocated.begin();
-      it != pimpl->allocated.end();
+  for( object_vector::iterator it = pimpl->allocated.begin();
+       it != pimpl->allocated.end();
       ){
     if( (*it)->GcCounter() < 0 ){
       delete *it;
@@ -57,7 +65,7 @@ void ObjectPool::GarbageCollect(){
 
 void ObjectPool::Mark(BasicObject * obj){
   // Marking
-  std::vector<BasicObject*> marking;
+  object_vector marking;
   marking.push_back(obj);
 
   while( !marking.empty() ){
@@ -81,13 +89,6 @@ void ObjectPool::Mark(BasicObject * obj){
 
 int ObjectPool::Size(){
   return pimpl->allocated.size(); 
-}
-
-ObjectPool::ObjectPool() : pimpl(new Impl){
-}
-
-ObjectPool::~ObjectPool(){
-  delete pimpl;
 }
 
 } // namespace allocator

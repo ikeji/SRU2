@@ -14,8 +14,7 @@ using namespace sru::allocator;
 
 class MyValue : public Value{
  public:
-  MyValue(){
-    MyObject = BasicObject::New().get();
+  MyValue():MyObject(BasicObject::New().get()){
     Count++;
   }
   ~MyValue(){
@@ -26,6 +25,9 @@ class MyValue : public Value{
   }
   BasicObject * MyObject;
   static int Count;
+ private:
+  MyValue(const MyValue& obj);
+  MyValue* operator=(const MyValue& obj);
 };
 
 int MyValue::Count;

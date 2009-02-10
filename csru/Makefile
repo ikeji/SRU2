@@ -31,7 +31,7 @@ class.o: class.h basic_object.h
 class_test.o: testing.h class.h basic_object.h
 library.o: library.h basic_object.h
 library_test.o: testing.h library.h basic_object.h
-object_pool.o: object_pool.h basic_object.h
+object_pool.o: object_pool.h basic_object.h object_vector.h
 object_pool_test.o: testing.h basic_object.h object_pool.h
 object_vector.o: object_vector.h basic_object.h
 object_vector_test.o: testing.h object_vector.h

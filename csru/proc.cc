@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
 #include "basic_object.h"
 #include "object_vector.h"
 #include "stack_frame.h"
@@ -60,6 +61,9 @@ BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
 void SRUProc::Call(const ptr_vector& arg){
   BasicObjectPtr old_frame = StackFrame::New();
   StackFrame* frame = dynamic_cast<StackFrame*>(old_frame->Data());
+#ifdef DEBUG
+  cout << "Step in: " << frame << endl;
+#endif
   assert(frame);
   StackFrame* current_frame = dynamic_cast<StackFrame*>(
       Interpreter::Instance()->CurrentStackFrame()->Data());
@@ -67,5 +71,12 @@ void SRUProc::Call(const ptr_vector& arg){
   *frame = *current_frame;
   current_frame->SetUpStack(old_frame);
   current_frame->Setup(Conv(expressions));
-  // TODO: bind varg to new frame.
+  for(unsigned int i=0;i<varg.size();i++){
+    if(i<arg.size()){
+      current_frame->Binding()->Set(varg[i],arg[i]);
+    }else{
+      current_frame->Binding()->Set(
+          varg[i],Library::Instance()->Nil());
+    }
+  } 
 }

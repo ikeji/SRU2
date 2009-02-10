@@ -10,25 +10,26 @@
 #include "ast.h"
 #include "proc.h"
 
+#include <iostream>
 using namespace std;
 using namespace sru;
 
 struct StackFrame::Impl {
   Impl():
     expressions(),
-    tree_it(),
+    tree_it(0),
     operations(),
-    it(),
+    it(0),
     local_stack(),
     binding(BasicObject::New().get()),
     up_frame(NULL)
     {}
 
   object_vector expressions;
-  object_vector::iterator tree_it;
+  unsigned int tree_it;
 
   object_vector operations;
-  object_vector::iterator it;
+  unsigned int it;
 
   object_vector local_stack;
  
@@ -163,19 +164,32 @@ class EvalVisitor : public Visitor{
 };
 
 bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
+#ifdef DEBUG
+  cout << "SetupTree: " <<
+       dynamic_cast<Expression*>(ast->Data())->Inspect() << endl;
+#endif
   local_stack.clear();
   operations.clear();
   TraceVisitor tracer(&operations);
   tracer.VisitTo(ast);
-  it = operations.begin();
+  it = 0;
   return tracer.noerror;
 }
 
 void StackFrame::Setup(const ptr_vector& asts){
+#ifdef DEBUG
+  cout << "Setup: ";
+  for(ptr_vector::const_iterator it = asts.begin();
+      it != asts.end();
+      it++){
+    cout << dynamic_cast<Expression*>((*it)->Data())->Inspect();
+  }
+  cout << endl;
+#endif
   pimpl->expressions = Conv(asts);
-  pimpl->tree_it = pimpl->expressions.begin();
+  pimpl->tree_it = 0;
   pimpl->operations.clear();
-  pimpl->it = pimpl->operations.begin();
+  pimpl->it = 0;
 }
 
 void StackFrame::SetUpStack(BasicObjectPtr obj){
@@ -184,29 +198,32 @@ void StackFrame::SetUpStack(BasicObjectPtr obj){
 
 bool StackFrame::EndOfTrees(){
   return pimpl->up_frame == NULL &&
-         pimpl->expressions.end() == pimpl->tree_it &&
-         pimpl->operations.end() == pimpl->it;
+         pimpl->expressions.size() == pimpl->tree_it &&
+         pimpl->operations.size() == pimpl->it;
 }
 
 bool StackFrame::EvalNode(){
   assert(!EndOfTrees());
-  if(pimpl->operations.end() == pimpl->it){
-    if(pimpl->expressions.end() == pimpl->tree_it){
+  if(pimpl->operations.size() == pimpl->it){
+    if(pimpl->expressions.size() == pimpl->tree_it){
       BasicObjectPtr rv = ReturnValue();
       StackFrame* st = dynamic_cast<StackFrame*>(pimpl->up_frame->Data());
       if(st == NULL)
         return false;
+#ifdef DEBUG
+      cout << "Step Out:" << (void*)st << endl;
+#endif
       *this = *st;
       pimpl->local_stack.push_back(rv.get());
       return true;
     }
-    bool ret = pimpl->SetupTree(*pimpl->tree_it);
-    pimpl->tree_it++;
+    bool ret = pimpl->SetupTree(pimpl->expressions[pimpl->tree_it]);
+    (pimpl->tree_it)++;
     return ret;
   }
   EvalVisitor visit(&(pimpl->local_stack),pimpl->binding);
   // We need step forward before exec each code.
-  BasicObjectPtr cur = *pimpl->it;
+  BasicObjectPtr cur = pimpl->operations[pimpl->it];
   pimpl->it++;
   // Execute immidentry
   Expression* exp = dynamic_cast<Expression*>(cur->Data());
@@ -251,6 +268,7 @@ StackFrame::StackFrame(const StackFrame& obj):pimpl(new Impl()){
   pimpl->tree_it = obj.pimpl->tree_it;
   pimpl->operations = obj.pimpl->operations;
   pimpl->it = obj.pimpl->it;
+  pimpl->binding = obj.pimpl->binding;
   pimpl->local_stack = obj.pimpl->local_stack;
   pimpl->up_frame = obj.pimpl->up_frame;
 }
@@ -262,6 +280,7 @@ StackFrame &StackFrame::operator=(const StackFrame& obj){
   pimpl->tree_it = obj.pimpl->tree_it;
   pimpl->operations = obj.pimpl->operations;
   pimpl->it = obj.pimpl->it;
+  pimpl->binding = obj.pimpl->binding;
   pimpl->local_stack = obj.pimpl->local_stack;
   pimpl->up_frame = obj.pimpl->up_frame;
   return *this;

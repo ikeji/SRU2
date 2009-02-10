@@ -2,26 +2,29 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-OBJS     = basic_object.o object_pool.o library.o string.o class.o object_vector.o
-TESTS    = basic_object_test.o object_pool_test.o library_test.o string_test.o class_test.o object_vector_test.o
-CXXFLAGS = -g -Wall -Werror
+OBJS     = basic_object.o class.o library.o object_pool.o object_vector.o string.o
+TESTS    = basic_object_test.o class_test.o library_test.o object_pool_test.o object_vector_test.o string_test.o
+CXXFLAGS = -g -O0 -Wall -Werror -Weffc++
 
-all: sru sru_test
+all: sru sru_test tags
+
+test: sru_test tags
+	./sru_test
 
 sru: $(OBJS) main.o
 	$(CXX) -g -o sru $(OBJS) main.o
 
-clean:
-	rm -f *.o sru sru_test *~
-
-depend:
-	makedepend *.cc
-
-test: sru_test
-	./sru_test
-
 sru_test: testing.o $(TESTS) $(OBJS)
 	$(CXX) -g -o sru_test $(TESTS) testing.o $(OBJS)
+
+clean:
+	rm -f *.o sru sru_test *~ Makefile.bak tags
+
+depend: 
+	makedepend *.cc
+
+tags:
+	ctags *
 
 # DO NOT DELETE
 

@@ -32,9 +32,7 @@ void TestCollection::AddTestCase(const string& name,TestCase* test_case){
 }
 
 int TestCollection::RunAllTests(const string& prog){
-  // Number of all tests.
-  const int all_tests = pimpl->tests.size();
-  int collect_tests = 0;
+  vector<string> fail_tests;
 
   // For all tests.
   for( map<string,TestCase*>::iterator it = pimpl->tests.begin();
@@ -47,17 +45,27 @@ int TestCollection::RunAllTests(const string& prog){
     int ret = system((prog + " " + it->first).c_str());
     // check test result in proess result code.
     if(ret == 0){
-      collect_tests++;
       cout << "TEST PASSED:" << it->first << endl;
     } else {
       cout << "TEST FAILED:" << it->first << endl;
+      fail_tests.push_back(it->first);
     }
   }
-  if(all_tests == collect_tests)
-    cout << "ALL TESTS PASSED" << endl;
-  else
-    cout << (all_tests - collect_tests) << "/" << all_tests << " TEST(S) FAILED!!!!" << endl;
-  return collect_tests - all_tests;
+  if(fail_tests.empty()){
+    cout << "----- ALL TESTS PASSED -----" << endl;
+  }else{
+    cout << "FAILED:";
+    for(vector<string>::iterator it = fail_tests.begin();
+        it != fail_tests.end();
+        it++){
+      cout << *it << " ";
+    }
+    cout << endl;
+    cout << "----- " << fail_tests.size() << "/" <<
+        pimpl->tests.size() << " TEST(S) FAILED!!!! -----" << endl;
+  }
+  
+  return(- fail_tests.size());
 }
 
 int TestCollection::RunTest(const string& name){

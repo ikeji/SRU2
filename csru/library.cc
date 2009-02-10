@@ -10,7 +10,7 @@ using namespace sru;
 struct Library::Impl {
   Impl():
       Nil(),
-      Frame(),
+      Binding(),
       Class(),
       Object(),
       Proc(),
@@ -23,7 +23,7 @@ struct Library::Impl {
       False() {}
      
   BasicObjectPtr Nil;
-  BasicObjectPtr Frame;
+  BasicObjectPtr Binding;
   BasicObjectPtr Class;
   BasicObjectPtr Object;
   BasicObjectPtr Proc;
@@ -40,7 +40,7 @@ struct Library::Impl {
 
 BasicObjectPtr Library::Nil(){ return pimpl->Nil; }
 
-BasicObjectPtr Library::Frame(){ return pimpl->Frame; }
+BasicObjectPtr Library::Binding(){ return pimpl->Binding; }
 
 BasicObjectPtr Library::Class(){ return pimpl->Class; }
 BasicObjectPtr Library::Object(){ return pimpl->Object; }
@@ -69,7 +69,7 @@ Library::~Library(){
 void Library::Impl::initialiseInteralClasses(){
   // Set new objects
   Nil = BasicObject::New();
-  Frame = BasicObject::New();
+  Binding = BasicObject::New();
   Class = BasicObject::New();
   Object = BasicObject::New();
   Proc = BasicObject::New();
@@ -87,7 +87,7 @@ void Library::Impl::initialiseInteralClasses(){
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set("nil",Instance()->Nil());
-  frame->Set("Frame",Instance()->Frame());
+  frame->Set("Binding",Instance()->Binding());
   frame->Set("Class",Instance()->Class());
   frame->Set("Object",Instance()->Object());
   frame->Set("Proc",Instance()->Proc());

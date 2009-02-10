@@ -10,7 +10,7 @@ using namespace sru;
 
 TEST(Library_GetPtrTest){
   assert(Library::Instance()->Nil().get());
-  assert(Library::Instance()->Frame().get());
+  assert(Library::Instance()->Binding().get());
   assert(Library::Instance()->Class().get());
   assert(Library::Instance()->Object().get());
   assert(Library::Instance()->Proc().get());

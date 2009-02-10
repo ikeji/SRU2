@@ -20,8 +20,8 @@ class Library {
   // Nil is zen
   BasicObjectPtr Nil();
 
-  // Class of Frame system
-  BasicObjectPtr Frame();
+  // Class of Binding system
+  BasicObjectPtr Binding();
 
   // Default Class System
   BasicObjectPtr Class();

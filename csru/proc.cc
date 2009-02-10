@@ -10,11 +10,17 @@
 #include "object_vector.h"
 #include "stack_frame.h"
 #include "interpreter.h"
+#include "library.h"
 
 using namespace sru;
 using namespace std;
 
 namespace sru{
+
+void Proc::Initialize(const BasicObjectPtr& obj){
+  obj->Set("class", Library::Instance()->Proc());
+}
+
 class SRUProc : public Proc{
  public:
   SRUProc(const vector<string>& varg,
@@ -35,8 +41,10 @@ class SRUProc : public Proc{
 BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
              const std::string& retval,
              const ptr_vector& expressions){
-  return BasicObject::New(new SRUProc(
-        varg,retval,expressions));
+  BasicObjectPtr obj = BasicObject::New(
+      new SRUProc(varg,retval,expressions));
+  Initialize(obj);
+  return obj;
 }
 
 void SRUProc::Call(const ptr_vector& arg){

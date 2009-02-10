@@ -196,9 +196,13 @@ bool StackFrame::EvalNode(){
   return true;
 }
 
-BasicObject* StackFrame::ReturnValue(){
+BasicObjectPtr StackFrame::ReturnValue(){
   assert(pimpl->local_stack.size() > 0);
   return pimpl->local_stack.back();
+}
+
+void StackFrame::PushResult(const BasicObjectPtr& obj){
+  pimpl->local_stack.push_back(obj.get());
 }
 
 void MarkVector(object_vector* v){

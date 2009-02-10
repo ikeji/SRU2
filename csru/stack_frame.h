@@ -26,7 +26,8 @@ class StackFrame : public Value{
   void SetUpStack(BasicObjectPtr obj);
   bool EndOfTrees();
   bool EvalNode();
-  BasicObject* ReturnValue();
+  BasicObjectPtr ReturnValue();
+  void PushResult(const BasicObjectPtr& ptr);
 
   void Mark();
 

@@ -10,6 +10,7 @@
 #include "basic_object.h"
 #include "object_vector.h"
 #include "stack_frame.h"
+#include "binding.h"
 #include "interpreter.h"
 #include "library.h"
 
@@ -69,17 +70,24 @@ void SRUProc::Call(const ptr_vector& arg){
       Interpreter::Instance()->CurrentStackFrame()->Data());
   assert(current_frame);
   *frame = *current_frame;
+  current_frame->SetBinding(Binding::New(binding));
   current_frame->SetUpStack(old_frame);
   current_frame->Setup(Conv(expressions));
   for(unsigned int i=0;i<varg.size();i++){
     if(i<arg.size()){
+#ifdef DEBUG
       cout << "Bind-arg: " << varg[i] << " = " << arg[i]->Inspect() << endl;
+#endif
       current_frame->Binding()->Set(varg[i],arg[i]);
     }else{
+#ifdef DEBUG
       cout << "Bind-arg: " << varg[i] << " = Nil" << endl;
+#endif
       current_frame->Binding()->Set(
           varg[i],Library::Instance()->Nil());
     }
   }
+#ifdef DEBUG
   cout << "Currend-Binding: " << current_frame->Binding()->Inspect() << endl;
+#endif
 }

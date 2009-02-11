@@ -2,8 +2,8 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-OBJS     = ast.o basic_object.o class.o interpreter.o library.o native_proc.o object_pool.o object_vector.o proc.o stack_frame.o string.o
-TESTS    = ast_test.o basic_object_test.o class_test.o interpreter_test.o library_test.o native_proc_test.o object_pool_test.o object_vector_test.o proc_test.o stack_frame_test.o string_test.o
+OBJS     = ast.o basic_object.o binding.o class.o interpreter.o library.o native_proc.o object_pool.o object_vector.o proc.o stack_frame.o string.o
+TESTS    = ast_test.o basic_object_test.o binding_test.o class_test.o interpreter_test.o library_test.o native_proc_test.o object_pool_test.o object_vector_test.o proc_test.o stack_frame_test.o string_test.o
 GENFILES = testing_ast.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ -DDEBUG
 ERB      = erb
@@ -40,6 +40,9 @@ ast.o: ast.h basic_object.h object_vector.h
 ast_test.o: testing.h ast.h basic_object.h object_vector.h
 basic_object.o: basic_object.h object_pool.h
 basic_object_test.o: testing.h basic_object.h
+binding.o: binding.h basic_object.h library.h
+binding_test.o: testing.h testing_ast.h ast.h basic_object.h object_vector.h
+binding_test.o: interpreter.h library.h
 class.o: class.h basic_object.h
 class_test.o: testing.h class.h basic_object.h
 interpreter.o: interpreter.h ast.h basic_object.h object_vector.h
@@ -56,12 +59,12 @@ object_pool.o: object_pool.h basic_object.h object_vector.h
 object_pool_test.o: testing.h basic_object.h object_pool.h
 object_vector.o: object_vector.h basic_object.h
 object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
-proc.o: proc.h basic_object.h object_vector.h stack_frame.h interpreter.h
-proc.o: library.h
+proc.o: proc.h basic_object.h object_vector.h stack_frame.h binding.h
+proc.o: library.h interpreter.h
 proc_test.o: testing.h proc.h basic_object.h object_vector.h ast.h
 proc_test.o: interpreter.h testing_ast.h library.h
 stack_frame.o: stack_frame.h basic_object.h object_vector.h string.h ast.h
-stack_frame.o: proc.h
+stack_frame.o: proc.h library.h binding.h
 stack_frame_test.o: testing.h stack_frame.h basic_object.h object_vector.h
 stack_frame_test.o: ast.h
 string.o: string.h basic_object.h library.h class.h

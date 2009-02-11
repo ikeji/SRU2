@@ -3,14 +3,17 @@
 // 
 
 #include "stack_frame.h"
-#include "object_vector.h"
+
+#include <iostream>
 #include <vector>
+#include "object_vector.h"
 #include "basic_object.h"
 #include "string.h"
 #include "ast.h"
 #include "proc.h"
+#include "library.h"
+#include "binding.h"
 
-#include <iostream>
 using namespace std;
 using namespace sru;
 
@@ -114,7 +117,20 @@ class EvalVisitor : public Visitor{
     }else{
       env = binding;
     }
-    env->Set(exp->Name(),rightValue);
+
+    // find slot
+    BasicObjectPtr e = env;
+    while(!(e->HasSlot(exp->Name()))){
+      if(! e->HasSlot(PARENT_SCOPE)) break;
+      e = e->Get(PARENT_SCOPE);
+    }
+    if(e->HasSlot(exp->Name())){
+      // if found exist slot, use the slot.
+      e->Set(exp->Name(),rightValue);
+    }else{
+      // if not found exist slot, use current frame's enviroment.
+      env->Set(exp->Name(),rightValue);
+    }
     Push(rightValue);
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
@@ -124,7 +140,19 @@ class EvalVisitor : public Visitor{
     }else{
       env = binding;
     }
-    Push(env->Get(exp->Name()));
+    // find slot
+    BasicObjectPtr e = env;
+    while(!(e->HasSlot(exp->Name()))){
+      if(! e->HasSlot(PARENT_SCOPE)) break;
+      e = e->Get(PARENT_SCOPE);
+    }
+    if(e->HasSlot(exp->Name())){
+      // if found exist slot
+      Push(e->Get(exp->Name()));
+    }else{
+      // if not found exist slot
+      Push(Library::Instance()->Nil());
+    }
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
     // Get arg value from stack, but it on reverse order.

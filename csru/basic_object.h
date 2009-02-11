@@ -57,11 +57,15 @@ class BasicObject {
 
   // Setting or getting from this object's slot.
   void Set(const std::string& name,BasicObjectPtr ref){
-    fields.insert(std::make_pair(name,ref.get()));
+    fields[name] = ref.get();
   }
   BasicObjectPtr Get(const std::string& name){
+    assert(fields.find(name) != fields.end());
     return BasicObjectPtr(fields[name]);
   };
+  bool HasSlot(const std::string& name){
+    return (fields.find(name) != fields.end());
+  }
   const std::map<std::string,BasicObject *>& Fields() const{
     return fields;
   }
@@ -72,14 +76,14 @@ class BasicObject {
   void SetGcCounter(int i) { gc_counter = i; }
   void IncrementGcCounter() {
     gc_counter++; 
-#ifdef DEBUG
+#ifdef DEBUG2
     std::cout <<"inc:" << Inspect() << " -> " << gc_counter << std::endl;
 #endif
   }
   void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
-#ifdef DEBUG
+#ifdef DEBUG2
     std::cout <<"dec:" << Inspect() << " -> " << gc_counter << std::endl;
 #endif
   }

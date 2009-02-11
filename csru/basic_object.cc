@@ -4,9 +4,13 @@
 #include "basic_object.h"
 
 #include <string>
+#include <map>
+#include <iostream>
+#include <sstream>
 #include "object_pool.h"
 
 using namespace sru;
+using namespace std;
 
 BasicObjectPtr BasicObject::New(){
   BasicObjectPtr obj = new BasicObject();
@@ -26,6 +30,26 @@ void BasicObject::Mark(){
  
 BasicObject::BasicObject(): fields(),gc_counter(0),data(NULL){
   fields.clear();
+}
+
+string BasicObject::Inspect(int limit){
+  string r;
+  if(Data()) r = Data()->Inspect();
+  if(r.empty()){
+    ostringstream s;
+    s << "<basic_object(" << this << ") ";
+    if(limit > (int)s.str().size()){
+      for(map<string,BasicObject*>::iterator it = fields.begin();
+          it != fields.end();
+          it++){
+        if(it != fields.begin()) s << ", ";
+        s << it->first << ":" << it->second->Inspect(limit-s.str().size());
+      }
+    }
+    s << ">";
+    r = s.str();
+  }
+  return r;
 }
 
 BasicObject::~BasicObject(){

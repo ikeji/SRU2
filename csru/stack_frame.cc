@@ -211,7 +211,7 @@ bool StackFrame::EvalNode(){
       if(st == NULL)
         return false;
 #ifdef DEBUG
-      cout << "Step Out:" << (void*)st << endl;
+      cout << "Step Out:" << pimpl->up_frame->Inspect() << endl;
 #endif
       *this = *st;
       pimpl->local_stack.push_back(rv.get());

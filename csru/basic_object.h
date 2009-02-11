@@ -73,21 +73,22 @@ class BasicObject {
   void IncrementGcCounter() {
     gc_counter++; 
 #ifdef DEBUG
-    std::cout <<"inc:" << (int)this << "->" << gc_counter << std::endl;
+    std::cout <<"inc:" << Inspect() << " -> " << gc_counter << std::endl;
 #endif
   }
   void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
 #ifdef DEBUG
-    std::cout <<"dec:" << (int)this << "->" << gc_counter << std::endl;
+    std::cout <<"dec:" << Inspect() << " -> " << gc_counter << std::endl;
 #endif
   }
 
   Value* Data(){ return data; }
   void SetData(Value* dat){ data = dat; }
-  ~BasicObject();
+  std::string Inspect(int limit=100);
 
+  ~BasicObject();
  private:
   BasicObject();
   
@@ -104,6 +105,7 @@ class Value {
   Value(){}
   virtual ~Value(){}
   virtual void Mark(){}
+  virtual std::string Inspect(){ return ""; }
 };
 
 

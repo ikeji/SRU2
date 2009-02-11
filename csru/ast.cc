@@ -13,7 +13,7 @@ using namespace sru;
 using namespace std;
 
 string InspectExpression(BasicObjectPtr obj){
-  return dynamic_cast<Expression*>(obj->Data())->Inspect();
+  return dynamic_cast<Expression*>(obj->Data())->InspectAST();
 }
 
 /* -------------------- LetExpression -------------------- */
@@ -52,7 +52,7 @@ void LetExpression::Mark(){
   pimpl->rightvalue->Mark();
 }
 
-string LetExpression::Inspect(){
+string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
   if(pimpl->env){
     return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name +
@@ -91,7 +91,7 @@ void RefExpression::Mark(){
   pimpl->env->Mark();
 }
 
-string RefExpression::Inspect(){
+string RefExpression::InspectAST(){
   if(pimpl->env){
     return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name;
   }else{
@@ -133,7 +133,7 @@ void CallExpression::Mark(){
   }
 }
 
-string CallExpression::Inspect(){
+string CallExpression::InspectAST(){
   string result = "";
   object_vector::iterator it = pimpl->arg.begin();
   while(true){
@@ -184,7 +184,7 @@ void ProcExpression::Mark(){
   }
 }
 
-string ProcExpression::Inspect(){
+string ProcExpression::InspectAST(){
   string argv = "";
   vector<string>::iterator i = pimpl->varg.begin();
   while(true){
@@ -227,6 +227,6 @@ const string& StringExpression::String(){
   return pimpl->str;
 }
 
-string StringExpression::Inspect(){
+string StringExpression::InspectAST(){
   return string("\"") + pimpl->str + "\"";
 }

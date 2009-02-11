@@ -62,7 +62,7 @@ void SRUProc::Call(const ptr_vector& arg){
   BasicObjectPtr old_frame = StackFrame::New();
   StackFrame* frame = dynamic_cast<StackFrame*>(old_frame->Data());
 #ifdef DEBUG
-  cout << "Step in: " << frame << endl;
+  cout << "Step in: " << old_frame->Inspect() << endl;
 #endif
   assert(frame);
   StackFrame* current_frame = dynamic_cast<StackFrame*>(
@@ -73,10 +73,13 @@ void SRUProc::Call(const ptr_vector& arg){
   current_frame->Setup(Conv(expressions));
   for(unsigned int i=0;i<varg.size();i++){
     if(i<arg.size()){
+      cout << "Bind-arg: " << varg[i] << " = " << arg[i]->Inspect() << endl;
       current_frame->Binding()->Set(varg[i],arg[i]);
     }else{
+      cout << "Bind-arg: " << varg[i] << " = Nil" << endl;
       current_frame->Binding()->Set(
           varg[i],Library::Instance()->Nil());
     }
-  } 
+  }
+  cout << "Currend-Binding: " << current_frame->Binding()->Inspect() << endl;
 }

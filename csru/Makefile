@@ -5,7 +5,7 @@
 OBJS     = ast.o basic_object.o class.o interpreter.o library.o native_proc.o object_pool.o object_vector.o proc.o stack_frame.o string.o
 TESTS    = ast_test.o basic_object_test.o class_test.o interpreter_test.o library_test.o native_proc_test.o object_pool_test.o object_vector_test.o proc_test.o stack_frame_test.o string_test.o
 GENFILES = testing_ast.h
-CXXFLAGS = -g -O0 -Wall -Werror -Weffc++
+CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ -DDEBUG
 ERB      = erb
 
 all: sru sru_test tags

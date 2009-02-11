@@ -35,8 +35,8 @@ TEST(Proc_EvalTest){
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc,arg);
-  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->InspectAST() == 
          "{Class;}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -56,8 +56,8 @@ TEST(Proc_EvalTest2){
   ptr_vector arg;
   arg.push_back(ref2);
   BasicObjectPtr call = CallExpression::New(proc,arg);
-  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->InspectAST() == 
          "{|a|a;}(Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -87,8 +87,8 @@ TEST(Proc_EvalTest3){
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc2,arg);
   BasicObjectPtr call2 = CallExpression::New(call,arg);
-  cout << dynamic_cast<Expression*>(call2->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call2->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call2->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call2->Data())->InspectAST() == 
          "{(a = Class);{a;};}()()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());
@@ -98,8 +98,8 @@ TEST(Proc_EvalTest3){
 TEST(Proc_NewEvalTest){
   // " { Class }() "
   BasicObjectPtr call = C(P(R("Class")));
-  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->InspectAST() == 
          "{Class;}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -109,8 +109,8 @@ TEST(Proc_NewEvalTest){
 TEST(Proc_NewEvalTest2){
   // " {|a| a }(Class) "
   BasicObjectPtr call = C(P("a",R("a")),R("Class"));
-  cout << dynamic_cast<Expression*>(call->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call->Data())->InspectAST() == 
          "{|a|a;}(Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -120,8 +120,8 @@ TEST(Proc_NewEvalTest2){
 TEST(Proc_NewEvalTest3){
   // " { a = Class;{a} }()() "
   BasicObjectPtr call2 = C(C(P(L("a",R("Class")),P(R("a")))));
-  cout << dynamic_cast<Expression*>(call2->Data())->Inspect() << endl;
-  assert(dynamic_cast<Expression*>(call2->Data())->Inspect() == 
+  cout << dynamic_cast<Expression*>(call2->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(call2->Data())->InspectAST() == 
          "{(a = Class);{a;};}()()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());

@@ -96,6 +96,6 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set("String",Instance()->String());
   frame->Set("Number",Instance()->Number());
   frame->Set("Boolean",Instance()->Boolean());
-  frame->Set("True",Instance()->True());
-  frame->Set("False",Instance()->False());
+  frame->Set("true",Instance()->True());
+  frame->Set("false",Instance()->False());
 }

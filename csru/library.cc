@@ -3,7 +3,9 @@
 // 
 
 #include "library.h"
+
 #include "basic_object.h"
+#include "object.h"
 
 using namespace sru;
 
@@ -56,11 +58,15 @@ BasicObjectPtr Library::False(){ return pimpl->False; }
 
 Library* Library::Instance(){
   static Library inst;
+  static bool initialized = false;
+  if(!initialized){
+    initialized = true;
+    inst.pimpl->initialiseInteralClasses();
+  }
   return &inst;
 }
 
 Library::Library():pimpl(new Impl()){
-  pimpl->initialiseInteralClasses();
 }
 Library::~Library(){
   delete pimpl;
@@ -83,6 +89,7 @@ void Library::Impl::initialiseInteralClasses(){
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
+  InitializeObjectClass(Object);
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

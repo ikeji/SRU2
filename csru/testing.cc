@@ -4,7 +4,6 @@
 
 #include "testing.h"
 
-#include <algorithom>
 #include <cassert>
 #include <cstdlib>
 #include <iostream>

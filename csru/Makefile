@@ -8,16 +8,25 @@ GENFILES = testing_ast.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ -DDEBUG
 ERB      = erb
 
-all: sru sru_test tags
+ifeq ($(findstring CYGWIN_NT,$(SYSTEM)),CYGWIN_NT)
+  # g++-4 doesn't support mingw now. use g++-3
+  CXX      = g++-3
+  # g++-3 doesn't work with -Weffc++
+  CXXFLAGS = -g -O0 -Wall -Werror -DDEBUG -mno-cygwin -I/usr/include/mingw
+  LDFLAGS  = -mno-cygwin -L/usr/lib/mingw
+else
+endif
+
+all: sru sru_test
 
 test: all
 	./sru_test
 
 sru: $(OBJS) main.o
-	$(CXX) -g -o sru $(OBJS) main.o
+	$(CXX) $(LDFLAGS) -g -o sru $(OBJS) main.o
 
 sru_test: testing.o $(TESTS) $(OBJS)
-	$(CXX) -g -o sru_test $(TESTS) testing.o $(OBJS)
+	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
 	rm -f *.o sru sru_test *~ Makefile.bak tags $(GENFILES)

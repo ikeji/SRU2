@@ -8,7 +8,7 @@ GENFILES = testing_ast.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ -DDEBUG
 ERB      = erb
 
-ifeq ($(findstring CYGWIN_NT,$(SYSTEM)),CYGWIN_NT)
+ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-4 doesn't support mingw now. use g++-3
   CXX      = g++-3
   # g++-3 doesn't work with -Weffc++

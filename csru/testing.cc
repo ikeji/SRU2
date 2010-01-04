@@ -42,7 +42,7 @@ int TestCollection::RunAllTests(const string& prog){
 
     // Execute test as child process.
     // So we can continue to test at assert or other runtime error.
-    int ret = system((prog + " " + it->first).c_str());
+    int ret = system(("\"" + prog + "\" " + it->first).c_str());
     // check test result in proess result code.
     if(ret == 0){
       cout << "TEST PASSED:" << it->first << endl;

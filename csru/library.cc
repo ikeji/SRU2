@@ -19,7 +19,7 @@ struct Library::Impl {
       Array(),
       Hash(),
       String(),
-      Number(),
+      Numeric(),
       Boolean(),
       True(),
       False() {}
@@ -32,7 +32,7 @@ struct Library::Impl {
   BasicObjectPtr Array;
   BasicObjectPtr Hash;
   BasicObjectPtr String;
-  BasicObjectPtr Number;
+  BasicObjectPtr Numeric;
   BasicObjectPtr Boolean;
   BasicObjectPtr True;
   BasicObjectPtr False;
@@ -51,7 +51,7 @@ BasicObjectPtr Library::Proc(){ return pimpl->Proc; }
 BasicObjectPtr Library::Array(){ return pimpl->Array; }
 BasicObjectPtr Library::Hash(){ return pimpl->Hash; }
 BasicObjectPtr Library::String(){ return pimpl->String; }
-BasicObjectPtr Library::Number(){ return pimpl->Number; }
+BasicObjectPtr Library::Numeric(){ return pimpl->Numeric; }
 BasicObjectPtr Library::Boolean(){ return pimpl->Boolean; }
 BasicObjectPtr Library::True(){ return pimpl->True; }
 BasicObjectPtr Library::False(){ return pimpl->False; }
@@ -82,7 +82,7 @@ void Library::Impl::initialiseInteralClasses(){
   Array = BasicObject::New();
   Hash = BasicObject::New();
   String = BasicObject::New();
-  Number = BasicObject::New();
+  Numeric = BasicObject::New();
   Boolean = BasicObject::New();
   True = BasicObject::New();
   False = BasicObject::New();
@@ -101,7 +101,7 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set("Array",Instance()->Array());
   frame->Set("Hash",Instance()->Hash());
   frame->Set("String",Instance()->String());
-  frame->Set("Number",Instance()->Number());
+  frame->Set("Numeric",Instance()->Numeric());
   frame->Set("Boolean",Instance()->Boolean());
   frame->Set("true",Instance()->True());
   frame->Set("false",Instance()->False());

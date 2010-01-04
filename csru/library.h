@@ -32,7 +32,7 @@ class Library {
   BasicObjectPtr Array();
   BasicObjectPtr Hash();
   BasicObjectPtr String();
-  BasicObjectPtr Number();
+  BasicObjectPtr Numeric();
   BasicObjectPtr Boolean();
   BasicObjectPtr True();
   BasicObjectPtr False();

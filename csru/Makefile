@@ -2,8 +2,38 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-OBJS     = ast.o basic_object.o binding.o class.o interpreter.o library.o native_proc.o object_pool.o object_vector.o proc.o stack_frame.o string.o object.o
-TESTS    = ast_test.o basic_object_test.o binding_test.o class_test.o interpreter_test.o library_test.o native_proc_test.o object_pool_test.o object_vector_test.o proc_test.o stack_frame_test.o string_test.o object_test.o
+OBJS     = \
+ast.o \
+basic_object.o \
+binding.o \
+class.o \
+interpreter.o \
+library.o \
+native_proc.o \
+numeric.o \
+object_pool.o \
+object_vector.o \
+proc.o \
+stack_frame.o \
+string.o \
+object.o \
+
+TESTS    = \
+ast_test.o \
+basic_object_test.o \
+binding_test.o \
+class_test.o \
+interpreter_test.o \
+library_test.o \
+native_proc_test.o \
+numeric_test.o \
+object_pool_test.o \
+object_vector_test.o \
+proc_test.o \
+stack_frame_test.o \
+string_test.o \
+object_test.o \
+
 GENFILES = testing_ast.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ -DDEBUG
 ERB      = erb
@@ -64,6 +94,8 @@ native_proc.o: native_proc.h proc.h basic_object.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h
 native_proc_test.o: testing.h native_proc.h proc.h basic_object.h
 native_proc_test.o: object_vector.h library.h stack_frame.h interpreter.h
+numeric.o: numeric.h basic_object.h library.h class.h
+numeric_test.o: testing.h numeric.h basic_object.h library.h
 object.o: object.h basic_object.h string.h
 object_pool.o: object_pool.h basic_object.h object_vector.h
 object_pool_test.o: testing.h basic_object.h object_pool.h

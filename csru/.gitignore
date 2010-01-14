@@ -2,3 +2,5 @@
 *.exe
 tags
 testing_ast.h
+sru
+sru_test

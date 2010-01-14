@@ -31,6 +31,7 @@ class SRUProc : public Proc{
           const BasicObjectPtr& binding):
       varg(varg),
       retval(retval),
+      // TODO: Check expressions are instance of AST.
       expressions(Conv(expressions)),
       binding(binding.get()){
   }

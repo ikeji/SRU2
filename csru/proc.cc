@@ -99,7 +99,7 @@ void SRUProc::Call(const ptr_vector& arg){
   assert(current_frame);
   *frame = *current_frame;
   current_frame->SetBinding(Binding::New(binding));
-  current_frame->SetUpStack(old_frame);
+  current_frame->SetUpperStack(old_frame);
   current_frame->Setup(Conv(expressions));
   for(unsigned int i=0;i<varg.size();i++){
     if(i<arg.size()){

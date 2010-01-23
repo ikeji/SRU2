@@ -25,7 +25,7 @@ struct StackFrame::Impl {
     it(0),
     local_stack(),
     binding(BasicObject::New().get()),
-    up_frame(NULL)
+    upper_frame(NULL)
     {}
 
   object_vector expressions;
@@ -37,7 +37,7 @@ struct StackFrame::Impl {
   object_vector local_stack;
  
   BasicObject* binding; 
-  BasicObject* up_frame;
+  BasicObject* upper_frame;
 
   bool SetupTree(BasicObjectPtr ast);
  private:
@@ -258,15 +258,15 @@ void StackFrame::Setup(const ptr_vector& asts){
   pimpl->it = 0;
 }
 
-void StackFrame::SetUpStack(BasicObjectPtr obj){
+void StackFrame::SetUpperStack(BasicObjectPtr obj){
 #ifdef DEBUG
-  cout << "SetUpStack" << endl;
+  cout << "SetUpperStack" << endl;
 #endif
-  pimpl->up_frame = obj.get();
+  pimpl->upper_frame = obj.get();
 }
 
 bool StackFrame::EndOfTrees(){
-  return pimpl->up_frame == NULL &&
+  return pimpl->upper_frame == NULL &&
          pimpl->expressions.size() == pimpl->tree_it &&
          pimpl->operations.size() == pimpl->it;
 }
@@ -285,11 +285,11 @@ bool StackFrame::EvalNode(){
       cout << "LastExpression" << endl;
 #endif
       BasicObjectPtr rv = ReturnValue();
-      StackFrame* st = dynamic_cast<StackFrame*>(pimpl->up_frame->Data());
+      StackFrame* st = dynamic_cast<StackFrame*>(pimpl->upper_frame->Data());
       if(st == NULL)
         return false;
 #ifdef DEBUG
-      cout << "Step Out:" << pimpl->up_frame->Inspect() << endl;
+      cout << "Step Out:" << pimpl->upper_frame->Inspect() << endl;
 #endif
       *this = *st;
       pimpl->local_stack.push_back(rv.get());
@@ -353,7 +353,7 @@ StackFrame::StackFrame(const StackFrame& obj):pimpl(new Impl()){
   pimpl->it = obj.pimpl->it;
   pimpl->binding = obj.pimpl->binding;
   pimpl->local_stack = obj.pimpl->local_stack;
-  pimpl->up_frame = obj.pimpl->up_frame;
+  pimpl->upper_frame = obj.pimpl->upper_frame;
 }
 
 StackFrame &StackFrame::operator=(const StackFrame& obj){
@@ -365,7 +365,7 @@ StackFrame &StackFrame::operator=(const StackFrame& obj){
   pimpl->it = obj.pimpl->it;
   pimpl->binding = obj.pimpl->binding;
   pimpl->local_stack = obj.pimpl->local_stack;
-  pimpl->up_frame = obj.pimpl->up_frame;
+  pimpl->upper_frame = obj.pimpl->upper_frame;
   return *this;
 }
 

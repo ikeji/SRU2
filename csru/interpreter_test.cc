@@ -95,6 +95,61 @@ TEST(Interpreter_LetExpressionTest){
   assert(r == Library::Instance()->Class());
 }
 
+TEST(Interpreter_StringExpressionRegTest){
+  cout << "TODO: enable this test after imprement Parser object" << endl;
+  return;
+  string str = "Hello";
+  string code = "\"Hello\"";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  string rstr = SRUString::GetValue(r.get());
+  if(!( str == rstr) ){
+    cout << "str:"  << str  << endl;
+    cout << "rstr:" << rstr << endl;
+  }
+  assert(str == rstr);
+}
+
+TEST(Interpreter_ComplexExpressionRegTest){
+  cout << "TODO: enable this test after imprement Parser object" << endl;
+  return;
+  string str = "Hello";
+  string code = "{ \"Hello\" }()";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  string rstr = SRUString::GetValue(r.get());
+  if(!( str == rstr) ){
+    cout << "str:"  << str  << endl;
+    cout << "rstr:" << rstr << endl;
+  }
+  assert(str == rstr);
+}
+
+TEST(Interpreter_RefExpressionRegTest){
+  cout << "TODO: enable this test after imprement Parser object" << endl;
+  return;
+  // " Class "
+  string code = " Class ";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
+TEST(Interpreter_LetExpressionRegTest){
+  cout << "TODO: enable this test after imprement Parser object" << endl;
+  return;
+  // " hoge = Class "
+  string code = " hoge = Class ";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+  // " hoge "
+  code = " hoge ";
+  r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(r == Library::Instance()->Class());
+}
+
 TEST(Interpreter_EvalCallExpressionRegTest){
   // NOTE: I found bug in stack_frame.cc .
   // (Numeric).parse((Numeric), "10")

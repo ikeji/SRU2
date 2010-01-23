@@ -38,23 +38,23 @@ int TestCollection::RunAllTests(const string& prog){
   for( map<string,TestCase*>::iterator it = pimpl->tests.begin();
        it != pimpl->tests.end();
        it++ ){
-    cout << "TEST       :" << it->first << endl;
+    cout << "TEST       : " << it->first << endl;
 
     // Execute test as child process.
     // So we can continue to test at assert or other runtime error.
     int ret = system(("\"" + prog + "\" " + it->first).c_str());
     // check test result in proess result code.
     if(ret == 0){
-      cout << "TEST PASSED:" << it->first << endl;
+      cout << "TEST PASSED: " << it->first << endl;
     } else {
-      cout << "TEST FAILED:" << it->first << endl;
+      cout << "TEST FAILED: " << it->first << endl;
       fail_tests.push_back(it->first);
     }
   }
   if(fail_tests.empty()){
     cout << "----- ALL TESTS PASSED -----" << endl;
   }else{
-    cout << "FAILED:";
+    cout << "FAILED: ";
     for(vector<string>::iterator it = fail_tests.begin();
         it != fail_tests.end();
         it++){

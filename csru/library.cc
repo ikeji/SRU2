@@ -112,5 +112,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set("Boolean",Instance()->Boolean());
   frame->Set("true",Instance()->True());
   frame->Set("false",Instance()->False());
-  frame->Set("Parser", Instance()->Parser());
+  frame->Set("sru_parser", Instance()->Parser());
 }

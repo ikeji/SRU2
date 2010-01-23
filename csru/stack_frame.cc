@@ -88,8 +88,8 @@ class TraceVisitor : public Visitor{
     VisitTo(exp->Proc());
 #ifdef DEBUG
     cout << "TRACE-CALL(ARGS)" << endl;
-    for(object_vector::const_iterator it = exp->Arg().begin();
 #endif
+    for(object_vector::const_iterator it = exp->Arg().begin();
         it != exp->Arg().end();
         it++)
       VisitTo(*it);

@@ -8,6 +8,8 @@
 #ifndef INTERPRETER_H_
 #define INTERPRETER_H_
 
+#include <string>
+
 namespace sru {
 
 class BasicObjectPtr;
@@ -15,14 +17,17 @@ class BasicObjectPtr;
 class Interpreter{
  public:
   BasicObjectPtr Eval(BasicObjectPtr obj);
+  BasicObjectPtr Eval(const std::string& str);
   static Interpreter* Instance(){
     static Interpreter inst;
     return &inst;
   }
   BasicObjectPtr CurrentStackFrame();
+  BasicObjectPtr RootStackFrame();
  private:
   Interpreter();
   ~Interpreter();
+  void InitializeInterpreter();
   
   struct Impl;
   Impl *pimpl;

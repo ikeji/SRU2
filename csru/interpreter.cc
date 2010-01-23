@@ -16,23 +16,34 @@ using namespace sru;
 using namespace std;
 
 struct Interpreter::Impl {
-  Impl(const BasicObjectPtr& cf):current_frame(cf){
+  Impl(): current_frame(), root_frame(){
   }
   BasicObjectPtr current_frame;
+  BasicObjectPtr root_frame;
 };
 
-Interpreter::Interpreter():pimpl(){
-  StackFrame* st = new StackFrame();
-  pimpl = new Impl(BasicObject::New(st));
-  Library::BindPrimitiveObjects(st->Binding());
+Interpreter::Interpreter():pimpl(new Impl()){
+  InitializeInterpreter();
 }
 
 Interpreter::~Interpreter(){
   delete pimpl;
 }
 
+void Interpreter::InitializeInterpreter(){
+  BasicObjectPtr st = StackFrame::New();
+  pimpl->current_frame = st;
+  pimpl->root_frame = st;
+  BasicObjectPtr bind = dynamic_cast<StackFrame*>(st->Data())->Binding();
+  Library::BindPrimitiveObjects(bind);
+}
+
 BasicObjectPtr Interpreter::CurrentStackFrame(){
   return pimpl->current_frame;
+}
+
+BasicObjectPtr Interpreter::RootStackFrame(){
+  return pimpl->root_frame;
 }
 
 BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
@@ -50,5 +61,26 @@ BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
     assert(st->EvalNode());
   } 
   return st->ReturnValue();
+}
+
+BasicObjectPtr Interpreter::Eval(const string& str){
+  // Paser.parse("str")
+  ptr_vector arg;
+  // Parser
+  arg.push_back(RefExpression::New(NULL, "sru_parser"));
+  // "str"
+  arg.push_back(StringExpression::New(str));
+  BasicObjectPtr call_parser = CallExpression::New(
+      RefExpression::New(RefExpression::New(NULL,"sru_parser"), "parse"), arg);
+
+  BasicObjectPtr ast = Eval(call_parser);
+  if(ast == Library::Instance()->Nil()) {
+    // TODO: Check more detail..
+    cout << "Parse error" << endl;
+    return NULL;
+  }
+
+  BasicObjectPtr result = Eval(ast);
+  return result;
 }
 

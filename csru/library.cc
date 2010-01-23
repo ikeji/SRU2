@@ -5,6 +5,7 @@
 #include "library.h"
 
 #include "basic_object.h"
+#include "numeric.h"
 #include "object.h"
 
 using namespace sru;
@@ -90,6 +91,7 @@ void Library::Impl::initialiseInteralClasses(){
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
   InitializeObjectClass(Object);
+  SRUNumeric::InitializeClassObject(Numeric);
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

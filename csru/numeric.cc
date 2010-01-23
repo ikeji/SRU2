@@ -3,9 +3,12 @@
 // 
 #include "numeric.h"
 
+#include <cstdlib>
 #include "basic_object.h"
-#include "library.h"
 #include "class.h"
+#include "library.h"
+#include "native_proc.h"
+#include "string.h"
 
 using namespace sru;
 using namespace std;
@@ -19,6 +22,16 @@ BasicObjectPtr SRUNumeric::New(int value){
   BasicObjectPtr ret = BasicObject::New(new SRUNumeric(value));
   Class::InitializeInstance(ret, Library::Instance()->Numeric());
   return ret;
+}
+
+DEFINE_SRU_PROC(NumericParse){
+  assert(arg.size() >= 2);
+  string narg = SRUString::GetValue(arg[1]);
+  return SRUNumeric::New(atoi(narg.c_str()));
+}
+
+void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
+  numeric->Set("parse",NumericParse.New());
 }
 
 int SRUNumeric::GetValue(BasicObjectPtr obj){

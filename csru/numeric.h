@@ -14,6 +14,7 @@ namespace sru {
 
 class SRUNumeric : public Value{
  public:
+  static void InitializeClassObject(BasicObjectPtr numeric);
   static BasicObjectPtr New(int i);
   static int GetValue(BasicObjectPtr obj);
  private:

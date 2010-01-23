@@ -1,0 +1,56 @@
+// Programing Language SRU
+// Copyright(C) 2005-2010 IKeJI
+// 
+#line 5 "testing_sru.herb"
+
+#ifndef TESTING_SRU_H_
+#define TESTING_SRU_H_
+
+#include <cassert>
+#include <iostream>
+#include <string>
+#include "proc.h"
+#include "interpreter.h"
+#include "object_vector.h"
+#include "stack_frame.h"
+
+namespace sru_test {
+
+inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
+                                const std::string& method,
+                                const sru::ptr_vector& v){
+  assert(obj.get());
+  const sru::BasicObjectPtr& m = obj->Get(method);
+  if(!m.get()){
+    std::cout << "Target: " << obj->Inspect() << std::endl;
+    assert(m.get());
+  }
+  sru::Proc* proc = dynamic_cast<sru::Proc*>(m->Data());
+  if(!proc){
+    std::cout << "Target: " << obj->Inspect() << std::endl;
+    assert(proc);
+  }
+  proc->Call(v);
+  sru::StackFrame* st = dynamic_cast<sru::StackFrame*>(
+      sru::Interpreter::Instance()->CurrentStackFrame()->Data());
+  assert(st);
+  return st->ReturnValue();
+}
+
+<% 20.times do |n| %>
+#line 31 "testing_sru.herb"
+inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
+                                const std::string& method<% n.times do |i| %>,
+                                const sru::BasicObjectPtr& arg<%= i %><% end %>){
+  sru::ptr_vector args;
+  args.push_back(obj);
+<% n.times do |i| %>  args.push_back(arg<%= i %>);
+<% end %>
+  return Call(obj, method, args);
+}
+<% end %>
+
+
+}  // namespace sru_test
+
+#endif  // TESTING_SRU_H_

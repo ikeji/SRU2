@@ -7,8 +7,11 @@
 
 #include "numeric.h"
 #include "library.h"
+#include "testing_sru.h"
+#include "string.h"
 
 using namespace sru;
+using namespace sru_test;
 
 TEST(SRUNumeric_Initialize){
   BasicObjectPtr obj = SRUNumeric::New(3);
@@ -20,3 +23,10 @@ TEST(SRUNumeric_Initialize){
   assert(SRUNumeric::GetValue(obj) == 4);
 }
 
+TEST(SRUNumeric_parse){
+  const BasicObjectPtr res = Call(Library::Instance()->Numeric(),"parse",
+                                  SRUString::New("3"));
+  assert(res.get());
+  assert(res->Get("class") == Library::Instance()->Numeric());
+  assert(SRUNumeric::GetValue(res) == 3);
+}

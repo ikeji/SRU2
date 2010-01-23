@@ -1,0 +1,81 @@
+* SRU2 supports contination.
+Each contination object must have full copy of call stack.  For example, Ruby(cruby)'s contination copy full system call stack when create contination object.  However copying call stack is little heavy.
+SRU2 use linked list for call stack to make contination object.
+
+* Linked list call stack.
+We have StackFrame object for each method call. And it make linked list.
+
+<code>
+StackFrame <-- StackFrame <-- StackFrame
+</code>
+
+For example, this program.
+
+<code>
+def a()
+  x = return
+  b()
+end
+
+def b()
+  puts x  # <= Now execute here.
+end
+a()
+</code>
+
+When sru interpritor execute 'puts', It's call stack looks follow
+
+<code>
+Root <--- a  <-- x
+      \-- a' <-- b <-- current
+</code>
+
+* Use call stack
+
+** Step In
+- Make new stack frame
+- Copy current stack frame to new one.
+- Re-Initialize current frame for new method.
+<code>
+Root <-- current
+
+Root <---- current
+      \     |
+       \    v copy
+        \- new
+
+Root <-- new <-- current
+
+</code>
+
+** Step Out
+We need appointment for contination.
+- Copy upper frame to current frame.
+- Continue use current frame.
+<code>
+
+Root <-- upper <-- current
+
+Root <-- upper <-- current
+           |         ^
+           |   copy  |
+           \---------/
+
+Root <-- upper     current
+      \               /
+       ---------------
+
+</code>
+
+** Use contination
+- Copy contination target to current frame.
+<code>
+Root <-- a <-- contination
+      \- b <-- c <-- current
+
+Root <--- a <-- contination
+      \                 |
+       \                v copy
+        - b <-- c <-- current
+
+</code>

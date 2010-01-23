@@ -35,7 +35,7 @@ void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
 }
 
 int SRUNumeric::GetValue(BasicObjectPtr obj){
-  SRUNumeric* n = dynamic_cast<SRUNumeric*>(obj->Data());
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
   if(!n)
     return 0;
   return n->pimpl->value;

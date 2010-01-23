@@ -30,13 +30,13 @@ DEFINE_SRU_PROC(ReturnString){
 TEST(NativeProc_Eval){
   const BasicObjectPtr& obj = ReturnString.New();
   assert(obj.get());
-  Proc* proc = dynamic_cast<Proc*>(obj->Data());
+  Proc* proc = obj->GetData<Proc>();
   assert(proc);
   ptr_vector v;
   proc->Call(v);
 
-  StackFrame* st = dynamic_cast<StackFrame*>(
-      Interpreter::Instance()->CurrentStackFrame()->Data());
+  StackFrame* st = Interpreter::Instance()
+      ->CurrentStackFrame()->GetData<StackFrame>();
   assert(st);
   assert(st->ReturnValue() == Library::Instance()->String());
 }

@@ -24,7 +24,7 @@ BasicObjectPtr SRUString::New(const string& val){
 }
 
 string SRUString::GetValue(BasicObjectPtr obj){
-  SRUString* s = dynamic_cast<SRUString*>(obj->Data());
+  SRUString* s = obj->GetData<SRUString>();
   if(!s)
     return "";
   return s->pimpl->value;

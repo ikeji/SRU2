@@ -82,20 +82,20 @@ string SRUProc::Inspect(){
   for(object_vector::const_iterator it = expressions.begin();
       it != expressions.end();
       it++){
-    ret += dynamic_cast<Expression*>((*it)->Data())->InspectAST() + ";";
+    ret += (*it)->GetData<Expression>()->InspectAST() + ";";
   }
   return ret + ">";
 }
 
 void SRUProc::Call(const ptr_vector& arg){
   BasicObjectPtr old_frame = StackFrame::New();
-  StackFrame* frame = dynamic_cast<StackFrame*>(old_frame->Data());
+  StackFrame* frame = old_frame->GetData<StackFrame>();
 #ifdef DEBUG
   cout << "Step in: " << old_frame->Inspect() << endl;
 #endif
   assert(frame);
-  StackFrame* current_frame = dynamic_cast<StackFrame*>(
-      Interpreter::Instance()->CurrentStackFrame()->Data());
+  StackFrame* current_frame = Interpreter::Instance()
+      ->CurrentStackFrame()->GetData<StackFrame>();
   assert(current_frame);
   *frame = *current_frame;
   current_frame->SetBinding(Binding::New(binding));

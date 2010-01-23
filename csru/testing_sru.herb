@@ -25,20 +25,20 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
     std::cout << "Target: " << obj->Inspect() << std::endl;
     assert(m.get());
   }
-  sru::Proc* proc = dynamic_cast<sru::Proc*>(m->Data());
+  sru::Proc* proc = m->GetData<sru::Proc>();
   if(!proc){
     std::cout << "Target: " << obj->Inspect() << std::endl;
     assert(proc);
   }
   proc->Call(v);
-  sru::StackFrame* st = dynamic_cast<sru::StackFrame*>(
-      sru::Interpreter::Instance()->CurrentStackFrame()->Data());
+  sru::StackFrame* st = sru::Interpreter::Instance()
+      ->CurrentStackFrame()->GetData<sru::StackFrame>();
   assert(st);
   return st->ReturnValue();
 }
 
 <% 20.times do |n| %>
-#line 31 "testing_sru.herb"
+#line 42 "testing_sru.herb"
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
                                 const std::string& method<% n.times do |i| %>,
                                 const sru::BasicObjectPtr& arg<%= i %><% end %>){

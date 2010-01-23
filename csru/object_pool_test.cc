@@ -97,8 +97,7 @@ TEST(ObjectPool_ValueTest){
   assert(ObjectPool::Instance()->Size() == 4);
   assert(MyValue::Count == 2);
   ObjectPool::Instance()->GarbageCollect();
-  dynamic_cast<MyValue *>(pv2->Data())->MyObject =
-      dynamic_cast<MyValue *>(pv->Data())->MyObject;
+  pv2->GetData<MyValue>()->MyObject = pv->GetData<MyValue>()->MyObject;
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
   assert(MyValue::Count == 2);
@@ -111,7 +110,7 @@ TEST(ObjectPool_ValueTest){
   // Ring reference
   BasicObjectPtr pr = BasicObject::New(new MyValue());
   BasicObjectPtr pr2 = BasicObject::New(new MyValue());
-  dynamic_cast<MyValue *>(pr2->Data())->MyObject = pr.get();
+  pr2->GetData<MyValue>()->MyObject = pr.get();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
   assert(MyValue::Count == 2);

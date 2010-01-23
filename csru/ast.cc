@@ -13,7 +13,7 @@ using namespace sru;
 using namespace std;
 
 string InspectExpression(BasicObjectPtr obj){
-  return dynamic_cast<Expression*>(obj->Data())->InspectAST();
+  return obj->GetData<Expression>()->InspectAST();
 }
 
 /* -------------------- LetExpression -------------------- */

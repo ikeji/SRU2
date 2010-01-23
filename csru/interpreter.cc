@@ -34,7 +34,7 @@ void Interpreter::InitializeInterpreter(){
   BasicObjectPtr st = StackFrame::New();
   pimpl->current_frame = st;
   pimpl->root_frame = st;
-  BasicObjectPtr bind = dynamic_cast<StackFrame*>(st->Data())->Binding();
+  BasicObjectPtr bind = st->GetData<StackFrame>()->Binding();
   Library::BindPrimitiveObjects(bind);
 }
 
@@ -49,7 +49,7 @@ BasicObjectPtr Interpreter::RootStackFrame(){
 BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
   ptr_vector asts;
   asts.push_back(ast);
-  StackFrame* st = dynamic_cast<StackFrame*>(pimpl->current_frame->Data());
+  StackFrame* st = pimpl->current_frame->GetData<StackFrame>();
   st->Setup(asts);
 #ifdef DEBUG
   cout << "setuped" << endl;

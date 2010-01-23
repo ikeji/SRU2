@@ -90,6 +90,14 @@ class BasicObject {
 
   Value* Data(){ return data; }
   void SetData(Value* dat){ data = dat; }
+
+  template<typename T>
+  T* GetData(){
+    T* r = dynamic_cast<T*>(data);
+    assert(r);
+    return r;
+  }
+
   std::string Inspect(int limit=100);
 
   ~BasicObject();

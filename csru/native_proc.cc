@@ -12,8 +12,8 @@ using namespace std;
 
 void NativeProc::Call(const ptr_vector& arg){
   BasicObjectPtr ret = method_body(arg);
-  StackFrame* current_frame = dynamic_cast<StackFrame*>(
-      Interpreter::Instance()->CurrentStackFrame()->Data());
+  StackFrame* current_frame =
+     Interpreter::Instance()->CurrentStackFrame()->GetData<StackFrame>();
   assert(current_frame);
   current_frame->PushResult(ret);
 }

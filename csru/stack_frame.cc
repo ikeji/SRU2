@@ -61,7 +61,7 @@ class TraceVisitor : public Visitor{
   TraceVisitor(object_vector* res):
         result(res),noerror(true){}
   void VisitTo(BasicObjectPtr obj){
-    dynamic_cast<Expression*>(obj->Data())->Visit(this, obj);
+    obj->GetData<Expression>()->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
 #ifdef DEBUG
@@ -198,7 +198,7 @@ class EvalVisitor : public Visitor{
       args.push_back(*it);
 
     BasicObjectPtr proc = Pop();
-    Proc* p = dynamic_cast<Proc*>(proc->Data());
+    Proc* p = proc->GetData<Proc>();
     // TODO: Show more meaningful error.
     assert(p || !"First error: Call target is must proc");
     p->Call(args);
@@ -231,8 +231,7 @@ class EvalVisitor : public Visitor{
 
 bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
 #ifdef DEBUG
-  cout << "SetupTree: " <<
-       dynamic_cast<Expression*>(ast->Data())->Inspect() << endl;
+  cout << "SetupTree: " << ast->GetData<Expression>()->Inspect() << endl;
 #endif
   local_stack.clear();
   operations.clear();
@@ -248,7 +247,7 @@ void StackFrame::Setup(const ptr_vector& asts){
   for(ptr_vector::const_iterator it = asts.begin();
       it != asts.end();
       it++){
-    cout << dynamic_cast<Expression*>((*it)->Data())->Inspect();
+    cout << (*it)->GetData<Expression>()->Inspect();
   }
   cout << endl;
 #endif
@@ -285,7 +284,7 @@ bool StackFrame::EvalNode(){
       cout << "LastExpression" << endl;
 #endif
       BasicObjectPtr rv = ReturnValue();
-      StackFrame* st = dynamic_cast<StackFrame*>(pimpl->upper_frame->Data());
+      StackFrame* st = pimpl->upper_frame->GetData<StackFrame>();
       if(st == NULL)
         return false;
 #ifdef DEBUG
@@ -305,11 +304,11 @@ bool StackFrame::EvalNode(){
   pimpl->it++;
 #ifdef DEBUG
   cout << "Eval: ";
-  cout << dynamic_cast<Expression*>(cur->Data())->Inspect();
+  cout << cur->GetData<Expression>()->Inspect();
   cout << endl;
 #endif
   // Execute immidentry
-  Expression* exp = dynamic_cast<Expression*>(cur->Data());
+  Expression* exp = cur->GetData<Expression>();
   assert(exp);
   exp->Visit(&visit,cur);
   return true;

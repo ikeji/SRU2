@@ -19,10 +19,6 @@ using namespace sru;
 using namespace sru_test;
 using namespace std;
 
-string InspectAST(BasicObjectPtr obj){
-  return dynamic_cast<Expression*>(obj->Data())->InspectAST();
-}
-
 TEST(Interpreter_StringExpressionTest){
   string str = "Hello";
   StringExpression* se = new StringExpression(str);
@@ -154,9 +150,8 @@ TEST(Interpreter_EvalCallExpressionRegTest){
   // NOTE: I found bug in stack_frame.cc .
   // (Numeric).parse((Numeric), "10")
   BasicObjectPtr p = C(R(R("Numeric"),"parse"), R("Numeric"), S("10"));
-  cout << dynamic_cast<Expression*>(p->Data())->InspectAST() << endl;
-  assert(dynamic_cast<Expression*>(p->Data())->InspectAST() ==
-      "(Numeric).parse(Numeric, \"10\")");
+  cout << InspectAST(p) << endl;
+  assert(InspectAST(p) == "(Numeric).parse(Numeric, \"10\")");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r->Get("class") == Library::Instance()->Numeric());

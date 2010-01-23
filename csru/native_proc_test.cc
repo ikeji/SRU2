@@ -35,8 +35,7 @@ TEST(NativeProc_Eval){
   ptr_vector v;
   proc->Call(v);
 
-  StackFrame* st = Interpreter::Instance()
-      ->CurrentStackFrame()->GetData<StackFrame>();
+  StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue() == Library::Instance()->String());
 }

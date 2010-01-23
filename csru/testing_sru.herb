@@ -31,8 +31,7 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
     assert(proc);
   }
   proc->Call(v);
-  sru::StackFrame* st = sru::Interpreter::Instance()
-      ->CurrentStackFrame()->GetData<sru::StackFrame>();
+  sru::StackFrame* st = sru::Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   return st->ReturnValue();
 }

@@ -9,10 +9,12 @@
 #define INTERPRETER_H_
 
 #include <string>
+#include "object_vector.h"
 
 namespace sru {
 
 class BasicObjectPtr;
+class StackFrame;
 
 class Interpreter{
  public:
@@ -22,8 +24,9 @@ class Interpreter{
     static Interpreter inst;
     return &inst;
   }
-  BasicObjectPtr CurrentStackFrame();
-  BasicObjectPtr RootStackFrame();
+  void DigIntoNewFrame(const sru::ptr_vector& expressions);
+  StackFrame* CurrentStackFrame();
+  StackFrame* RootStackFrame();
  private:
   Interpreter();
   ~Interpreter();

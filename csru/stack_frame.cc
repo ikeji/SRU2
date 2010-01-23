@@ -201,9 +201,12 @@ class EvalVisitor : public Visitor{
     Proc* p = proc->GetData<Proc>();
     // TODO: Show more meaningful error.
     assert(p || !"First error: Call target is must proc");
+#ifdef DEBUG
+    cout << "EVAL-CALL: { " << endl;
+#endif
     p->Call(args);
 #ifdef DEBUG
-    cout << "EVAL-CALL: -- " << endl;
+    cout << "EVAL-CALL: } " << endl;
 #endif
     // Caller must push return value.
   }
@@ -265,6 +268,15 @@ void StackFrame::SetUpperStack(BasicObjectPtr obj){
 }
 
 bool StackFrame::EndOfTrees(){
+#ifdef DEBUG
+  cout << "EndOfTrees?:"
+       << " root?:" <<
+           (pimpl->upper_frame == NULL)
+       << " lastline?:" <<
+           (pimpl->expressions.size() == pimpl->tree_it)
+       << " lastop?:" << 
+           (pimpl->operations.size() == pimpl->it) << endl;
+#endif
   return pimpl->upper_frame == NULL &&
          pimpl->expressions.size() == pimpl->tree_it &&
          pimpl->operations.size() == pimpl->it;

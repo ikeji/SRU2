@@ -38,29 +38,45 @@ void Interpreter::InitializeInterpreter(){
   Library::BindPrimitiveObjects(bind);
 }
 
-BasicObjectPtr Interpreter::CurrentStackFrame(){
-  return pimpl->current_frame;
+void Interpreter::DigIntoNewFrame(const ptr_vector& expressions){
+  BasicObjectPtr old_frame_object = pimpl->current_frame;
+
+  BasicObjectPtr new_frame_object = StackFrame::New();
+  StackFrame* new_frame = new_frame_object->GetData<StackFrame>();
+#ifdef DEBUG
+  cout << "Step in: " << new_frame_object->Inspect() << endl;
+#endif
+  new_frame->SetUpperStack(old_frame_object);
+  pimpl->current_frame = new_frame_object;
+  
+  new_frame->Setup(expressions);
 }
 
-BasicObjectPtr Interpreter::RootStackFrame(){
-  return pimpl->root_frame;
+StackFrame* Interpreter::CurrentStackFrame(){
+  return pimpl->current_frame->GetData<StackFrame>();
+}
+
+StackFrame* Interpreter::RootStackFrame(){
+  return pimpl->root_frame->GetData<StackFrame>();
 }
 
 BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
   ptr_vector asts;
   asts.push_back(ast);
-  StackFrame* st = pimpl->current_frame->GetData<StackFrame>();
-  st->Setup(asts);
+  CurrentStackFrame()->Setup(asts);
 #ifdef DEBUG
   cout << "setuped" << endl;
 #endif
-  while(! st->EndOfTrees()){
+  while(! CurrentStackFrame()->EndOfTrees()){
 #ifdef DEBUG
-    cout << "exec" << endl;
+    cout << "Step start" << endl;
 #endif
-    assert(st->EvalNode());
+    assert(CurrentStackFrame()->EvalNode());
+#ifdef DEBUG
+    cout << "Step end" << endl;
+#endif
   } 
-  return st->ReturnValue();
+  return CurrentStackFrame()->ReturnValue();
 }
 
 BasicObjectPtr Interpreter::Eval(const string& str){

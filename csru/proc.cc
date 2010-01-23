@@ -88,19 +88,11 @@ string SRUProc::Inspect(){
 }
 
 void SRUProc::Call(const ptr_vector& arg){
-  BasicObjectPtr old_frame = StackFrame::New();
-  StackFrame* frame = old_frame->GetData<StackFrame>();
-#ifdef DEBUG
-  cout << "Step in: " << old_frame->Inspect() << endl;
-#endif
-  assert(frame);
-  StackFrame* current_frame = Interpreter::Instance()
-      ->CurrentStackFrame()->GetData<StackFrame>();
-  assert(current_frame);
-  *frame = *current_frame;
-  current_frame->SetBinding(Binding::New(binding));
-  current_frame->SetUpperStack(old_frame);
-  current_frame->Setup(Conv(expressions));
+  Interpreter::Instance()->DigIntoNewFrame(Conv(expressions));
+  StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
+  // TODO: Now we use same binding for all scope.
+  //       Remove next lint after define scope strategy and impliment it.
+  current_frame->SetBinding(Interpreter::Instance()->RootStackFrame()->Binding());
   for(unsigned int i=0;i<varg.size();i++){
     if(i<arg.size()){
 #ifdef DEBUG

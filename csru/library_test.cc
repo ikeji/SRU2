@@ -21,5 +21,6 @@ TEST(Library_GetPtrTest){
   assert(Library::Instance()->Boolean().get());
   assert(Library::Instance()->True().get());
   assert(Library::Instance()->False().get());
+  assert(Library::Instance()->Parser().get());
 }
 

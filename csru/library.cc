@@ -23,7 +23,8 @@ struct Library::Impl {
       Numeric(),
       Boolean(),
       True(),
-      False() {}
+      False(),
+      Parser() {}
      
   BasicObjectPtr Nil;
   BasicObjectPtr Binding;
@@ -37,6 +38,7 @@ struct Library::Impl {
   BasicObjectPtr Boolean;
   BasicObjectPtr True;
   BasicObjectPtr False;
+  BasicObjectPtr Parser;
   
   void initialiseInteralClasses();
 };
@@ -56,6 +58,8 @@ BasicObjectPtr Library::Numeric(){ return pimpl->Numeric; }
 BasicObjectPtr Library::Boolean(){ return pimpl->Boolean; }
 BasicObjectPtr Library::True(){ return pimpl->True; }
 BasicObjectPtr Library::False(){ return pimpl->False; }
+
+BasicObjectPtr Library::Parser(){ return pimpl->Parser; }
 
 Library* Library::Instance(){
   static Library inst;
@@ -87,6 +91,7 @@ void Library::Impl::initialiseInteralClasses(){
   Boolean = BasicObject::New();
   True = BasicObject::New();
   False = BasicObject::New();
+  Parser = BasicObject::New();
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
@@ -107,4 +112,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set("Boolean",Instance()->Boolean());
   frame->Set("true",Instance()->True());
   frame->Set("false",Instance()->False());
+  frame->Set("Parser", Instance()->Parser());
 }

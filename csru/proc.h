@@ -22,6 +22,7 @@ class Proc : public Value{
              const ptr_vector& expressions,
              const BasicObjectPtr& binding);
   virtual void Call(const ptr_vector& arg) = 0;
+  virtual std::string Inspect();
  protected:
   static void Initialize(const BasicObjectPtr& ptr);
 };

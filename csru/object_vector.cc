@@ -27,4 +27,13 @@ object_vector Conv(const ptr_vector& src){
   return dst;
 }
 
+// TODO: Write test.
+void MarkVector(object_vector* vec){
+  for(object_vector::iterator it = vec->begin();
+      it != vec->end();
+      it++){
+    (*it)->Mark();
+  }
+}
+
 }  // namespace sru

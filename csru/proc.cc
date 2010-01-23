@@ -7,12 +7,13 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "ast.h"
 #include "basic_object.h"
-#include "object_vector.h"
-#include "stack_frame.h"
 #include "binding.h"
 #include "interpreter.h"
 #include "library.h"
+#include "object_vector.h"
+#include "stack_frame.h"
 
 using namespace sru;
 using namespace std;
@@ -21,6 +22,10 @@ namespace sru{
 
 void Proc::Initialize(const BasicObjectPtr& obj){
   obj->Set("class", Library::Instance()->Proc());
+}
+
+string Proc::Inspect(){
+  return "<Proc>";
 }
 
 class SRUProc : public Proc{
@@ -38,7 +43,9 @@ class SRUProc : public Proc{
   void Call(const ptr_vector& arg);
   void Mark(){
     binding->Mark();
+    MarkVector(&expressions);
   }
+  string Inspect();
  private:
   vector<string> varg;
   string retval;
@@ -58,6 +65,26 @@ BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
       new SRUProc(varg,retval,expressions,binding));
   Initialize(obj);
   return obj;
+}
+
+string SRUProc::Inspect(){
+  string ret = "";
+  for(vector<string>::iterator it = varg.begin();
+      it != varg.end();
+      it++){
+    if(it != varg.begin())
+      ret += ",";
+    ret += *it;
+  }
+  if(!retval.empty()) ret += ":" + retval;
+  if(!ret.empty()) ret = "|" + ret + "|";
+  ret = "<Proc: {";
+  for(object_vector::const_iterator it = expressions.begin();
+      it != expressions.end();
+      it++){
+    ret += dynamic_cast<Expression*>((*it)->Data())->InspectAST() + ";";
+  }
+  return ret + ">";
 }
 
 void SRUProc::Call(const ptr_vector& arg){

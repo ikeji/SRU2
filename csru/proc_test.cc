@@ -127,3 +127,15 @@ TEST(Proc_NewEvalTest3){
   assert(r.get());
   assert(r == Library::Instance()->Class());
 }
+
+TEST(Proc_InspectTest){
+  // " { a = Class;{a} } "
+  BasicObjectPtr m = P(L("a",R("Class")),P(R("a")));
+  cout << dynamic_cast<Expression*>(m->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(m->Data())->InspectAST() == 
+         "{(a = Class);{a;};}");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(m);
+  assert(r.get());
+  cout << r->Inspect() << endl;
+  assert(r->Inspect() == "<Proc: {(a = Class);{a;};>");
+}

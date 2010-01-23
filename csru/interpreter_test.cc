@@ -5,6 +5,7 @@
 #include "interpreter.h"
 
 #include "testing.h"
+#include "testing_ast.h"
 #include <cassert>
 
 #include <string>
@@ -15,6 +16,7 @@
 #include "library.h"
 
 using namespace sru;
+using namespace sru_test;
 using namespace std;
 
 string InspectAST(BasicObjectPtr obj){
@@ -92,3 +94,16 @@ TEST(Interpreter_LetExpressionTest){
   assert(r.get());
   assert(r == Library::Instance()->Class());
 }
+
+TEST(Interpreter_EvalCallExpressionRegTest){
+  // NOTE: I found bug in stack_frame.cc .
+  // (Numeric).parse((Numeric), "10")
+  BasicObjectPtr p = C(R(R("Numeric"),"parse"), R("Numeric"), S("10"));
+  cout << dynamic_cast<Expression*>(p->Data())->InspectAST() << endl;
+  assert(dynamic_cast<Expression*>(p->Data())->InspectAST() ==
+      "(Numeric).parse(Numeric, \"10\")");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(p);
+  assert(r.get());
+  assert(r->Get("class") == Library::Instance()->Numeric());
+}
+

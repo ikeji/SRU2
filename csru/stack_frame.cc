@@ -64,28 +64,47 @@ class TraceVisitor : public Visitor{
     dynamic_cast<Expression*>(obj->Data())->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "TRACE-LET: " << exp->Inspect() << endl;
+#endif
     if(exp->Env())
       VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "TRACE-REF: " << exp->Inspect() << endl;
+#endif
     if(exp->Env())
       VisitTo(exp->Env());
     result->push_back(obj.get());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "TRACE-CALL: " << exp->Inspect() << endl;
+    cout << "TRACE-CALL(PROC)" << endl;
+#endif
     VisitTo(exp->Proc());
+#ifdef DEBUG
+    cout << "TRACE-CALL(ARGS)" << endl;
     for(object_vector::const_iterator it = exp->Arg().begin();
+#endif
         it != exp->Arg().end();
         it++)
-      result->push_back(*it);
+      VisitTo(*it);
     result->push_back(obj.get());
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "TRACE-PROC: " << exp->Inspect() << endl;
+#endif
     result->push_back(obj.get());
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "TRACE-STRING: " << exp->Inspect() << endl;
+#endif
     result->push_back(obj.get());
   }
   object_vector* result;
@@ -131,6 +150,9 @@ class EvalVisitor : public Visitor{
       // if not found exist slot, use current frame's enviroment.
       env->Set(exp->Name(),rightValue);
     }
+#ifdef DEBUG
+    cout << "EVAL-LET: " << exp->Name() << " = " << rightValue->Inspect() << endl;
+#endif
     Push(rightValue);
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
@@ -147,9 +169,15 @@ class EvalVisitor : public Visitor{
       e = e->Get(PARENT_SCOPE);
     }
     if(e->HasSlot(exp->Name())){
+#ifdef DEBUG
+      cout << "EVAL-REF: " << e->Get(exp->Name())->Inspect();
+#endif
       // if found exist slot
       Push(e->Get(exp->Name()));
     }else{
+#ifdef DEBUG
+      cout << "EVAL-REF: nil " << endl;
+#endif
       // if not found exist slot
       Push(Library::Instance()->Nil());
     }
@@ -171,16 +199,26 @@ class EvalVisitor : public Visitor{
 
     BasicObjectPtr proc = Pop();
     Proc* p = dynamic_cast<Proc*>(proc->Data());
+    // TODO: Show more meaningful error.
     assert(p || !"First error: Call target is must proc");
     p->Call(args);
+#ifdef DEBUG
+    cout << "EVAL-CALL: -- " << endl;
+#endif
     // Caller must push return value.
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "EVAL-PROC: {} " << endl;
+#endif
     Push(Proc::New(
              exp->Varg(),exp->RetVal(),
              Conv(exp->Expressions()),binding));
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
+#ifdef DEBUG
+    cout << "EVAL-STRING:" << exp->String() << endl;
+#endif
     Push(SRUString::New(exp->String()));
   }
   object_vector* local_stack;
@@ -221,6 +259,9 @@ void StackFrame::Setup(const ptr_vector& asts){
 }
 
 void StackFrame::SetUpStack(BasicObjectPtr obj){
+#ifdef DEBUG
+  cout << "SetUpStack" << endl;
+#endif
   pimpl->up_frame = obj.get();
 }
 
@@ -231,9 +272,18 @@ bool StackFrame::EndOfTrees(){
 }
 
 bool StackFrame::EvalNode(){
+#ifdef DEBUG
+  cout << "EvalNode" << endl;
+#endif
   assert(!EndOfTrees());
   if(pimpl->operations.size() == pimpl->it){
+#ifdef DEBUG
+    cout << "LastOperation" << endl;
+#endif
     if(pimpl->expressions.size() == pimpl->tree_it){
+#ifdef DEBUG
+      cout << "LastExpression" << endl;
+#endif
       BasicObjectPtr rv = ReturnValue();
       StackFrame* st = dynamic_cast<StackFrame*>(pimpl->up_frame->Data());
       if(st == NULL)
@@ -253,6 +303,11 @@ bool StackFrame::EvalNode(){
   // We need step forward before exec each code.
   BasicObjectPtr cur = pimpl->operations[pimpl->it];
   pimpl->it++;
+#ifdef DEBUG
+  cout << "Eval: ";
+  cout << dynamic_cast<Expression*>(cur->Data())->Inspect();
+  cout << endl;
+#endif
   // Execute immidentry
   Expression* exp = dynamic_cast<Expression*>(cur->Data());
   assert(exp);

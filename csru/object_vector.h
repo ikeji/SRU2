@@ -15,7 +15,10 @@ namespace sru {
 class BasicObject; 
 class BasicObjectPtr;
 
+// A list for object without reference count.
+// NOTE: You must impliment Mark for keep this vector invalid.
 typedef std::vector<BasicObject*> object_vector;
+// A list for object with reference count.
 typedef std::vector<BasicObjectPtr> ptr_vector;
 
 ptr_vector Conv(const object_vector& src);

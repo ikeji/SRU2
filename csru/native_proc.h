@@ -5,11 +5,12 @@
 // All native method a subclass of NativeProc.
 //
 
-#include "proc.h"
-#include "object_vector.h"
-
 #ifndef NATIVE_PROC_H_
 #define NATIVE_PROC_H_
+
+#include <string>
+#include "proc.h"
+#include "object_vector.h"
 
 namespace sru {
 
@@ -22,6 +23,7 @@ class NativeProc: public Proc{
     return result;
   }
   virtual BasicObjectPtr method_body(const ptr_vector& arg) = 0;
+  virtual std::string Inspect();
 };
 
 #define DEFINE_SRU_PROC(name) \

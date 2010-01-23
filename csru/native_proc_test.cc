@@ -41,3 +41,7 @@ TEST(NativeProc_Eval){
   assert(st->ReturnValue() == Library::Instance()->String());
 }
 
+TEST(NativeProc_Inspect){
+  cout << ReturnString.New()->Inspect() << endl;
+  assert("<Proc: { -- Native Code -- }>" == ReturnString.New()->Inspect());
+}

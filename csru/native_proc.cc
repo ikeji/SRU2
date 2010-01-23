@@ -3,10 +3,12 @@
 // 
 #include "native_proc.h"
 
+#include <string>
 #include "interpreter.h"
 #include "stack_frame.h"
 
 using namespace sru;
+using namespace std;
 
 void NativeProc::Call(const ptr_vector& arg){
   BasicObjectPtr ret = method_body(arg);
@@ -14,4 +16,8 @@ void NativeProc::Call(const ptr_vector& arg){
       Interpreter::Instance()->CurrentStackFrame()->Data());
   assert(current_frame);
   current_frame->PushResult(ret);
+}
+
+string NativeProc::Inspect(){
+  return "<Proc: { -- Native Code -- }>";
 }

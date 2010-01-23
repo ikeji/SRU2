@@ -11,12 +11,13 @@ interpreter.o \
 library.o \
 native_proc.o \
 numeric.o \
+object.o \
 object_pool.o \
 object_vector.o \
+parser.o \
 proc.o \
 stack_frame.o \
 string.o \
-object.o \
 
 TESTS    = \
 ast_test.o \
@@ -28,11 +29,12 @@ library_test.o \
 native_proc_test.o \
 numeric_test.o \
 object_pool_test.o \
+object_test.o \
 object_vector_test.o \
+parser_test.o \
 proc_test.o \
 stack_frame_test.o \
 string_test.o \
-object_test.o \
 
 DFLAGS   = -DDEBUG
 GENFILES = testing_ast.h testing_sru.h
@@ -60,7 +62,7 @@ sru_test: testing.o $(TESTS) $(OBJS)
 	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
-	rm -f *.o sru sru_test *~ Makefile.bak tags $(GENFILES)
+	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES)
 
 depend: $(GENFILES)
 	makedepend *.cc
@@ -87,9 +89,9 @@ class.o: class.h basic_object.h
 class_test.o: testing.h class.h basic_object.h
 interpreter.o: interpreter.h ast.h basic_object.h object_vector.h
 interpreter.o: stack_frame.h library.h
-interpreter_test.o: interpreter.h testing.h basic_object.h ast.h
-interpreter_test.o: object_vector.h string.h library.h
-library.o: library.h basic_object.h numeric.h object.h
+interpreter_test.o: interpreter.h testing.h testing_ast.h ast.h
+interpreter_test.o: basic_object.h object_vector.h string.h library.h
+library.o: library.h basic_object.h numeric.h parser.h object.h
 library_test.o: testing.h library.h basic_object.h
 native_proc.o: native_proc.h proc.h basic_object.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h
@@ -105,7 +107,8 @@ object_pool_test.o: testing.h basic_object.h object_pool.h
 object_test.o: testing.h object.h basic_object.h
 object_vector.o: object_vector.h basic_object.h
 object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
-parser_test.o: testing.h
+parser.o: parser.h basic_object.h
+parser_test.o: parser.h basic_object.h testing.h
 proc.o: proc.h basic_object.h object_vector.h ast.h binding.h library.h
 proc.o: interpreter.h stack_frame.h
 proc_test.o: testing.h proc.h basic_object.h object_vector.h ast.h

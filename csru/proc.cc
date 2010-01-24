@@ -109,6 +109,6 @@ void SRUProc::Call(const ptr_vector& arg){
     }
   }
 #ifdef DEBUG
-  cout << "Currend-Binding: " << current_frame->Binding()->Inspect() << endl;
+  cout << "Current-Binding: " << current_frame->Binding()->Inspect() << endl;
 #endif
 }

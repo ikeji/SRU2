@@ -170,7 +170,7 @@ class EvalVisitor : public Visitor{
     }
     if(e->HasSlot(exp->Name())){
 #ifdef DEBUG
-      cout << "EVAL-REF: " << e->Get(exp->Name())->Inspect();
+      cout << "EVAL-REF: " << e->Get(exp->Name())->Inspect() << endl;
 #endif
       // if found exist slot
       Push(e->Get(exp->Name()));

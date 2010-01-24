@@ -10,13 +10,14 @@
 
 #include <string>
 #include "basic_object.h"
+#include "constants.h"
 
 namespace sru {
 
 class Class {
  public:
   static void InitializeInstance(BasicObjectPtr obj,BasicObjectPtr klass){
-    obj->Set("class",klass);
+    obj->Set(fCLASS,klass);
     // TODO: InsertClassSystem
   }
 };

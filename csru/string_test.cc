@@ -6,12 +6,13 @@
 #include <cassert>
 #include "string.h"
 #include "library.h"
+#include "constants.h"
 
 using namespace sru;
 
 TEST(SRUString_Initialise){
   BasicObjectPtr obj = SRUString::New("hoge");
-  assert(obj->Get("class").get() == Library::Instance()->String().get());
+  assert(obj->Get(fCLASS).get() == Library::Instance()->String().get());
   assert(SRUString::GetValue(obj) == "hoge");
 }
 

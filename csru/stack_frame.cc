@@ -140,8 +140,8 @@ class EvalVisitor : public Visitor{
     // find slot
     BasicObjectPtr e = env;
     while(!(e->HasSlot(exp->Name()))){
-      if(! e->HasSlot(PARENT_SCOPE)) break;
-      e = e->Get(PARENT_SCOPE);
+      if(! e->HasSlot(fPARENT_SCOPE)) break;
+      e = e->Get(fPARENT_SCOPE);
     }
     if(e->HasSlot(exp->Name())){
       // if found exist slot, use the slot.
@@ -165,8 +165,8 @@ class EvalVisitor : public Visitor{
     // find slot
     BasicObjectPtr e = env;
     while(!(e->HasSlot(exp->Name()))){
-      if(! e->HasSlot(PARENT_SCOPE)) break;
-      e = e->Get(PARENT_SCOPE);
+      if(! e->HasSlot(fPARENT_SCOPE)) break;
+      e = e->Get(fPARENT_SCOPE);
     }
     if(e->HasSlot(exp->Name())){
 #ifdef DEBUG

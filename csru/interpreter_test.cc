@@ -14,6 +14,7 @@
 #include "ast.h"
 #include "string.h"
 #include "library.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace sru_test;
@@ -154,6 +155,6 @@ TEST(Interpreter_EvalCallExpressionRegTest){
   assert(InspectAST(p) == "(Numeric).parse(Numeric, \"10\")");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
-  assert(r->Get("class") == Library::Instance()->Numeric());
+  assert(r->Get(fCLASS) == Library::Instance()->Numeric());
 }
 

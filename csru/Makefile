@@ -82,25 +82,26 @@ ast.o: ast.h basic_object.h object_vector.h
 ast_test.o: testing.h ast.h basic_object.h object_vector.h
 basic_object.o: basic_object.h object_pool.h
 basic_object_test.o: testing.h basic_object.h
-binding.o: binding.h basic_object.h library.h
+binding.o: binding.h basic_object.h library.h constants.h
 binding_test.o: testing.h testing_ast.h ast.h basic_object.h object_vector.h
 binding_test.o: interpreter.h library.h
-class.o: class.h basic_object.h
-class_test.o: testing.h class.h basic_object.h
-interpreter.o: interpreter.h ast.h basic_object.h object_vector.h
+class.o: class.h basic_object.h constants.h
+class_test.o: testing.h class.h basic_object.h constants.h
+interpreter.o: interpreter.h object_vector.h ast.h basic_object.h
 interpreter.o: stack_frame.h library.h
-interpreter_test.o: interpreter.h testing.h testing_ast.h ast.h
-interpreter_test.o: basic_object.h object_vector.h string.h library.h
+interpreter_test.o: interpreter.h object_vector.h testing.h testing_ast.h
+interpreter_test.o: ast.h basic_object.h string.h library.h constants.h
 library.o: library.h basic_object.h numeric.h parser.h object.h
 library_test.o: testing.h library.h basic_object.h
 native_proc.o: native_proc.h proc.h basic_object.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h
 native_proc_test.o: testing.h native_proc.h proc.h basic_object.h
 native_proc_test.o: object_vector.h library.h stack_frame.h interpreter.h
-numeric.o: numeric.h basic_object.h class.h library.h native_proc.h proc.h
-numeric.o: object_vector.h string.h
+numeric.o: numeric.h basic_object.h class.h constants.h library.h
+numeric.o: native_proc.h proc.h object_vector.h string.h
 numeric_test.o: testing.h numeric.h basic_object.h library.h testing_sru.h
 numeric_test.o: proc.h object_vector.h interpreter.h stack_frame.h string.h
+numeric_test.o: constants.h
 object.o: object.h basic_object.h string.h
 object_pool.o: object_pool.h basic_object.h object_vector.h
 object_pool_test.o: testing.h basic_object.h object_pool.h
@@ -110,13 +111,13 @@ object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
 parser.o: parser.h basic_object.h
 parser_test.o: parser.h basic_object.h testing.h
 proc.o: proc.h basic_object.h object_vector.h ast.h binding.h library.h
-proc.o: interpreter.h stack_frame.h
+proc.o: constants.h interpreter.h stack_frame.h
 proc_test.o: testing.h proc.h basic_object.h object_vector.h ast.h
 proc_test.o: interpreter.h testing_ast.h library.h
 stack_frame.o: stack_frame.h basic_object.h object_vector.h string.h ast.h
-stack_frame.o: proc.h library.h binding.h
+stack_frame.o: proc.h library.h binding.h constants.h
 stack_frame_test.o: testing.h stack_frame.h basic_object.h object_vector.h
 stack_frame_test.o: ast.h
-string.o: string.h basic_object.h library.h class.h
-string_test.o: testing.h string.h basic_object.h library.h
+string.o: string.h basic_object.h library.h class.h constants.h
+string_test.o: testing.h string.h basic_object.h library.h constants.h
 testing.o: testing.h

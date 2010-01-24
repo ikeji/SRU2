@@ -8,6 +8,8 @@
 #include "numeric.h"
 #include "parser.h"
 #include "object.h"
+#include "string.h"
+#include "constants.h"
 
 using namespace sru;
 
@@ -97,6 +99,21 @@ void Library::Impl::initialiseInteralClasses(){
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
   InitializeObjectClass(Object);
+
+  // TODO: Move this to proc.cc
+  Proc->Set(fNAME, SRUString::New("Proc"));
+  // TODO: Move this to array.cc
+  Array->Set(fNAME, SRUString::New("Array"));
+  // TODO: Move this to hash.cc
+  Hash->Set(fNAME, SRUString::New("Hash"));
+  // TODO: Move this to string.cc
+  String->Set(fNAME, SRUString::New("String"));
+  // TODO: Move this to boolean.cc
+  Boolean->Set(fNAME, SRUString::New("Boolean"));
+  // TODO: Move this to boolean.cc
+  True->Set(fNAME, SRUString::New("True"));
+  // TODO: Move this to boolean.cc
+  False->Set(fNAME, SRUString::New("False"));
 
   SRUNumeric::InitializeClassObject(Numeric);
 

@@ -5,6 +5,7 @@
 
 #include "basic_object.h"
 #include "string.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace std;
@@ -15,7 +16,7 @@ namespace object_methods {
 namespace sru {
 
 void InitializeObjectClass(const BasicObjectPtr& obj){
-  obj->Set("name", SRUString::New("Object"));
+  obj->Set(fNAME, SRUString::New("Object"));
 }
 
 }  // namespace sru

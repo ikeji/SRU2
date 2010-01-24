@@ -6,6 +6,7 @@
 #define CONSTANTS_H_
 
 const char* const fCLASS = "class";
-const char* const fPARENT_SCOPE = "class";
+const char* const fPARENT_SCOPE = "parent";
+const char* const fNAME = "name";
 
 #endif  // CONSTANTS_H_ 

@@ -9,6 +9,7 @@
 #include "library.h"
 #include "native_proc.h"
 #include "string.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace std;
@@ -32,6 +33,7 @@ DEFINE_SRU_PROC(NumericParse){
 
 void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   numeric->Set("parse",NumericParse.New());
+  numeric->Set(fNAME, SRUString::New("Numeric"));
 }
 
 int SRUNumeric::GetValue(BasicObjectPtr obj){

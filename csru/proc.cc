@@ -15,6 +15,7 @@
 #include "object_vector.h"
 #include "stack_frame.h"
 #include "constants.h"
+#include "class.h"
 
 using namespace sru;
 using namespace std;
@@ -22,7 +23,7 @@ using namespace std;
 namespace sru{
 
 void Proc::Initialize(const BasicObjectPtr& obj){
-  obj->Set(fCLASS, Library::Instance()->Proc());
+  Class::InitializeInstance(obj,Library::Instance()->Proc());
 }
 
 string Proc::Inspect(){

@@ -9,6 +9,7 @@
 #include "basic_object.h"
 #include "library.h"
 #include "constants.h"
+#include "class.h"
 
 namespace sru {
 
@@ -16,7 +17,7 @@ class Binding {
  public:
   static BasicObjectPtr New(const BasicObjectPtr& parent=NULL){
     BasicObjectPtr r = BasicObject::New();
-    r->Set(fCLASS, Library::Instance()->Binding());
+    Class::InitializeInstance(r,Library::Instance()->Binding());
     if(parent.get() != NULL)
       r->Set(fPARENT_SCOPE, parent);
     return r;

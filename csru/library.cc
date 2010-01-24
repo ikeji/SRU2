@@ -100,6 +100,10 @@ void Library::Impl::initialiseInteralClasses(){
   // TODO: Impliment Object Initialize.
   InitializeObjectClass(Object);
 
+  // TODO: Move this to binding.cc
+  Binding->Set(fNAME, SRUString::New("Binding"));
+  // TODO: Move this to class.cc
+  Class->Set(fNAME, SRUString::New("Class"));
   // TODO: Move this to proc.cc
   Proc->Set(fNAME, SRUString::New("Proc"));
   // TODO: Move this to array.cc

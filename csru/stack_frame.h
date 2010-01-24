@@ -12,14 +12,15 @@
 
 #include "basic_object.h"
 #include "object_vector.h"
+#include "binding.h"
 
 namespace sru {
 
 class StackFrame : public Value{
  public:
-  static BasicObjectPtr New();
+  static BasicObjectPtr New(const BasicObjectPtr& binding=Binding::New());
 
-  StackFrame();
+  StackFrame(const BasicObjectPtr& binding=Binding::New());
   ~StackFrame();
 
   void Setup(const ptr_vector& expressions);

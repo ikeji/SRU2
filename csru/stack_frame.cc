@@ -18,13 +18,13 @@ using namespace std;
 using namespace sru;
 
 struct StackFrame::Impl {
-  Impl():
+  Impl(const BasicObjectPtr& binding):
     expressions(),
     tree_it(0),
     operations(),
     it(0),
     local_stack(),
-    binding(BasicObject::New().get()),
+    binding(binding.get()),
     upper_frame(NULL)
     {}
 
@@ -45,11 +45,12 @@ struct StackFrame::Impl {
   Impl* operator=(const Impl& obj);
 };
 
-BasicObjectPtr StackFrame::New(){
-  return BasicObject::New(new StackFrame());
+BasicObjectPtr StackFrame::New(const BasicObjectPtr& binding){
+  return BasicObject::New(new StackFrame(binding));
 }
 
-StackFrame::StackFrame():pimpl(new Impl()){
+StackFrame::StackFrame(const BasicObjectPtr& binding):
+    pimpl(new Impl(binding)){
 }
 
 StackFrame::~StackFrame(){
@@ -152,6 +153,7 @@ class EvalVisitor : public Visitor{
     }
 #ifdef DEBUG
     cout << "EVAL-LET: " << exp->Name() << " = " << rightValue->Inspect() << endl;
+    cout << "CURRENT-SCOPE: " << binding->Inspect() << endl;
 #endif
     Push(rightValue);
   }
@@ -357,12 +359,12 @@ void StackFrame::Mark(){
 }
 
 // TODO: call StackFrame()
-StackFrame::StackFrame(const StackFrame& obj):pimpl(new Impl()){
+StackFrame::StackFrame(const StackFrame& obj):
+      pimpl(new Impl(obj.pimpl->binding)){
   pimpl->expressions = obj.pimpl->expressions;
   pimpl->tree_it = obj.pimpl->tree_it;
   pimpl->operations = obj.pimpl->operations;
   pimpl->it = obj.pimpl->it;
-  pimpl->binding = obj.pimpl->binding;
   pimpl->local_stack = obj.pimpl->local_stack;
   pimpl->upper_frame = obj.pimpl->upper_frame;
 }

@@ -24,7 +24,8 @@ class Interpreter{
     static Interpreter inst;
     return &inst;
   }
-  void DigIntoNewFrame(const sru::ptr_vector& expressions);
+  void DigIntoNewFrame(const ptr_vector& expressions,
+                       const BasicObjectPtr& binding=NULL);
   StackFrame* CurrentStackFrame();
   StackFrame* RootStackFrame();
  private:

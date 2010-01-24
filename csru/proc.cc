@@ -90,26 +90,25 @@ string SRUProc::Inspect(){
 }
 
 void SRUProc::Call(const ptr_vector& arg){
-  Interpreter::Instance()->DigIntoNewFrame(Conv(expressions));
-  StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
-  // TODO: Now we use same binding for all scope.
-  //       Remove next lint after define scope strategy and impliment it.
-  current_frame->SetBinding(Interpreter::Instance()->RootStackFrame()->Binding());
+#ifdef DEBUG
+      cout << "Call sru function" << endl;
+#endif
+  BasicObjectPtr new_binding = Binding::New(binding);
+  Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);
   for(unsigned int i=0;i<varg.size();i++){
     if(i<arg.size()){
 #ifdef DEBUG
       cout << "Bind-arg: " << varg[i] << " = " << arg[i]->Inspect() << endl;
 #endif
-      current_frame->Binding()->Set(varg[i],arg[i]);
+      new_binding->Set(varg[i],arg[i]);
     }else{
 #ifdef DEBUG
       cout << "Bind-arg: " << varg[i] << " = Nil" << endl;
 #endif
-      current_frame->Binding()->Set(
-          varg[i],Library::Instance()->Nil());
+      new_binding->Set(varg[i],Library::Instance()->Nil());
     }
   }
 #ifdef DEBUG
-  cout << "Current-Binding: " << current_frame->Binding()->Inspect() << endl;
+  cout << "Current-Binding: " << new_binding->Inspect() << endl;
 #endif
 }

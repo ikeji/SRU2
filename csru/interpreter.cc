@@ -38,10 +38,11 @@ void Interpreter::InitializeInterpreter(){
   Library::BindPrimitiveObjects(bind);
 }
 
-void Interpreter::DigIntoNewFrame(const ptr_vector& expressions){
+void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
+                                  const BasicObjectPtr& binding){
   BasicObjectPtr old_frame_object = pimpl->current_frame;
 
-  BasicObjectPtr new_frame_object = StackFrame::New();
+  BasicObjectPtr new_frame_object = StackFrame::New(binding);
   StackFrame* new_frame = new_frame_object->GetData<StackFrame>();
 #ifdef DEBUG
   cout << "Step in: " << new_frame_object->Inspect() << endl;

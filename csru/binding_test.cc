@@ -47,8 +47,6 @@ TEST(Binding_ScopeTest3){
 }
 
 TEST(Binding_ScopeTest4){
-  cout << "TODO: enable this test after impliment binding chain" << endl;
-  return;
   // { a = Class; {|a|(a=true)}(String);a}() => Class
   BasicObjectPtr p = C(P(L("a",R("Class")),C(P("a",L("a",R("true"))),R("String")),R("a")));
   cout << InspectAST(p) << endl;

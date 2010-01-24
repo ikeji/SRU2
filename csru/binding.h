@@ -15,6 +15,7 @@ namespace sru {
 
 class Binding {
  public:
+  static void InitializeClassObject(BasicObjectPtr numeric);
   static BasicObjectPtr New(const BasicObjectPtr& parent=NULL){
     BasicObjectPtr r = BasicObject::New();
     Class::InitializeInstance(r,Library::Instance()->Binding());

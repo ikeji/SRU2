@@ -10,6 +10,7 @@
 #include "object.h"
 #include "string.h"
 #include "constants.h"
+#include "binding.h"
 
 using namespace sru;
 
@@ -100,8 +101,8 @@ void Library::Impl::initialiseInteralClasses(){
   // TODO: Impliment Object Initialize.
   InitializeObjectClass(Object);
 
-  // TODO: Move this to binding.cc
-  Binding->Set(fNAME, SRUString::New("Binding"));
+  Binding::InitializeClassObject(Binding);
+
   // TODO: Move this to class.cc
   Class->Set(fNAME, SRUString::New("Class"));
   // TODO: Move this to proc.cc

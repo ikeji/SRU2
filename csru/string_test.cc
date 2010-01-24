@@ -14,5 +14,6 @@ TEST(SRUString_Initialise){
   BasicObjectPtr obj = SRUString::New("hoge");
   assert(obj->Get(fCLASS).get() == Library::Instance()->String().get());
   assert(SRUString::GetValue(obj) == "hoge");
+  assert(obj->Inspect() == "<\"hoge\">");
 }
 

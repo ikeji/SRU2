@@ -30,6 +30,10 @@ string SRUString::GetValue(BasicObjectPtr obj){
   return s->pimpl->value;
 }
 
+string SRUString::Inspect(){
+  return string("<\"") + pimpl->value + "\">";
+}
+
 SRUString::SRUString(const string& val):
       pimpl(new Impl(val)){
 }

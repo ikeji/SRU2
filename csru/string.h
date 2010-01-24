@@ -16,6 +16,7 @@ class SRUString : public Value{
  public:
   static BasicObjectPtr New(const std::string& val);
   static std::string GetValue(BasicObjectPtr obj);
+  std::string Inspect();
  private:
   SRUString(const std::string& val);
   ~SRUString();

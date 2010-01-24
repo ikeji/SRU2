@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include "object_pool.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace std;
@@ -37,7 +38,11 @@ string BasicObject::Inspect(int limit){
   if(Data()) r = Data()->Inspect();
   if(r.empty()){
     ostringstream s;
-    s << "<basic_object(" << this << ") ";
+    if(HasSlot(fNAME)) {
+      s << "<" << Get(fNAME)->Inspect() << " ";
+    } else {
+      s << "<basic_object(" << this << ") ";
+    }
     if(limit > (int)s.str().size()){
       for(map<string,BasicObject*>::iterator it = fields.begin();
           it != fields.end();

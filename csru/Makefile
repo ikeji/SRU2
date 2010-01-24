@@ -80,7 +80,7 @@ tags:
 
 ast.o: ast.h basic_object.h object_vector.h
 ast_test.o: testing.h ast.h basic_object.h object_vector.h
-basic_object.o: basic_object.h object_pool.h
+basic_object.o: basic_object.h object_pool.h constants.h
 basic_object_test.o: testing.h basic_object.h
 binding.o: binding.h basic_object.h library.h constants.h class.h
 binding_test.o: testing.h testing_ast.h ast.h basic_object.h object_vector.h

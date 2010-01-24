@@ -23,5 +23,5 @@ TEST(SRUString_CLASS){
   cout << Library::Instance()->String()->Inspect() << endl;
   // TODO: Fix output format like <String>.
   assert(Library::Instance()->String()->Inspect() ==
-      "<<\"String\"> name:<\"String\">>");
+      "<String name:<\"String\">>");
 }

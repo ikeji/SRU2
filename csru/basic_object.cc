@@ -9,6 +9,7 @@
 #include <sstream>
 #include "object_pool.h"
 #include "constants.h"
+#include "string.h"
 
 using namespace sru;
 using namespace std;
@@ -37,10 +38,13 @@ string BasicObject::Inspect(int limit){
   string r;
   if(Data()) r = Data()->Inspect();
   if(r.empty()){
+    string name = "";
+    if(HasSlot(fNAME))
+      name = SRUString::GetValue(Get(fNAME));
     ostringstream s;
-    if(HasSlot(fNAME)) {
-      s << "<" << Get(fNAME)->Inspect() << " ";
-    } else {
+    if(name != ""){
+      s << "<" << name << " ";
+    }else {
       s << "<basic_object(" << this << ") ";
     }
     if(limit > (int)s.str().size()){

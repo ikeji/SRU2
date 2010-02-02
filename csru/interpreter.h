@@ -25,7 +25,7 @@ class Interpreter{
     return &inst;
   }
   void DigIntoNewFrame(const ptr_vector& expressions,
-                       const BasicObjectPtr& binding=NULL);
+                       const BasicObjectPtr& binding);
   StackFrame* CurrentStackFrame();
   StackFrame* RootStackFrame();
  private:

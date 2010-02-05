@@ -9,7 +9,7 @@ depend: all
 	makedepend *.cc
 
 clean:
-	rm -f *~ .gitignore~ Makefile.back tags $(GENFILE)
+	rm -f *~ .gitignore~ Makefile.bak tags $(GENFILE)
 
 # DO NOT DELETE
 

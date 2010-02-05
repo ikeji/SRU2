@@ -111,6 +111,8 @@ void Library::Impl::initialiseInteralClasses(){
   InitializeFalseObject(False);
   Proc::InitializeClassObject(Proc);
 
+  // TODO: Move this to nill.cc
+  Nil->Set(fNAME, SRUString::New("Nil"));
   // TODO: Move this to array.cc
   Array->Set(fNAME, SRUString::New("Array"));
   // TODO: Move this to hash.cc

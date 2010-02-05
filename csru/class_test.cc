@@ -36,6 +36,14 @@ TEST(Class_SubClassTest){
   assert(subclass->Get(fSUPERCLASS) == klass);
 }
 
+TEST(Class_InstanceMethodTest){
+  BasicObjectPtr klass = BasicObject::New();
+  BasicObjectPtr method = BasicObject::New();
+  Class::SetAsInstanceMethod(klass, "AMethod", method);
+  assert(klass->HasSlot(fINSTANCE_METHODS));
+  // TODO: Test field named instance method has "AMethod".
+}
+
 TEST(Class_InitializeClassTest){
   BasicObjectPtr klass = Library::Instance()->Class();
   assert(klass.get());

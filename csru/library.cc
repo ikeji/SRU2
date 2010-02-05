@@ -11,6 +11,7 @@
 #include "string.h"
 #include "constants.h"
 #include "binding.h"
+#include "boolean.h"
 
 using namespace sru;
 
@@ -104,6 +105,9 @@ void Library::Impl::initialiseInteralClasses(){
   Binding::InitializeClassObject(Binding);
   SRUNumeric::InitializeClassObject(Numeric);
   sru_parser::InitializeParserObject(Parser);
+  InitializeBooleanClassObject(Boolean);
+  InitializeTrueObject(True);
+  InitializeFalseObject(False);
 
   // TODO: Move this to proc.cc
   Proc->Set(fNAME, SRUString::New("Proc"));
@@ -113,12 +117,6 @@ void Library::Impl::initialiseInteralClasses(){
   Hash->Set(fNAME, SRUString::New("Hash"));
   // TODO: Move this to string.cc
   String->Set(fNAME, SRUString::New("String"));
-  // TODO: Move this to boolean.cc
-  Boolean->Set(fNAME, SRUString::New("Boolean"));
-  // TODO: Move this to boolean.cc
-  True->Set(fNAME, SRUString::New("True"));
-  // TODO: Move this to boolean.cc
-  False->Set(fNAME, SRUString::New("False"));
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

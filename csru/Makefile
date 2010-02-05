@@ -6,6 +6,7 @@ OBJS     = \
 ast.o \
 basic_object.o \
 binding.o \
+boolean.o \
 class.o \
 interpreter.o \
 library.o \
@@ -23,6 +24,7 @@ TESTS    = \
 ast_test.o \
 basic_object_test.o \
 binding_test.o \
+boolean_test.o \
 class_test.o \
 interpreter_test.o \
 library_test.o \
@@ -85,6 +87,10 @@ basic_object_test.o: testing.h basic_object.h
 binding.o: binding.h basic_object.h library.h constants.h class.h string.h
 binding_test.o: testing.h testing_ast.h ast.h basic_object.h object_vector.h
 binding_test.o: interpreter.h library.h
+boolean.o: boolean.h basic_object.h class.h library.h native_proc.h proc.h
+boolean.o: object_vector.h string.h constants.h testing_sru.h interpreter.h
+boolean.o: stack_frame.h
+boolean_test.o: testing.h library.h basic_object.h constants.h
 class.o: class.h basic_object.h constants.h library.h string.h
 class_test.o: testing.h class.h basic_object.h constants.h library.h
 interpreter.o: interpreter.h object_vector.h ast.h basic_object.h
@@ -92,7 +98,7 @@ interpreter.o: stack_frame.h library.h binding.h constants.h class.h
 interpreter_test.o: interpreter.h object_vector.h testing.h testing_ast.h
 interpreter_test.o: ast.h basic_object.h string.h library.h constants.h
 library.o: library.h basic_object.h numeric.h parser.h object.h string.h
-library.o: constants.h binding.h class.h
+library.o: constants.h binding.h class.h boolean.h
 library_test.o: testing.h library.h basic_object.h
 native_proc.o: native_proc.h proc.h basic_object.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h

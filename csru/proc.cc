@@ -159,12 +159,36 @@ DEFINE_SRU_PROC_SMASH(whileTrue){
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R("whileTrue_internal"))),
       new_binding);
+  // TODO: Muliti thread support.
   if(whileTrue_internal == NULL)
     whileTrue_internal = CREATE_SRU_PROC(_whileTrue_internal);
 
   new_binding->Set("whileTrue_internal",whileTrue_internal);
   new_binding->Set("condition", arg[0]);
   new_binding->Set("block", arg[1]);
+}
+
+DEFINE_SRU_PROC_SMASH(_loop_internal){
+  Interpreter::Instance()->CurrentStackFrame()->Setup(
+      A(
+        C(R("block")),
+        C(R("block"),R("loop"))
+       ));
+}
+
+DEFINE_SRU_PROC_SMASH(loop){
+  static BasicObjectPtr loop_internal;
+  assert(arg.size() > 0);
+  BasicObjectPtr new_binding = Binding::New();
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(C(R("loop_internal"))),
+      new_binding);
+  // TODO: Muliti thread support.
+  if(loop_internal == NULL)
+    loop_internal = CREATE_SRU_PROC(loop_internal);
+
+  new_binding->Set("loop_internal",loop_internal);
+  new_binding->Set("block", arg[0]);
 }
 
 }  // namespace sru

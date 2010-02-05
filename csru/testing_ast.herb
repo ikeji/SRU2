@@ -47,7 +47,7 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 }
 <% end %>
 
-<% 20.times do |e| %><% 20.times do |s| %>
+<% 25.times do |e| %><% 5.times do |s| %>
 #line 52 "testing_ast.herb"
 inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
                       <% end %>const std::string& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
@@ -62,7 +62,7 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
 }
 <% end %><% end %>
 
-<% 20.times do |e| %><% 20.times do |s| %>
+<% 20.times do |e| %><% 5.times do |s| %>
 #line 67 "testing_ast.herb"
 inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
                       <% end %>const std::string& varg<%= i %><% end; if s !=0 %>,

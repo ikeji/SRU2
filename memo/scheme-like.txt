@@ -1,0 +1,16 @@
+Sheme like parser design.
+
+* Syntax
+
+program: { expression }
+expression: list | ref | atom
+list: spc '(' (define | lambda | call) ')'
+define: 'define' spc id spc list
+lambda: 'lambda' spc '(' spc id { spc ',' spc id } spc ')' program
+call: program { spc program }
+ref: list '.' id | id
+atom: id | string
+
+string: "[^"]"
+id: [a-zA-Z][a-zA-Z0-9]
+

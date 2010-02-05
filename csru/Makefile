@@ -16,6 +16,7 @@ object.o \
 object_pool.o \
 object_vector.o \
 parser.o \
+parser_helper.o \
 proc.o \
 stack_frame.o \
 string.o \
@@ -57,16 +58,18 @@ all: sru sru_test
 test: all
 	./sru_test
 
-sru: $(OBJS) main.o
+sru: parser $(OBJS) main.o
 	$(CXX) $(LDFLAGS) -g -o sru $(OBJS) main.o
 
-sru_test: testing.o $(TESTS) $(OBJS)
+sru_test: parser testing.o $(TESTS) $(OBJS)
 	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
+	make -C parser_generator clean
 	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES)
 
-depend: $(GENFILES)
+depend: $(GENFILES) parser
+	make -C parser_generator depend
 	makedepend *.cc
 
 tags:
@@ -77,6 +80,10 @@ tags:
 .herb.h:
 	$(ERB) < $< > $@.tmp
 	mv $@.tmp $@
+
+parser:
+	make -C parser_generator
+	cp -u parser_generator/parser.cc parser.cc
 
 # DO NOT DELETE
 
@@ -116,7 +123,11 @@ object_pool_test.o: testing.h basic_object.h object_pool.h
 object_test.o: testing.h object.h basic_object.h
 object_vector.o: object_vector.h basic_object.h
 object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
-parser.o: parser.h basic_object.h string.h constants.h
+parser.o: parser.h basic_object.h native_proc.h proc.h object_vector.h
+parser.o: constants.h binding.h library.h class.h string.h testing_ast.h
+parser.o: ast.h testing_sru.h interpreter.h stack_frame.h
+parser_helper.o: native_proc.h proc.h basic_object.h object_vector.h string.h
+parser_helper.o: numeric.h library.h testing_ast.h ast.h
 parser_test.o: parser.h basic_object.h testing.h
 proc.o: proc.h basic_object.h object_vector.h ast.h binding.h library.h
 proc.o: constants.h class.h interpreter.h stack_frame.h native_proc.h

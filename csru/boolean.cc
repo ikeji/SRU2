@@ -24,21 +24,22 @@ void sru::InitializeBooleanClassObject(const BasicObjectPtr& boolean){
 
 DECLARE_SRU_PROC(True_ifTrue);
 DECLARE_SRU_PROC(True_ifTrueFalse);
+DECLARE_SRU_PROC(False_ifTrue);
+DECLARE_SRU_PROC(False_ifTrueFalse);
 
 void InitializeTrueObject(const BasicObjectPtr& tlue){
   Class::InitializeInstance(tlue, Library::Instance()->Boolean());
   tlue->Set(fNAME,         SRUString::New("True"));
   tlue->Set("ifTrue",      CREATE_SRU_PROC(True_ifTrue));
+  tlue->Set("ifFalse",      CREATE_SRU_PROC(False_ifTrue));
   tlue->Set("ifTrueFalse", CREATE_SRU_PROC(True_ifTrueFalse));
 }
-
-DECLARE_SRU_PROC(False_ifTrue);
-DECLARE_SRU_PROC(False_ifTrueFalse);
 
 void InitializeFalseObject(const BasicObjectPtr& farse){
   Class::InitializeInstance(farse, Library::Instance()->Boolean());
   farse->Set(fNAME,         SRUString::New("False"));
   farse->Set("ifTrue",      CREATE_SRU_PROC(False_ifTrue));
+  farse->Set("ifFalse",      CREATE_SRU_PROC(True_ifTrue));
   farse->Set("ifTrueFalse", CREATE_SRU_PROC(False_ifTrueFalse));
 
 }

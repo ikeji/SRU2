@@ -23,6 +23,7 @@ TEST(Boolean_InitializeTrueTest){
   assert(tlue.get());
   assert(tlue->Get(fCLASS) == Library::Instance()->Boolean());
   assert(tlue->HasSlot("ifTrue"));
+  assert(tlue->HasSlot("ifFalse"));
   assert(tlue->HasSlot("ifTrueFalse"));
 }
 
@@ -31,5 +32,6 @@ TEST(Boolean_InitializeFalseTest){
   assert(farse.get());
   assert(farse->Get(fCLASS) == Library::Instance()->Boolean());
   assert(farse->HasSlot("ifTrue"));
+  assert(farse->HasSlot("ifFalse"));
   assert(farse->HasSlot("ifTrueFalse"));
 }

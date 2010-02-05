@@ -9,6 +9,6 @@ const char* const fCLASS        = "class";
 const char* const fPARENT_SCOPE = "parent";
 const char* const fNAME         = "name";
 const char* const fTHIS         = "this";
-const char* const fSUPERCLASS   = "this";
+const char* const fSUPERCLASS   = "superclass";
 
 #endif  // CONSTANTS_H_ 

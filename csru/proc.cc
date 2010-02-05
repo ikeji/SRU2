@@ -30,11 +30,20 @@ using namespace std;
 
 namespace sru{
 
+DECLARE_SRU_PROC(whileTrue);
+
 void Proc::Initialize(const BasicObjectPtr& obj){
   Class::InitializeInstance(obj,Library::Instance()->Proc());
-}
 
-DECLARE_SRU_PROC(whileTrue);
+  // HACK: avoid infinite loop.
+  static BasicObjectPtr while_true_instance;
+  if(while_true_instance.get() == NULL) {
+    while_true_instance = BasicObject::New(whileTrue);
+    Initialize(while_true_instance);
+  }
+  // TODO: We need class system.
+  obj->Set("whileTrue", while_true_instance); 
+}
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
   Class::SetAsSubclass(proc, NULL);

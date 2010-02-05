@@ -4,6 +4,9 @@
 #include "numeric.h"
 
 #include <cstdlib>
+#include <string>
+#include <iostream>
+#include <sstream>
 #include "basic_object.h"
 #include "class.h"
 #include "library.h"
@@ -43,6 +46,12 @@ int SRUNumeric::GetValue(BasicObjectPtr obj){
   if(!n)
     return 0;
   return n->pimpl->value;
+}
+
+string SRUNumeric::Inspect(){
+  ostringstream o;
+  o << "<Numeric: " << pimpl->value << " >";
+  return o.str();
 }
 
 SRUNumeric::SRUNumeric(int n):

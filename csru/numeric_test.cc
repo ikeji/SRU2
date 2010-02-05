@@ -5,12 +5,14 @@
 #include "testing.h"
 #include <cassert>
 
+#include <iostream>
 #include "numeric.h"
 #include "library.h"
 #include "testing_sru.h"
 #include "string.h"
 #include "constants.h"
 
+using namespace std;
 using namespace sru;
 using namespace sru_test;
 
@@ -22,6 +24,13 @@ TEST(SRUNumeric_InitializeTest){
   obj = SRUNumeric::New(4);
   assert(obj->Get(fCLASS) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(obj) == 4);
+}
+
+TEST(SRUNumeric_InspectTest){
+  cout << SRUNumeric::New(123)->Inspect() << endl;
+  assert(SRUNumeric::New(123)->Inspect() == "<Numeric: 123 >");
+  assert(SRUNumeric::New(0)->Inspect() == "<Numeric: 0 >");
+  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric: -123 >");
 }
 
 TEST(SRUNumeric_ParseTest){

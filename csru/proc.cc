@@ -31,6 +31,7 @@ using namespace std;
 namespace sru{
 
 DECLARE_SRU_PROC(whileTrue);
+DECLARE_SRU_PROC(loop);
 
 void Proc::Initialize(const BasicObjectPtr& obj){
   Class::InitializeInstance(obj,Library::Instance()->Proc());
@@ -41,8 +42,15 @@ void Proc::Initialize(const BasicObjectPtr& obj){
     while_true_instance = BasicObject::New(whileTrue);
     Initialize(while_true_instance);
   }
+  static BasicObjectPtr loop_instance;
+  if(loop_instance.get() == NULL) {
+    loop_instance = BasicObject::New(loop);
+    Initialize(loop_instance);
+  }
   // TODO: We need class system.
+  // TODO: test this functions existed or not.
   obj->Set("whileTrue", while_true_instance); 
+  obj->Set("loop", loop_instance); 
 }
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
@@ -152,6 +160,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
       );
 }
 
+// TODO: test this function.
 DEFINE_SRU_PROC_SMASH(whileTrue){
   static BasicObjectPtr whileTrue_internal;
   assert(arg.size() > 1);
@@ -176,6 +185,7 @@ DEFINE_SRU_PROC_SMASH(_loop_internal){
        ));
 }
 
+// TODO: test this function.
 DEFINE_SRU_PROC_SMASH(loop){
   static BasicObjectPtr loop_internal;
   assert(arg.size() > 0);
@@ -185,7 +195,7 @@ DEFINE_SRU_PROC_SMASH(loop){
       new_binding);
   // TODO: Muliti thread support.
   if(loop_internal == NULL)
-    loop_internal = CREATE_SRU_PROC(loop_internal);
+    loop_internal = CREATE_SRU_PROC(_loop_internal);
 
   new_binding->Set("loop_internal",loop_internal);
   new_binding->Set("block", arg[0]);

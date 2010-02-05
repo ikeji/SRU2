@@ -12,7 +12,7 @@
 using namespace sru;
 using namespace std;
 
-TEST(AST_StringExpression){
+TEST(AST_StringExpressionTest){
   string test = "hogehoge";
   StringExpression* obj = new StringExpression(test);
   test = "foobar";

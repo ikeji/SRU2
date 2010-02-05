@@ -14,7 +14,7 @@ using namespace sru::allocator;
 using namespace std;
 
 
-TEST(ObjectVector_conv){
+TEST(ObjectVector_ConvTest){
   assert(ObjectPool::Instance()->Size() == 0);
   ptr_vector v1;
   v1.push_back(BasicObject::New());

@@ -12,14 +12,14 @@
 using namespace sru;
 using namespace std;
 
-TEST(SRUString_Initialise){
+TEST(SRUString_InitialiseTest){
   BasicObjectPtr obj = SRUString::New("hoge");
   assert(obj->Get(fCLASS).get() == Library::Instance()->String().get());
   assert(SRUString::GetValue(obj) == "hoge");
   assert(obj->Inspect() == "<\"hoge\">");
 }
 
-TEST(SRUString_CLASS){
+TEST(SRUString_ClassTest){
   cout << Library::Instance()->String()->Inspect() << endl;
   // TODO: Fix output format like <String>.
   assert(Library::Instance()->String()->Inspect() ==

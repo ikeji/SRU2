@@ -13,7 +13,7 @@
 using namespace std;
 using namespace sru;
 
-TEST(Class_InitializeInstance){
+TEST(Class_InitializeInstanceTest){
   BasicObjectPtr klass = BasicObject::New();
   BasicObjectPtr instance = BasicObject::New();
   Class::InitializeInstance(instance, klass);

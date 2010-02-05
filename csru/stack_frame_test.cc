@@ -13,13 +13,13 @@
 using namespace sru;
 using namespace std;
 
-TEST(StackFrame_Backup){
+TEST(StackFrame_BackupTest){
   StackFrame st;
   StackFrame st2;
   st = st2;
 }
 
-TEST(StackFrame_EvalStep){
+TEST(StackFrame_EvalStepTest){
   StackFrame st;
   ptr_vector ast;
   ast.push_back(BasicObject::New(new StringExpression("Hello")).get());

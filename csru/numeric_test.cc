@@ -14,7 +14,7 @@
 using namespace sru;
 using namespace sru_test;
 
-TEST(SRUNumeric_Initialize){
+TEST(SRUNumeric_InitializeTest){
   BasicObjectPtr obj = SRUNumeric::New(3);
   assert(obj->Get(fCLASS) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(obj) == 3);
@@ -24,7 +24,7 @@ TEST(SRUNumeric_Initialize){
   assert(SRUNumeric::GetValue(obj) == 4);
 }
 
-TEST(SRUNumeric_parse){
+TEST(SRUNumeric_ParseTest){
   const BasicObjectPtr res = Call(Library::Instance()->Numeric(),"parse",
                                   SRUString::New("3"));
   assert(res.get());

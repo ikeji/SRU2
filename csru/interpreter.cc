@@ -59,8 +59,14 @@ DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
   *Interpreter::Instance()->CurrentStackFrame() = *proc->Get("CurrentStackFrame")->GetData<StackFrame>();
   if(arg.size() > 0){
+#ifdef DEBUG
+    cout << "Contination invoked with: " << arg[0]->Inspect() << endl;
+#endif
     return arg[0];
   }else{
+#ifdef DEBUG
+    cout << "Contination invoked" << endl;
+#endif
     return Library::Instance()->Nil();
   }
 }

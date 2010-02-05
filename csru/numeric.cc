@@ -34,7 +34,7 @@ DEFINE_SRU_PROC(NumericParse){
 
 void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::InitializeInstance(numeric, Library::Instance()->Class());
-  numeric->Set("parse",NumericParse.New());
+  numeric->Set("parse",CREATE_SRU_PROC(NumericParse));
   numeric->Set(fNAME, SRUString::New("Numeric"));
 }
 

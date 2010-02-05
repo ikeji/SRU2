@@ -20,7 +20,24 @@ DEFINE_SRU_PROC(SimpleMethod){
 
 TEST(NativeProc_CallTest){
   ptr_vector v;
-  SimpleMethod.Call(v);
+  SimpleMethod->Call(v);
+  StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
+  assert(st);
+  assert(st->ReturnValue().get());
+}
+
+DECLARE_SRU_PROC(SimpleMethod2);
+
+TEST(NativeProc_DeclareTest){
+  ptr_vector v;
+  SimpleMethod2->Call(v);
+  StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
+  assert(st);
+  assert(st->ReturnValue().get());
+}
+
+DEFINE_SRU_PROC(SimpleMethod2){
+  return BasicObject::New();
 }
 
 DEFINE_SRU_PROC(ReturnString){
@@ -28,7 +45,7 @@ DEFINE_SRU_PROC(ReturnString){
 }
 
 TEST(NativeProc_EvalTest){
-  const BasicObjectPtr& obj = ReturnString.New();
+  const BasicObjectPtr& obj = CREATE_SRU_PROC(ReturnString);
   assert(obj.get());
   Proc* proc = obj->GetData<Proc>();
   assert(proc);
@@ -46,7 +63,7 @@ DEFINE_SRU_PROC(ReturnArgment){
 }
 
 TEST(NativeProc_PassArgTest){
-  const BasicObjectPtr& obj = ReturnArgment.New();
+  const BasicObjectPtr& obj = CREATE_SRU_PROC(ReturnArgment);
   assert(obj.get());
   Proc* proc = obj->GetData<Proc>();
   assert(proc);
@@ -60,6 +77,7 @@ TEST(NativeProc_PassArgTest){
 }
 
 TEST(NativeProc_InspectTest){
-  cout << ReturnString.New()->Inspect() << endl;
-  assert("<Proc: { -- Native Code -- }>" == ReturnString.New()->Inspect());
+  cout << CREATE_SRU_PROC(ReturnString)->Inspect() << endl;
+  assert("<Proc: { -- Native Code -- }>" ==
+         CREATE_SRU_PROC(ReturnString)->Inspect());
 }

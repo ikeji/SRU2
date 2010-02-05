@@ -30,8 +30,15 @@ class NativeProc: public Proc{
   class METHOD_##name:public NativeProc { \
    private: \
     BasicObjectPtr method_body(const ptr_vector& arg); \
-  } name; \
+  }; \
+  NativeProc* name = new METHOD_##name(); \
   BasicObjectPtr METHOD_##name::method_body(const ptr_vector& arg)
+
+#define DECLARE_SRU_PROC(name) \
+  extern NativeProc* name
+
+#define CREATE_SRU_PROC(name) \
+  (name->New())
 
 } // namespace sru
 

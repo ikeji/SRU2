@@ -8,18 +8,15 @@
 #ifndef CLASS_H_ 
 #define CLASS_H_
 
-#include <string>
-#include "basic_object.h"
-#include "constants.h"
-
 namespace sru {
+
+class BasicObjectPtr;
 
 class Class {
  public:
-  static void InitializeInstance(BasicObjectPtr obj,BasicObjectPtr klass){
-    obj->Set(fCLASS,klass);
-    // TODO: InsertClassSystem
-  }
+  static void InitializeInstance(BasicObjectPtr obj,BasicObjectPtr klass);
+  static void SetAsSubclass(BasicObjectPtr obj,BasicObjectPtr klass);
+  static void InitializeClassClass(BasicObjectPtr klass);
 };
 
 } // namespace sru

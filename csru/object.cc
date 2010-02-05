@@ -18,7 +18,7 @@ namespace object_methods {
 namespace sru {
 
 void InitializeObjectClass(const BasicObjectPtr& obj){
-  Class::InitializeInstance(obj, Library::Instance()->Class());
+  Class::SetAsSubclass(obj, Library::Instance()->Nil());
   obj->Set(fNAME, SRUString::New("Object"));
 }
 

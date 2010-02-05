@@ -100,11 +100,11 @@ void Library::Impl::initialiseInteralClasses(){
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
   InitializeObjectClass(Object);
-
+  Class::InitializeClassClass(Class);
   Binding::InitializeClassObject(Binding);
+  SRUNumeric::InitializeClassObject(Numeric);
+  sru_parser::InitializeParserObject(Parser);
 
-  // TODO: Move this to class.cc
-  Class->Set(fNAME, SRUString::New("Class"));
   // TODO: Move this to proc.cc
   Proc->Set(fNAME, SRUString::New("Proc"));
   // TODO: Move this to array.cc
@@ -119,10 +119,6 @@ void Library::Impl::initialiseInteralClasses(){
   True->Set(fNAME, SRUString::New("True"));
   // TODO: Move this to boolean.cc
   False->Set(fNAME, SRUString::New("False"));
-
-  SRUNumeric::InitializeClassObject(Numeric);
-
-  sru_parser::InitializeParserObject(Parser);
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

@@ -37,7 +37,7 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 }
 
 <% 20.times do |n| %>
-#line 42 "testing_sru.herb"
+#line 41 "testing_sru.herb"
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
                                 const std::string& method<% n.times do |i| %>,
                                 const sru::BasicObjectPtr& arg<%= i %><% end %>){
@@ -49,6 +49,22 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 }
 <% end %>
 
+#line 53 "testing_sru.herb"
+inline sru::ptr_vector A(){
+  return sru::ptr_vector();
+}
+
+<% 20.times do |n| %>
+#line 59 "testing_sru.herb"
+inline sru::ptr_vector A(const sru::BasicObjectPtr& obj<% n.times do |i| %>,
+    const sru::BasicObjectPtr& obj<%= i %><% end %>){
+  sru::ptr_vector ret;
+  ret.push_back(obj);
+<% n.times do |i| %>  ret.push_back(obj<%= i %>);
+<% end %>
+  return ret;
+}
+<% end %>
 
 }  // namespace sru_test
 

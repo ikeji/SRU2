@@ -98,7 +98,7 @@ class BasicObject {
     return r;
   }
 
-  std::string Inspect(int limit=100);
+  std::string Inspect(int limit=80);
 
   ~BasicObject();
  private:

@@ -24,8 +24,11 @@ class Interpreter{
     static Interpreter inst;
     return &inst;
   }
+  // TODO: find more good name.
   void DigIntoNewFrame(const ptr_vector& expressions,
                        const BasicObjectPtr& binding);
+  // TODO: find more good name.
+  BasicObjectPtr GetContinationToEscapeFromCurrentStack();
   StackFrame* CurrentStackFrame();
   StackFrame* RootStackFrame();
  private:

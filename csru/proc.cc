@@ -132,6 +132,8 @@ void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
       new_binding->Set(varg[i],Library::Instance()->Nil());
     }
   }
+  if(!retval.empty())
+    new_binding->Set(retval,Interpreter::Instance()->GetContinationToEscapeFromCurrentStack());
 #ifdef DEBUG
   cout << "Current-Binding: " << new_binding->Inspect() << endl;
 #endif

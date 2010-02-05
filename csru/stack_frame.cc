@@ -274,6 +274,10 @@ void StackFrame::SetUpperStack(BasicObjectPtr obj){
   pimpl->upper_frame = obj.get();
 }
 
+BasicObjectPtr StackFrame::GetUpperStack(){
+  return(pimpl->upper_frame);
+}
+
 bool StackFrame::EndOfTrees(){
 #ifdef DEBUG
   cout << "EndOfTrees?:"

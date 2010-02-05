@@ -12,6 +12,7 @@
 #include "stack_frame.h"
 #include "library.h"
 #include "binding.h"
+#include "native_proc.h"
 
 using namespace sru;
 using namespace std;
@@ -52,6 +53,22 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
   pimpl->current_frame = new_frame_object;
   
   new_frame->Setup(expressions);
+}
+
+DEFINE_SRU_PROC(ContinationInvoke){
+  // Move into target stack position.
+  *Interpreter::Instance()->CurrentStackFrame() = *proc->Get("CurrentStackFrame")->GetData<StackFrame>();
+  if(arg.size() > 0){
+    return arg[0];
+  }else{
+    return Library::Instance()->Nil();
+  }
+}
+
+BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
+  const BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
+  cont->Set("CurrentStackFrame", CurrentStackFrame()->GetUpperStack());
+  return cont;
 }
 
 StackFrame* Interpreter::CurrentStackFrame(){

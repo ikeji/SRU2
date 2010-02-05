@@ -12,6 +12,7 @@
 #include "interpreter.h"
 #include "testing_ast.h"
 #include "library.h"
+#include "string.h"
 
 using namespace std;
 using namespace sru;
@@ -133,6 +134,74 @@ TEST(Proc_InspectTest){
   assert(r.get());
   cout << r->Inspect() << endl;
   assert(r->Inspect() == "<Proc: {(a = Class);{a;};>");
+}
+
+TEST(Proc_ContinationTest){
+  // " {a = "1";{|:r| a="2"; r(); a="3"}(); a}() "
+  BasicObjectPtr call2 = C(P(
+      L("a", S("1")),     // a = "1"
+      C(B("r",
+          L("a", S("2")), // a = "2"
+          C(R("r")),
+          L("a", S("3"))  // a = "3"
+        )),
+      R("a")));
+  cout << InspectAST(call2) << endl;
+  assert(InspectAST(call2) == 
+      "{"
+        "(a = \"1\");"
+        "{|:r|"
+          "(a = \"2\");"
+          "r();"
+          "(a = \"3\");"
+        "}();"
+        "a;"
+      "}()");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
+  assert(r.get());
+  assert(SRUString::GetValue(r) == "2");
+}
+
+TEST(Proc_ContinationComplexAndJumpInTest){
+  // {|:q|
+  //   c = {|:r|
+  //     {|:s|
+  //       r(s);  ------+
+  //     }();           |
+  //          <-----+   |
+  //     q("1"); ---|---|--+
+  //   }();         |   |  |
+  //        <-------|---/  |
+  //   c();  -------/      |
+  //   "2";                |
+  // }();                  |
+  //        <--------------/
+  //
+  BasicObjectPtr call2 = C(B("q",    // {|:q|
+        L("c", C(B("r",              //   c = {|:r|
+          C(B("s",                   //     {|:s|
+            C(R("r"),R("s"))         //       r(s);
+          )),                        //     }();
+          C(R("q"),S("1"))           //     q("1");
+          ))),                       //   }();
+        C(R("c")),                   //   c();
+        S("2")                       //   "2";
+        ));                          // }();
+  cout << InspectAST(call2) << endl;
+  assert(InspectAST(call2) == 
+      "{|:q|"
+        "(c = {|:r|"
+          "{|:s|"
+            "r(s);"
+          "}();"
+          "q(\"1\");"
+        "}());"
+        "c();"
+        "\"2\";"
+      "}()");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
+  assert(r.get());
+  assert(SRUString::GetValue(r) == "1");
 }
 
 // TODO: test instance methods "whileTrue".

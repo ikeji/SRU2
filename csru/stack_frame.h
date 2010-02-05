@@ -24,6 +24,7 @@ class StackFrame : public Value{
 
   void Setup(const ptr_vector& expressions);
   void SetUpperStack(BasicObjectPtr obj);
+  BasicObjectPtr GetUpperStack();
   bool EndOfTrees();
   bool EvalNode();
   BasicObjectPtr ReturnValue();

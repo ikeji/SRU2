@@ -49,7 +49,7 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 
 <% 20.times do |e| %><% 20.times do |s| %>
 #line 52 "testing_ast.herb"
-inline sru::BasicObjectPtr P(<% s.times do |i| if i != 0 %>,
+inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
                       <% end %>const std::string& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
                       <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
   std::vector<std::string> varg;
@@ -61,6 +61,23 @@ inline sru::BasicObjectPtr P(<% s.times do |i| if i != 0 %>,
   return sru::ProcExpression::New(varg,"",expressions);
 }
 <% end %><% end %>
+
+<% 20.times do |e| %><% 20.times do |s| %>
+#line 67 "testing_ast.herb"
+inline sru::BasicObjectPtr PR(<% s.times do |i| if i != 0 %>,
+                      <% end %>const std::string& varg<%= i %><% end; if s !=0 %>,
+                      <% end %>const std::string& retval<% e.times do |j| %>,
+                      const sru::BasicObjectPtr& expression<%= j %><% end %>){
+  std::vector<std::string> varg;
+<% s.times do |i| %>  varg.push_back(varg<%= i %>);
+<% end %>
+  sru::ptr_vector expressions;
+<% e.times do |j| %>  expressions.push_back(expression<%= j %>);
+<% end %>
+  return sru::ProcExpression::New(varg,retval,expressions);
+}
+<% end %><% end %>
+
 
 inline sru::BasicObjectPtr S(const std::string& str){
   return sru::StringExpression::New(str);

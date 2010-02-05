@@ -40,6 +40,25 @@ TEST(NativeProc_Eval){
   assert(st->ReturnValue() == Library::Instance()->String());
 }
 
+DEFINE_SRU_PROC(ReturnArgment){
+  assert(arg.size() > 0);
+  return arg[0];
+}
+
+TEST(NativeProc_PassArg){
+  const BasicObjectPtr& obj = ReturnArgment.New();
+  assert(obj.get());
+  Proc* proc = obj->GetData<Proc>();
+  assert(proc);
+  ptr_vector v;
+  v.push_back(Library::Instance()->Numeric());
+  proc->Call(v);
+
+  StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
+  assert(st);
+  assert(st->ReturnValue() == Library::Instance()->Numeric());
+}
+
 TEST(NativeProc_Inspect){
   cout << ReturnString.New()->Inspect() << endl;
   assert("<Proc: { -- Native Code -- }>" == ReturnString.New()->Inspect());

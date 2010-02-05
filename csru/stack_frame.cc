@@ -206,7 +206,7 @@ class EvalVisitor : public Visitor{
 #ifdef DEBUG
     cout << "EVAL-CALL: { " << endl;
 #endif
-    p->Call(args);
+    p->Call(proc, args);
 #ifdef DEBUG
     cout << "EVAL-CALL: } " << endl;
 #endif

@@ -67,7 +67,7 @@ class SRUProc : public Proc{
       expressions(Conv(expressions)),
       binding(binding.get()){
   }
-  void Call(const ptr_vector& arg);
+  void Call(const BasicObjectPtr& proc, const ptr_vector& arg);
   void Mark(){
     binding->Mark();
     MarkVector(&expressions);
@@ -113,7 +113,7 @@ string SRUProc::Inspect(){
   return ret + ">";
 }
 
-void SRUProc::Call(const ptr_vector& arg){
+void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
 #ifdef DEBUG
       cout << "Call sru function" << endl;
 #endif

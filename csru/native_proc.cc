@@ -11,7 +11,7 @@
 using namespace sru;
 using namespace std;
 
-void NativeProc::Call(const ptr_vector& arg){
+void NativeProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
 #ifdef DEBUG
   cout << "Call native proc with: ";
   for(ptr_vector::const_iterator it = arg.begin();
@@ -21,12 +21,13 @@ void NativeProc::Call(const ptr_vector& arg){
   }
   cout << endl;
 #endif
-  BasicObjectPtr ret = method_body(arg);
+  BasicObjectPtr ret = method_body(proc, arg);
   StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
   current_frame->PushResult(ret);
 }
-void NativeProcWithStackSmash::Call(const ptr_vector& arg){
-  method_body_smash(arg);
+void NativeProcWithStackSmash::Call(const BasicObjectPtr& proc,
+                                    const ptr_vector& arg){
+  method_body_smash(proc, arg);
 }
 
 string NativeProc::Inspect(){

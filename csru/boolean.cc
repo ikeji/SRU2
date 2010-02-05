@@ -45,12 +45,12 @@ void InitializeFalseObject(const BasicObjectPtr& farse){
 
 DEFINE_SRU_PROC_SMASH(True_ifTrue){
   assert(arg.size() > 1);
-  arg[1]->GetData<Proc>()->Call(sru_test::A());
+  arg[1]->GetData<Proc>()->Call(arg[1], sru_test::A());
 }
 
 DEFINE_SRU_PROC_SMASH(True_ifTrueFalse){
   assert(arg.size() > 2);
-  arg[1]->GetData<Proc>()->Call(sru_test::A());
+  arg[1]->GetData<Proc>()->Call(arg[1], sru_test::A());
 }
 
 DEFINE_SRU_PROC(False_ifTrue){
@@ -59,7 +59,7 @@ DEFINE_SRU_PROC(False_ifTrue){
 
 DEFINE_SRU_PROC_SMASH(False_ifTrueFalse){
   assert(arg.size() > 2);
-  arg[2]->GetData<Proc>()->Call(sru_test::A());
+  arg[2]->GetData<Proc>()->Call(arg[2], sru_test::A());
 }
 
 }  // namespace sru

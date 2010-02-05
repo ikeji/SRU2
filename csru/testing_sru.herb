@@ -30,7 +30,7 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
     std::cout << "Target: " << obj->Inspect() << std::endl;
     assert(proc);
   }
-  proc->Call(v);
+  proc->Call(m, v);
   sru::StackFrame* st = sru::Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   return st->ReturnValue();

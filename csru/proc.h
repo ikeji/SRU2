@@ -21,7 +21,7 @@ class Proc : public Value{
              const std::string& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding);
-  virtual void Call(const ptr_vector& arg) = 0;
+  virtual void Call(const BasicObjectPtr& proc, const ptr_vector& arg) = 0;
   virtual std::string Inspect();
   static void InitializeClassObject(const BasicObjectPtr& proc);
  protected:

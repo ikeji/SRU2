@@ -16,6 +16,14 @@
 #include "stack_frame.h"
 #include "constants.h"
 #include "class.h"
+#include "native_proc.h"
+#include "string.h"
+#include "class.h"
+
+// TODO: remove this dependency
+#include "testing_ast.h"
+#include "testing_sru.h"
+using namespace sru_test;
 
 using namespace sru;
 using namespace std;
@@ -24,6 +32,14 @@ namespace sru{
 
 void Proc::Initialize(const BasicObjectPtr& obj){
   Class::InitializeInstance(obj,Library::Instance()->Proc());
+}
+
+DECLARE_SRU_PROC(whileTrue);
+
+void Proc::InitializeClassObject(const BasicObjectPtr& proc){
+  Class::SetAsSubclass(proc, NULL);
+  proc->Set(fNAME, SRUString::New("Proc"));
+  Class::SetAsInstanceMethod(proc, "whileTrue", CREATE_SRU_PROC(whileTrue));
 }
 
 string Proc::Inspect(){
@@ -57,7 +73,6 @@ class SRUProc : public Proc{
   SRUProc(const SRUProc& obj);
   SRUProc* operator=(const SRUProc& obj);
 };
-}
 
 BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
              const std::string& retval,
@@ -112,3 +127,33 @@ void SRUProc::Call(const ptr_vector& arg){
   cout << "Current-Binding: " << new_binding->Inspect() << endl;
 #endif
 }
+
+DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
+  Interpreter::Instance()->CurrentStackFrame()->Setup(
+      A(
+        L("result", C(R("condition"))),  // result = condition()
+        C(
+          R(R("result"),"ifTrue"),       // if(result){
+          P(C(R("block")),               //   block();
+            C(R("whileTrue_internal"))   //   whileTrue_internal();
+          )                              // }
+        ))
+      );
+}
+
+DEFINE_SRU_PROC_SMASH(whileTrue){
+  static BasicObjectPtr whileTrue_internal;
+  assert(arg.size() > 1);
+  BasicObjectPtr new_binding = Binding::New();
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(C(R("whileTrue_internal"))),
+      new_binding);
+  if(whileTrue_internal == NULL)
+    whileTrue_internal = CREATE_SRU_PROC(_whileTrue_internal);
+
+  new_binding->Set("whileTrue_internal",whileTrue_internal);
+  new_binding->Set("condition", arg[0]);
+  new_binding->Set("block", arg[1]);
+}
+
+}  // namespace sru

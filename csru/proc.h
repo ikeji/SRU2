@@ -23,6 +23,7 @@ class Proc : public Value{
              const BasicObjectPtr& binding);
   virtual void Call(const ptr_vector& arg) = 0;
   virtual std::string Inspect();
+  static void InitializeClassObject(const BasicObjectPtr& proc);
  protected:
   static void Initialize(const BasicObjectPtr& ptr);
 };

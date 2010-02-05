@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "binding.h"
 #include "boolean.h"
+#include "proc.h"
 
 using namespace sru;
 
@@ -108,9 +109,8 @@ void Library::Impl::initialiseInteralClasses(){
   InitializeBooleanClassObject(Boolean);
   InitializeTrueObject(True);
   InitializeFalseObject(False);
+  Proc::InitializeClassObject(Proc);
 
-  // TODO: Move this to proc.cc
-  Proc->Set(fNAME, SRUString::New("Proc"));
   // TODO: Move this to array.cc
   Array->Set(fNAME, SRUString::New("Array"));
   // TODO: Move this to hash.cc

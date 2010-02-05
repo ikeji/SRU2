@@ -134,3 +134,5 @@ TEST(Proc_InspectTest){
   cout << r->Inspect() << endl;
   assert(r->Inspect() == "<Proc: {(a = Class);{a;};>");
 }
+
+// TODO: test instance methods "whileTrue".

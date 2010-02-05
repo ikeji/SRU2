@@ -9,18 +9,19 @@
 #include <iostream>
 #include "object_vector.h"
 #include "ast.h"
+#include "binding.h"
 
 using namespace sru;
 using namespace std;
 
 TEST(StackFrame_BackupTest){
-  StackFrame st;
-  StackFrame st2;
+  StackFrame st(Binding::New());
+  StackFrame st2(Binding::New());
   st = st2;
 }
 
 TEST(StackFrame_EvalStepTest){
-  StackFrame st;
+  StackFrame st(Binding::New());
   ptr_vector ast;
   ast.push_back(BasicObject::New(new StringExpression("Hello")).get());
   st.Setup(ast);

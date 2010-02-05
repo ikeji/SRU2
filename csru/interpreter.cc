@@ -11,6 +11,7 @@
 #include "object_vector.h"
 #include "stack_frame.h"
 #include "library.h"
+#include "binding.h"
 
 using namespace sru;
 using namespace std;
@@ -31,7 +32,7 @@ Interpreter::~Interpreter(){
 }
 
 void Interpreter::InitializeInterpreter(){
-  BasicObjectPtr st = StackFrame::New();
+  BasicObjectPtr st = StackFrame::New(Binding::New());
   pimpl->current_frame = st;
   pimpl->root_frame = st;
   BasicObjectPtr bind = st->GetData<StackFrame>()->Binding();

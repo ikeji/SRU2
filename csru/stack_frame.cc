@@ -200,8 +200,13 @@ class EvalVisitor : public Visitor{
       args.push_back(*it);
 
     BasicObjectPtr proc = Pop();
-    Proc* p = proc->GetData<Proc>();
     // TODO: Show more meaningful error.
+#ifdef DEBUG
+    if(!(dynamic_cast<Proc*>(proc->Data()))){
+      cout << "Can't invoke " << proc->Inspect() << " object" << endl;
+    }
+#endif
+    Proc* p = proc->GetData<Proc>();
     assert(p || !"First error: Call target is must proc");
 #ifdef DEBUG
     cout << "EVAL-CALL: { " << endl;

@@ -16,7 +16,7 @@ TEST(Boolean_InitializeTest){
   BasicObjectPtr boolean = Library::Instance()->Boolean();
   assert(boolean.get());
   assert(boolean->Get(fCLASS) == Library::Instance()->Class());
-  assert(boolean->Get(fSUPER) == Library::Instance()->Object());
+  assert(boolean->Get(fSUPERCLASS) == Library::Instance()->Object());
 }
 TEST(Boolean_InitializeTrueTest){ 
   BasicObjectPtr tlue = Library::Instance()->True();

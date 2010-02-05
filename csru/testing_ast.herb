@@ -64,7 +64,7 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
 
 <% 20.times do |e| %><% 20.times do |s| %>
 #line 67 "testing_ast.herb"
-inline sru::BasicObjectPtr PR(<% s.times do |i| if i != 0 %>,
+inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
                       <% end %>const std::string& varg<%= i %><% end; if s !=0 %>,
                       <% end %>const std::string& retval<% e.times do |j| %>,
                       const sru::BasicObjectPtr& expression<%= j %><% end %>){

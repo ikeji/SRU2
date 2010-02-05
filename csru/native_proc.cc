@@ -15,6 +15,9 @@ void NativeProc::Call(const ptr_vector& arg){
   StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
   current_frame->PushResult(ret);
 }
+void NativeProcWithStackSmash::Call(const ptr_vector& arg){
+  method_body_smash(arg);
+}
 
 string NativeProc::Inspect(){
   return "<Proc: { -- Native Code -- }>";

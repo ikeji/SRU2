@@ -26,6 +26,14 @@ TEST(NativeProc_CallTest){
   assert(st->ReturnValue().get());
 }
 
+DEFINE_SRU_PROC_SMASH(SimpleMethodSmash){
+}
+
+TEST(NativeProc_CallSmashTest){
+  ptr_vector v;
+  SimpleMethodSmash->Call(v);
+}
+
 DECLARE_SRU_PROC(SimpleMethod2);
 
 TEST(NativeProc_DeclareTest){

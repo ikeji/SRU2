@@ -124,11 +124,12 @@ object_test.o: testing.h object.h basic_object.h
 object_vector.o: object_vector.h basic_object.h
 object_vector_test.o: testing.h object_vector.h basic_object.h object_pool.h
 parser.o: parser.h basic_object.h native_proc.h proc.h object_vector.h
-parser.o: constants.h binding.h library.h class.h string.h testing_ast.h
-parser.o: ast.h testing_sru.h interpreter.h stack_frame.h
+parser.o: constants.h binding.h library.h class.h string.h numeric.h
+parser.o: testing_ast.h ast.h testing_sru.h interpreter.h stack_frame.h
 parser_helper.o: native_proc.h proc.h basic_object.h object_vector.h string.h
 parser_helper.o: numeric.h library.h testing_ast.h ast.h
-parser_test.o: parser.h basic_object.h testing.h
+parser_test.o: parser.h basic_object.h testing.h interpreter.h
+parser_test.o: object_vector.h numeric.h library.h constants.h string.h
 proc.o: proc.h basic_object.h object_vector.h ast.h binding.h library.h
 proc.o: constants.h class.h interpreter.h stack_frame.h native_proc.h
 proc.o: string.h testing_ast.h testing_sru.h

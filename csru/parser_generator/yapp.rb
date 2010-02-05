@@ -9,6 +9,7 @@ class ParserBuilder
   def self.build(&proc)
     p = self.new
     p.instance_eval &proc
+    p.regester_terminal_symbols
     p
   end
 
@@ -40,7 +41,7 @@ class ParserBuilder
 
   def regester_terminal_symbols
     r = RegesterTerminalSymbolsInternal.new(self)
-    @symbols.each{|s| @syntaxes[s].accept(r)}
+    @symbols.each{|s| @syntaxes[s] && @syntaxes[s].accept(r)}
   end
 
   def symbol(*symbols)
@@ -178,22 +179,26 @@ class CppCodeBuilder
     self.new.print(parser)
   end
   def print(parser)
+    # TODO: move this to template file.
     ret = <<-EOL
 // Programing Language SRU
 // Copyright(C) 2005-2010 IKeJI
 // 
 
+#include <iostream>
 #include "parser.h"
 #include "basic_object.h"
 #include "native_proc.h"
 #include "constants.h"
 #include "binding.h"
 #include "string.h"
+#include "numeric.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
 #include "testing_sru.h"
 
+using namespace std;
 using namespace sru;
 using namespace sru_test;
 
@@ -207,8 +212,19 @@ DECLARE_SRU_PROC(#{sym.to_s});#{pri(parser,sym)}
     end
     ret += <<-EOL
 
+    EOL
+    parser.terms.each do|term|
+      ret += <<-EOL
+DECLARE_SRU_PROC(term#{term.num});// #{term.string}
+      EOL
+    end
+    ret += <<-EOL
+
+DECLARE_SRU_PROC(Parse);
+
 void sru_parser::InitializeParserObject(BasicObjectPtr& parser){
   parser->Set(fNAME, SRUString::New("sru_parser"));
+  parser->Set("parse", CREATE_SRU_PROC(Parse));
 
     EOL
     parser.symbols.each do|sym|
@@ -227,12 +243,23 @@ void sru_parser::InitializeParserObject(BasicObjectPtr& parser){
     ret += <<-EOL
 }
 
+DEFINE_SRU_PROC_SMASH(Parse){
+  assert(arg.size() > 1);
+  // TODO: check arg0
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(R(C(R(R(fTHIS),"program"), R(fTHIS), R("src"), C(R(R("Numeric"),"parse"),R("Numeric"),S("0"))),"ast")),
+      Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
+  // Push args to local
+  BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
+  binding->Set(fTHIS, arg[0]);
+  binding->Set("src", arg[1]);
+}
 
     EOL
     parser.syntaxes.keys.each do |sym|
       ret += <<-EOL
 DEFINE_SRU_PROC_SMASH(#{sym}){
-#{pri(parser,sym)}
+#{pri2(parser,sym)}
   assert(arg.size()>2);
   // TODO: Check argument.
   Interpreter::Instance()->DigIntoNewFrame(
@@ -284,6 +311,15 @@ DEFINE_SRU_PROC(term#{term.num}){
     return "  // #{parser.syntaxes[sym].accept(Printer.new)}" if(parser.syntaxes[sym])
     ""
   end
+  def pri2(parser, sym)
+    return "" if(! parser.syntaxes[sym])
+    r = parser.syntaxes[sym].accept(Printer.new)
+    return <<-EOL 
+  // #{r}
+  cout << "Enter parser: #{sym} <= #{r.gsub(/"/,'\"')}" << endl;
+    EOL
+    ""
+  end
   def prii(p)
     p.accept(Printer.new)
   end
@@ -300,7 +336,9 @@ L("result#{n}",
     R("status#{n}"),
     P(R("result#{n+1}")),
     P(
-#{spc(6,peg.left.accept(self, n+1))}
+#{spc(6,peg.right.accept(self, n+1))}
+      ,
+      R("result#{n+1}")
     )
   )
 )
@@ -321,7 +359,9 @@ L("result#{n}",
     R("status#{n}"),
     P(
       L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
-#{spc(6,peg.left.accept(self, n+1))}
+#{spc(6,peg.right.accept(self, n+1))}
+      ,
+      R("result#{n+1}")
     ),
     P(R("result#{n+1}"))
   )
@@ -362,14 +402,16 @@ L("result#{n}",
 // index: #{n}
 L("result#{n}",
   C(B("break#{n}",
+    L("pos#{n+1}", R("pos#{n}")),
+    L("last#{n}", R("nil")),
     L("block#{n}", P(
-      L("pos#{n+1}", R("pos#{n}")),
 #{spc(6, peg.cont.accept(self, n+1))}
       ,
       L("status#{n}", R(R("result#{n+1}"),"status")),
       C(R(R("status#{n}"),"ifFalse"),
         R("status#{n}"),
         P(C(R("break#{n}"),R("last#{n}")))),
+      L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
       L("last#{n}", R("result#{n+1}"))
     )),
     C(R(R("block#{n}"),"loop"),R("block#{n}"))

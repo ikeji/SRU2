@@ -58,17 +58,17 @@ all: sru sru_test
 test: all
 	./sru_test
 
-sru: parser $(OBJS) main.o
+sru: $(OBJS) main.o
 	$(CXX) $(LDFLAGS) -g -o sru $(OBJS) main.o
 
-sru_test: parser testing.o $(TESTS) $(OBJS)
+sru_test: testing.o $(TESTS) $(OBJS)
 	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
 	make -C parser_generator clean
 	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES) parser.cc
 
-depend: $(GENFILES) parser
+depend: $(GENFILES) parser.cc
 	make -C parser_generator depend
 	makedepend *.cc
 
@@ -81,7 +81,7 @@ tags:
 	$(ERB) < $< > $@.tmp
 	mv $@.tmp $@
 
-parser:
+parser.cc:
 	make -C parser_generator
 	cp -u parser_generator/parser.cc parser.cc
 

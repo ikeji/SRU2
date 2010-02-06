@@ -8,7 +8,7 @@ p = ParserBuilder.build() do
   list <= spc * "(" * (define | lambda | call ) * ")"
   define <= "define" * spc * id * spc * list
   lambda <= "lambda" * spc * "(" * spc * id * r( spc * "," *spc * id ) * spc * ")" * program
-  call <= program * r(spc * program)
+  call <= expression * r(spc * expression)
   ref <= id * '.' * ref | id 
   literal <= stringliteral
 end

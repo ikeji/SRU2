@@ -104,11 +104,11 @@ DEFINE_SRU_PROC(stringliteral){
   string str = SRUString::GetValue(arg[1]);
   int pos = SRUNumeric::GetValue(arg[2]);
   BasicObjectPtr ret = BasicObject::New();
-  int epos = pos;
   if(str[pos] != '"'){  // this is not string literal.
     ret->Set("status", Library::Instance()->False());
     return ret;
   }
+  int epos = pos + 1;
   while(true){
     if(epos > (int)str.size()) break;
     if(str[epos] == '"') break;
@@ -123,7 +123,7 @@ DEFINE_SRU_PROC(stringliteral){
 #endif
     ret->Set("status", Library::Instance()->True());
     ret->Set("ast", S(substr));
-    ret->Set("pos", SRUNumeric::New(epos));
+    ret->Set("pos", SRUNumeric::New(epos + 1));
   }
   return ret;
 }

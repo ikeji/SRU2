@@ -32,3 +32,11 @@ TEST(Parser_ParseRefTest){
   assert(r == Library::Instance()->Parser());
 }
 
+TEST(Parser_ParseStringTest){
+  // "\"hoge\""
+  string code = "\"hoge\"";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(SRUString::GetValue(r) == "hoge");
+}
+

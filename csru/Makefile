@@ -73,7 +73,7 @@ clean:
 	make -C parser_generator clean
 	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES) parser.cc
 
-depend: $(GENFILES) parser.cc
+depend: parser $(GENFILES) parser.cc
 	make -C parser_generator depend
 	makedepend *.cc
 

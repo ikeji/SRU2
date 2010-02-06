@@ -39,7 +39,7 @@ proc_test.o \
 stack_frame_test.o \
 string_test.o \
 
-#DFLAGS   = -DDEBUG
+DFLAGS   = -DDEBUG
 GENFILES = testing_ast.h testing_sru.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ $(DFLAGS)
 CPFLAGS  = -u

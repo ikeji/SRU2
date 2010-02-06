@@ -39,7 +39,7 @@ proc_test.o \
 stack_frame_test.o \
 string_test.o \
 
-DFLAGS   = -DDEBUG
+#DFLAGS   = -DDEBUG
 GENFILES = testing_ast.h testing_sru.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ $(DFLAGS)
 CPFLAGS  = -u
@@ -58,7 +58,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   LDFLAGS  = -mno-cygwin -L/usr/lib/mingw
 endif
 
-all: sru sru_test
+all: parser sru sru_test
 
 test: all
 	./sru_test
@@ -86,9 +86,11 @@ tags:
 	$(ERB) < $< > $@.tmp
 	mv $@.tmp $@
 
-parser.cc:
-	make -C parser_generator
+parser.cc: parser_generator/parser.cc
 	cp $(CPFLAGS) parser_generator/parser.cc parser.cc
+
+parser:
+	make -C parser_generator
 
 # DO NOT DELETE
 

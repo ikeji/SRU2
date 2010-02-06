@@ -42,7 +42,13 @@ string_test.o \
 DFLAGS   = -DDEBUG
 GENFILES = testing_ast.h testing_sru.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ $(DFLAGS)
+CPFLAGS  = -u
 ERB      = erb
+
+ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
+  # BSD cp doesn't support -u option.
+  CPFLAGS =
+endif
 
 ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-4 doesn't support mingw now. use g++-3
@@ -50,7 +56,6 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-3 doesn't work with -Weffc++
   CXXFLAGS = -g -O0 -Wall -Werror -mno-cygwin -I/usr/include/mingw $(DFLAGS)
   LDFLAGS  = -mno-cygwin -L/usr/lib/mingw
-else
 endif
 
 all: sru sru_test
@@ -83,7 +88,7 @@ tags:
 
 parser.cc:
 	make -C parser_generator
-	cp -u parser_generator/parser.cc parser.cc
+	cp $(CPFLAGS) parser_generator/parser.cc parser.cc
 
 # DO NOT DELETE
 

@@ -63,7 +63,9 @@ DEFINE_SRU_PROC(number){
 }
 
 DEFINE_SRU_PROC(id){
+#if DEBUG
   cout << "checkid" << endl;
+#endif
   assert(arg.size() > 2);
   string str = SRUString::GetValue(arg[1]);
   int pos = SRUNumeric::GetValue(arg[2]);
@@ -84,7 +86,9 @@ DEFINE_SRU_PROC(id){
     ret->Set("status", Library::Instance()->False());
   }else{
     string substr = str.substr(pos, epos-pos);
+#if DEBUG
     cout << "Match to id: " << substr << endl;
+#endif
     ret->Set("status", Library::Instance()->True());
     ret->Set("ast", R(substr));
     ret->Set("pos", SRUNumeric::New(epos));
@@ -93,6 +97,9 @@ DEFINE_SRU_PROC(id){
 }
 
 DEFINE_SRU_PROC(stringliteral){
+#if DEBUG
+  cout << "checkstringliteral" << endl;
+#endif
   assert(arg.size() > 2);
   string str = SRUString::GetValue(arg[1]);
   int pos = SRUNumeric::GetValue(arg[2]);
@@ -111,6 +118,9 @@ DEFINE_SRU_PROC(stringliteral){
     ret->Set("status", Library::Instance()->False());
   }else{
     string substr = str.substr(pos+1, epos-pos-1); // cut " s
+#if DEBUG
+    cout << "Match to string: " << substr << endl;
+#endif
     ret->Set("status", Library::Instance()->True());
     ret->Set("ast", S(substr));
     ret->Set("pos", SRUNumeric::New(epos));

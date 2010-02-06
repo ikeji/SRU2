@@ -314,9 +314,11 @@ DEFINE_SRU_PROC(term#{term.num}){
   def pri2(parser, sym)
     return "" if(! parser.syntaxes[sym])
     r = parser.syntaxes[sym].accept(Printer.new)
-    return <<-EOL 
+    return <<-EOL
   // #{r}
+#if DEBUG
   cout << "Enter parser: #{sym} <= #{r.gsub(/"/,'\"')}" << endl;
+#endif
     EOL
     ""
   end

@@ -35,7 +35,7 @@ class NativeProcWithStackSmash: public NativeProc{
   void Call(const BasicObjectPtr& ptr, const ptr_vector& arg);
   // TODO: Remove this.
   BasicObjectPtr method_body(const BasicObjectPtr& proc,
-                             const ptr_vector& arg){assert(false);};
+                             const ptr_vector& arg){assert(false);return NULL;};
   virtual void method_body_smash(const BasicObjectPtr& proc,
                                  const ptr_vector& arg) = 0;
 };

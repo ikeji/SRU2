@@ -222,7 +222,7 @@ DECLARE_SRU_PROC(term#{term.num});// #{term.string}
 
 DECLARE_SRU_PROC(Parse);
 
-void sru_parser::InitializeParserObject(BasicObjectPtr& parser){
+void InitializeParserObject(BasicObjectPtr& parser){
   parser->Set(fNAME, SRUString::New("sru_parser"));
   parser->Set("parse", CREATE_SRU_PROC(Parse));
 

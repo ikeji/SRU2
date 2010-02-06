@@ -17,7 +17,7 @@
 
 namespace sru {
 
-void sru::InitializeBooleanClassObject(const BasicObjectPtr& boolean){
+void InitializeBooleanClassObject(const BasicObjectPtr& boolean){
   Class::SetAsSubclass(boolean,NULL);
   boolean->Set(fNAME, SRUString::New("Boolean"));
 }

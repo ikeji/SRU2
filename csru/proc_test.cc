@@ -5,7 +5,6 @@
 #include "testing.h"
 #include "proc.h"
 
-#include <iostream>
 #include <cassert>
 #include <vector>
 #include "ast.h"
@@ -13,6 +12,7 @@
 #include "testing_ast.h"
 #include "library.h"
 #include "string.h"
+#include "logging.h"
 
 using namespace std;
 using namespace sru;
@@ -36,7 +36,7 @@ TEST(Proc_EvalTest){
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc,arg);
-  cout << InspectAST(call) << endl;
+  LOG << InspectAST(call);
   assert(InspectAST(call) == "{Class;}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -56,7 +56,7 @@ TEST(Proc_EvalTest2){
   ptr_vector arg;
   arg.push_back(ref2);
   BasicObjectPtr call = CallExpression::New(proc,arg);
-  cout << InspectAST(call) << endl;
+  LOG << InspectAST(call);
   assert(InspectAST(call) == "{|a|a;}(Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -85,10 +85,10 @@ TEST(Proc_EvalTest3){
   
   ptr_vector arg;
   BasicObjectPtr call = CallExpression::New(proc2,arg);
-  cout << InspectAST(call) << endl;
+  LOG << InspectAST(call);
   assert(InspectAST(call) == "{(a = Class);{a;};}()");
   BasicObjectPtr call2 = CallExpression::New(call,arg);
-  cout << InspectAST(call2) << endl;
+  LOG << InspectAST(call2);
   assert(InspectAST(call2) == "{(a = Class);{a;};}()()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());
@@ -98,7 +98,7 @@ TEST(Proc_EvalTest3){
 TEST(Proc_NewEvalTest){
   // " { Class }() "
   BasicObjectPtr call = C(P(R("Class")));
-  cout << InspectAST(call) << endl;
+  LOG << InspectAST(call);
   assert(InspectAST(call) == "{Class;}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -108,7 +108,7 @@ TEST(Proc_NewEvalTest){
 TEST(Proc_NewEvalTest2){
   // " {|a| a }(Class) "
   BasicObjectPtr call = C(P("a",R("a")),R("Class"));
-  cout << InspectAST(call) << endl;
+  LOG << InspectAST(call);
   assert(InspectAST(call) == "{|a|a;}(Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call);
   assert(r.get());
@@ -118,7 +118,7 @@ TEST(Proc_NewEvalTest2){
 TEST(Proc_NewEvalTest3){
   // " { a = Class;{a} }()() "
   BasicObjectPtr call2 = C(C(P(L("a",R("Class")),P(R("a")))));
-  cout << InspectAST(call2) << endl;
+  LOG << InspectAST(call2);
   assert(InspectAST(call2) == "{(a = Class);{a;};}()()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());
@@ -128,11 +128,11 @@ TEST(Proc_NewEvalTest3){
 TEST(Proc_InspectTest){
   // " { a = Class;{a} } "
   BasicObjectPtr m = P(L("a",R("Class")),P(R("a")));
-  cout << InspectAST(m) << endl;
+  LOG << InspectAST(m);
   assert(InspectAST(m) == "{(a = Class);{a;};}");
   BasicObjectPtr r = Interpreter::Instance()->Eval(m);
   assert(r.get());
-  cout << r->Inspect() << endl;
+  LOG << r->Inspect();
   assert(r->Inspect() == "<Proc: {(a = Class);{a;};>");
 }
 
@@ -146,7 +146,7 @@ TEST(Proc_ContinationTest){
           L("a", S("3"))  // a = "3"
         )),
       R("a")));
-  cout << InspectAST(call2) << endl;
+  LOG << InspectAST(call2);
   assert(InspectAST(call2) == 
       "{"
         "(a = \"1\");"
@@ -187,7 +187,7 @@ TEST(Proc_ContinationComplexAndJumpInTest){
         C(R("c")),                   //   c();
         S("2")                       //   "2";
         ));                          // }();
-  cout << InspectAST(call2) << endl;
+  LOG << InspectAST(call2);
   assert(InspectAST(call2) == 
       "{|:q|"
         "(c = {|:r|"

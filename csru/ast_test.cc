@@ -7,7 +7,7 @@
 #include "ast.h"
 
 #include <string>
-#include <iostream>
+#include "logging.h"
 
 using namespace sru;
 using namespace std;
@@ -16,7 +16,7 @@ TEST(AST_StringExpressionTest){
   string test = "hogehoge";
   StringExpression* obj = new StringExpression(test);
   test = "foobar";
-  cout << obj->InspectAST() << endl;
+  LOG << obj->InspectAST();
   assert(obj->InspectAST() == "\"hogehoge\"");
   assert(obj->String() != test);
   assert(obj->String() == "hogehoge");

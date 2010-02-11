@@ -18,10 +18,7 @@
 #include <cassert>
 #include <string>
 #include <map>
-
-#ifdef DEBUG
-#include <iostream>
-#endif
+#include "logging.h"
 
 namespace sru {
 
@@ -60,11 +57,7 @@ class BasicObject {
     fields[name] = ref.get();
   }
   BasicObjectPtr Get(const std::string& name){
-#ifdef DEBUG
-    if(!HasSlot(name))
-      std::cout << "Error: unknwn slot: " << name <<
-        " in: " << Inspect() << std::endl;
-#endif
+    CHECK(HasSlot(name)) << "Error: unknwn slot: " << name << " in: " << Inspect();
     assert(fields.find(name) != fields.end());
     return BasicObjectPtr(fields[name]);
   };
@@ -81,16 +74,12 @@ class BasicObject {
   void SetGcCounter(int i) { gc_counter = i; }
   void IncrementGcCounter() {
     gc_counter++; 
-#ifdef DEBUG2
-    std::cout <<"inc:" << Inspect() << " -> " << gc_counter << std::endl;
-#endif
+    LOG <<"inc:" << Inspect() << " -> " << gc_counter;
   }
   void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
-#ifdef DEBUG2
-    std::cout <<"dec:" << Inspect() << " -> " << gc_counter << std::endl;
-#endif
+    LOG <<"dec:" << Inspect() << " -> " << gc_counter;
   }
 
   Value* Data(){ return data; }

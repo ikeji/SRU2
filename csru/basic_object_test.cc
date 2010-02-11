@@ -5,7 +5,6 @@
 #include "testing.h"
 #include "basic_object.h"
 
-#include <iostream>
 #include <cassert>
 
 using namespace std;

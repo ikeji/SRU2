@@ -5,7 +5,6 @@
 
 #include <string>
 #include <map>
-#include <iostream>
 #include <sstream>
 #include "object_pool.h"
 #include "constants.h"

@@ -6,10 +6,10 @@
 #include "stack_frame.h"
 
 #include <cassert>
-#include <iostream>
 #include "object_vector.h"
 #include "ast.h"
 #include "binding.h"
+#include "logging.h"
 
 using namespace sru;
 using namespace std;
@@ -32,6 +32,6 @@ TEST(StackFrame_EvalStepTest){
   }
   // Step1: Extract Tree
   // Step2: Eval StringExpression
-  if(counter != 2) cout << "counter :" << counter << endl;
+  LOG << "counter :" << counter;
   assert(counter == 2);
 }

@@ -4,7 +4,6 @@
 
 #include "stack_frame.h"
 
-#include <iostream>
 #include <vector>
 #include "object_vector.h"
 #include "basic_object.h"
@@ -14,6 +13,7 @@
 #include "library.h"
 #include "binding.h"
 #include "constants.h"
+#include "logging.h"
 
 using namespace std;
 using namespace sru;
@@ -66,31 +66,23 @@ class TraceVisitor : public Visitor{
     obj->GetData<Expression>()->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "TRACE-LET: " << exp->Inspect() << endl;
-#endif
+    LOG << "TRACE-LET: " << exp->Inspect();
     if(exp->Env())
       VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "TRACE-REF: " << exp->Inspect() << endl;
-#endif
+    LOG << "TRACE-REF: " << exp->Inspect();
     if(exp->Env())
       VisitTo(exp->Env());
     result->push_back(obj.get());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "TRACE-CALL: " << exp->Inspect() << endl;
-    cout << "TRACE-CALL(PROC)" << endl;
-#endif
+    LOG << "TRACE-CALL: " << exp->Inspect();
+    LOG << "TRACE-CALL(PROC)";
     VisitTo(exp->Proc());
-#ifdef DEBUG
-    cout << "TRACE-CALL(ARGS)" << endl;
-#endif
+    LOG << "TRACE-CALL(ARGS)";
     for(object_vector::const_iterator it = exp->Arg().begin();
         it != exp->Arg().end();
         it++)
@@ -98,15 +90,11 @@ class TraceVisitor : public Visitor{
     result->push_back(obj.get());
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "TRACE-PROC: " << exp->Inspect() << endl;
-#endif
+    LOG << "TRACE-PROC: " << exp->Inspect();
     result->push_back(obj.get());
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "TRACE-STRING: " << exp->Inspect() << endl;
-#endif
+    LOG << "TRACE-STRING: " << exp->Inspect();
     result->push_back(obj.get());
   }
   object_vector* result;
@@ -154,10 +142,8 @@ class EvalVisitor : public Visitor{
       // if not found exist slot, use current frame's enviroment.
       env->Set(exp->Name(),rightValue);
     }
-#ifdef DEBUG
-    cout << "EVAL-LET: " << exp->Name() << " = " << rightValue->Inspect() << endl;
-    cout << "CURRENT-SCOPE: " << binding->Inspect() << endl;
-#endif
+    LOG << "EVAL-LET: " << exp->Name() << " = " << rightValue->Inspect();
+    LOG << "CURRENT-SCOPE: " << binding->Inspect();
     Push(rightValue);
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
@@ -169,16 +155,12 @@ class EvalVisitor : public Visitor{
     }
     // find slot
     if(env->HasSlot(exp->Name())){
-#ifdef DEBUG
-      cout << "EVAL-REF: " << env->Get(exp->Name())->Inspect() << endl;
-#endif
+      LOG << "EVAL-REF: " << env->Get(exp->Name())->Inspect();
       Push(env->Get(exp->Name()));
       return;
     }
     if(env->HasSlot(fFIND_SLOT)){
-#ifdef DEBUG
-      cout << "EVAL-REF-FIND_SLOT" << endl;
-#endif
+      LOG << "EVAL-REF-FIND_SLOT";
       ptr_vector args;
       args.push_back(env);
       args.push_back(SRUString::New(exp->Name()));
@@ -187,9 +169,7 @@ class EvalVisitor : public Visitor{
       return;
     }
     // if not found exist slot
-#ifdef DEBUG
-    cout << "EVAL-REF: nil " << endl;
-#endif
+    LOG << "EVAL-REF: nil ";
     Push(Library::Instance()->Nil());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
@@ -208,27 +188,19 @@ class EvalVisitor : public Visitor{
       args.push_back(*it);
 
     BasicObjectPtr proc = Pop();
-#ifdef DEBUG
-    cout << "EVAL-CALL: { " << endl;
-#endif
+    LOG << "EVAL-CALL: { ";
     Proc::Invoke(proc,args);
-#ifdef DEBUG
-    cout << "EVAL-CALL: } " << endl;
-#endif
+    LOG << "EVAL-CALL: } ";
     // Caller must push return value.
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "EVAL-PROC: {} " << endl;
-#endif
+    LOG << "EVAL-PROC: {} ";
     Push(Proc::New(
              exp->Varg(),exp->RetVal(),
              Conv(exp->Expressions()),binding));
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
-#ifdef DEBUG
-    cout << "EVAL-STRING:" << exp->String() << endl;
-#endif
+    LOG << "EVAL-STRING:" << exp->String();
     Push(SRUString::New(exp->String()));
   }
   object_vector* local_stack;
@@ -240,9 +212,7 @@ class EvalVisitor : public Visitor{
 };
 
 bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
-#ifdef DEBUG
-  cout << "SetupTree: " << ast->GetData<Expression>()->Inspect() << endl;
-#endif
+  LOG << "SetupTree: " << ast->GetData<Expression>()->Inspect();
   local_stack.clear();
   operations.clear();
   TraceVisitor tracer(&operations);
@@ -252,15 +222,15 @@ bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
 }
 
 void StackFrame::Setup(const ptr_vector& asts){
-#ifdef DEBUG
-  cout << "Setup: ";
-  for(ptr_vector::const_iterator it = asts.begin();
-      it != asts.end();
-      it++){
-    cout << (*it)->GetData<Expression>()->Inspect();
+  IF_DEBUG{
+    LOGOBJ(log);
+    log.cout() << "Setup: ";
+    for(ptr_vector::const_iterator it = asts.begin();
+        it != asts.end();
+        it++){
+      log.cout() << (*it)->GetData<Expression>()->Inspect();
+    }
   }
-  cout << endl;
-#endif
   pimpl->expressions = Conv(asts);
   pimpl->tree_it = 0;
   pimpl->operations.clear();
@@ -268,9 +238,7 @@ void StackFrame::Setup(const ptr_vector& asts){
 }
 
 void StackFrame::SetUpperStack(BasicObjectPtr obj){
-#ifdef DEBUG
-  cout << "SetUpperStack" << endl;
-#endif
+  LOG << "SetUpperStack";
   pimpl->upper_frame = obj.get();
 }
 
@@ -279,40 +247,30 @@ BasicObjectPtr StackFrame::GetUpperStack(){
 }
 
 bool StackFrame::EndOfTrees(){
-#ifdef DEBUG
-  cout << "EndOfTrees?:"
-       << " root?:" <<
-           (pimpl->upper_frame == NULL)
-       << " lastline?:" <<
-           (pimpl->expressions.size() == pimpl->tree_it)
-       << " lastop?:" << 
-           (pimpl->operations.size() == pimpl->it) << endl;
-#endif
+  LOG << "EndOfTrees?:"
+      << " root?:" <<
+          (pimpl->upper_frame == NULL)
+      << " lastline?:" <<
+          (pimpl->expressions.size() == pimpl->tree_it)
+      << " lastop?:" << 
+          (pimpl->operations.size() == pimpl->it);
   return pimpl->upper_frame == NULL &&
          pimpl->expressions.size() == pimpl->tree_it &&
          pimpl->operations.size() == pimpl->it;
 }
 
 bool StackFrame::EvalNode(){
-#ifdef DEBUG
-  cout << "EvalNode" << endl;
-#endif
+  LOG << "EvalNode";
   assert(!EndOfTrees());
   if(pimpl->operations.size() == pimpl->it){
-#ifdef DEBUG
-    cout << "LastOperation" << endl;
-#endif
+    LOG << "LastOperation";
     if(pimpl->expressions.size() == pimpl->tree_it){
-#ifdef DEBUG
-      cout << "LastExpression" << endl;
-#endif
+      LOG << "LastExpression";
       BasicObjectPtr rv = ReturnValue();
       StackFrame* st = pimpl->upper_frame->GetData<StackFrame>();
       if(st == NULL)
         return false;
-#ifdef DEBUG
-      cout << "Step Out:" << pimpl->upper_frame->Inspect() << endl;
-#endif
+      LOG << "Step Out:" << pimpl->upper_frame->Inspect();
       *this = *st;
       pimpl->local_stack.push_back(rv.get());
       return true;
@@ -325,11 +283,7 @@ bool StackFrame::EvalNode(){
   // We need step forward before exec each code.
   BasicObjectPtr cur = pimpl->operations[pimpl->it];
   pimpl->it++;
-#ifdef DEBUG
-  cout << "Eval: ";
-  cout << cur->GetData<Expression>()->Inspect();
-  cout << endl;
-#endif
+  LOG << "Eval: " << cur->GetData<Expression>()->Inspect();
   // Execute immidentry
   Expression* exp = cur->GetData<Expression>();
   assert(exp);

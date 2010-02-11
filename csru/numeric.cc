@@ -5,7 +5,6 @@
 
 #include <cstdlib>
 #include <string>
-#include <iostream>
 #include <sstream>
 #include "basic_object.h"
 #include "class.h"

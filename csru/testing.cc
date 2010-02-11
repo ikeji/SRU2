@@ -80,6 +80,8 @@ int TestCollection::RunTest(const string& name){
   return 0;
 }
 
+#include "logging.h"
+
 int main(int argc, char* argv[]){
   assert(argc > 0);
 

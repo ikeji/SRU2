@@ -6,7 +6,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 #include "ast.h"
 #include "basic_object.h"
 #include "binding.h"
@@ -19,6 +18,7 @@
 #include "native_proc.h"
 #include "string.h"
 #include "class.h"
+#include "logging.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -66,11 +66,8 @@ string Proc::Inspect(){
 void Proc::Invoke(const BasicObjectPtr& proc,
                   const ptr_vector& args){
   // TODO: Show more meaningful error.
-#ifdef DEBUG
-  if(!(dynamic_cast<Proc*>(proc->Data()))){
-    cout << "Can't invoke " << proc->Inspect() << " object" << endl;
-  }
-#endif
+  CHECK(dynamic_cast<Proc*>(proc->Data())) <<
+    "Can't invoke " << proc->Inspect() << " object";
   Proc* p = proc->GetData<Proc>();
   assert(p || !"First error: Call target is must proc");
   p->Call(proc, args);
@@ -135,29 +132,21 @@ string SRUProc::Inspect(){
 }
 
 void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){
-#ifdef DEBUG
-      cout << "Call sru function" << endl;
-#endif
+  LOG << "Call sru function";
   BasicObjectPtr new_binding = Binding::New(binding);
   Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);
   for(unsigned int i=0;i<vargs.size();i++){
     if(i<args.size()){
-#ifdef DEBUG
-      cout << "Bind-arg: " << vargs[i] << " = " << args[i]->Inspect() << endl;
-#endif
+      LOG << "Bind-arg: " << vargs[i] << " = " << args[i]->Inspect();
       new_binding->Set(vargs[i],args[i]);
     }else{
-#ifdef DEBUG
-      cout << "Bind-arg: " << vargs[i] << " = Nil" << endl;
-#endif
+      LOG << "Bind-arg: " << vargs[i] << " = Nil";
       new_binding->Set(vargs[i],Library::Instance()->Nil());
     }
   }
   if(!retval.empty())
     new_binding->Set(retval,Interpreter::Instance()->GetContinationToEscapeFromCurrentStack());
-#ifdef DEBUG
-  cout << "Current-Binding: " << new_binding->Inspect() << endl;
-#endif
+  LOG << "Current-Binding: " << new_binding->Inspect();
 }
 
 DEFINE_SRU_PROC_SMASH(_whileTrue_internal){

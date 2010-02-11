@@ -3,11 +3,11 @@
 // 
 
 #include <string>
-#include <iostream>
 #include "native_proc.h"
 #include "string.h"
 #include "numeric.h"
 #include "library.h"
+#include "logging.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -23,17 +23,13 @@ DEFINE_SRU_PROC(spc){
   string str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
-#if DEBUG
-  cout << "spc start: pos = " << epos;
-#endif
+  LOG << "spc start: pos = " << epos;
   while(true){
     if(epos > (int)str.size()) break;
     if(str[epos] != ' ') break;
     epos++;
   }
-#if DEBUG
-  cout << "spc result: epos = " << epos;
-#endif
+  LOG << "spc result: epos = " << epos;
   BasicObjectPtr ret = BasicObject::New();
   ret->Set("status", Library::Instance()->True());
   ret->Set("pos", SRUNumeric::New(epos));
@@ -63,9 +59,7 @@ DEFINE_SRU_PROC(number){
 }
 
 DEFINE_SRU_PROC(id){
-#if DEBUG
-  cout << "checkid" << endl;
-#endif
+  LOG << "checkid";
   assert(args.size() > 2);
   string str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
@@ -86,9 +80,7 @@ DEFINE_SRU_PROC(id){
     ret->Set("status", Library::Instance()->False());
   }else{
     string substr = str.substr(pos, epos-pos);
-#if DEBUG
-    cout << "Match to id: " << substr << endl;
-#endif
+    LOG << "Match to id: " << substr;
     ret->Set("status", Library::Instance()->True());
     ret->Set("ast", R(substr));
     ret->Set("pos", SRUNumeric::New(epos));
@@ -97,9 +89,7 @@ DEFINE_SRU_PROC(id){
 }
 
 DEFINE_SRU_PROC(stringliteral){
-#if DEBUG
-  cout << "checkstringliteral" << endl;
-#endif
+  LOG << "checkstringliteral";
   assert(args.size() > 2);
   string str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
@@ -118,9 +108,7 @@ DEFINE_SRU_PROC(stringliteral){
     ret->Set("status", Library::Instance()->False());
   }else{
     string substr = str.substr(pos+1, epos-pos-1); // cut " s
-#if DEBUG
-    cout << "Match to string: " << substr << endl;
-#endif
+    LOG << "Match to string: " << substr;
     ret->Set("status", Library::Instance()->True());
     ret->Set("ast", S(substr));
     ret->Set("pos", SRUNumeric::New(epos + 1));

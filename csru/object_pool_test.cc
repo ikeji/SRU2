@@ -3,7 +3,6 @@
 // 
 
 #include "testing.h"
-#include <iostream>
 #include <cassert>
 #include "basic_object.h"
 #include "object_pool.h"

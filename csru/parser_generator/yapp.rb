@@ -223,7 +223,6 @@ class CppCodeBuilder
 // Copyright(C) 2005-2010 IKeJI
 // 
 
-#include <iostream>
 #include "parser.h"
 #include "basic_object.h"
 #include "native_proc.h"
@@ -232,6 +231,7 @@ class CppCodeBuilder
 #include "string.h"
 #include "numeric.h"
 #include "library.h"
+#include "logging.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -362,9 +362,7 @@ DEFINE_SRU_PROC(term#{term.num}){
     r = parser.syntaxes[sym].accept(Printer.new)
     return <<-EOL
   // #{r}
-#if DEBUG
-  cout << "Enter parser: #{sym} <= #{r.gsub(/"/,'\"')}" << endl;
-#endif
+  LOG << "Enter parser: #{sym} <= #{r.gsub(/"/,'\"')}";
     EOL
     ""
   end

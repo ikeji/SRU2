@@ -7,12 +7,12 @@
 #define TESTING_SRU_H_
 
 #include <cassert>
-#include <iostream>
 #include <string>
 #include "proc.h"
 #include "interpreter.h"
 #include "object_vector.h"
 #include "stack_frame.h"
+#include "logging.h"
 
 namespace sru_test {
 
@@ -22,12 +22,12 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
   assert(obj.get());
   const sru::BasicObjectPtr& m = obj->Get(method);
   if(!m.get()){
-    std::cout << "Target: " << obj->Inspect() << std::endl;
+    LOG << "Target: " << obj->Inspect();
     assert(m.get());
   }
   sru::Proc* proc = m->GetData<sru::Proc>();
   if(!proc){
-    std::cout << "Target: " << obj->Inspect() << std::endl;
+    LOG << "Target: " << obj->Inspect();
     assert(proc);
   }
   proc->Call(m, v);

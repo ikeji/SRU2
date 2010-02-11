@@ -4,7 +4,6 @@
 #include "class.h"
 
 #include <string>
-#include <iostream>
 #include "basic_object.h"
 #include "constants.h"
 #include "library.h"
@@ -12,6 +11,7 @@
 #include "native_proc.h"
 #include "interpreter.h"
 #include "stack_frame.h"
+#include "logging.h"
 
 using namespace sru;
 using namespace std;
@@ -20,9 +20,7 @@ void Class::InitializeInstance(const BasicObjectPtr& obj,
                                const BasicObjectPtr& klass){
   obj->Set(fCLASS,klass);
   // TODO: InsertClassSystem
-#ifdef DEBUG2
-  cout << "Use findSlotMethod" << endl;
-#endif
+  LOG << "Use findSlotMethod";
   obj->Set(fFIND_SLOT, klass->Get(fCLASS)->Get("findSlotMethod"));
 }
 
@@ -49,9 +47,7 @@ void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
   klass->Set(fCLASS, klass);
   BasicObjectPtr find_slot_method = BasicObject::New(findSlot);
   klass->Set("findSlotMethod", find_slot_method);
-#ifdef DEBUG2
-  cout << "Setup findSlotMethod" << endl;
-#endif
+  LOG << "Setup findSlotMethod";
 }
 
 void Class::InitializeClassClassLast(const BasicObjectPtr& klass){

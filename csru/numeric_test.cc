@@ -5,12 +5,12 @@
 #include "testing.h"
 #include <cassert>
 
-#include <iostream>
 #include "numeric.h"
 #include "library.h"
 #include "testing_sru.h"
 #include "string.h"
 #include "constants.h"
+#include "logging.h"
 
 using namespace std;
 using namespace sru;
@@ -27,7 +27,7 @@ TEST(SRUNumeric_InitializeTest){
 }
 
 TEST(SRUNumeric_InspectTest){
-  cout << SRUNumeric::New(123)->Inspect() << endl;
+  LOG << SRUNumeric::New(123)->Inspect();
   assert(SRUNumeric::New(123)->Inspect() == "<Numeric: 123 >");
   assert(SRUNumeric::New(0)->Inspect() == "<Numeric: 0 >");
   assert(SRUNumeric::New(-123)->Inspect() == "<Numeric: -123 >");

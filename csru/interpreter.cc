@@ -4,7 +4,6 @@
 
 #include "interpreter.h"
 
-#include <iostream>
 #include <vector>
 #include "ast.h"
 #include "basic_object.h"
@@ -13,6 +12,7 @@
 #include "library.h"
 #include "binding.h"
 #include "native_proc.h"
+#include "logging.h"
 
 using namespace sru;
 using namespace std;
@@ -46,9 +46,7 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 
   BasicObjectPtr new_frame_object = StackFrame::New(binding);
   StackFrame* new_frame = new_frame_object->GetData<StackFrame>();
-#ifdef DEBUG
-  cout << "Step in: " << new_frame_object->Inspect() << endl;
-#endif
+  LOG << "Step in: " << new_frame_object->Inspect();
   new_frame->SetUpperStack(old_frame_object);
   pimpl->current_frame = new_frame_object;
   
@@ -59,14 +57,10 @@ DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
   *Interpreter::Instance()->CurrentStackFrame() = *proc->Get("CurrentStackFrame")->GetData<StackFrame>();
   if(args.size() > 0){
-#ifdef DEBUG
-    cout << "Contination invoked with: " << args[0]->Inspect() << endl;
-#endif
+    LOG << "Contination invoked with: " << args[0]->Inspect();
     return args[0];
   }else{
-#ifdef DEBUG
-    cout << "Contination invoked" << endl;
-#endif
+    LOG << "Contination invoked";
     return Library::Instance()->Nil();
   }
 }
@@ -89,17 +83,11 @@ BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
   ptr_vector asts;
   asts.push_back(ast);
   CurrentStackFrame()->Setup(asts);
-#ifdef DEBUG
-  cout << "setuped" << endl;
-#endif
+  LOG << "setuped";
   while(! CurrentStackFrame()->EndOfTrees()){
-#ifdef DEBUG
-    cout << "Step start" << endl;
-#endif
+    LOG << "Step start";
     assert(CurrentStackFrame()->EvalNode());
-#ifdef DEBUG
-    cout << "Step end" << endl;
-#endif
+    LOG << "Step end";
   } 
   return CurrentStackFrame()->ReturnValue();
 }
@@ -117,12 +105,10 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   BasicObjectPtr ast = Eval(call_parser);
   if(ast == Library::Instance()->Nil()) {
     // TODO: Check more detail..
-    cout << "Parse error" << endl;
+    LOG_ERROR << "Parse error";
     return NULL;
   }
-#ifdef DEBUG
-  cout << "Parse OK : " << ast->Inspect() << endl;
-#endif
+  LOG << "Parse OK : " << ast->Inspect();
 
   BasicObjectPtr result = Eval(ast);
   return result;

@@ -5,11 +5,11 @@
 #include "testing.h"
 #include "native_proc.h"
 
-#include <iostream>
 #include <cassert>
 #include "library.h"
 #include "stack_frame.h"
 #include "interpreter.h"
+#include "logging.h"
 
 using namespace std;
 using namespace sru;
@@ -85,7 +85,7 @@ TEST(NativeProc_PassArgTest){
 }
 
 TEST(NativeProc_InspectTest){
-  cout << CREATE_SRU_PROC(ReturnString)->Inspect() << endl;
+  LOG << CREATE_SRU_PROC(ReturnString)->Inspect();
   assert("<Proc: { -- Native Code -- }>" ==
          CREATE_SRU_PROC(ReturnString)->Inspect());
 }

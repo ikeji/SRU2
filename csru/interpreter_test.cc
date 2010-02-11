@@ -9,12 +9,12 @@
 #include <cassert>
 
 #include <string>
-#include <iostream>
 #include "basic_object.h"
 #include "ast.h"
 #include "string.h"
 #include "library.h"
 #include "constants.h"
+#include "logging.h"
 
 using namespace sru;
 using namespace sru_test;
@@ -24,14 +24,14 @@ TEST(Interpreter_StringExpressionTest){
   string str = "Hello";
   StringExpression* se = new StringExpression(str);
   BasicObjectPtr p = BasicObject::New(se);
-  cout << se->InspectAST() << endl;
+  LOG << se->InspectAST();
   assert(se->InspectAST() == "\"Hello\"");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
   if(!( str == rstr) ){
-    cout << "str:"  << str  << endl;
-    cout << "rstr:" << rstr << endl;
+    LOG << "str:"  << str;
+    LOG << "rstr:" << rstr;
   }
   assert(str == rstr);
 }
@@ -52,14 +52,14 @@ TEST(Interpreter_ComplexExpressionTest){
     ),
     args
   );
-  cout << InspectAST(p) << endl;
+  LOG << InspectAST(p);
   assert(InspectAST(p) == "{\"Hello\";}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
   if(!( str == rstr) ){
-    cout << "str:"  << str  << endl;
-    cout << "rstr:" << rstr << endl;
+    LOG << "str:"  << str;
+    LOG << "rstr:" << rstr;
   }
   assert(str == rstr);
 }
@@ -67,7 +67,7 @@ TEST(Interpreter_ComplexExpressionTest){
 TEST(Interpreter_RefExpressionTest){
   // " Class "
   BasicObjectPtr p = RefExpression::New(NULL,"Class");
-  cout << InspectAST(p) << endl;
+  LOG << InspectAST(p);
   assert(InspectAST(p) == "Class");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
@@ -78,14 +78,14 @@ TEST(Interpreter_LetExpressionTest){
   // " hoge = Class "
   BasicObjectPtr ref = RefExpression::New(NULL,"Class");
   BasicObjectPtr p = LetExpression::New(NULL,"hoge",ref);
-  cout << InspectAST(p) << endl;
+  LOG << InspectAST(p);
   assert(InspectAST(p) == "(hoge = Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r == Library::Instance()->Class());
   // " hoge "
   p = RefExpression::New(NULL,"hoge");
-  cout << InspectAST(p) << endl;
+  LOG << InspectAST(p);
   assert(InspectAST(p) == "hoge");
   r = Interpreter::Instance()->Eval(p);
   assert(r.get());
@@ -93,7 +93,7 @@ TEST(Interpreter_LetExpressionTest){
 }
 
 TEST(Interpreter_StringExpressionRegTest){
-  cout << "TODO: enable this test after imprement Parser object" << endl;
+  LOG_ERROR << "TODO: enable this test after imprement Parser object";
   return;
   string str = "Hello";
   string code = "\"Hello\"";
@@ -101,14 +101,14 @@ TEST(Interpreter_StringExpressionRegTest){
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
   if(!( str == rstr) ){
-    cout << "str:"  << str  << endl;
-    cout << "rstr:" << rstr << endl;
+    LOG << "str:"  << str;
+    LOG << "rstr:" << rstr;
   }
   assert(str == rstr);
 }
 
 TEST(Interpreter_ComplexExpressionRegTest){
-  cout << "TODO: enable this test after imprement Parser object" << endl;
+  LOG << "TODO: enable this test after imprement Parser object";
   return;
   string str = "Hello";
   string code = "{ \"Hello\" }()";
@@ -116,14 +116,14 @@ TEST(Interpreter_ComplexExpressionRegTest){
   assert(r.get());
   string rstr = SRUString::GetValue(r.get());
   if(!( str == rstr) ){
-    cout << "str:"  << str  << endl;
-    cout << "rstr:" << rstr << endl;
+    LOG << "str:"  << str;
+    LOG << "rstr:" << rstr;
   }
   assert(str == rstr);
 }
 
 TEST(Interpreter_RefExpressionRegTest){
-  cout << "TODO: enable this test after imprement Parser object" << endl;
+  LOG << "TODO: enable this test after imprement Parser object";
   return;
   // " Class "
   string code = " Class ";
@@ -133,7 +133,7 @@ TEST(Interpreter_RefExpressionRegTest){
 }
 
 TEST(Interpreter_LetExpressionRegTest){
-  cout << "TODO: enable this test after imprement Parser object" << endl;
+  LOG << "TODO: enable this test after imprement Parser object";
   return;
   // " hoge = Class "
   string code = " hoge = Class ";
@@ -151,7 +151,7 @@ TEST(Interpreter_EvalCallExpressionRegTest){
   // NOTE: I found bug in stack_frame.cc .
   // (Numeric).parse((Numeric), "10")
   BasicObjectPtr p = C(R(R("Numeric"),"parse"), R("Numeric"), S("10"));
-  cout << InspectAST(p) << endl;
+  LOG << InspectAST(p);
   assert(InspectAST(p) == "(Numeric).parse(Numeric, \"10\")");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());

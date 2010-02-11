@@ -222,7 +222,7 @@ bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
 }
 
 void StackFrame::Setup(const ptr_vector& asts){
-  IF_DEBUG{
+  IF_DEBUG_INFO{
     LOGOBJ(log);
     log.cout() << "Setup: ";
     for(ptr_vector::const_iterator it = asts.begin();

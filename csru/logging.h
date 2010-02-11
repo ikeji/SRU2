@@ -32,21 +32,6 @@ class Logging{
 #define LOGOBJ(name) \
   sru_logging::Logging name(__FILE__,__LINE__);
 
-#ifdef DEBUG_INFO
-
-#define LOG \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
-#define IF_DEBUG \
-  if(true)
-
-#else
-
-#define LOG \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
-#define IF_DEBUG \
-  if(false)
-
-#endif // DEBUG
 
 #ifdef DEBUG
 
@@ -65,5 +50,35 @@ class Logging{
   if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
 
 #endif // DEBUG
+
+
+#ifdef DEBUG_INFO
+
+#define LOG \
+  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+#define IF_DEBUG_INFO \
+  if(true)
+
+#else
+
+#define LOG \
+  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+#define IF_DEBUG \
+  if(false)
+
+#endif // DEBUG_INFO
+
+
+#ifdef DEBUG_TRACE
+
+#define LOG_TRACE \
+  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+
+#else
+
+#define LOG_TRACE \
+  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+
+#endif
 
 #endif // LOGGING_H_

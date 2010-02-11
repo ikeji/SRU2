@@ -74,12 +74,12 @@ class BasicObject {
   void SetGcCounter(int i) { gc_counter = i; }
   void IncrementGcCounter() {
     gc_counter++; 
-    LOG <<"inc:" << Inspect() << " -> " << gc_counter;
+    LOG_TRACE <<"inc:" << Inspect() << " -> " << gc_counter;
   }
   void DecrementGcCounter() {
     gc_counter--; 
     assert(gc_counter >= 0); 
-    LOG <<"dec:" << Inspect() << " -> " << gc_counter;
+    LOG_TRACE <<"dec:" << Inspect() << " -> " << gc_counter;
   }
 
   Value* Data(){ return data; }

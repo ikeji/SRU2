@@ -20,7 +20,7 @@ void Class::InitializeInstance(const BasicObjectPtr& obj,
                                const BasicObjectPtr& klass){
   obj->Set(fCLASS,klass);
   // TODO: InsertClassSystem
-  LOG << "Use findSlotMethod";
+  LOG_TRACE << "Use findSlotMethod";
   obj->Set(fFIND_SLOT, klass->Get(fCLASS)->Get("findSlotMethod"));
 }
 
@@ -63,10 +63,13 @@ DEFINE_SRU_PROC_SMASH(findSlot){
   const string& name = SRUString::GetValue(args[1]);
   if(obj->HasSlot(fCLASS)){
     const BasicObjectPtr& klass = obj->Get(fCLASS);
+    LOG << "Find in class." << klass->Inspect();
     if(klass->HasSlot(fINSTANCE_METHODS)){
       const BasicObjectPtr& instance_slots = klass->Get(fINSTANCE_METHODS);
+      LOG << "Find in instance slot." << instance_slots->Inspect();
       if(instance_slots->HasSlot(name)){
         // Slot found.
+        LOG << "Slot found.";
         Interpreter::Instance()->
           CurrentStackFrame()->
           PushResult(instance_slots->Get(name));

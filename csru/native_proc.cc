@@ -14,7 +14,7 @@ using namespace sru_logging;
 
 void NativeProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
   // TODO: Refacter this.
-  IF_DEBUG {
+  IF_DEBUG_INFO {
     LOGOBJ(log);
     log.cout() << "Call native proc with: ";
     for(ptr_vector::const_iterator it = arg.begin();

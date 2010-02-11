@@ -13,6 +13,7 @@
 #include "library.h"
 #include "string.h"
 #include "logging.h"
+#include "numeric.h"
 
 using namespace std;
 using namespace sru;
@@ -205,3 +206,33 @@ TEST(Proc_ContinationComplexAndJumpInTest){
 }
 
 // TODO: test instance methods "whileTrue".
+
+TEST(Proc_LoopTest){
+  // {a = 0; {|:break| c = { a = a + 1; r = a > 10; r.ifTrue({break()}); }; c.loop() }(); a;}()
+  BasicObjectPtr loop_test = C(P(
+        L("a", C(R(R("Numeric"),"parse"),R("Numeric"),S("0"))),
+        C(B("break",
+            L("c",P(
+                L("a", C(R(R("a"),"plus"),R("a"),C(R(R("Numeric"),"parse"),R("Numeric"),S("1")))),
+                L("r", C(R(R("a"),"greaterThan"),R("a"),C(R(R("Numeric"),"parse"),R("Numeric"),S("10")))),
+                C(R(R("r"),"ifTrue"),R("r"),P(C(R("break"),R("a"))))
+            )),
+            C(R(R("c"),"loop"),R("c"))
+        ))
+  ));
+  cout << InspectAST(loop_test) << endl;
+  assert(InspectAST(loop_test) == "{"
+      "(a = (Numeric).parse(Numeric, \"0\"));"
+      "{|:break|"
+        "(c = {"
+          "(a = (a).plus(a, (Numeric).parse(Numeric, \"1\")));"
+          "(r = (a).greaterThan(a, (Numeric).parse(Numeric, \"10\")));"
+          "(r).ifTrue(r, {break(a);});"
+        "});"
+        "(c).loop(c);"
+      "}();"
+    "}()");
+  BasicObjectPtr r = Interpreter::Instance()->Eval(loop_test);
+  assert(r.get());
+  assert(SRUNumeric::GetValue(r) == 11);
+}

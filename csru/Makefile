@@ -150,7 +150,7 @@ proc.o: proc.h basic_object.h logging.h object_vector.h ast.h binding.h
 proc.o: interpreter.h library.h stack_frame.h constants.h class.h
 proc.o: native_proc.h string.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h object_vector.h ast.h
-proc_test.o: interpreter.h testing_ast.h library.h string.h
+proc_test.o: interpreter.h testing_ast.h library.h string.h numeric.h
 stack_frame.o: stack_frame.h basic_object.h logging.h object_vector.h
 stack_frame.o: string.h ast.h proc.h library.h binding.h constants.h
 stack_frame_test.o: testing.h stack_frame.h basic_object.h logging.h

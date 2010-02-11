@@ -181,7 +181,7 @@ DEFINE_SRU_PROC_SMASH(_loop_internal){
   Interpreter::Instance()->CurrentStackFrame()->Setup(
       A(
         C(R("block")),
-        C(R("block"),R("loop"))
+        C(R("loop_internal"))
        ));
 }
 

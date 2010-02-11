@@ -42,6 +42,9 @@ class BasicObjectPtr {
   bool operator==(const BasicObjectPtr& obj){
     return (ptr == obj.ptr);
   }
+  bool operator!=(const BasicObjectPtr& obj){
+    return (ptr != obj.ptr);
+  }
  private:
   BasicObject* ptr;
 };

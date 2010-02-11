@@ -271,6 +271,7 @@ bool StackFrame::EvalNode(){
       if(st == NULL)
         return false;
       LOG_TRACE << "Step Out:" << pimpl->upper_frame->Inspect();
+      LOG << "Reutn: " << rv->Inspect();
       *this = *st;
       pimpl->local_stack.push_back(rv.get());
       return true;

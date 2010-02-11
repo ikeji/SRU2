@@ -58,11 +58,11 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
   *Interpreter::Instance()->CurrentStackFrame() = *proc->Get("CurrentStackFrame")->GetData<StackFrame>();
-  if(arg.size() > 0){
+  if(args.size() > 0){
 #ifdef DEBUG
-    cout << "Contination invoked with: " << arg[0]->Inspect() << endl;
+    cout << "Contination invoked with: " << args[0]->Inspect() << endl;
 #endif
-    return arg[0];
+    return args[0];
   }else{
 #ifdef DEBUG
     cout << "Contination invoked" << endl;
@@ -106,13 +106,13 @@ BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
 
 BasicObjectPtr Interpreter::Eval(const string& str){
   // Paser.parse("str")
-  ptr_vector arg;
+  ptr_vector args;
   // Parser
-  arg.push_back(RefExpression::New(NULL, "sru_parser"));
+  args.push_back(RefExpression::New(NULL, "sru_parser"));
   // "str"
-  arg.push_back(StringExpression::New(str));
+  args.push_back(StringExpression::New(str));
   BasicObjectPtr call_parser = CallExpression::New(
-      RefExpression::New(RefExpression::New(NULL,"sru_parser"), "parse"), arg);
+      RefExpression::New(RefExpression::New(NULL,"sru_parser"), "parse"), args);
 
   BasicObjectPtr ast = Eval(call_parser);
   if(ast == Library::Instance()->Nil()) {

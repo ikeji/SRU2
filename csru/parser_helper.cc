@@ -19,9 +19,9 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(spc){
-  assert(arg.size() > 2);
-  string str = SRUString::GetValue(arg[1]);
-  int pos = SRUNumeric::GetValue(arg[2]);
+  assert(args.size() > 2);
+  string str = SRUString::GetValue(args[1]);
+  int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
 #if DEBUG
   cout << "spc start: pos = " << epos;
@@ -41,9 +41,9 @@ DEFINE_SRU_PROC(spc){
 }
 
 DEFINE_SRU_PROC(number){
-  assert(arg.size() > 2);
-  string str = SRUString::GetValue(arg[1]);
-  int pos = SRUNumeric::GetValue(arg[2]);
+  assert(args.size() > 2);
+  string str = SRUString::GetValue(args[1]);
+  int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){
     if(epos > (int)str.size()) break;
@@ -66,9 +66,9 @@ DEFINE_SRU_PROC(id){
 #if DEBUG
   cout << "checkid" << endl;
 #endif
-  assert(arg.size() > 2);
-  string str = SRUString::GetValue(arg[1]);
-  int pos = SRUNumeric::GetValue(arg[2]);
+  assert(args.size() > 2);
+  string str = SRUString::GetValue(args[1]);
+  int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){
     if(epos > (int)str.size()) break;
@@ -100,9 +100,9 @@ DEFINE_SRU_PROC(stringliteral){
 #if DEBUG
   cout << "checkstringliteral" << endl;
 #endif
-  assert(arg.size() > 2);
-  string str = SRUString::GetValue(arg[1]);
-  int pos = SRUNumeric::GetValue(arg[2]);
+  assert(args.size() > 2);
+  string str = SRUString::GetValue(args[1]);
+  int pos = SRUNumeric::GetValue(args[2]);
   BasicObjectPtr ret = BasicObject::New();
   if(str[pos] != '"'){  // this is not string literal.
     ret->Set("status", Library::Instance()->False());

@@ -282,15 +282,15 @@ void InitializeParserObject(BasicObjectPtr& parser){
 }
 
 DEFINE_SRU_PROC_SMASH(Parse){
-  assert(arg.size() > 1);
-  // TODO: check arg0
+  assert(args.size() > 1);
+  // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
       A(R(C(R(R(fTHIS),"program"), R(fTHIS), R("src"), C(R(R("Numeric"),"parse"),R("Numeric"),S("0"))),"ast")),
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
   BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
-  binding->Set(fTHIS, arg[0]);
-  binding->Set("src", arg[1]);
+  binding->Set(fTHIS, args[0]);
+  binding->Set("src", args[1]);
 }
 
     EOL
@@ -298,7 +298,7 @@ DEFINE_SRU_PROC_SMASH(Parse){
       ret += <<-EOL
 DEFINE_SRU_PROC_SMASH(#{sym}){
 #{pri2(parser,sym)}
-  assert(arg.size()>2);
+  assert(args.size()>2);
   // TODO: Check argument.
   Interpreter::Instance()->DigIntoNewFrame(
       A(
@@ -316,9 +316,9 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
   BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
-  binding->Set(fTHIS, arg[0]);
-  binding->Set("src", arg[1]);
-  binding->Set("pos0", arg[2]);
+  binding->Set(fTHIS, args[0]);
+  binding->Set("src", args[1]);
+  binding->Set("pos0", args[2]);
   // Stack smash!
 }
       EOL
@@ -327,10 +327,10 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       ret += <<-EOL
 DEFINE_SRU_PROC(term#{term.num}){
   string target = "#{term.string}";
-  assert(arg.size()>2);
+  assert(args.size()>2);
   // TODO: Check argument.
-  string src = SRUString::GetValue(arg[1]);
-  int pos = SRUNumeric::GetValue(arg[2]);
+  string src = SRUString::GetValue(args[1]);
+  int pos = SRUNumeric::GetValue(args[2]);
   // TODO: Define ParserResult type.
   BasicObjectPtr ret = BasicObject::New();
   if(src.compare(pos, target.size(), target) == 0){

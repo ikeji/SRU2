@@ -65,24 +65,24 @@ string Proc::Inspect(){
 
 class SRUProc : public Proc{
  public:
-  SRUProc(const vector<string>& varg,
+  SRUProc(const vector<string>& vargs,
           const string retval,
           const ptr_vector& expressions,
           const BasicObjectPtr& binding):
-      varg(varg),
+      vargs(vargs),
       retval(retval),
       // TODO: Check expressions are instance of AST.
       expressions(Conv(expressions)),
       binding(binding.get()){
   }
-  void Call(const BasicObjectPtr& proc, const ptr_vector& arg);
+  void Call(const BasicObjectPtr& proc, const ptr_vector& args);
   void Mark(){
     binding->Mark();
     MarkVector(&expressions);
   }
   string Inspect();
  private:
-  vector<string> varg;
+  vector<string> vargs;
   string retval;
   object_vector expressions;
   BasicObject* binding;
@@ -91,22 +91,22 @@ class SRUProc : public Proc{
   SRUProc* operator=(const SRUProc& obj);
 };
 
-BasicObjectPtr Proc::New(const std::vector<std::string>& varg,
+BasicObjectPtr Proc::New(const std::vector<std::string>& vargs,
              const std::string& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding){
   BasicObjectPtr obj = BasicObject::New(
-      new SRUProc(varg,retval,expressions,binding));
+      new SRUProc(vargs,retval,expressions,binding));
   Initialize(obj);
   return obj;
 }
 
 string SRUProc::Inspect(){
   string ret = "";
-  for(vector<string>::iterator it = varg.begin();
-      it != varg.end();
+  for(vector<string>::iterator it = vargs.begin();
+      it != vargs.end();
       it++){
-    if(it != varg.begin())
+    if(it != vargs.begin())
       ret += ",";
     ret += *it;
   }
@@ -121,23 +121,23 @@ string SRUProc::Inspect(){
   return ret + ">";
 }
 
-void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
+void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){
 #ifdef DEBUG
       cout << "Call sru function" << endl;
 #endif
   BasicObjectPtr new_binding = Binding::New(binding);
   Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);
-  for(unsigned int i=0;i<varg.size();i++){
-    if(i<arg.size()){
+  for(unsigned int i=0;i<vargs.size();i++){
+    if(i<args.size()){
 #ifdef DEBUG
-      cout << "Bind-arg: " << varg[i] << " = " << arg[i]->Inspect() << endl;
+      cout << "Bind-arg: " << vargs[i] << " = " << args[i]->Inspect() << endl;
 #endif
-      new_binding->Set(varg[i],arg[i]);
+      new_binding->Set(vargs[i],args[i]);
     }else{
 #ifdef DEBUG
-      cout << "Bind-arg: " << varg[i] << " = Nil" << endl;
+      cout << "Bind-arg: " << vargs[i] << " = Nil" << endl;
 #endif
-      new_binding->Set(varg[i],Library::Instance()->Nil());
+      new_binding->Set(vargs[i],Library::Instance()->Nil());
     }
   }
   if(!retval.empty())
@@ -163,7 +163,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
 // TODO: test this function.
 DEFINE_SRU_PROC_SMASH(whileTrue){
   static BasicObjectPtr whileTrue_internal;
-  assert(arg.size() > 1);
+  assert(args.size() > 1);
   BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R("whileTrue_internal"))),
@@ -173,8 +173,8 @@ DEFINE_SRU_PROC_SMASH(whileTrue){
     whileTrue_internal = CREATE_SRU_PROC(_whileTrue_internal);
 
   new_binding->Set("whileTrue_internal",whileTrue_internal);
-  new_binding->Set("condition", arg[0]);
-  new_binding->Set("block", arg[1]);
+  new_binding->Set("condition", args[0]);
+  new_binding->Set("block", args[1]);
 }
 
 DEFINE_SRU_PROC_SMASH(_loop_internal){
@@ -188,7 +188,7 @@ DEFINE_SRU_PROC_SMASH(_loop_internal){
 // TODO: test this function.
 DEFINE_SRU_PROC_SMASH(loop){
   static BasicObjectPtr loop_internal;
-  assert(arg.size() > 0);
+  assert(args.size() > 0);
   BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R("loop_internal"))),
@@ -198,7 +198,7 @@ DEFINE_SRU_PROC_SMASH(loop){
     loop_internal = CREATE_SRU_PROC(_loop_internal);
 
   new_binding->Set("loop_internal",loop_internal);
-  new_binding->Set("block", arg[0]);
+  new_binding->Set("block", args[0]);
 }
 
 }  // namespace sru

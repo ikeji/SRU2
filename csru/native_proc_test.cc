@@ -66,8 +66,8 @@ TEST(NativeProc_EvalTest){
 }
 
 DEFINE_SRU_PROC(ReturnArgment){
-  assert(arg.size() > 0);
-  return arg[0];
+  assert(args.size() > 0);
+  return args[0];
 }
 
 TEST(NativeProc_PassArgTest){

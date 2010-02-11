@@ -43,16 +43,31 @@ string BasicObject::Inspect(int limit){
       name = SRUString::GetValue(Get(fNAME));
     ostringstream s;
     if(name != ""){
-      s << "<" << name << " ";
+      s << "<" << name;
     }else {
-      s << "<basic_object(" << this << ") ";
+      s << "<basic_object(" << this << ")";
     }
-    if(limit > (int)s.str().size()){
+    int titlesize = (int)s.str().size() + 2;
+    if(limit > titlesize){
+      s << " ";
+      int sum = 0;
+      for(map<string,BasicObject*>::iterator it = fields.begin();
+          it != fields.end();
+          it++){
+        sum += (int)it->first.size() + 5;
+      }
+      bool show_details = (sum < (limit - titlesize));
+      int detailsize = (limit - titlesize - sum) / (fields.size()+1);
+      if(detailsize < 0) detailsize = 0;
       for(map<string,BasicObject*>::iterator it = fields.begin();
           it != fields.end();
           it++){
         if(it != fields.begin()) s << ", ";
-        s << it->first << ":" << it->second->Inspect(limit-s.str().size());
+        if(show_details){
+          s << it->first << ":" << it->second->Inspect(detailsize);
+        }else{
+          s << it->first << ":...";
+        }
       }
     }
     s << ">";

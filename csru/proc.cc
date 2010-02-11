@@ -47,16 +47,14 @@ void Proc::Initialize(const BasicObjectPtr& obj){
     loop_instance = BasicObject::New(loop);
     Initialize(loop_instance);
   }
-  // TODO: We need class system.
   // TODO: test this functions existed or not.
-  obj->Set("whileTrue", while_true_instance); 
-  obj->Set("loop", loop_instance); 
 }
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
   Class::SetAsSubclass(proc, NULL);
   proc->Set(fNAME, SRUString::New("Proc"));
   Class::SetAsInstanceMethod(proc, "whileTrue", CREATE_SRU_PROC(whileTrue));
+  Class::SetAsInstanceMethod(proc, "loop", CREATE_SRU_PROC(loop));
 }
 
 string Proc::Inspect(){

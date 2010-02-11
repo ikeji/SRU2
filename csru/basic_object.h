@@ -60,6 +60,11 @@ class BasicObject {
     fields[name] = ref.get();
   }
   BasicObjectPtr Get(const std::string& name){
+#ifdef DEBUG
+    if(!HasSlot(name))
+      std::cout << "Error: unknwn slot: " << name <<
+        " in: " << Inspect() << std::endl;
+#endif
     assert(fields.find(name) != fields.end());
     return BasicObjectPtr(fields[name]);
   };

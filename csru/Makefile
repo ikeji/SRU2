@@ -39,9 +39,10 @@ proc_test.o \
 stack_frame_test.o \
 string_test.o \
 
-DFLAGS   = -DDEBUG
+DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h
 CXXFLAGS = -g -O0 -Wall -Werror -Weffc++ $(DFLAGS)
+LDFLAGS  = $(DFLAGS)
 CPFLAGS  = -u
 ERB      = erb
 
@@ -54,8 +55,8 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-4 doesn't support mingw now. use g++-3
   CXX      = g++-3
   # g++-3 doesn't work with -Weffc++
-  CXXFLAGS = -g -O0 -Wall -Werror -mno-cygwin -I/usr/include/mingw $(DFLAGS)
-  LDFLAGS  = -mno-cygwin -L/usr/lib/mingw
+  CXXFLAGS = -g -O0 -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw
+  LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 
 all: parser sru sru_test

@@ -126,10 +126,12 @@ class EvalVisitor : public Visitor{
     local_stack->pop_back();
     return r;
   }
+ private:
   void Push(const BasicObjectPtr& obj){
     assert(obj.get());
     local_stack->push_back(obj.get());
   }
+ public:
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     const BasicObjectPtr& rightValue = Pop();
     BasicObjectPtr env;
@@ -166,24 +168,29 @@ class EvalVisitor : public Visitor{
       env = binding;
     }
     // find slot
-    BasicObjectPtr e = env;
-    while(!(e->HasSlot(exp->Name()))){
-      if(! e->HasSlot(fPARENT_SCOPE)) break;
-      e = e->Get(fPARENT_SCOPE);
-    }
-    if(e->HasSlot(exp->Name())){
+    if(env->HasSlot(exp->Name())){
 #ifdef DEBUG
-      cout << "EVAL-REF: " << e->Get(exp->Name())->Inspect() << endl;
+      cout << "EVAL-REF: " << env->Get(exp->Name())->Inspect() << endl;
 #endif
-      // if found exist slot
-      Push(e->Get(exp->Name()));
-    }else{
-#ifdef DEBUG
-      cout << "EVAL-REF: nil " << endl;
-#endif
-      // if not found exist slot
-      Push(Library::Instance()->Nil());
+      Push(env->Get(exp->Name()));
+      return;
     }
+    if(env->HasSlot(fFIND_SLOT)){
+#ifdef DEBUG
+      cout << "EVAL-REF-FIND_SLOT" << endl;
+#endif
+      ptr_vector args;
+      args.push_back(env);
+      args.push_back(SRUString::New(exp->Name()));
+      BasicObjectPtr find_slot_proc = env->Get(fFIND_SLOT);
+      Proc::Invoke(find_slot_proc, args);
+      return;
+    }
+    // if not found exist slot
+#ifdef DEBUG
+    cout << "EVAL-REF: nil " << endl;
+#endif
+    Push(Library::Instance()->Nil());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
     // Get arg value from stack, but it on reverse order.

@@ -12,7 +12,8 @@ const char* const fPARENT_SCOPE     = "parent";
 const char* const fNAME             = "name";
 const char* const fTHIS             = "this";
 const char* const fSUPERCLASS       = "superclass";
-const char* const fINSTANCE_METHODS = "instance_methods";
+const char* const fINSTANCE_METHODS = "instanceMethods";
+const char* const fFIND_SLOT        = "findSlot";
 
 }
 

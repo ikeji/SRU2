@@ -91,6 +91,7 @@ class BasicObject {
   template<typename T>
   T* GetData(){
     T* r = dynamic_cast<T*>(data);
+    CHECK(r) << "Can't cast " << Inspect() << " to real type " << T::name();
     assert(r);
     return r;
   }

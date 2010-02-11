@@ -33,6 +33,7 @@ class Expression : public Value{
     return std::string("<Expression:") + InspectAST() + ">";
   }
   virtual std::string InspectAST() = 0;
+  static const char* name(){ return "Expression"; }
  private:
   Expression(const Expression& obj);
   Expression* &operator=(const Expression& obj);

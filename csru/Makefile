@@ -129,7 +129,7 @@ numeric.o: numeric.h basic_object.h logging.h class.h library.h native_proc.h
 numeric.o: proc.h object_vector.h string.h constants.h
 numeric_test.o: testing.h numeric.h basic_object.h logging.h library.h
 numeric_test.o: testing_sru.h proc.h object_vector.h interpreter.h
-numeric_test.o: stack_frame.h string.h constants.h
+numeric_test.o: stack_frame.h string.h constants.h testing_ast.h ast.h
 object.o: object.h basic_object.h logging.h string.h constants.h class.h
 object.o: library.h
 object_pool.o: object_pool.h basic_object.h logging.h object_vector.h

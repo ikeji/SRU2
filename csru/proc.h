@@ -26,6 +26,7 @@ class Proc : public Value{
   static void InitializeClassObject(const BasicObjectPtr& proc);
   static void Invoke(const BasicObjectPtr& proc, const ptr_vector& args);
   static void Initialize(const BasicObjectPtr& ptr);
+  static const char* name(){ return "Proc"; }
 };
 
 } // namespace sru

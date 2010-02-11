@@ -24,6 +24,7 @@ class MyValue : public Value{
   }
   BasicObject * MyObject;
   static int Count;
+  static const char* name(){ return "MyObject"; }
  private:
   MyValue(const MyValue& obj);
   MyValue* operator=(const MyValue& obj);

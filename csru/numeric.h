@@ -18,6 +18,7 @@ class SRUNumeric : public Value{
   static BasicObjectPtr New(int i);
   static int GetValue(BasicObjectPtr obj);
   std::string Inspect();
+  static const char* name(){ return "SRUNumeric"; }
  private:
   SRUNumeric(int i);
   ~SRUNumeric();

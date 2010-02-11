@@ -35,6 +35,8 @@ class StackFrame : public Value{
 
   void Mark();
 
+  static const char* name(){ return "StackFrame"; }
+
   StackFrame(const StackFrame& obj);
   StackFrame &operator=(const StackFrame& obj);
  private:

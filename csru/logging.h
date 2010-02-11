@@ -63,7 +63,7 @@ class Logging{
 
 #define LOG \
   if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
-#define IF_DEBUG \
+#define IF_DEBUG_INFO \
   if(false)
 
 #endif // DEBUG_INFO
@@ -73,11 +73,15 @@ class Logging{
 
 #define LOG_TRACE \
   if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+#define IF_DEBUG_TRACE \
+  if(true)
 
 #else
 
 #define LOG_TRACE \
   if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+#define IF_DEBUG_TRACE \
+  if(false)
 
 #endif
 

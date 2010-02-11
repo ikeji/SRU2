@@ -66,23 +66,23 @@ class TraceVisitor : public Visitor{
     obj->GetData<Expression>()->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
-    LOG << "TRACE-LET: " << exp->Inspect();
+    LOG_TRACE << "TRACE-LET: " << exp->Inspect();
     if(exp->Env())
       VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
-    LOG << "TRACE-REF: " << exp->Inspect();
+    LOG_TRACE << "TRACE-REF: " << exp->Inspect();
     if(exp->Env())
       VisitTo(exp->Env());
     result->push_back(obj.get());
   }
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
-    LOG << "TRACE-CALL: " << exp->Inspect();
-    LOG << "TRACE-CALL(PROC)";
+    LOG_TRACE << "TRACE-CALL: " << exp->Inspect();
+    LOG_TRACE << "TRACE-CALL(PROC)";
     VisitTo(exp->Proc());
-    LOG << "TRACE-CALL(ARGS)";
+    LOG_TRACE << "TRACE-CALL(ARGS)";
     for(object_vector::const_iterator it = exp->Arg().begin();
         it != exp->Arg().end();
         it++)
@@ -90,11 +90,11 @@ class TraceVisitor : public Visitor{
     result->push_back(obj.get());
   }
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
-    LOG << "TRACE-PROC: " << exp->Inspect();
+    LOG_TRACE << "TRACE-PROC: " << exp->Inspect();
     result->push_back(obj.get());
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
-    LOG << "TRACE-STRING: " << exp->Inspect();
+    LOG_TRACE << "TRACE-STRING: " << exp->Inspect();
     result->push_back(obj.get());
   }
   object_vector* result;
@@ -222,7 +222,7 @@ bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
 }
 
 void StackFrame::Setup(const ptr_vector& asts){
-  IF_DEBUG_INFO{
+  IF_DEBUG_TRACE{
     LOGOBJ(log);
     log.cout() << "Setup: ";
     for(ptr_vector::const_iterator it = asts.begin();
@@ -238,7 +238,7 @@ void StackFrame::Setup(const ptr_vector& asts){
 }
 
 void StackFrame::SetUpperStack(BasicObjectPtr obj){
-  LOG << "SetUpperStack";
+  LOG_TRACE << "SetUpperStack";
   pimpl->upper_frame = obj.get();
 }
 
@@ -247,30 +247,30 @@ BasicObjectPtr StackFrame::GetUpperStack(){
 }
 
 bool StackFrame::EndOfTrees(){
-  LOG << "EndOfTrees?:"
-      << " root?:" <<
-          (pimpl->upper_frame == NULL)
-      << " lastline?:" <<
-          (pimpl->expressions.size() == pimpl->tree_it)
-      << " lastop?:" << 
-          (pimpl->operations.size() == pimpl->it);
+  LOG_TRACE << "EndOfTrees?:"
+            << " root?:" <<
+                (pimpl->upper_frame == NULL)
+            << " lastline?:" <<
+                (pimpl->expressions.size() == pimpl->tree_it)
+            << " lastop?:" << 
+                (pimpl->operations.size() == pimpl->it);
   return pimpl->upper_frame == NULL &&
          pimpl->expressions.size() == pimpl->tree_it &&
          pimpl->operations.size() == pimpl->it;
 }
 
 bool StackFrame::EvalNode(){
-  LOG << "EvalNode";
+  LOG_TRACE << "EvalNode";
   assert(!EndOfTrees());
   if(pimpl->operations.size() == pimpl->it){
-    LOG << "LastOperation";
+    LOG_TRACE << "LastOperation";
     if(pimpl->expressions.size() == pimpl->tree_it){
-      LOG << "LastExpression";
+      LOG_TRACE << "LastExpression";
       BasicObjectPtr rv = ReturnValue();
       StackFrame* st = pimpl->upper_frame->GetData<StackFrame>();
       if(st == NULL)
         return false;
-      LOG << "Step Out:" << pimpl->upper_frame->Inspect();
+      LOG_TRACE << "Step Out:" << pimpl->upper_frame->Inspect();
       *this = *st;
       pimpl->local_stack.push_back(rv.get());
       return true;

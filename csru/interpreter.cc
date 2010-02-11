@@ -120,6 +120,9 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     cout << "Parse error" << endl;
     return NULL;
   }
+#ifdef DEBUG
+  cout << "Parse OK : " << ast->Inspect() << endl;
+#endif
 
   BasicObjectPtr result = Eval(ast);
   return result;

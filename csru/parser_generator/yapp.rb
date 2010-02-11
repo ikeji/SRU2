@@ -231,6 +231,7 @@ class CppCodeBuilder
 #include "binding.h"
 #include "string.h"
 #include "numeric.h"
+#include "library.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"

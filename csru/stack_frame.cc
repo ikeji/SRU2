@@ -13,6 +13,7 @@
 #include "proc.h"
 #include "library.h"
 #include "binding.h"
+#include "constants.h"
 
 using namespace std;
 using namespace sru;

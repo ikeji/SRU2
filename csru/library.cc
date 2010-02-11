@@ -13,6 +13,7 @@
 #include "binding.h"
 #include "boolean.h"
 #include "proc.h"
+#include "class.h"
 
 using namespace sru;
 

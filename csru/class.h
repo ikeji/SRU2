@@ -23,7 +23,8 @@ class Class {
   static void SetAsInstanceMethod(const BasicObjectPtr& klass,
                                   const std::string& name,
                                   const BasicObjectPtr& method);
-  static void InitializeClassClass(const BasicObjectPtr& klass);
+  static void InitializeClassClassFirst(const BasicObjectPtr& klass);
+  static void InitializeClassClassLast(const BasicObjectPtr& klass);
 };
 
 } // namespace sru

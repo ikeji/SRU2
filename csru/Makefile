@@ -107,7 +107,8 @@ boolean.o: boolean.h basic_object.h class.h library.h native_proc.h proc.h
 boolean.o: object_vector.h string.h constants.h testing_sru.h interpreter.h
 boolean.o: stack_frame.h
 boolean_test.o: testing.h library.h basic_object.h constants.h
-class.o: class.h basic_object.h constants.h library.h string.h
+class.o: class.h basic_object.h constants.h library.h string.h native_proc.h
+class.o: proc.h object_vector.h interpreter.h stack_frame.h
 class_test.o: testing.h class.h basic_object.h constants.h library.h
 interpreter.o: interpreter.h object_vector.h ast.h basic_object.h
 interpreter.o: stack_frame.h library.h binding.h native_proc.h proc.h

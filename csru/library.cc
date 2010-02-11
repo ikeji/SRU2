@@ -100,10 +100,33 @@ void Library::Impl::initialiseInteralClasses(){
   False = BasicObject::New();
   Parser = BasicObject::New();
 
+  // Define class path.
+  Class->Set(fCLASS, Class);
+  Object->Set(fCLASS, Class);
+  Proc->Set(fCLASS, Class);
+  Array->Set(fCLASS, Class);
+  Hash->Set(fCLASS, Class);
+  String->Set(fCLASS, Class);
+  Numeric->Set(fCLASS, Class);
+  Boolean->Set(fCLASS, Class);
+  True->Set(fCLASS, Boolean);
+  False->Set(fCLASS, Boolean);
+
+  // Define inheritance path.
+  Class->Set(fSUPERCLASS, Object);
+  Object->Set(fSUPERCLASS, Nil);
+  Proc->Set(fSUPERCLASS, Object);
+  Array->Set(fSUPERCLASS, Object);
+  Hash->Set(fSUPERCLASS, Object);
+  String->Set(fSUPERCLASS, Object);
+  Numeric->Set(fSUPERCLASS, Object);
+  Boolean->Set(fSUPERCLASS, Object);
+
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
+  Class::InitializeClassClassFirst(Class);
+
   InitializeObjectClass(Object);
-  Class::InitializeClassClass(Class);
   Binding::InitializeClassObject(Binding);
   SRUNumeric::InitializeClassObject(Numeric);
   sru_parser::InitializeParserObject(Parser);
@@ -111,6 +134,7 @@ void Library::Impl::initialiseInteralClasses(){
   InitializeTrueObject(True);
   InitializeFalseObject(False);
   Proc::InitializeClassObject(Proc);
+  Class::InitializeClassClassLast(Class);
 
   // TODO: Move this to nill.cc
   Nil->Set(fNAME, SRUString::New("Nil"));

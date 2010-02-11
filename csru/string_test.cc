@@ -22,6 +22,5 @@ TEST(SRUString_InitialiseTest){
 TEST(SRUString_ClassTest){
   cout << Library::Instance()->String()->Inspect() << endl;
   // TODO: Fix output format like <String>.
-  assert(Library::Instance()->String()->Inspect() ==
-      "<String name:<\"String\">>");
+  assert(Library::Instance()->String()->Inspect() == "<String class:<Class class:..., findSlot:..., findSlotMethod:..., name:..., superclass:...>, name:<\"String\">, superclass:<Object>>");
 }

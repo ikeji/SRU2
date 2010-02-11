@@ -16,6 +16,7 @@ using namespace sru;
 
 TEST(Class_InitializeInstanceTest){
   BasicObjectPtr klass = BasicObject::New();
+  klass->Set(fCLASS, Library::Instance()->Class());
   BasicObjectPtr instance = BasicObject::New();
   Class::InitializeInstance(instance, klass);
   assert(instance->Get(fCLASS) == klass);

@@ -24,6 +24,7 @@ class Proc : public Value{
   virtual void Call(const BasicObjectPtr& proc, const ptr_vector& args) = 0;
   virtual std::string Inspect();
   static void InitializeClassObject(const BasicObjectPtr& proc);
+  static void Invoke(const BasicObjectPtr& proc, const ptr_vector& args);
  protected:
   static void Initialize(const BasicObjectPtr& ptr);
 };

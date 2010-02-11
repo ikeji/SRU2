@@ -63,6 +63,19 @@ string Proc::Inspect(){
   return "<Proc>";
 }
 
+void Proc::Invoke(const BasicObjectPtr& proc,
+                  const ptr_vector& args){
+  // TODO: Show more meaningful error.
+#ifdef DEBUG
+  if(!(dynamic_cast<Proc*>(proc->Data()))){
+    cout << "Can't invoke " << proc->Inspect() << " object" << endl;
+  }
+#endif
+  Proc* p = proc->GetData<Proc>();
+  assert(p || !"First error: Call target is must proc");
+  p->Call(proc, args);
+}
+
 class SRUProc : public Proc{
  public:
   SRUProc(const vector<string>& vargs,

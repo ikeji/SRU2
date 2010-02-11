@@ -1,15 +1,17 @@
 class ParserBuilder
-  attr_accessor :syntaxes, :symbols, :terms
+  attr_accessor :syntaxes, :symbols, :terms, :captures
   def initialize
     @symbols = []
     @terms = []
     @syntaxes = {}
+    @captures = Hash.new{|h,k| h[k] = []}
   end
 
   def self.build(&proc)
     p = self.new
     p.instance_eval &proc
     p.regester_terminal_symbols
+    p.regester_captures
     p
   end
 
@@ -44,13 +46,49 @@ class ParserBuilder
     @symbols.each{|s| @syntaxes[s] && @syntaxes[s].accept(r)}
   end
 
+  class RegesterCapturesInternal
+    def initialize(parser)
+      @parser = parser
+    end
+    def visit_NonTerminalSymbol(peg, sym)
+      @parser.captures[sym] << peg.capture if peg.capture
+    end
+    def visit_Or(peg, sym)
+      peg.left.accept(self, sym)
+      peg.right.accept(self, sym)
+    end
+    def visit_And(peg, sym)
+      peg.left.accept(self, sym)
+      peg.right.accept(self, sym)
+    end
+    def visit_TerminalSymbol(peg, sym)
+    end
+    def visit_RegexpSymbol(peg, sym)
+    end
+    def visit_Repeater(peg, sym)
+    end
+  end
+  
+  def regester_captures
+    r = RegesterCapturesInternal.new(self)
+    @symbols.each do|s|
+      @syntaxes[s].accept(r,s) if @syntaxes[s]
+      @captures[s].uniq!
+    end
+  end
+
   def symbol(*symbols)
     parser  = self
     symbols.each do|sym|
       self.class.module_eval do
-        define_method(sym){
+        define_method(sym){|*cap|
           s = NonTerminalSymbol.new(sym)
           s.parser = parser
+          if cap.size() > 0
+            s.capture = cap[0]
+          else
+            s.capture = sym
+          end
           return s
         }
       end
@@ -120,7 +158,7 @@ class TerminalSymbol < PEG
 end
 
 class NonTerminalSymbol < PEG
-  attr_accessor :parser, :symbol
+  attr_accessor :parser, :symbol, :capture
   def <=(right)
     raise Exception.new if @parser == nil
     @parser.syntaxes[@symbol] = convert(right)
@@ -264,6 +302,13 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
   // TODO: Check argument.
   Interpreter::Instance()->DigIntoNewFrame(
       A(
+      EOL
+      parser.captures[sym].each do |cap|
+        ret += <<-EOL
+        L("#{cap}", R("nil")),
+        EOL
+      end
+      ret += <<-EOL
 #{spc(8,parser.syntaxes[sym].accept(self, 0))}
         ,
         R("result0")
@@ -373,7 +418,7 @@ L("result#{n}",
     EOL
   end
   def visit_NonTerminalSymbol(peg, n)
-    <<-EOL
+    r = <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
 L("result#{n}",
@@ -384,6 +429,11 @@ L("result#{n}",
 // end: #{prii(peg)}
 // index: #{n}
     EOL
+    if peg.capture
+      return "L(\"#{peg.capture}\",\n" + r + ")"
+    else
+      return r
+    end 
   end
   def visit_TerminalSymbol(peg,n)
     <<-EOL

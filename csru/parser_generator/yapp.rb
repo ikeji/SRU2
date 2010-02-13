@@ -559,7 +559,7 @@ class CppHelperBuilder
     ret = ""
     parser.manipulators.each do|mani|
       ret += <<-EOL
-DECLARE_SRU_PROC(#{mani.name}){ // this, src, pos, #{mani.varg_list.map{|m|m.to_s}.join ", "}
+DEFINE_SRU_PROC(#{mani.name}){ // this, src, pos, #{mani.varg_list.map{|m|m.to_s}.join ", "}
   assert(args.size() >= #{ 3 + mani.varg_list.size });
 
 }

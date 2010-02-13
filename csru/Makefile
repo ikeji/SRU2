@@ -88,7 +88,7 @@ tags:
 	$(ERB) < $< > $@.tmp
 	mv $@.tmp $@
 
-parser.cc: parser_generator/parser.cc
+parser.cc: parser parser_generator/parser.cc
 	cp $(CPFLAGS) parser_generator/parser.cc parser.cc
 
 parser:

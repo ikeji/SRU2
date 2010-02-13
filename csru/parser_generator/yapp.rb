@@ -48,7 +48,7 @@ class ParserBuilder
 
   def regester_terminal_symbols
     r = RegesterTerminalSymbolsInternal.new(self)
-    @symbols.each{|s| @syntaxes[s] && @syntaxes[s].accept(r)}
+    @symbols.each{|s| @syntaxes.has_key?(s) && @syntaxes[s].accept(r)}
   end
 
   class RegesterCapturesInternal
@@ -74,6 +74,7 @@ class ParserBuilder
       peg.cont.accept(self, sym)
     end
     def visit_Manipulator(peg, sym)
+      @parser.captures[sym] << peg.capture if peg.capture
     end
   end
   
@@ -212,9 +213,10 @@ class RegexpSymbol < PEG
 end
 
 class Manipulator < PEG
-  attr_accessor :name, :varg_list
+  attr_accessor :name, :varg_list, :capture
   def initialize(name, varg_list)
     @name = name
+    @capture = name
     @varg_list = varg_list
   end
 end

@@ -48,7 +48,7 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
   }
   const BasicObjectPtr& parent = env->Get(fPARENT_SCOPE);
   if(parent->HasSlot(name)){
-    LOG << "find in parent: " << parent->Inspect();
+    LOG << "find in parent: " << parent->Inspect() << " --> " << parent->Get(name)->Inspect();
     Interpreter::Instance()->
       CurrentStackFrame()->
       PushResult(parent->Get(name));

@@ -3,13 +3,16 @@ GENFILE = parser.cc
 all: $(GENFILE)
 
 parser.cc: ppsample.rb yapp.rb
-	ruby ppsample.rb > parser.cc
+	ruby main.rb -c ppsample.rb > parser.cc
 
 depend: all
 	makedepend *.cc
 
 clean:
 	rm -f *~ .gitignore~ Makefile.bak tags $(GENFILE)
+
+pering:
+	ruby main.rb -p ppsample.rb
 
 # DO NOT DELETE
 

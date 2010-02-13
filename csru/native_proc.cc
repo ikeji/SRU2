@@ -16,11 +16,11 @@ void NativeProc::Call(const BasicObjectPtr& proc, const ptr_vector& arg){
   // TODO: Refacter this.
   IF_DEBUG_INFO {
     LOGOBJ(log);
-    log.cout() << "Call native proc with: ";
+    log.ostream() << "Call native proc with: ";
     for(ptr_vector::const_iterator it = arg.begin();
         it != arg.end();
         it++){
-      log.cout() << (*it)->Inspect() << " ";
+      log.ostream() << (*it)->Inspect() << " ";
     }
   }
   BasicObjectPtr ret = method_body(proc, arg);

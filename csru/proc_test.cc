@@ -220,7 +220,7 @@ TEST(Proc_LoopTest){
             C(R(R("c"),"loop"),R("c"))
         ))
   ));
-  cout << InspectAST(loop_test) << endl;
+  LOG << InspectAST(loop_test);
   assert(InspectAST(loop_test) == "{"
       "(a = (Numeric).parse(Numeric, \"0\"));"
       "{|:break|"

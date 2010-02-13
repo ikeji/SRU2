@@ -10,6 +10,7 @@ boolean.o \
 class.o \
 interpreter.o \
 library.o \
+logging.o \
 native_proc.o \
 numeric.o \
 object.o \
@@ -121,6 +122,7 @@ library.o: library.h basic_object.h logging.h numeric.h parser.h object.h
 library.o: string.h constants.h binding.h boolean.h proc.h object_vector.h
 library.o: class.h
 library_test.o: testing.h library.h basic_object.h logging.h
+logging.o: logging.h
 native_proc.o: native_proc.h proc.h basic_object.h logging.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h
 native_proc_test.o: testing.h native_proc.h proc.h basic_object.h logging.h

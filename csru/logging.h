@@ -5,23 +5,15 @@
 #ifndef LOGGING_H_
 #define LOGGING_H_
 
-#include <string>
-#include <iostream>
 #include <ostream>
 
 namespace sru_logging{
 
 class Logging{
  public:
-  Logging(const char* fname, int line){
-    std::cout << "[" << fname << ":" << line << "] ";
-  }
-  ~Logging(){
-    std::cout << std::endl;
-  }
-  std::ostream& cout(){
-    return std::cout;
-  }
+  Logging(const char* fname, int line);
+  ~Logging();
+  std::ostream& ostream();
  private:
   Logging(const Logging&);
   Logging &operator=(const Logging&);
@@ -36,18 +28,18 @@ class Logging{
 #ifdef DEBUG
 
 #define CHECK(assert) \
-  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define LOG_ERROR \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
 
 #else
 
 // We don't check 'assert' without DEBUG option.
 // TODO: Evaluate 'assert'?
 #define CHECK(assert) \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define LOG_ERROR \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
 
 #endif // DEBUG
 
@@ -55,14 +47,14 @@ class Logging{
 #ifdef DEBUG_INFO
 
 #define LOG \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define IF_DEBUG_INFO \
   if(true)
 
 #else
 
 #define LOG \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define IF_DEBUG_INFO \
   if(false)
 
@@ -72,14 +64,14 @@ class Logging{
 #ifdef DEBUG_TRACE
 
 #define LOG_TRACE \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define IF_DEBUG_TRACE \
   if(true)
 
 #else
 
 #define LOG_TRACE \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).cout()
+  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
 #define IF_DEBUG_TRACE \
   if(false)
 

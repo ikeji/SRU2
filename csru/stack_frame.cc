@@ -224,11 +224,11 @@ bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
 void StackFrame::Setup(const ptr_vector& asts){
   IF_DEBUG_TRACE{
     LOGOBJ(log);
-    log.cout() << "Setup: ";
+    log.ostream() << "Setup: ";
     for(ptr_vector::const_iterator it = asts.begin();
         it != asts.end();
         it++){
-      log.cout() << (*it)->GetData<Expression>()->Inspect();
+      log.ostream() << (*it)->GetData<Expression>()->Inspect();
     }
   }
   pimpl->expressions = Conv(asts);

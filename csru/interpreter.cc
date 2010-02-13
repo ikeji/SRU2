@@ -108,7 +108,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     LOG_ERROR << "Parse error";
     return NULL;
   }
-  LOG << "Parse OK : " << ast->Inspect();
+  LOG_ERROR << "Parse OK : " << ast->Inspect();
 
   BasicObjectPtr result = Eval(ast);
   return result;

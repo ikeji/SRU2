@@ -69,19 +69,21 @@ DEFINE_SRU_PROC_SMASH(findSlot){
       LOG << "Find in instance slot." << instance_slots->Inspect();
       if(instance_slots->HasSlot(name)){
         // Slot found.
-        LOG << "Slot found.";
+        LOG << "Slot found: " << instance_slots->Get(name)->Inspect();
         Interpreter::Instance()->
           CurrentStackFrame()->
           PushResult(instance_slots->Get(name));
         return;
       }
     }
+    LOG << "Not found";
     // TODO: Impliment inheritance.
     Interpreter::Instance()->
       CurrentStackFrame()->
       PushResult(Library::Instance()->Nil());
     return;
   }
+  LOG << "Class instance not found";
   // This is not instance.
   Interpreter::Instance()->
   CurrentStackFrame()->

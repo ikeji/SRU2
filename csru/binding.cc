@@ -37,8 +37,10 @@ BasicObjectPtr Binding::New(const BasicObjectPtr& parent){
 DEFINE_SRU_PROC_SMASH(FindSlot){
   assert(args.size() >= 2);
   const BasicObjectPtr& env = args[0];
+  LOG << env->Inspect();
   const string& name = SRUString::GetValue(args[1]);
   if(!env->HasSlot(fPARENT_SCOPE)){
+    LOG << "Parent not found.";
     Interpreter::Instance()->
       CurrentStackFrame()->
       PushResult(Library::Instance()->Nil());
@@ -46,6 +48,7 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
   }
   const BasicObjectPtr& parent = env->Get(fPARENT_SCOPE);
   if(parent->HasSlot(name)){
+    LOG << "find in parent: " << parent->Inspect();
     Interpreter::Instance()->
       CurrentStackFrame()->
       PushResult(parent->Get(name));
@@ -58,6 +61,7 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
     Proc::Invoke(parent->Get(fFIND_SLOT),next_args);
     return;
   }
+  LOG << "Not found.";
   Interpreter::Instance()->
     CurrentStackFrame()->
     PushResult(Library::Instance()->Nil());

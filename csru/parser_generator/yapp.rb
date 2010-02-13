@@ -71,7 +71,7 @@ class ParserBuilder
     def visit_RegexpSymbol(peg, sym)
     end
     def visit_Repeater(peg, sym)
-      peg.cont.accept(self)
+      peg.cont.accept(self, sym)
     end
     def visit_Manipulator(peg, sym)
     end

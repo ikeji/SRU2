@@ -314,10 +314,12 @@ DECLARE_SRU_PROC(#{mani.name}); // this, src, pos, #{mani.varg_list.map{|m|m.to_
     ret += <<-EOL
 
 DECLARE_SRU_PROC(Parse);
+DECLARE_SRU_PROC(TrueResult);
 
 void InitializeParserObject(BasicObjectPtr& parser){
   parser->Set(fNAME, SRUString::New("sru_parser"));
   parser->Set("parse", CREATE_SRU_PROC(Parse));
+  parser->Set("trueResult", CREATE_SRU_PROC(TrueResult));
 
     EOL
     parser.symbols.each do|sym|
@@ -407,6 +409,14 @@ DEFINE_SRU_PROC(term#{term.num}){
       EOL
     end
     ret += <<-EOL
+
+DEFINE_SRU_PROC(TrueResult){ // this, pos
+  LOG << args[1]->Inspect();
+  BasicObjectPtr ret = BasicObject::New();
+  ret->Set("status", Library::Instance()->True());
+  ret->Set("pos", args[1]);
+  return ret;
+}
 
 } // namespace sru_parser
     EOL
@@ -514,7 +524,7 @@ L("result#{n}",
   C(B("break#{n}",
     L("pos#{n+1}", R("pos#{n}")),
     // TODO: We must return true when empty loop.
-    L("last#{n}", R("nil")),
+    L("last#{n}", C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}"))),
     L("block#{n}", P(
 #{spc(6, peg.cont.accept(self, n+1))}
       ,

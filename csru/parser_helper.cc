@@ -203,13 +203,9 @@ DEFINE_SRU_PROC(lamb_end){ // this, src, pos, lamb_begin, program
   LOG << "lamb_end";
   ProcExpression* p = args[3]->Get("ast")->GetData<ProcExpression>();
   CHECK(p) << "Need ProcExpression by lambda for lambda";
-  ProcExpression* prog = args[4]->Get("ast")->GetData<ProcExpression>();
-  CHECK(prog) << "Need ProcExpression by program for lambda";
-  object_vector* prog_v = prog->Expressions();
-  object_vector* p_v = p->Expressions();
-  for(object_vector::iterator it = prog_v->begin(); it != prog_v->end(); it++){
-    p_v->push_back(*it);
-  }
+  BasicObjectPtr prog = args[4]->Get("ast");
+  CHECK(prog.get()) << "Need program for lambda";
+  p->Expressions()->push_back(prog.get());
   return CreateResult(true, args[3]->Get("ast"), args[2]);
 }
 

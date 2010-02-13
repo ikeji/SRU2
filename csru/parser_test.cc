@@ -40,3 +40,17 @@ TEST(Parser_ParseStringTest){
   assert(SRUString::GetValue(r) == "hoge");
 }
 
+TEST(Parser_ParseSpaceTest){
+  // "     \"hoge\" "
+  string code = "     \"hoge\" ";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(SRUString::GetValue(r) == "hoge");
+}
+
+TEST(Parser_ParseManipulatorTest){
+  string code = "\"hoge\"   \"foo\" \"bar\" ";
+  BasicObjectPtr r = Interpreter::Instance()->Eval(code);
+  assert(r.get());
+  assert(SRUString::GetValue(r) == "bar");
+}

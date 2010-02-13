@@ -8,6 +8,7 @@
 #include "numeric.h"
 #include "library.h"
 #include "logging.h"
+#include "ast.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -17,6 +18,35 @@ using namespace std;
 using namespace sru_test;
 
 namespace sru_parser {
+
+BasicObjectPtr CreateResult(const BasicObjectPtr& status,
+                            const BasicObjectPtr& ast,
+                            const BasicObjectPtr& pos){
+  BasicObjectPtr ret = BasicObject::New();
+  ret->Set("status", status);
+  ret->Set("ast", ast);
+  ret->Set("pos", pos);
+  return ret;
+}
+BasicObjectPtr CreateResult(bool status,
+                            const BasicObjectPtr& ast,
+                            const BasicObjectPtr& pos){
+  return CreateResult(
+      status ? Library::Instance()->True() : Library::Instance()->False(),
+      ast,
+      pos);
+}
+BasicObjectPtr CreateResult(const BasicObjectPtr& status,
+                            const BasicObjectPtr& ast,
+                            int pos){
+  return CreateResult(status, ast, SRUNumeric::New(pos));
+}
+
+BasicObjectPtr CreateResult(bool status,
+                            const BasicObjectPtr& ast,
+                            int pos){
+  return CreateResult(status, ast, SRUNumeric::New(pos));
+}
 
 DEFINE_SRU_PROC(spc){
   assert(args.size() > 2);
@@ -114,6 +144,26 @@ DEFINE_SRU_PROC(stringliteral){
     ret->Set("pos", SRUNumeric::New(epos + 1));
   }
   return ret;
+}
+
+DEFINE_SRU_PROC(begin_repeat){ // this, src, pos
+  assert(args.size() > 2);
+  LOG << "begin_repeat";
+  return CreateResult(true, P(), args[2]); // return true, empty closure, pos
+}
+
+DEFINE_SRU_PROC(repeater){ // this, src, pos, begin_repeat, expression
+  assert(args.size() > 4);
+  LOG << "repeater called with " << args[4]->Inspect();
+  ProcExpression* pr = args[3]->Get("ast")->GetData<ProcExpression>();
+  const_cast<object_vector*>(&(pr->Expressions()))->push_back(args[4]->Get("ast").get());
+  return CreateResult(true, args[3]->Get("ast"), args[2]);
+}
+
+DEFINE_SRU_PROC(end_repeat){
+  assert(args.size() > 2);
+  LOG << "end_repeat";
+  return CreateResult(true, C(args[3]->Get("ast")), args[2]); // return true, closure, pos
 }
 
 }  // namespace sru_parser

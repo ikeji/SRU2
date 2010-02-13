@@ -3,14 +3,15 @@ require "yapp"
 p = ParserBuilder.build() do
   symbol :program, :expression, :list, :spc, :define, :lambda, :call, :id,
          :ref, :stringliteral, :literal
-  program <= r(expression)
-  expression <= spc * (list | ref | literal)
+  manipulator :begin_repeat, :repeater, :end_repeat
+  program <= begin_repeat * r(expression * repeater(:begin_repeat,:expression)) * end_repeat(:begin_repeat)
+  expression <= spc * ( list | ref | literal )
   list <= spc * "(" * (define | lambda | call ) * ")"
-  define <= "define" * spc * id * spc * list
-  lambda <= "lambda" * spc * "(" * spc * id * r( spc * "," *spc * id ) * spc * ")" * program
+  define <= spc * "define" * spc * id * spc * list
+  lambda <= spc * "lambda" * spc * "(" * spc * id * r( spc * "," *spc * id ) * spc * ")" * program
   call <= expression * r(spc * expression)
-  ref <= id * '.' * ref | id 
-  literal <= stringliteral
+  ref <= spc * id * '.' * ref | id 
+  literal <= spc * stringliteral
 end
 
 #puts Printer.to_s(p)

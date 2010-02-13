@@ -1,10 +1,12 @@
+
 class ParserBuilder
-  attr_accessor :syntaxes, :symbols, :terms, :captures
+  attr_accessor :syntaxes, :symbols, :terms, :captures, :manipulators
   def initialize
     @symbols = []
     @terms = []
     @syntaxes = {}
     @captures = Hash.new{|h,k| h[k] = []}
+    @manipulators = []
   end
 
   def self.build(&proc)
@@ -39,6 +41,8 @@ class ParserBuilder
     end
     def visit_Repeater(peg)
     end
+    def visit_Manipulator(peg)
+    end
   end
 
   def regester_terminal_symbols
@@ -67,6 +71,8 @@ class ParserBuilder
     end
     def visit_Repeater(peg, sym)
     end
+    def visit_Manipulator(peg, sym)
+    end
   end
   
   def regester_captures
@@ -81,7 +87,7 @@ class ParserBuilder
     parser  = self
     symbols.each do|sym|
       self.class.module_eval do
-        define_method(sym){|*cap|
+        define_method(sym) do |*cap|
           s = NonTerminalSymbol.new(sym)
           s.parser = parser
           if cap.size() > 0
@@ -90,10 +96,26 @@ class ParserBuilder
             s.capture = sym
           end
           return s
-        }
+        end
       end
     end
     @symbols.push *symbols
+  end
+
+  def manipulator(*manipulators)
+    parser = self
+    manipulators.each do|mani|
+      self.class.module_eval do
+        define_method(mani) do |*arg|
+          @manipulators.each do|m|
+            raise Exception.new("duplicated manipulator name") if m.name == mani
+          end
+          m = Manipulator.new(mani, arg)
+          @manipulators << m
+          return m
+        end
+      end
+    end
   end
 
   def r(arg)
@@ -182,6 +204,14 @@ class RegexpSymbol < PEG
   end
 end
 
+class Manipulator < PEG
+  attr_accessor :name, :varg_list
+  def initialize(name, varg_list)
+    @name = name
+    @varg_list = varg_list
+  end
+end
+
 class Printer
   def self.to_s(parser)
     p = self.new
@@ -209,6 +239,9 @@ class Printer
   end
   def visit_Repeater(peg)
     "{" + peg.cont.accept(self) + "}"
+  end
+  def visit_Manipulator(peg)
+    " /*" + peg.name.to_s + "*/ "
   end
 end
 
@@ -252,11 +285,23 @@ DECLARE_SRU_PROC(#{sym.to_s});#{pri(parser,sym)}
     ret += <<-EOL
 
     EOL
+    ret += <<-EOL
+
+    EOL
     parser.terms.each do|term|
       ret += <<-EOL
 DECLARE_SRU_PROC(term#{term.num});// #{term.string}
       EOL
     end
+    ret += <<-EOL
+
+    EOL
+    parser.manipulators.each do|mani|
+      ret += <<-EOL
+DECLARE_SRU_PROC(#{mani.name}); // this, src, pos, #{mani.varg_list.map{|m|m.to_s}.join ", "}
+      EOL
+    end
+
     ret += <<-EOL
 
 DECLARE_SRU_PROC(Parse);
@@ -277,6 +322,14 @@ void InitializeParserObject(BasicObjectPtr& parser){
     parser.terms.each do|term|
       ret += <<-EOL
   parser->Set("term#{term.num}", CREATE_SRU_PROC(term#{term.num}));
+      EOL
+    end
+    ret += <<-EOL
+
+    EOL
+    parser.manipulators.each do|mani|
+      ret += <<-EOL
+  parser->Set("#{mani.name}", CREATE_SRU_PROC(#{mani.name}));
       EOL
     end
     ret += <<-EOL
@@ -420,19 +473,16 @@ L("result#{n}",
     r = <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("result#{n}",
-  C(R(R(fTHIS),"#{peg.symbol}"),
-    R(fTHIS), R("src"), R("pos#{n}")
+L("#{peg.capture}",
+  L("result#{n}",
+    C(R(R(fTHIS),"#{peg.symbol}"),
+      R(fTHIS), R("src"), R("pos#{n}")
+    )
   )
 )
 // end: #{prii(peg)}
 // index: #{n}
     EOL
-    if peg.capture
-      return "L(\"#{peg.capture}\",\n" + r + ")"
-    else
-      return r
-    end 
   end
   def visit_TerminalSymbol(peg,n)
     <<-EOL
@@ -454,6 +504,7 @@ L("result#{n}",
 L("result#{n}",
   C(B("break#{n}",
     L("pos#{n+1}", R("pos#{n}")),
+    // TODO: We must return true when empty loop.
     L("last#{n}", R("nil")),
     L("block#{n}", P(
 #{spc(6, peg.cont.accept(self, n+1))}
@@ -470,6 +521,33 @@ L("result#{n}",
 // end: #{prii(peg)}
 // index: #{n}
     EOL
+  end
+  def visit_Manipulator(peg,n)
+    r = <<-EOL
+// start: #{prii(peg)}
+// index: #{n}
+L("#{peg.name}",
+  L("result#{n}",
+    C(R(R(fTHIS),"#{peg.name}"),
+      R(fTHIS),
+      R("src"),
+      R("pos#{n}"),
+    EOL
+    peg.varg_list.each do |v|
+      r += <<-EOL
+      R("#{v}"),
+      EOL
+    end
+    r = r[0..-3]
+    r += <<-EOL
+
+    )
+  )
+)
+// end: #{prii(peg)}
+// index: #{n}
+    EOL
+    return r;
   end
 end
 

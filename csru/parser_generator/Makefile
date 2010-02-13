@@ -14,6 +14,9 @@ clean:
 print:
 	ruby main.rb -p ppsample.rb
 
+helper:
+	ruby main.rb -h ppsample.rb
+
 # DO NOT DELETE
 
 parser.o: /usr/include/string.h /usr/include/_ansi.h /usr/include/newlib.h

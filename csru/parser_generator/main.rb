@@ -6,6 +6,7 @@ $output = Printer
 OptionParser.new do |opt|
   opt.on('-p','--print'){ $output = Printer }
   opt.on('-c','--cpp'){ $output = CppCodeBuilder }
+  opt.on('-h','--helper'){ $output = CppHelperBuilder }
   opt.parse!(ARGV)
 end
 

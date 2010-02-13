@@ -40,6 +40,7 @@ class ParserBuilder
     def visit_RegexpSymbol(peg)
     end
     def visit_Repeater(peg)
+      peg.cont.accept(self)
     end
     def visit_Manipulator(peg)
     end
@@ -70,6 +71,7 @@ class ParserBuilder
     def visit_RegexpSymbol(peg, sym)
     end
     def visit_Repeater(peg, sym)
+      peg.cont.accept(self)
     end
     def visit_Manipulator(peg, sym)
     end

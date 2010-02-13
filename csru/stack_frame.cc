@@ -67,14 +67,14 @@ class TraceVisitor : public Visitor{
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     LOG_TRACE << "TRACE-LET: " << exp->Inspect();
-    if(exp->Env())
+    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil())
       VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
     LOG_TRACE << "TRACE-REF: " << exp->Inspect();
-    if(exp->Env())
+    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil())
       VisitTo(exp->Env());
     result->push_back(obj.get());
   }
@@ -83,8 +83,8 @@ class TraceVisitor : public Visitor{
     LOG_TRACE << "TRACE-CALL(PROC)";
     VisitTo(exp->Proc());
     LOG_TRACE << "TRACE-CALL(ARGS)";
-    for(object_vector::const_iterator it = exp->Arg().begin();
-        it != exp->Arg().end();
+    for(object_vector::const_iterator it = exp->Arg()->begin();
+        it != exp->Arg()->end();
         it++)
       VisitTo(*it);
     result->push_back(obj.get());
@@ -123,7 +123,7 @@ class EvalVisitor : public Visitor{
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     const BasicObjectPtr& rightValue = Pop();
     BasicObjectPtr env;
-    if(exp->Env()){
+    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil()){
       env = Pop();
     }else{
       env = binding;
@@ -148,7 +148,7 @@ class EvalVisitor : public Visitor{
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
     BasicObjectPtr env;
-    if(exp->Env()){
+    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil()){
       env = Pop();
     }else{
       env = binding;
@@ -175,8 +175,8 @@ class EvalVisitor : public Visitor{
   void Accept(CallExpression* exp,const BasicObjectPtr& obj){
     // Get arg value from stack, but it on reverse order.
     ptr_vector reverse_args;
-    for(object_vector::const_iterator it = exp->Arg().begin();
-        it != exp->Arg().end();
+    for(object_vector::const_iterator it = exp->Arg()->begin();
+        it != exp->Arg()->end();
         it++)
       reverse_args.push_back(Pop());
 
@@ -196,8 +196,8 @@ class EvalVisitor : public Visitor{
   void Accept(ProcExpression* exp,const BasicObjectPtr& obj){
     LOG << "EVAL-PROC: {} ";
     Push(Proc::New(
-             exp->Varg(),exp->RetVal(),
-             Conv(exp->Expressions()),binding));
+             *(exp->Varg()),exp->RetVal(),
+             Conv(*(exp->Expressions())),binding));
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
     LOG << "EVAL-STRING:" << exp->String();

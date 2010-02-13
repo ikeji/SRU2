@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include "object_vector.h"
+#include "library.h"
 
 using namespace sru;
 using namespace std;
@@ -37,13 +38,17 @@ LetExpression::LetExpression(const BasicObjectPtr& env,
 LetExpression::~LetExpression(){
   delete pimpl;
 }
-BasicObject* LetExpression::Env(){
+BasicObjectPtr LetExpression::Env(){
   return pimpl->env;
+}
+BasicObjectPtr LetExpression::SetEnv(BasicObjectPtr env){
+  pimpl->env = env.get();
+  return env;
 }
 const string& LetExpression::Name(){
   return pimpl->name;
 }
-BasicObject* LetExpression::RightValue(){
+BasicObjectPtr LetExpression::RightValue(){
   return pimpl->rightvalue;
 }
 
@@ -54,7 +59,7 @@ void LetExpression::Mark(){
 
 string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
-  if(pimpl->env){
+  if(pimpl->env && Library::Instance()->Nil() != pimpl->env){
     return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name +
            " = " + rv + ")";
   }else{
@@ -81,8 +86,12 @@ RefExpression::RefExpression(const BasicObjectPtr& env,
 RefExpression::~RefExpression(){
   delete pimpl;
 }
-BasicObject* RefExpression::Env(){
+BasicObjectPtr RefExpression::Env(){
   return pimpl->env;
+}
+BasicObjectPtr RefExpression::SetEnv(BasicObjectPtr env){
+  pimpl->env = env.get();
+  return env;
 }
 const string& RefExpression::Name(){
   return pimpl->name;
@@ -92,7 +101,7 @@ void RefExpression::Mark(){
 }
 
 string RefExpression::InspectAST(){
-  if(pimpl->env){
+  if(pimpl->env && Library::Instance()->Nil() != pimpl->env){
     return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name;
   }else{
     return pimpl->name;
@@ -118,11 +127,11 @@ CallExpression::CallExpression(const BasicObjectPtr& proc,
 CallExpression::~CallExpression(){
   delete pimpl;
 }
-BasicObject* CallExpression::Proc(){
+BasicObjectPtr CallExpression::Proc(){
   return pimpl->proc;
 }
-const object_vector& CallExpression::Arg(){
-  return pimpl->arg;
+object_vector* CallExpression::Arg(){
+  return &(pimpl->arg);
 }
 void CallExpression::Mark(){
   pimpl->proc->Mark();
@@ -167,14 +176,14 @@ ProcExpression::ProcExpression(const vector<string>& varg,
 ProcExpression::~ProcExpression(){
   delete pimpl;
 }
-const vector<string>& ProcExpression::Varg(){
-  return pimpl->varg;
+vector<string>* ProcExpression::Varg(){
+  return &(pimpl->varg);
 }
 const string& ProcExpression::RetVal(){
   return pimpl->retval;
 }
-const object_vector& ProcExpression::Expressions(){
-  return pimpl->expressions;
+object_vector* ProcExpression::Expressions(){
+  return &(pimpl->expressions);
 }
 void ProcExpression::Mark(){
   for(object_vector::iterator it = pimpl->expressions.begin();

@@ -107,9 +107,14 @@ class ParserBuilder
     manipulators.each do|mani|
       self.class.module_eval do
         define_method(mani) do |*arg|
+          found = nil
           @manipulators.each do|m|
-            raise Exception.new("duplicated manipulator name") if m.name == mani
+            next if(m.name != mani)
+            raise Exception.new("duplicated manipulator name") if m.varg_list != arg
+            found = m
+            break
           end
+          return found if found
           m = Manipulator.new(mani, arg)
           @manipulators << m
           return m
@@ -139,7 +144,7 @@ class PEG
     return arg if arg.is_a?(PEG)
     return TerminalSymbol.new(arg) if arg.is_a?(String)
     return RegexpSymbol.new(arg) if arg.is_a?(Regexp)
-    raise Exception.new
+    raise Exception.new("Don't support " + arg.class.to_s)
   end
   def accept(visitor, *args)
     args.unshift self
@@ -561,6 +566,7 @@ class CppHelperBuilder
       ret += <<-EOL
 DEFINE_SRU_PROC(#{mani.name}){ // this, src, pos, #{mani.varg_list.map{|m|m.to_s}.join ", "}
   assert(args.size() >= #{ 3 + mani.varg_list.size });
+  LOG << "#{mani.name}";
 
 }
 

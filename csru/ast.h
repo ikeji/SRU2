@@ -75,9 +75,10 @@ class LetExpression : public Expression{
   }
   void Mark();
 
-  BasicObject* Env();
+  BasicObjectPtr Env();
+  BasicObjectPtr SetEnv(BasicObjectPtr env);
   const std::string& Name();
-  BasicObject* RightValue();
+  BasicObjectPtr RightValue();
   
   std::string InspectAST();
  private:
@@ -105,7 +106,8 @@ class RefExpression : public Expression{
   }
   void Mark();
 
-  BasicObject* Env();
+  BasicObjectPtr Env();
+  BasicObjectPtr SetEnv(BasicObjectPtr env);
   const std::string& Name();
   
   std::string InspectAST();
@@ -135,8 +137,8 @@ class CallExpression : public Expression{
   }
   void Mark();
 
-  BasicObject* Proc();
-  const object_vector& Arg();
+  BasicObjectPtr Proc();
+  object_vector* Arg();
 
   std::string InspectAST();
  private:
@@ -167,9 +169,9 @@ class ProcExpression : public Expression{
   }
   void Mark();
 
-  const std::vector<std::string>& Varg();
+  std::vector<std::string>* Varg();
   const std::string& RetVal();
-  const object_vector& Expressions();
+  object_vector* Expressions();
   
   std::string InspectAST();
  private:

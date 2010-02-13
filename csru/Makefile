@@ -96,7 +96,7 @@ parser:
 
 # DO NOT DELETE
 
-ast.o: ast.h basic_object.h logging.h object_vector.h
+ast.o: ast.h basic_object.h logging.h object_vector.h library.h
 ast_test.o: testing.h ast.h basic_object.h logging.h object_vector.h
 basic_object.o: basic_object.h logging.h object_pool.h constants.h string.h
 basic_object_test.o: testing.h basic_object.h logging.h
@@ -123,6 +123,7 @@ library.o: string.h constants.h binding.h boolean.h proc.h object_vector.h
 library.o: class.h
 library_test.o: testing.h library.h basic_object.h logging.h
 logging.o: logging.h
+main.o: interpreter.h object_vector.h basic_object.h logging.h
 native_proc.o: native_proc.h proc.h basic_object.h logging.h object_vector.h
 native_proc.o: interpreter.h stack_frame.h
 native_proc_test.o: testing.h native_proc.h proc.h basic_object.h logging.h
@@ -144,8 +145,8 @@ parser.o: parser.h basic_object.h logging.h native_proc.h proc.h
 parser.o: object_vector.h constants.h binding.h string.h numeric.h library.h
 parser.o: testing_ast.h ast.h testing_sru.h interpreter.h stack_frame.h
 parser_helper.o: native_proc.h proc.h basic_object.h logging.h
-parser_helper.o: object_vector.h string.h numeric.h library.h testing_ast.h
-parser_helper.o: ast.h
+parser_helper.o: object_vector.h string.h numeric.h library.h ast.h
+parser_helper.o: testing_ast.h
 parser_test.o: parser.h basic_object.h logging.h testing.h interpreter.h
 parser_test.o: object_vector.h numeric.h library.h constants.h string.h
 proc.o: proc.h basic_object.h logging.h object_vector.h ast.h binding.h

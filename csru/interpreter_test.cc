@@ -93,8 +93,6 @@ TEST(Interpreter_LetExpressionTest){
 }
 
 TEST(Interpreter_StringExpressionRegTest){
-  LOG_ERROR << "TODO: enable this test after imprement Parser object";
-  return;
   string str = "Hello";
   string code = "\"Hello\"";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
@@ -123,8 +121,6 @@ TEST(Interpreter_ComplexExpressionRegTest){
 }
 
 TEST(Interpreter_RefExpressionRegTest){
-  LOG << "TODO: enable this test after imprement Parser object";
-  return;
   // " Class "
   string code = " Class ";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);

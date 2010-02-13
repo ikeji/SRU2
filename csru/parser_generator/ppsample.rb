@@ -4,7 +4,7 @@ p = ParserBuilder.build() do
   symbol :program, :expression, :list, :spc, :define, :lambda, :call, :id,
          :ref, :stringliteral, :literal
   program <= r(expression)
-  expression <= list | ref | literal 
+  expression <= spc * (list | ref | literal)
   list <= spc * "(" * (define | lambda | call ) * ")"
   define <= "define" * spc * id * spc * list
   lambda <= "lambda" * spc * "(" * spc * id * r( spc * "," *spc * id ) * spc * ")" * program

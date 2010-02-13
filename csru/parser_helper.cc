@@ -79,7 +79,9 @@ DEFINE_SRU_PROC(id){
     if(
         (str[epos] < 'a' || 'z' < str[epos]) &&
         (str[epos] < 'A' || 'Z' < str[epos]) &&
-        (str[epos] < '0' || '9' < str[epos]) &&
+        ( epos == pos ||
+          (str[epos] < '0' || '9' < str[epos])
+        ) &&
         (str[epos] != '_') &&
         true
         ) break;
@@ -172,9 +174,10 @@ DEFINE_SRU_PROC(prog_end){ // this, src, pos, id, expression
 DEFINE_SRU_PROC(def_creat){ // this, src, pos, id, expression
   assert(args.size() >= 5);
   LOG << "def_creat";
-  RefExpression* ref = args[3]->GetData<RefExpression>();
+  RefExpression* ref = args[3]->Get("ast")->GetData<RefExpression>();
   CHECK(ref) << "Need RefExpression for def";
-  BasicObjectPtr exp = args[4];
+  LOG << args[4]->Inspect();
+  BasicObjectPtr exp = args[4]->Get("ast");
   return CreateResult(true, L(ref->Env(),ref->Name(),exp), args[2]);
 }
 
@@ -187,60 +190,60 @@ DEFINE_SRU_PROC(lamb_begin){ // this, src, pos,
 DEFINE_SRU_PROC(lamb_arg){ // this, src, pos, lamb_begin, id
   assert(args.size() >= 5);
   LOG << "lamb_arg";
-  ProcExpression* p = args[3]->GetData<ProcExpression>();
+  ProcExpression* p = args[3]->Get("ast")->GetData<ProcExpression>();
   CHECK(p) << "Need ProcExpression for lambda";
-  RefExpression* ref = args[4]->GetData<RefExpression>();
+  RefExpression* ref = args[4]->Get("ast")->GetData<RefExpression>();
   CHECK(ref) << "Need RefExpression for lambda";
   p->Varg()->push_back(ref->Name());
-  return CreateResult(true, args[3], args[2]);
+  return CreateResult(true, args[3]->Get("ast"), args[2]);
 }
 
 DEFINE_SRU_PROC(lamb_end){ // this, src, pos, lamb_begin, program
   assert(args.size() >= 5);
   LOG << "lamb_end";
-  ProcExpression* p = args[3]->GetData<ProcExpression>();
+  ProcExpression* p = args[3]->Get("ast")->GetData<ProcExpression>();
   CHECK(p) << "Need ProcExpression by lambda for lambda";
-  ProcExpression* prog = args[4]->GetData<ProcExpression>();
+  ProcExpression* prog = args[4]->Get("ast")->GetData<ProcExpression>();
   CHECK(prog) << "Need ProcExpression by program for lambda";
   object_vector* prog_v = prog->Expressions();
   object_vector* p_v = p->Expressions();
   for(object_vector::iterator it = prog_v->begin(); it != prog_v->end(); it++){
     p_v->push_back(*it);
   }
-  return CreateResult(true, args[3], args[2]);
+  return CreateResult(true, args[3]->Get("ast"), args[2]);
 }
 
 DEFINE_SRU_PROC(call_begin){ // this, src, pos, expression
   assert(args.size() >= 4);
   LOG << "call_begin";
-  return CreateResult(true, C(args[3]), args[2]);
+  return CreateResult(true, C(args[3]->Get("ast")), args[2]);
 }
 
 DEFINE_SRU_PROC(call_rep){ // this, src, pos, call_begin, expression
   assert(args.size() >= 5);
   LOG << "call_rep";
-  CallExpression* call = args[3]->GetData<CallExpression>();
-  call->Arg()->push_back(args[4].get());
-  return CreateResult(true, args[3], args[2]);
+  CallExpression* call = args[3]->Get("ast")->GetData<CallExpression>();
+  call->Arg()->push_back(args[4]->Get("ast").get());
+  return CreateResult(true, args[3]->Get("ast"), args[2]);
 }
 
 DEFINE_SRU_PROC(call_end){ // this, src, pos, call_begin
   assert(args.size() >= 4);
   LOG << "call_end";
-  return CreateResult(true, args[3], args[2]);
+  return CreateResult(true, args[3]->Get("ast"), args[2]);
 }
 
 DEFINE_SRU_PROC(ref_ins){ // this, src, pos, id, ins
   assert(args.size() >= 5);
   LOG << "ref_ins";
-  RefExpression* ref = args[4]->GetData<RefExpression>();
+  RefExpression* ref = args[4]->Get("ast")->GetData<RefExpression>();
   CHECK(ref) << "Need RefExpression by ref for lambda";
   while(ref->Env() != NULL && ref->Env() != Library::Instance()->Nil()){
     ref = ref->Env()->GetData<RefExpression>();
     CHECK(ref) << "Need RefExpression chain for lambda";
   }
-  ref->SetEnv(args[3]);
-  return CreateResult(true, args[4], args[2]);
+  ref->SetEnv(args[3]->Get("ast"));
+  return CreateResult(true, args[4]->Get("ast"), args[2]);
 }
 
 

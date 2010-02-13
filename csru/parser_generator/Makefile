@@ -11,7 +11,7 @@ depend: all
 clean:
 	rm -f *~ .gitignore~ Makefile.bak tags $(GENFILE)
 
-pering:
+print:
 	ruby main.rb -p ppsample.rb
 
 # DO NOT DELETE

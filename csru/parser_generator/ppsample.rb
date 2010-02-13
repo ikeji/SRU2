@@ -3,8 +3,7 @@ symbol :program, :expression, :list, :define, :lamb, :call, :ref, :literal
 # Terminal symbol
 symbol :spc, :id, :stringliteral, :numericliteral
 
-manipulator :prog_begin, :prog_rep, :prog_end
-program <= prog_begin * r(expression * prog_rep(:prog_begin,:expression)) * prog_end(:prog_begin)
+program <= expression
 
 expression <= spc * ( list | ref | literal )
 

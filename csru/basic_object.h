@@ -178,6 +178,59 @@ class Value {
   virtual std::string Inspect(){ return ""; }
 };
 
+// NOTE: Mark as inline follow functions by performance issue.
+inline BasicObjectPtr::BasicObjectPtr(BasicObject * p): ptr(p){
+  if( ptr )
+    ptr->IncrementGcCounter();
+}
+
+inline BasicObjectPtr::~BasicObjectPtr(){
+  if( ptr )
+    ptr->DecrementGcCounter();
+}
+
+inline void BasicObjectPtr::reset(BasicObject * p){
+  if( ptr )
+    ptr->DecrementGcCounter();
+  ptr = p;
+  if( ptr )
+    ptr->IncrementGcCounter();
+}
+
+inline BasicObject& BasicObjectPtr::operator*() const{
+  return *ptr;
+}
+
+inline BasicObject * BasicObjectPtr::operator->() const{
+  return ptr;
+}
+
+inline BasicObject * BasicObjectPtr::get() const{
+  return ptr;
+}
+
+inline void BasicObjectPtr::swap(BasicObjectPtr &b){
+  std::swap(ptr, b.ptr);
+}
+
+inline BasicObjectPtr::BasicObjectPtr(const BasicObjectPtr& obj):
+    ptr(obj.ptr){
+  if( ptr )
+    ptr->IncrementGcCounter();
+}
+
+inline BasicObjectPtr & BasicObjectPtr::operator=(const BasicObjectPtr &obj){
+  if( this == &obj )
+    return *this;
+
+  if( ptr )
+    ptr->DecrementGcCounter();
+  ptr = obj.ptr;
+  if( ptr )
+    ptr->IncrementGcCounter();
+
+  return *this;
+}
 
 } // namespace sru
 

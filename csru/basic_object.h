@@ -61,6 +61,7 @@ class BasicObject {
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
+    CHECK(ref.get()) << "Don't set NULL";
     fields[name] = ref.get();
   }
   BasicObjectPtr Get(const std::string& name){

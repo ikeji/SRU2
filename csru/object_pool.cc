@@ -4,11 +4,13 @@
 
 #include "object_pool.h"
 
+#include <ctime>
 #include <map>
 #include <string>
 #include <vector>
 #include "basic_object.h"
 #include "object_vector.h"
+#include "logging.h"
 
 namespace sru {
 namespace allocator {
@@ -38,11 +40,16 @@ void ObjectPool::Register(BasicObject * obj){
 }
 
 void ObjectPool::GarbageCollect(){
+#ifdef DEBUG_TRACE
+  clock_t start = clock();
+  LOG_ERROR << "Start GC";
+#endif
   // Initialize 
   object_vector root_object;
   for( object_vector::iterator it = pimpl->allocated.begin();
        it != pimpl->allocated.end();
        it++ ){
+    CHECK(*it) << "Why allcated has NULL?";
     if((*it)->GcCounter() > 0){
       root_object.push_back(*it);
     } else {
@@ -67,6 +74,9 @@ void ObjectPool::GarbageCollect(){
     it++;
   }
 #endif
+#ifdef DEBUG_TRACE
+  int deleted = 0;
+#endif
   // Sweep
   for( object_vector::iterator it = pimpl->allocated.begin();
        it != pimpl->allocated.end();
@@ -78,27 +88,39 @@ void ObjectPool::GarbageCollect(){
       delete *it;
 #endif
       it = pimpl->allocated.erase(it);
+#ifdef DEBUG_TRACE
+      deleted++;
+#endif
     } else {
       it++;
     }
   }
+#ifdef DEBUG_TRACE
+  LOG_ERROR << "GC delete " << deleted << "/" <<
+    (deleted + Size()) << " objects in " << 
+    ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC) << " secs.";
+#endif
 }
 
 void ObjectPool::Mark(BasicObject * obj){
   // Marking
   object_vector marking;
+  CHECK(obj) << "Why mark call with NULL?";
   marking.push_back(obj);
 
   while( !marking.empty() ){
     BasicObject * cur = marking.back();
     marking.pop_back();
+    CHECK(cur) << "Why mark NULL?";
 
     if( cur->GcCounter() < 0 )
       cur->SetGcCounter(0);
+
     for(std::map<std::string,BasicObject*>::const_iterator it
             = cur->Fields().begin();
         it != cur->Fields().end();
         it++){
+      CHECK(it->second) << "Why object has NULL?";
       if(it->second->GcCounter() < 0)
         marking.push_back(it->second);
     }

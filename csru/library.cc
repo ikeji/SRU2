@@ -85,6 +85,7 @@ Library::~Library(){
 }
 
 void Library::Impl::initialiseInteralClasses(){
+  LOG << "Start initializing library.";
   // Set new objects
   Nil = BasicObject::New();
   Binding = BasicObject::New();

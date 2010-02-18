@@ -138,6 +138,7 @@ void CallExpression::Mark(){
   for(object_vector::iterator it = pimpl->arg.begin();
       it != pimpl->arg.end();
       it++){
+    CHECK(*it) << "Why arg has NULL?";
     (*it)->Mark();
   }
 }
@@ -189,6 +190,7 @@ void ProcExpression::Mark(){
   for(object_vector::iterator it = pimpl->expressions.begin();
       it != pimpl->expressions.end();
       it++){
+    CHECK(*it) << "Why expression has NULL?";
     (*it)->Mark();
   }
 }

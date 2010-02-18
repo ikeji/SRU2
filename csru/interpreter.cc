@@ -66,7 +66,7 @@ DEFINE_SRU_PROC(ContinationInvoke){
 }
 
 BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
-  const BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
+  BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
   cont->Set("CurrentStackFrame", CurrentStackFrame()->GetUpperStack());
   return cont;
 }

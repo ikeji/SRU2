@@ -59,7 +59,7 @@ void LetExpression::Mark(){
 
 string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
-  if(pimpl->env && Library::Instance()->Nil() != pimpl->env){
+  if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
     return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name +
            " = " + rv + ")";
   }else{
@@ -101,7 +101,7 @@ void RefExpression::Mark(){
 }
 
 string RefExpression::InspectAST(){
-  if(pimpl->env && Library::Instance()->Nil() != pimpl->env){
+  if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
     return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name;
   }else{
     return pimpl->name;

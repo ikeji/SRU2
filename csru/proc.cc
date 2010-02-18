@@ -30,25 +30,13 @@ using namespace std;
 
 namespace sru{
 
-DECLARE_SRU_PROC(whileTrue);
-DECLARE_SRU_PROC(loop);
-
 void Proc::Initialize(const BasicObjectPtr& obj){
   Class::InitializeInstance(obj,Library::Instance()->Proc());
-
-  // HACK: avoid infinite loop.
-  static BasicObjectPtr while_true_instance;
-  if(while_true_instance.get() == NULL) {
-    while_true_instance = BasicObject::New(whileTrue);
-    Initialize(while_true_instance);
-  }
-  static BasicObjectPtr loop_instance;
-  if(loop_instance.get() == NULL) {
-    loop_instance = BasicObject::New(loop);
-    Initialize(loop_instance);
-  }
   // TODO: test this functions existed or not.
 }
+
+DECLARE_SRU_PROC(whileTrue);
+DECLARE_SRU_PROC(loop);
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
   Class::SetAsSubclass(proc, NULL);

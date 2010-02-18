@@ -46,7 +46,11 @@ class NativeProcWithStackSmash: public NativeProc{
     BasicObjectPtr method_body(const BasicObjectPtr& proc, \
                                const ptr_vector& args); \
   }; \
-  NativeProc* name = new METHOD_##name(); \
+  BasicObjectPtr CreateMethod##name(){ \
+    BasicObjectPtr result = BasicObject::New(new METHOD_##name()); \
+    METHOD_##name::Initialize(result); \
+    return result; \
+  } \
   BasicObjectPtr METHOD_##name::method_body(const BasicObjectPtr& proc, \
                                             const ptr_vector& args)
 
@@ -55,16 +59,26 @@ class NativeProcWithStackSmash: public NativeProc{
    private: \
     void method_body_smash(const BasicObjectPtr& proc, \
                            const ptr_vector& args); \
+   public: \
+    static BasicObjectPtr New(){ \
+      BasicObjectPtr result = BasicObject::New(new METHOD_##name()); \
+      Initialize(result); \
+      return result; \
+    } \
   }; \
-  NativeProc* name = new METHOD_##name(); \
+  BasicObjectPtr CreateMethod##name(){ \
+    BasicObjectPtr result = BasicObject::New(new METHOD_##name()); \
+    METHOD_##name::Initialize(result); \
+    return result; \
+  } \
   void METHOD_##name::method_body_smash(const BasicObjectPtr& proc, \
                                         const ptr_vector& args)
 
 #define DECLARE_SRU_PROC(name) \
-  extern NativeProc* name
+  BasicObjectPtr CreateMethod##name();
 
 #define CREATE_SRU_PROC(name) \
-  (name->New())
+  (CreateMethod##name())
 
 } // namespace sru
 

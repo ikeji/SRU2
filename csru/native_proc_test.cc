@@ -20,7 +20,7 @@ DEFINE_SRU_PROC(SimpleMethod){
 
 TEST(NativeProc_CallTest){
   ptr_vector v;
-  SimpleMethod->Call(CREATE_SRU_PROC(SimpleMethod), v);
+  METHOD_SimpleMethod().Call(CREATE_SRU_PROC(SimpleMethod), v);
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue().get());
@@ -31,14 +31,16 @@ DEFINE_SRU_PROC_SMASH(SimpleMethodSmash){
 
 TEST(NativeProc_CallSmashTest){
   ptr_vector v;
-  SimpleMethodSmash->Call(CREATE_SRU_PROC(SimpleMethodSmash),v);
+  METHOD_SimpleMethodSmash().Call(
+      CREATE_SRU_PROC(SimpleMethodSmash),v);
 }
 
 DECLARE_SRU_PROC(SimpleMethod2);
 
 TEST(NativeProc_DeclareTest){
   ptr_vector v;
-  SimpleMethod2->Call(CREATE_SRU_PROC(SimpleMethod2),v);
+  BasicObjectPtr proc = CREATE_SRU_PROC(SimpleMethod2);
+  proc->GetData<Proc>()->Call(proc,v);
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue().get());

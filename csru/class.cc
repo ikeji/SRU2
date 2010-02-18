@@ -41,22 +41,6 @@ void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
   klass->Get(fINSTANCE_METHODS)->Set(name, method);
 }
 
-DECLARE_SRU_PROC(findSlot);
-
-void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
-  klass->Set(fCLASS, klass);
-  BasicObjectPtr find_slot_method = BasicObject::New(findSlot);
-  klass->Set("findSlotMethod", find_slot_method);
-  LOG << "Setup findSlotMethod";
-}
-
-void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
-  Proc::Initialize(klass->Get("findSlotMethod"));
-
-  klass->Set(fNAME, SRUString::New("Class"));
-  SetAsSubclass(klass,NULL);
-}
-
 DEFINE_SRU_PROC_SMASH(findSlot){
   assert(args.size() >= 2);
   const BasicObjectPtr& obj = args[0];
@@ -89,3 +73,18 @@ DEFINE_SRU_PROC_SMASH(findSlot){
   CurrentStackFrame()->
   PushResult(Library::Instance()->Nil());
 }
+
+void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
+  klass->Set(fCLASS, klass);
+  BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
+  klass->Set("findSlotMethod", find_slot_method);
+  LOG << "Setup findSlotMethod";
+}
+
+void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
+  Proc::Initialize(klass->Get("findSlotMethod"));
+
+  klass->Set(fNAME, SRUString::New("Class"));
+  SetAsSubclass(klass,NULL);
+}
+

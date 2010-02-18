@@ -110,7 +110,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
 #{pri2(parser,sym)}
   assert(args.size()>2);
   // TODO: Check argument.
-  Interpreter::Instance()->DigIntoNewFrame(
+  static ptr_vector exps = 
       A(
       EOL
       parser.captures[sym].each do |cap|
@@ -122,7 +122,8 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
 #{spc(8,parser.syntaxes[sym].accept(self, 0))}
         ,
         R("result0")
-      ),
+      );
+  Interpreter::Instance()->DigIntoNewFrame(exps,
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
   BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();

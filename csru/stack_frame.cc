@@ -320,6 +320,8 @@ void StackFrame::Mark(){
   MarkVector(&pimpl->expressions);
   MarkVector(&pimpl->operations);
   MarkVector(&pimpl->local_stack);
+  if(pimpl->binding) pimpl->binding->Mark();
+  if(pimpl->upper_frame) pimpl->upper_frame->Mark();
 }
 
 // TODO: call StackFrame()

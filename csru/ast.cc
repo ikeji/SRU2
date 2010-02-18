@@ -53,8 +53,8 @@ BasicObjectPtr LetExpression::RightValue(){
 }
 
 void LetExpression::Mark(){
-  pimpl->env->Mark();
-  pimpl->rightvalue->Mark();
+  if(pimpl->env) pimpl->env->Mark();
+  if(pimpl->rightvalue) pimpl->rightvalue->Mark();
 }
 
 string LetExpression::InspectAST(){
@@ -97,7 +97,7 @@ const string& RefExpression::Name(){
   return pimpl->name;
 }
 void RefExpression::Mark(){
-  pimpl->env->Mark();
+  if(pimpl->env) pimpl->env->Mark();
 }
 
 string RefExpression::InspectAST(){
@@ -134,7 +134,7 @@ object_vector* CallExpression::Arg(){
   return &(pimpl->arg);
 }
 void CallExpression::Mark(){
-  pimpl->proc->Mark();
+  if(pimpl->proc) pimpl->proc->Mark();
   for(object_vector::iterator it = pimpl->arg.begin();
       it != pimpl->arg.end();
       it++){

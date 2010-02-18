@@ -37,6 +37,7 @@ object_test.o \
 object_vector_test.o \
 parser_test.o \
 proc_test.o \
+scheme_like_test.o \
 stack_frame_test.o \
 string_test.o \
 

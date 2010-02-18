@@ -1,11 +1,16 @@
 # Nonterminal symbol
-symbol :program, :expression, :list, :define, :lamb, :call, :ref, :literal
+symbol :program, :expression, :list, :define, :lamb, :call, :ref, :literal, :target
 # Terminal symbol
 symbol :spc, :id, :stringliteral, :numericliteral
 
 program <= expression
 
-expression <= spc * ( list | ref | literal )
+expression <= spc * ref
+
+manipulator :ref_ins
+ref <= spc * target * '.' * ref * ref_ins(:target,:ref) | target
+
+target <= id | literal | list
 
 list <= define | lamb | call
 
@@ -21,9 +26,6 @@ manipulator :call_begin, :call_rep, :call_end
 call <=  spc * "(" * expression * call_begin(:expression) *
   r(spc * expression * call_rep(:call_begin, :expression)) * spc * ")" *
   call_end(:call_begin)
-
-manipulator :ref_ins
-ref <= spc * id * '.' * ref * ref_ins(:id,:ref) | id 
 
 literal <= spc * (stringliteral | numericliteral)
 

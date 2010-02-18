@@ -1,12 +1,20 @@
 GENFILE = parser.cc
+SRCS    = \
+cpp_code_builder.rb \
+cpp_helper_builder.rb \
+main.rb \
+parser_builder.rb \
+ppsample.rb \
+printer.rb \
+yapp.rb \
+
 
 all: $(GENFILE)
 
-parser.cc: ppsample.rb yapp.rb
+parser.cc: $(SRCS)
 	ruby main.rb -c ppsample.rb > parser.cc
 
 depend: all
-	makedepend *.cc
 
 clean:
 	rm -f *~ .gitignore~ Makefile.bak tags $(GENFILE)
@@ -16,11 +24,3 @@ print:
 
 helper:
 	ruby main.rb -h ppsample.rb
-
-# DO NOT DELETE
-
-parser.o: /usr/include/string.h /usr/include/_ansi.h /usr/include/newlib.h
-parser.o: /usr/include/sys/config.h /usr/include/machine/ieeefp.h
-parser.o: /usr/include/sys/reent.h /usr/include/sys/_types.h
-parser.o: /usr/include/machine/_types.h /usr/include/machine/_default_types.h
-parser.o: /usr/include/sys/lock.h /usr/include/sys/string.h

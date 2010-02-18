@@ -31,7 +31,7 @@ void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
   // TODO: Define more good strategy.
 #ifndef DEBUG_GC
-  if(Size() > 1024*1024){
+  if(Size() > 1024*10){
 #else
   if(true){
 #endif
@@ -61,7 +61,10 @@ void ObjectPool::GarbageCollect(){
   for( object_vector::iterator it = root_object.begin();
        it != root_object.end();
        it++ ){
+    int backup_gc_counter = (*it)->GcCounter();
+    (*it)->SetGcCounter(-1);
     Mark(*it);
+    (*it)->SetGcCounter(backup_gc_counter);
   }
 
 #ifdef DEBUG_GC
@@ -113,20 +116,21 @@ void ObjectPool::Mark(BasicObject * obj){
     marking.pop_back();
     CHECK(cur) << "Why mark NULL?";
 
-    if( cur->GcCounter() < 0 )
+    if( cur->GcCounter() < 0 ){
       cur->SetGcCounter(0);
 
-    for(std::map<std::string,BasicObject*>::const_iterator it
-            = cur->Fields().begin();
-        it != cur->Fields().end();
-        it++){
-      CHECK(it->second) << "Why object has NULL?";
-      if(it->second->GcCounter() < 0)
-        marking.push_back(it->second);
-    }
+      for(std::map<std::string,BasicObject*>::const_iterator it
+          = cur->Fields().begin();
+          it != cur->Fields().end();
+          it++){
+        CHECK(it->second) << "Why object has NULL?";
+        if(it->second->GcCounter() < 0)
+          marking.push_back(it->second);
+      }
 
-    if( cur->Data() != NULL )
-      cur->Data()->Mark();
+      if( cur->Data() != NULL )
+        cur->Data()->Mark();
+    }
   }
 }
 

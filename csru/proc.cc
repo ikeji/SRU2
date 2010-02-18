@@ -121,12 +121,25 @@ string SRUProc::Inspect(){
   if(!retval.empty()) ret += ":" + retval;
   if(!ret.empty()) ret = "|" + ret + "|";
   ret = "<Proc: {";
+  if(vargs.size() > 0 || !retval.empty()){
+    ret += "|";
+    for(vector<string>::const_iterator it = vargs.begin();
+        it != vargs.end();
+        it++){
+      if(it != vargs.begin()) ret += ",";
+      ret += (*it);
+    }
+    if(!retval.empty()){
+      ret += ":" + retval;
+    }
+    ret += "|";
+  }
   for(object_vector::const_iterator it = expressions.begin();
       it != expressions.end();
       it++){
     ret += (*it)->GetData<Expression>()->InspectAST() + ";";
   }
-  return ret + ">";
+  return ret + "}>";
 }
 
 void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){

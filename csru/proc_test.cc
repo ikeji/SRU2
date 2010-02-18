@@ -134,7 +134,7 @@ TEST(Proc_InspectTest){
   BasicObjectPtr r = Interpreter::Instance()->Eval(m);
   assert(r.get());
   LOG << r->Inspect();
-  assert(r->Inspect() == "<Proc: {(a = Class);{a;};>");
+  assert(r->Inspect() == "<Proc: {(a = Class);{a;};}>");
 }
 
 TEST(Proc_ContinationTest){

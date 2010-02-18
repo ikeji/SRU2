@@ -28,7 +28,7 @@ ObjectPool::~ObjectPool(){
 void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
   // TODO: Define more good strategy.
-#ifdef DEBUG_GC
+#ifndef DEBUG_GC
   if(Size() > 1024*1024){
 #else
   if(true){

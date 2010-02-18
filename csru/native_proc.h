@@ -19,11 +19,6 @@ class BasicObjectPtr;
 class NativeProc: public Proc{
  public:
   void Call(const BasicObjectPtr& ptr, const ptr_vector& args);
-  BasicObjectPtr New(){
-    BasicObjectPtr result = BasicObject::New(this);
-    Initialize(result);
-    return result;
-  }
   virtual BasicObjectPtr method_body(const BasicObjectPtr& proc,
                                      const ptr_vector& args) = 0;
   virtual std::string Inspect();

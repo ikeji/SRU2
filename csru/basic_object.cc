@@ -29,7 +29,13 @@ void BasicObject::Mark(){
   allocator::ObjectPool::Instance()->Mark(this);
 }
  
-BasicObject::BasicObject(): fields(),gc_counter(0),data(NULL){
+BasicObject::BasicObject():
+#ifdef DEBUG_GC
+  deleted(false),
+#endif
+  fields(),
+  gc_counter(0),
+  data(NULL){
   fields.clear();
 }
 

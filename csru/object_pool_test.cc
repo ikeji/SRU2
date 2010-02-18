@@ -106,18 +106,27 @@ TEST(ObjectPool_ValueTest){
   pv2.reset();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
+  // NOTE: GC don't delete object with DEBUG_GC
+#ifndef DEBUG_GC
   assert(MyValue::Count == 0);
+#endif
   // Ring reference
   BasicObjectPtr pr = BasicObject::New(new MyValue());
   BasicObjectPtr pr2 = BasicObject::New(new MyValue());
   pr2->GetData<MyValue>()->MyObject = pr.get();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 3);
+  // NOTE: GC don't delete object with DEBUG_GC
+#ifndef DEBUG_GC
   assert(MyValue::Count == 2);
+#endif
   pr.reset();
   pr2.reset();
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);
+  // NOTE: GC don't delete object with DEBUG_GC
+#ifndef DEBUG_GC
   assert(MyValue::Count == 0);
+#endif
 }
 

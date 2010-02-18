@@ -57,39 +57,95 @@ class BasicObject {
 
   // Setting or getting from this object's slot.
   void Set(const std::string& name,BasicObjectPtr ref){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     fields[name] = ref.get();
   }
   BasicObjectPtr Get(const std::string& name){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     CHECK(HasSlot(name)) << "Error: unknwn slot: " << name << " in: " << Inspect();
     assert(fields.find(name) != fields.end());
     return BasicObjectPtr(fields[name]);
   };
   bool HasSlot(const std::string& name){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     return (fields.find(name) != fields.end());
   }
   const std::map<std::string,BasicObject *>& Fields() const{
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     return fields;
   }
 
   // Follow is GC related method.
   void Mark();
-  int GcCounter() const { return gc_counter; }
-  void SetGcCounter(int i) { gc_counter = i; }
+  int GcCounter() const { 
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
+    return gc_counter;
+  }
+  void SetGcCounter(int i) {
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
+    gc_counter = i; 
+  }
   void IncrementGcCounter() {
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     gc_counter++; 
     LOG_TRACE <<"inc:" << Inspect() << " -> " << gc_counter;
   }
   void DecrementGcCounter() {
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     gc_counter--; 
+#ifdef DEBUG_GC
+    assert(gc_counter >= -1); 
+#else
     assert(gc_counter >= 0); 
+#endif
     LOG_TRACE <<"dec:" << Inspect() << " -> " << gc_counter;
   }
 
-  Value* Data(){ return data; }
-  void SetData(Value* dat){ data = dat; }
+  Value* Data(){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
+    return data; 
+  }
+  void SetData(Value* dat){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
+    data = dat; 
+  }
 
   template<typename T>
   T* GetData(){
+#ifdef DEBUG_GC
+    CHECK(!deleted) << "Why use deleted object?";
+    assert(!deleted);
+#endif
     T* r = dynamic_cast<T*>(data);
     CHECK(r) << "Can't cast " << Inspect() << " to real type " << T::name();
     assert(r);
@@ -99,6 +155,9 @@ class BasicObject {
   std::string Inspect(int limit=80);
 
   ~BasicObject();
+#ifdef DEBUG_GC
+  bool deleted;
+#endif
  private:
   BasicObject();
   

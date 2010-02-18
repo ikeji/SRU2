@@ -27,10 +27,17 @@ ObjectPool::~ObjectPool(){
 
 void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
+  // TODO: Define more good strategy.
+#ifdef DEBUG_GC
+  if(Size() > 1024*1024){
+#else
+  if(true){
+#endif
+    GarbageCollect();
+  }
 }
 
 void ObjectPool::GarbageCollect(){
- 
   // Initialize 
   object_vector root_object;
   for( object_vector::iterator it = pimpl->allocated.begin();
@@ -50,12 +57,26 @@ void ObjectPool::GarbageCollect(){
     Mark(*it);
   }
 
+#ifdef DEBUG_GC
+  for( object_vector::iterator it = pimpl->allocated.begin();
+       it != pimpl->allocated.end();
+      ){
+    if( (*it)->GcCounter() < 0 ){
+      LOG << "delete: " << (*it)->Inspect();
+    }
+    it++;
+  }
+#endif
   // Sweep
   for( object_vector::iterator it = pimpl->allocated.begin();
        it != pimpl->allocated.end();
       ){
     if( (*it)->GcCounter() < 0 ){
+#ifdef DEBUG_GC
+      (*it)->deleted = true;
+#else
       delete *it;
+#endif
       it = pimpl->allocated.erase(it);
     } else {
       it++;

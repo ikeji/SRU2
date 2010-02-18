@@ -21,13 +21,14 @@ TEST(StackFrame_BackupTest){
 }
 
 TEST(StackFrame_EvalStepTest){
-  StackFrame st(Binding::New());
+  BasicObjectPtr s = StackFrame::New(Binding::New());
+  StackFrame* st = s->GetData<StackFrame>();
   ptr_vector ast;
-  ast.push_back(BasicObject::New(new StringExpression("Hello")).get());
-  st.Setup(ast);
+  ast.push_back(BasicObject::New(new StringExpression("Hello")));
+  st->Setup(ast);
   int counter = 0;
-  while(! st.EndOfTrees()){
-    assert(st.EvalNode());
+  while(! st->EndOfTrees()){
+    assert(st->EvalNode());
     counter++;
   }
   // Step1: Extract Tree

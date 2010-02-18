@@ -49,8 +49,6 @@ TEST(Scheme_Test1){
   TestCode("((plus 4 3).plus (plus 4 3) (plus 1 2))", "<Numeric: 10 >");
   TestCode("(true.ifTrueFalse true (lambda (x) 1) (lambda (x) 2))", "<Numeric: 1 >");
   TestCode("(false.ifTrueFalse false (lambda (x) 1) (lambda (x) 2))", "<Numeric: 2 >");
-  LOG << "TODO: Enable follow test codes.";
-  return;
   start = clock();
   TestCode("(define fib (lambda (x) "
              "((x.lessThan x 2).ifTrueFalse "

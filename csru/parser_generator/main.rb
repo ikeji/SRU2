@@ -16,7 +16,7 @@ if(ARGV.size < 1)
 end
 
 p = ParserBuilder.build() do
-  eval(File.read(ARGV[0]), binding)
+  eval(File.read(ARGV[0]), binding, ARGV[0])
 end
 
 puts $output.to_s(p)

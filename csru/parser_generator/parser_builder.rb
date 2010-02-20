@@ -42,6 +42,9 @@ class ParserBuilder
     def visit_Repeater(peg)
       peg.cont.accept(self)
     end
+    def visit_Optional(peg)
+      peg.cont.accept(self)
+    end
     def visit_Manipulator(peg)
     end
   end
@@ -73,6 +76,9 @@ class ParserBuilder
     def visit_Repeater(peg, sym)
       peg.cont.accept(self, sym)
     end
+    def visit_Optional(peg, sym)
+      peg.cont.accept(self, sym)
+    end
     def visit_Manipulator(peg, sym)
       @parser.captures[sym] << peg.capture if peg.capture
     end
@@ -91,9 +97,11 @@ class ParserBuilder
     symbols.each do|sym|
       self.class.module_eval do
         define_method(sym) do |*cap|
+          raise Exception.new "syntax error" if(cap.size > 1)
           s = NonTerminalSymbol.new(sym)
           s.parser = parser
-          if cap.size() > 0
+          if cap.size() == 1
+            raise Exception.new "syntax error" if !cap[0].instance_of?(Symbol)
             s.capture = cap[0]
           else
             s.capture = sym
@@ -129,6 +137,9 @@ class ParserBuilder
   def r(arg)
     return Repeater.new(arg)
   end
+  def o(arg)
+    return Optional.new(arg)
+  end
 end
 
 class String
@@ -139,6 +150,9 @@ class String
   end
   def |(arg)
     Or.new(TerminalSymbol.new(self),arg)
+  end
+  def ~@
+    Optional.new(self)
   end
 end
 
@@ -159,6 +173,9 @@ class PEG
   def |(right)
     Or.new(self,convert(right))
   end
+  def ~@
+    Optional.new(self)
+  end
 end
 
 class And < PEG
@@ -178,6 +195,24 @@ class Or < PEG
 end
 
 class Not < PEG
+  attr_accessor :cont
+  def initialize(cont)
+    @cont = convert cont
+  end
+end
+
+class Repeater < PEG
+  attr_accessor :cont
+  def initialize(cont)
+    @cont = convert cont
+  end
+end
+
+class Optional < PEG
+  attr_accessor :cont
+  def initialize(cont)
+    @cont = convert cont
+  end
 end
 
 class TerminalSymbol < PEG
@@ -195,13 +230,6 @@ class NonTerminalSymbol < PEG
   end
   def initialize(symbol)
     @symbol = symbol
-  end
-end
-
-class Repeater < PEG
-  attr_accessor :cont
-  def initialize(cont)
-    @cont = cont
   end
 end
 

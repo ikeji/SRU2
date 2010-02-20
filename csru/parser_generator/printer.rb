@@ -26,8 +26,11 @@ class Printer
   def visit_Repeater(peg)
     "{" + peg.cont.accept(self) + "}"
   end
+  def visit_Optional(peg)
+    "[" + peg.cont.accept(self) + "]"
+  end
   def visit_Manipulator(peg)
-    " /*" + peg.name.to_s + "*/ "
+    " { " + peg.name.to_s + " } "
   end
 end
 

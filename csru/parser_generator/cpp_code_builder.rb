@@ -187,6 +187,9 @@ DEFINE_SRU_PROC(TrueResult){ // this, pos
   def prii(p)
     p.accept(Printer.new)
   end
+# Each visitor output C++ code for parser.
+# each step output parse result as resultN.
+# And use other work valiables like hogehogeN ex status2.
   def visit_Or(peg, n)
     <<-EOL
 // start: #{prii(peg)}
@@ -234,6 +237,50 @@ L("result#{n}",
 // index: #{n}
     EOL
   end
+  def visit_Repeater(peg, n)
+    <<-EOL
+// start: #{prii(peg)}
+// index: #{n}
+L("result#{n}",
+  C(B("break#{n}",
+    L("pos#{n+1}", R("pos#{n}")),
+    // TODO: We must return true when empty loop.
+    L("last#{n}", C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}"))),
+    L("block#{n}", P(
+#{spc(6, peg.cont.accept(self, n+1))}
+      ,
+      L("status#{n}", R(R("result#{n+1}"),"status")),
+      C(R(R("status#{n}"),"ifFalse"),
+        R("status#{n}"),
+        P(C(R("break#{n}"),R("last#{n}")))),
+      L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
+      L("last#{n}", R("result#{n+1}"))
+    )),
+    C(R(R("block#{n}"),"loop"),R("block#{n}"))
+  )))
+// end: #{prii(peg)}
+// index: #{n}
+    EOL
+  end
+  def visit_Optional(peg, n)
+    <<-EOL
+// start: #{prii(peg)}
+// index: #{n}
+L("pos#{n+1}", R("pos#{n}")),
+#{peg.cont.accept(self, n+1)}
+,
+L("status#{n}", R(R("result#{n+1}"),"status")),
+L("result#{n}",
+  C(R(R("status#{n}"), "ifTrueFalse"),
+    R("status#{n}"),
+    P(R("result#{n+1}")),
+    P(C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}")))
+  )
+)
+// end: #{prii(peg)}
+// index: #{n}
+    EOL
+  end
   def visit_NonTerminalSymbol(peg, n)
     r = <<-EOL
 // start: #{prii(peg)}
@@ -258,31 +305,6 @@ L("result#{n}",
     R(fTHIS), R("src"), R("pos#{n}")
   )
 )
-// end: #{prii(peg)}
-// index: #{n}
-    EOL
-  end
-  def visit_Repeater(peg, n)
-    <<-EOL
-// start: #{prii(peg)}
-// index: #{n}
-L("result#{n}",
-  C(B("break#{n}",
-    L("pos#{n+1}", R("pos#{n}")),
-    // TODO: We must return true when empty loop.
-    L("last#{n}", C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}"))),
-    L("block#{n}", P(
-#{spc(6, peg.cont.accept(self, n+1))}
-      ,
-      L("status#{n}", R(R("result#{n+1}"),"status")),
-      C(R(R("status#{n}"),"ifFalse"),
-        R("status#{n}"),
-        P(C(R("break#{n}"),R("last#{n}")))),
-      L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
-      L("last#{n}", R("result#{n+1}"))
-    )),
-    C(R(R("block#{n}"),"loop"),R("block#{n}"))
-  )))
 // end: #{prii(peg)}
 // index: #{n}
     EOL

@@ -12,7 +12,9 @@ yapp.rb \
 all: $(GENFILE)
 
 parser.cc: $(SRCS)
-	ruby main.rb -c ppsample.rb > parser.cc
+	ruby main.rb -c ppsample.rb > $@.tmp
+	mv $@.tmp $@
+
 
 depend: all
 

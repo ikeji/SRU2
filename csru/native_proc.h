@@ -10,7 +10,7 @@
 
 #include <string>
 #include "proc.h"
-#include "object_vector.h"
+#include "object_container.h"
 
 namespace sru {
 

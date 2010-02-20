@@ -7,7 +7,7 @@
 #include <vector>
 #include "ast.h"
 #include "basic_object.h"
-#include "object_vector.h"
+#include "object_container.h"
 #include "stack_frame.h"
 #include "library.h"
 #include "binding.h"

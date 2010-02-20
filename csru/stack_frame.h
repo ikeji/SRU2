@@ -11,7 +11,7 @@
 #define STACK_FRAME_H_
 
 #include "basic_object.h"
-#include "object_vector.h"
+#include "object_container.h"
 
 namespace sru {
 

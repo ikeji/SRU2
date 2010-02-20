@@ -5,7 +5,7 @@
 #include "stack_frame.h"
 
 #include <vector>
-#include "object_vector.h"
+#include "object_container.h"
 #include "basic_object.h"
 #include "string.h"
 #include "ast.h"

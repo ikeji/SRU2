@@ -11,7 +11,7 @@
 #include "binding.h"
 #include "interpreter.h"
 #include "library.h"
-#include "object_vector.h"
+#include "object_container.h"
 #include "stack_frame.h"
 #include "constants.h"
 #include "class.h"

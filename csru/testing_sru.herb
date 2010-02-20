@@ -10,7 +10,7 @@
 #include <string>
 #include "proc.h"
 #include "interpreter.h"
-#include "object_vector.h"
+#include "object_container.h"
 #include "stack_frame.h"
 #include "logging.h"
 

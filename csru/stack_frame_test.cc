@@ -6,7 +6,7 @@
 #include "stack_frame.h"
 
 #include <cassert>
-#include "object_vector.h"
+#include "object_container.h"
 #include "ast.h"
 #include "binding.h"
 #include "logging.h"

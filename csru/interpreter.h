@@ -9,7 +9,7 @@
 #define INTERPRETER_H_
 
 #include <string>
-#include "object_vector.h"
+#include "object_container.h"
 
 namespace sru {
 

@@ -2,7 +2,7 @@
 // Copyright(C) 2005-2008 IKeJI
 // 
 
-#include "object_vector.h"
+#include "object_container.h"
 #include "basic_object.h"
 
 namespace sru {

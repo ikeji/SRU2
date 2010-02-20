@@ -15,6 +15,8 @@
 namespace sru {
 namespace allocator {
 
+using namespace std;
+
 struct ObjectPool::Impl {
   Impl():allocated() {}
   object_vector allocated;
@@ -31,7 +33,7 @@ void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
   // TODO: Define more good strategy.
 #ifndef DEBUG_GC
-  if(Size() > 1024*10){
+  if(Size() > 1024*1024){
 #else
   if(true){
 #endif
@@ -44,34 +46,20 @@ void ObjectPool::GarbageCollect(){
   clock_t start = clock();
   LOG_ERROR << "Start GC";
 #endif
-  // Initialize 
-  object_vector root_object;
+
+  // Mark
   for( object_vector::iterator it = pimpl->allocated.begin();
        it != pimpl->allocated.end();
        it++ ){
-    CHECK(*it) << "Why allcated has NULL?";
-    if((*it)->GcCounter() > 0){
-      root_object.push_back(*it);
-    } else {
-      (*it)->SetGcCounter(-1);
-    }
-  }
-
-  // Mark
-  for( object_vector::iterator it = root_object.begin();
-       it != root_object.end();
-       it++ ){
-    int backup_gc_counter = (*it)->GcCounter();
-    (*it)->SetGcCounter(-1);
-    Mark(*it);
-    (*it)->SetGcCounter(backup_gc_counter);
+    if((*it)->GcCounter() > 0)
+      Mark(*it, true);
   }
 
 #ifdef DEBUG_GC
   for( object_vector::iterator it = pimpl->allocated.begin();
        it != pimpl->allocated.end();
       ){
-    if( (*it)->GcCounter() < 0 ){
+    if( (*it)->GcCounter() == 0 ){
       LOG << "delete: " << (*it)->Inspect();
     }
     it++;
@@ -81,57 +69,76 @@ void ObjectPool::GarbageCollect(){
   int deleted = 0;
 #endif
   // Sweep
-  for( object_vector::iterator it = pimpl->allocated.begin();
-       it != pimpl->allocated.end();
-      ){
-    if( (*it)->GcCounter() < 0 ){
+  object_vector::iterator to = pimpl->allocated.begin();
+  for( object_vector::iterator from = pimpl->allocated.begin();
+       from != pimpl->allocated.end();
+       from++){
+    if( (*from)->GcCounter() == 0 ){
 #ifdef DEBUG_GC
-      (*it)->deleted = true;
+      (*from)->deleted = true;
 #else
-      delete *it;
+      delete *from;
 #endif
-      it = pimpl->allocated.erase(it);
 #ifdef DEBUG_TRACE
       deleted++;
 #endif
     } else {
-      it++;
+      if(to != from)
+        *to = *from;
+      if((*to)->GcCounter() == -1)
+        (*to)->SetGcCounter(0);
+      to++;
     }
   }
+  pimpl->allocated.resize(distance(pimpl->allocated.begin(), to));
 #ifdef DEBUG_TRACE
-  LOG_ERROR << "GC delete " << deleted << "/" <<
+  LOG << "GC delete " << deleted << "/" <<
     (deleted + Size()) << " objects in " << 
     ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC) << " secs.";
 #endif
 }
 
-void ObjectPool::Mark(BasicObject * obj){
-  // Marking
-  object_vector marking;
+typedef map<string, BasicObject*>::const_iterator fielditr;
+
+void ObjectPool::Mark(BasicObject * obj, bool force){
   CHECK(obj) << "Why mark call with NULL?";
-  marking.push_back(obj);
+  // Already marked.
+  if(!force && obj->GcCounter() != 0)
+    return;
 
-  while( !marking.empty() ){
-    BasicObject * cur = marking.back();
-    marking.pop_back();
-    CHECK(cur) << "Why mark NULL?";
+  if(obj->GcCounter() == 0)
+    obj->SetGcCounter(-1);
 
-    if( cur->GcCounter() < 0 ){
-      cur->SetGcCounter(0);
+  vector<pair<fielditr, fielditr> > marking_stack;
+  if(!obj->Fields().empty())
+    marking_stack.push_back(make_pair(obj->Fields().begin(), obj->Fields().end()));
 
-      for(std::map<std::string,BasicObject*>::const_iterator it
-          = cur->Fields().begin();
-          it != cur->Fields().end();
-          it++){
-        CHECK(it->second) << "Why object has NULL?";
-        if(it->second->GcCounter() < 0)
-          marking.push_back(it->second);
-      }
+  while( !marking_stack.empty() ){
+    pair<fielditr, fielditr> pos = marking_stack.back();
+    marking_stack.pop_back();
+    while(pos.first != pos.second){
+      BasicObject * cur = pos.first->second;
+      pos.first++;
 
-      if( cur->Data() != NULL )
+      if(cur->GcCounter() != 0)
+        continue;
+
+      cur->SetGcCounter(-1);
+
+      if(cur->Data())
         cur->Data()->Mark();
+      
+      if(cur->Fields().empty())
+        continue;
+
+      marking_stack.push_back(pos);
+      marking_stack.push_back(make_pair(cur->Fields().begin(), cur->Fields().end()));
+      break;
     }
   }
+
+  if(obj->Data())
+    obj->Data()->Mark();
 }
 
 int ObjectPool::Size(){

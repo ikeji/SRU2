@@ -23,7 +23,7 @@ class ObjectPool{
   }
   void Register(BasicObject * obj);
   void GarbageCollect();
-  void Mark(BasicObject * obj);
+  void Mark(BasicObject * obj, bool force = false);
   int Size();
 
  private:

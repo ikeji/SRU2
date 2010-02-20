@@ -70,8 +70,9 @@ class BasicObject {
     assert(!deleted);
 #endif
     CHECK(HasSlot(name)) << "Error: unknwn slot: " << name << " in: " << Inspect();
-    assert(fields.find(name) != fields.end());
-    return BasicObjectPtr(fields[name]);
+    std::map<std::string,BasicObject* >::iterator it = fields.find(name);
+    assert(it != fields.end());
+    return it->second;
   };
   bool HasSlot(const std::string& name){
 #ifdef DEBUG_GC

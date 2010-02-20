@@ -50,7 +50,7 @@ ERB      = erb
 
 ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
   # BSD cp doesn't support -u option.
-  CPFLAGS =
+  CPFLAGS = -p
 endif
 
 ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)

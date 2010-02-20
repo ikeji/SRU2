@@ -69,8 +69,8 @@ class BasicObject {
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
-    CHECK(HasSlot(name)) << "Error: unknwn slot: " << name << " in: " << Inspect();
     std::map<std::string,BasicObject* >::iterator it = fields.find(name);
+    CHECK(it != fields.end()) << "Error: unknwn slot: " << name << " in: " << Inspect();
     assert(it != fields.end());
     return it->second;
   };

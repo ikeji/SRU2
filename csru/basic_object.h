@@ -17,7 +17,19 @@
 
 #include <cassert>
 #include <string>
+#ifdef USEOLDGCC
+#include <ext/hash_map>
+namespace __gnu_cxx {
+template <>
+struct hash<std::string>{
+  size_t operator()(const std::string&x) const {
+    return hash<const char*>()(x.c_str());
+  }
+};
+}  // namespace __gnu_cxx;
+#else
 #include <tr1/unordered_map>
+#endif
 #include "logging.h"
 
 namespace sru {
@@ -51,7 +63,11 @@ class BasicObjectPtr {
 
 class BasicObject {
  public:
+#ifdef USEOLDGCC
+  typedef __gnu_cxx::hash_map<std::string,BasicObject* > fields_type;
+#else
   typedef std::tr1::unordered_map<std::string,BasicObject* > fields_type;
+#endif
 
   // Always use New method to allocate BasicObject instead of new operator.
   static BasicObjectPtr New();

@@ -58,7 +58,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-4 doesn't support mingw now. use g++-3
   CXX      = g++-3
   # g++-3 doesn't work with -Weffc++
-  CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw
+  CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 

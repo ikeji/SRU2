@@ -84,4 +84,32 @@ TEST(Scheme_Test1){
   start = clock();
   TestCode("(fib 20)", "<Numeric: 10946 >");
   LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
+  LOG_ERROR << "TODO: enable tak function.";
+  return;
+  start = clock();
+  TestCode("(define tak (lambda (x,y,z) "
+             "((x.lessThan x (y.plus y 1)).ifTrueFalse "
+               "Nil "
+               "(lambda (n) y) "
+               "(lambda (n) "
+                 "(tak "
+                   "(tak (x.minous x 1) y z) "
+                   "(tak (y.minous y 1) z x) "
+                   "(tak (z.minous z 1) x y) "
+                 ") "
+               ") "
+             ")"
+           "))",
+           "<Proc: {|x,y,z|"
+             "((x).lessThan(x, (y).plus(y, (Numeric).parse(Numeric, \"1\")))).ifTrueFalse("
+               "Nil, "
+               "{|n|y;}, "
+               "{|n|"
+                 "tak("
+                   "tak((x).minous(x, (Numeric).parse(Numeric, \"1\")), y, z), "
+                   "tak((y).minous(y, (Numeric).parse(Numeric, \"1\")), z, x), "
+                   "tak((z).minous(z, (Numeric).parse(Numeric, \"1\")), x, y));"
+               "});"
+           "}>");
+  LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
 }

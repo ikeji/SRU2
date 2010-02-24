@@ -17,7 +17,7 @@
 
 #include <cassert>
 #include <string>
-#include <map>
+#include <tr1/unordered_map>
 #include "logging.h"
 
 namespace sru {
@@ -51,7 +51,7 @@ class BasicObjectPtr {
 
 class BasicObject {
  public:
-  typedef std::map<std::string,BasicObject* > fields_type;
+  typedef std::tr1::unordered_map<std::string,BasicObject* > fields_type;
 
   // Always use New method to allocate BasicObject instead of new operator.
   static BasicObjectPtr New();

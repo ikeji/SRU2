@@ -4,7 +4,6 @@
 #include "basic_object.h"
 
 #include <string>
-#include <map>
 #include <sstream>
 #include "object_pool.h"
 #include "constants.h"
@@ -56,7 +55,7 @@ string BasicObject::Inspect(int limit){
     if(limit > titlesize){
       s << " ";
       int sum = 0;
-      for(map<string,BasicObject*>::iterator it = fields.begin();
+      for(fields_type::iterator it = fields.begin();
           it != fields.end();
           it++){
         sum += (int)it->first.size() + 5;
@@ -64,7 +63,7 @@ string BasicObject::Inspect(int limit){
       bool show_details = (sum < (limit - titlesize));
       int detailsize = (limit - titlesize - sum) / (fields.size()+1);
       if(detailsize < 0) detailsize = 0;
-      for(map<string,BasicObject*>::iterator it = fields.begin();
+      for(fields_type::iterator it = fields.begin();
           it != fields.end();
           it++){
         if(it != fields.begin()) s << ", ";

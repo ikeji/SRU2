@@ -51,6 +51,8 @@ class BasicObjectPtr {
 
 class BasicObject {
  public:
+  typedef std::map<std::string,BasicObject* > fields_type;
+
   // Always use New method to allocate BasicObject instead of new operator.
   static BasicObjectPtr New();
   static BasicObjectPtr New(Value * value);
@@ -69,7 +71,7 @@ class BasicObject {
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
-    std::map<std::string,BasicObject* >::iterator it = fields.find(name);
+    fields_type::iterator it = fields.find(name);
     CHECK(it != fields.end()) << "Error: unknwn slot: " << name << " in: " << Inspect();
     assert(it != fields.end());
     return it->second;
@@ -81,7 +83,7 @@ class BasicObject {
 #endif
     return (fields.find(name) != fields.end());
   }
-  const std::map<std::string,BasicObject *>& Fields() const{
+  const fields_type& Fields() const{
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
@@ -163,7 +165,8 @@ class BasicObject {
  private:
   BasicObject();
   
-  std::map<std::string,BasicObject* > fields;
+  fields_type fields;
+
   int gc_counter;
   Value* data;
 

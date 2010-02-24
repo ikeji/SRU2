@@ -5,7 +5,6 @@
 #include "object_pool.h"
 
 #include <ctime>
-#include <map>
 #include <string>
 #include <vector>
 #include "basic_object.h"
@@ -98,7 +97,7 @@ void ObjectPool::GarbageCollect(){
 #endif
 }
 
-typedef map<string, BasicObject*>::const_iterator fielditr;
+typedef BasicObject::fields_type::const_iterator fielditr;
 
 void ObjectPool::Mark(BasicObject * obj, bool force){
   CHECK(obj) << "Why mark call with NULL?";

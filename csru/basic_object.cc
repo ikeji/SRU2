@@ -5,6 +5,8 @@
 
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <vector>
 #include "object_pool.h"
 #include "constants.h"
 #include "string.h"
@@ -55,22 +57,25 @@ string BasicObject::Inspect(int limit){
     if(limit > titlesize){
       s << " ";
       int sum = 0;
+      vector<string> keys;
       for(fields_type::iterator it = fields.begin();
           it != fields.end();
           it++){
         sum += (int)it->first.size() + 5;
+        keys.push_back(it->first);
       }
+      sort(keys.begin(), keys.end());
       bool show_details = (sum < (limit - titlesize));
       int detailsize = (limit - titlesize - sum) / (fields.size()+1);
       if(detailsize < 0) detailsize = 0;
-      for(fields_type::iterator it = fields.begin();
-          it != fields.end();
+      for(vector<string>::iterator it = keys.begin();
+          it != keys.end();
           it++){
-        if(it != fields.begin()) s << ", ";
+        if(it != keys.begin()) s << ", ";
         if(show_details){
-          s << it->first << ":" << it->second->Inspect(detailsize);
+          s << *it << ":" << fields[*it]->Inspect(detailsize);
         }else{
-          s << it->first << ":...";
+          s << *it << ":...";
         }
       }
     }

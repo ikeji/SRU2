@@ -62,14 +62,14 @@ DECLARE_SRU_PROC(Parse);
 DECLARE_SRU_PROC(TrueResult);
 
 void InitializeParserObject(BasicObjectPtr& parser){
-  parser->Set(fNAME, SRUString::New("sru_parser"));
-  parser->Set("parse", CREATE_SRU_PROC(Parse));
-  parser->Set("trueResult", CREATE_SRU_PROC(TrueResult));
+  parser->Set(sym::name(), SRUString::New("sru_parser"));
+  parser->Set(sym::parse(), CREATE_SRU_PROC(Parse));
+  parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
 
     EOL
     parser.symbols.each do|sym|
       ret += <<-EOL
-  parser->Set("#{sym}", CREATE_SRU_PROC(#{sym}));
+  parser->Set(sym::#{sym}(), CREATE_SRU_PROC(#{sym}));
       EOL
     end
     ret += <<-EOL
@@ -77,7 +77,7 @@ void InitializeParserObject(BasicObjectPtr& parser){
     EOL
     parser.terms.each do|term|
       ret += <<-EOL
-  parser->Set("term#{term.num}", CREATE_SRU_PROC(term#{term.num}));
+  parser->Set(sym::term#{term.num}(), CREATE_SRU_PROC(term#{term.num}));
       EOL
     end
     ret += <<-EOL
@@ -85,7 +85,7 @@ void InitializeParserObject(BasicObjectPtr& parser){
     EOL
     parser.manipulators.each do|mani|
       ret += <<-EOL
-  parser->Set("#{mani.name}", CREATE_SRU_PROC(#{mani.name}));
+  parser->Set(sym::#{mani.name}(), CREATE_SRU_PROC(#{mani.name}));
       EOL
     end
     ret += <<-EOL
@@ -95,12 +95,20 @@ DEFINE_SRU_PROC_SMASH(Parse){
   assert(args.size() > 1);
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
-      A(R(C(R(R(fTHIS),"program"), R(fTHIS), R("src"), C(R(R("Numeric"),"parse"),R("Numeric"),S("0"))),"ast")),
+      A(
+        R(
+          C(R(R(sym::self()),sym::program()),
+            R(sym::self()),
+            R(sym::src()),
+            C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S("0"))),
+          sym::ast()
+        )
+      ),
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
   BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
-  binding->Set(fTHIS, args[0]);
-  binding->Set("src", args[1]);
+  binding->Set(sym::self(), args[0]);
+  binding->Set(sym::src(), args[1]);
 }
 
     EOL
@@ -115,21 +123,21 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       EOL
       parser.captures[sym].each do |cap|
         ret += <<-EOL
-        L("#{cap}", R("nil")),
+        L(sym::#{cap}(), R(sym::nil())),
         EOL
       end
       ret += <<-EOL
 #{spc(8,parser.syntaxes[sym].accept(self, 0))}
         ,
-        R("result0")
+        R(sym::result0())
       );
   Interpreter::Instance()->DigIntoNewFrame(exps,
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
   BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
-  binding->Set(fTHIS, args[0]);
-  binding->Set("src", args[1]);
-  binding->Set("pos0", args[2]);
+  binding->Set(sym::self(), args[0]);
+  binding->Set(sym::src(), args[1]);
+  binding->Set(sym::pos0(), args[2]);
   // Stack smash!
 }
       EOL
@@ -137,7 +145,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
     parser.terms.each do |term|
       ret += <<-EOL
 DEFINE_SRU_PROC(term#{term.num}){
-  string target = "#{term.string}";
+  const static string target = "#{term.string}";
   assert(args.size()>2);
   // TODO: Check argument.
   string src = SRUString::GetValue(args[1]);
@@ -145,10 +153,10 @@ DEFINE_SRU_PROC(term#{term.num}){
   // TODO: Define ParserResult type.
   BasicObjectPtr ret = BasicObject::New();
   if(src.compare(pos, target.size(), target) == 0){
-    ret->Set("status", Library::Instance()->True());
-    ret->Set("pos", SRUNumeric::New(pos + target.size()));
+    ret->Set(sym::status(), Library::Instance()->True());
+    ret->Set(sym::pos(), SRUNumeric::New(pos + target.size()));
   } else {
-    ret->Set("status", Library::Instance()->False());
+    ret->Set(sym::status(), Library::Instance()->False());
   }
   return ret;
 }
@@ -159,8 +167,8 @@ DEFINE_SRU_PROC(term#{term.num}){
 DEFINE_SRU_PROC(TrueResult){ // this, pos
   LOG << args[1]->Inspect();
   BasicObjectPtr ret = BasicObject::New();
-  ret->Set("status", Library::Instance()->True());
-  ret->Set("pos", args[1]);
+  ret->Set(sym::status(), Library::Instance()->True());
+  ret->Set(sym::pos(), args[1]);
   return ret;
 }
 
@@ -194,18 +202,18 @@ DEFINE_SRU_PROC(TrueResult){ // this, pos
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("pos#{n+1}", R("pos#{n}")),
+L(sym::pos#{n+1}(), R(sym::pos#{n}())),
 #{peg.left.accept(self, n+1)}
 ,
-L("status#{n}", R(R("result#{n+1}"),"status")),
-L("result#{n}",
-  C(R(R("status#{n}"), "ifTrueFalse"),
-    R("status#{n}"),
-    P(R("result#{n+1}")),
+L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+L(sym::result#{n}(),
+  C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
+    R(sym::status#{n}()),
+    P(R(sym::result#{n+1}())),
     P(
 #{spc(6,peg.right.accept(self, n+1))}
       ,
-      R("result#{n+1}")
+      R(sym::result#{n+1}())
     )
   )
 )
@@ -217,20 +225,20 @@ L("result#{n}",
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("pos#{n+1}", R("pos#{n}")),
+L(sym::pos#{n+1}(), R(sym::pos#{n}())),
 #{peg.left.accept(self, n+1)}
 ,
-L("status#{n}", R(R("result#{n+1}"),"status")),
-L("result#{n}",
-  C(R(R("status#{n}"), "ifTrueFalse"),
-    R("status#{n}"),
+L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+L(sym::result#{n}(),
+  C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
+    R(sym::status#{n}()),
     P(
-      L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
+      L(sym::pos#{n+1}(), R(R(sym::result#{n+1}()),sym::pos())),
 #{spc(6,peg.right.accept(self, n+1))}
       ,
-      R("result#{n+1}")
+      R(sym::result#{n+1}())
     ),
-    P(R("result#{n+1}"))
+    P(R(sym::result#{n+1}()))
   )
 )
 // end: #{prii(peg)}
@@ -241,22 +249,23 @@ L("result#{n}",
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("result#{n}",
-  C(B("break#{n}",
-    L("pos#{n+1}", R("pos#{n}")),
-    // TODO: We must return true when empty loop.
-    L("last#{n}", C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}"))),
-    L("block#{n}", P(
+L(sym::result#{n}(),
+  C(B(sym::break#{n}(),
+    L(sym::pos#{n+1}(), R(sym::pos#{n}())),
+    L(sym::last#{n}(),
+      C(R(R(sym::self()),sym::trueResult()),
+        R(sym::self()),R(sym::pos#{n}()))),
+    L(sym::block#{n}(), P(
 #{spc(6, peg.cont.accept(self, n+1))}
       ,
-      L("status#{n}", R(R("result#{n+1}"),"status")),
-      C(R(R("status#{n}"),"ifFalse"),
-        R("status#{n}"),
-        P(C(R("break#{n}"),R("last#{n}")))),
-      L("pos#{n+1}", R(R("result#{n+1}"),"pos")),
-      L("last#{n}", R("result#{n+1}"))
+      L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+      C(R(R(sym::status#{n}()),sym::ifFalse()),
+        R(sym::status#{n}()),
+        P(C(R(sym::break#{n}()),R(sym::last#{n}())))),
+      L(sym::pos#{n+1}(), R(R(sym::result#{n+1}()),sym::pos())),
+      L(sym::last#{n}(), R(sym::result#{n+1}()))
     )),
-    C(R(R("block#{n}"),"loop"),R("block#{n}"))
+    C(R(R(sym::block#{n}()),sym::loop()),R(sym::block#{n}()))
   )))
 // end: #{prii(peg)}
 // index: #{n}
@@ -266,15 +275,15 @@ L("result#{n}",
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("pos#{n+1}", R("pos#{n}")),
+L(sym::pos#{n+1}(), R(sym::pos#{n}())),
 #{peg.cont.accept(self, n+1)}
 ,
-L("status#{n}", R(R("result#{n+1}"),"status")),
-L("result#{n}",
-  C(R(R("status#{n}"), "ifTrueFalse"),
-    R("status#{n}"),
-    P(R("result#{n+1}")),
-    P(C(R(R(fTHIS),"trueResult"),R(fTHIS),R("pos#{n}")))
+L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+L(sym::result#{n}(),
+  C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
+    R(sym::status#{n}()),
+    P(R(sym::result#{n+1}())),
+    P(C(R(R(sym::self()),sym::trueResult()),R(sym::self()),R(sym::pos#{n}())))
   )
 )
 // end: #{prii(peg)}
@@ -285,10 +294,10 @@ L("result#{n}",
     r = <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("#{peg.capture}",
-  L("result#{n}",
-    C(R(R(fTHIS),"#{peg.symbol}"),
-      R(fTHIS), R("src"), R("pos#{n}")
+L(sym::#{peg.capture}(),
+  L(sym::result#{n}(),
+    C(R(R(sym::self()),sym::#{peg.symbol}()),
+      R(sym::self()), R(sym::src()), R(sym::pos#{n}())
     )
   )
 )
@@ -300,9 +309,9 @@ L("#{peg.capture}",
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("result#{n}",
-  C(R(R(fTHIS),"term#{peg.num}"),
-    R(fTHIS), R("src"), R("pos#{n}")
+L(sym::result#{n}(),
+  C(R(R(sym::self()),sym::term#{peg.num}()),
+    R(sym::self()), R(sym::src()), R(sym::pos#{n}())
   )
 )
 // end: #{prii(peg)}
@@ -313,16 +322,16 @@ L("result#{n}",
     r = <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
-L("#{peg.name}",
-  L("result#{n}",
-    C(R(R(fTHIS),"#{peg.name}"),
-      R(fTHIS),
-      R("src"),
-      R("pos#{n}"),
+L(sym::#{peg.name}(),
+  L(sym::result#{n}(),
+    C(R(R(sym::self()),sym::#{peg.name}()),
+      R(sym::self()),
+      R(sym::src()),
+      R(sym::pos#{n}()),
     EOL
     peg.varg_list.each do |v|
       r += <<-EOL
-      R("#{v}"),
+      R(sym::#{v}()),
       EOL
     end
     r = r[0..-3]

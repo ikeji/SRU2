@@ -109,16 +109,16 @@ DEFINE_SRU_PROC(Slash){
 
 void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::SetAsSubclass(numeric, NULL);
-  numeric->Set("parse",CREATE_SRU_PROC(NumericParse));
-  numeric->Set(fNAME, SRUString::New("Numeric"));
-  Class::SetAsInstanceMethod(numeric, "equal", CREATE_SRU_PROC(Equal));
-  Class::SetAsInstanceMethod(numeric, "notEqual", CREATE_SRU_PROC(NotEqual));
-  Class::SetAsInstanceMethod(numeric, "greaterThan", CREATE_SRU_PROC(GreaterThan));
-  Class::SetAsInstanceMethod(numeric, "lessThan", CREATE_SRU_PROC(LessThan));
-  Class::SetAsInstanceMethod(numeric, "plus", CREATE_SRU_PROC(Plus));
-  Class::SetAsInstanceMethod(numeric, "minous", CREATE_SRU_PROC(Minous));
-  Class::SetAsInstanceMethod(numeric, "asterisk", CREATE_SRU_PROC(Asterisk));
-  Class::SetAsInstanceMethod(numeric, "slash", CREATE_SRU_PROC(Slash));
+  numeric->Set(sym::parse(),CREATE_SRU_PROC(NumericParse));
+  numeric->Set(sym::name(), SRUString::New("Numeric"));
+  Class::SetAsInstanceMethod(numeric, sym::equal(), CREATE_SRU_PROC(Equal));
+  Class::SetAsInstanceMethod(numeric, sym::notEqual(), CREATE_SRU_PROC(NotEqual));
+  Class::SetAsInstanceMethod(numeric, sym::greaterThan(), CREATE_SRU_PROC(GreaterThan));
+  Class::SetAsInstanceMethod(numeric, sym::lessThan(), CREATE_SRU_PROC(LessThan));
+  Class::SetAsInstanceMethod(numeric, sym::plus(), CREATE_SRU_PROC(Plus));
+  Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minous));
+  Class::SetAsInstanceMethod(numeric, sym::asterisk(), CREATE_SRU_PROC(Asterisk));
+  Class::SetAsInstanceMethod(numeric, sym::slash(), CREATE_SRU_PROC(Slash));
 }
 
 int SRUNumeric::GetValue(BasicObjectPtr obj){

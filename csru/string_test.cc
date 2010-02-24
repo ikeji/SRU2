@@ -14,7 +14,7 @@ using namespace std;
 
 TEST(SRUString_InitialiseTest){
   BasicObjectPtr obj = SRUString::New("hoge");
-  assert(obj->Get(fCLASS).get() == Library::Instance()->String().get());
+  assert(obj->Get(sym::klass()).get() == Library::Instance()->String().get());
   assert(SRUString::GetValue(obj) == "hoge");
   assert(obj->Inspect() == "<\"hoge\">");
 }

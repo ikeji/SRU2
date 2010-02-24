@@ -21,6 +21,7 @@ TEST(Binding_ScopeTest){
   LOG << InspectAST(p);
   assert(InspectAST(p) == "{(a = Class);{a;}();}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
+  LOG << r->Inspect();
   assert(r.get());
   assert(r == Library::Instance()->Class());
 }

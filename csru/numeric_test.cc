@@ -19,11 +19,11 @@ using namespace sru_test;
 
 TEST(SRUNumeric_InitializeTest){
   BasicObjectPtr obj = SRUNumeric::New(3);
-  assert(obj->Get(fCLASS) == Library::Instance()->Numeric());
+  assert(obj->Get(sym::klass()) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(obj) == 3);
   
   obj = SRUNumeric::New(4);
-  assert(obj->Get(fCLASS) == Library::Instance()->Numeric());
+  assert(obj->Get(sym::klass()) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(obj) == 4);
 }
 
@@ -38,13 +38,17 @@ TEST(SRUNumeric_ParseTest){
   const BasicObjectPtr res = Call(Library::Instance()->Numeric(),"parse",
                                   SRUString::New("3"));
   assert(res.get());
-  assert(res->Get(fCLASS) == Library::Instance()->Numeric());
+  assert(res->Get(sym::klass()) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(res) == 3);
 }
 
+void check_has(const string& sym){
+  assert(Library::Instance()->Numeric()->HasSlot(sym::instanceMethods()));
+  assert(Library::Instance()->Numeric()->Get(sym::instanceMethods())->HasSlot(sym));
+}
+
 TEST(SRUNumeric_EqualTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("equal"));
+  check_has(sym::equal());
 }
 
 TEST(SRUNumeric_EqualTestTrue){
@@ -82,8 +86,7 @@ TEST(SRUNumeric_EqualTestFalse){
 }
 
 TEST(SRUNumeric_NotEqualTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("notEqual"));
+  check_has(sym::notEqual());
 }
 
 TEST(SRUNumeric_NotEqualTestTrue){
@@ -121,8 +124,7 @@ TEST(SRUNumeric_NotEqualTestFalse){
 }
 
 TEST(SRUNumeric_GreaterThanTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("greaterThan"));
+  check_has(sym::greaterThan());
 }
 
 TEST(SRUNumeric_GreaterThanTestTrue){
@@ -160,8 +162,7 @@ TEST(SRUNumeric_GreaterThanTestFalse){
 }
 
 TEST(SRUNumeric_LessThanTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("lessThan"));
+  check_has(sym::lessThan());
 }
 
 TEST(SRUNumeric_LessThanTestTrue){
@@ -199,8 +200,7 @@ TEST(SRUNumeric_LessThanTestFalse){
 }
 
 TEST(SRUNumeric_PlusTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("plus"));
+  check_has(sym::plus());
 }
 
 TEST(SRUNumeric_PlusTest1){
@@ -221,20 +221,19 @@ TEST(SRUNumeric_PlusTest1){
 }
 
 TEST(SRUNumeric_MinousTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("minous"));
+  check_has(sym::minus());
 }
 
 TEST(SRUNumeric_MinousTest1){
-  // {a = 123; a.minous(a,456);}()
+  // {a = 123; a.minus(a,456);}()
   BasicObjectPtr proc = C(P(
         L("a", C(R(R("Numeric"),"parse"), R("Numeric"), S("123"))),
-        C(R(R("a"),"minous"),R("a"),C(R(R("Numeric"),"parse"), R("Numeric"), S("456")))
+        C(R(R("a"),"minus"),R("a"),C(R(R("Numeric"),"parse"), R("Numeric"), S("456")))
         ));
   LOG << InspectAST(proc);
   assert(InspectAST(proc) == "{"
       "(a = (Numeric).parse(Numeric, \"123\"));"
-      "(a).minous(a, (Numeric).parse(Numeric, \"456\"));"
+      "(a).minus(a, (Numeric).parse(Numeric, \"456\"));"
       "}()");
   BasicObjectPtr result = Interpreter::Instance()->Eval(proc);
   assert(result.get());
@@ -243,8 +242,7 @@ TEST(SRUNumeric_MinousTest1){
 }
 
 TEST(SRUNumeric_AsteriskTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("asterisk"));
+  check_has(sym::asterisk());
 }
 
 TEST(SRUNumeric_AsteriskTest1){
@@ -265,8 +263,7 @@ TEST(SRUNumeric_AsteriskTest1){
 }
 
 TEST(SRUNumeric_SlashTest){
-  assert(Library::Instance()->Numeric()->HasSlot(fINSTANCE_METHODS));
-  assert(Library::Instance()->Numeric()->Get(fINSTANCE_METHODS)->HasSlot("slash"));
+  check_has(sym::slash());
 }
 
 TEST(SRUNumeric_SlashTest1){

@@ -151,6 +151,6 @@ TEST(Interpreter_EvalCallExpressionRegTest){
   assert(InspectAST(p) == "(Numeric).parse(Numeric, \"10\")");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
-  assert(r->Get(fCLASS) == Library::Instance()->Numeric());
+  assert(r->Get(sym::klass()) == Library::Instance()->Numeric());
 }
 

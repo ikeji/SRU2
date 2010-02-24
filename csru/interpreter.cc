@@ -13,6 +13,7 @@
 #include "binding.h"
 #include "native_proc.h"
 #include "logging.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace std;
@@ -55,7 +56,7 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 
 DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
-  *Interpreter::Instance()->CurrentStackFrame() = *proc->Get("CurrentStackFrame")->GetData<StackFrame>();
+  *Interpreter::Instance()->CurrentStackFrame() = *proc->Get(sym::CurrentStackFrame())->GetData<StackFrame>();
   if(args.size() > 0){
     LOG << "Contination invoked with: " << args[0]->Inspect();
     return args[0];
@@ -67,7 +68,7 @@ DEFINE_SRU_PROC(ContinationInvoke){
 
 BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
   BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
-  cont->Set("CurrentStackFrame", CurrentStackFrame()->GetUpperStack());
+  cont->Set(sym::CurrentStackFrame(), CurrentStackFrame()->GetUpperStack());
   return cont;
 }
 
@@ -96,11 +97,11 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   // Paser.parse("str")
   ptr_vector args;
   // Parser
-  args.push_back(RefExpression::New(NULL, "sru_parser"));
+  args.push_back(RefExpression::New(NULL, sym::sru_parser()));
   // "str"
   args.push_back(StringExpression::New(str));
   BasicObjectPtr call_parser = CallExpression::New(
-      RefExpression::New(RefExpression::New(NULL,"sru_parser"), "parse"), args);
+      RefExpression::New(RefExpression::New(NULL,sym::sru_parser()), sym::parse()), args);
 
   BasicObjectPtr ast = Eval(call_parser);
   if(ast == Library::Instance()->Nil()) {

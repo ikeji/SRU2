@@ -20,8 +20,8 @@ using namespace sru_test;
 TEST(Parser_ParserObjectTest){
   BasicObjectPtr sru_parser = Library::Instance()->Parser();
   assert(sru_parser.get());
-  assert(SRUString::GetValue(sru_parser->Get(fNAME)) == "sru_parser");
-  assert(sru_parser->HasSlot("parse"));
+  assert(SRUString::GetValue(sru_parser->Get(sym::name())) == "sru_parser");
+  assert(sru_parser->HasSlot(sym::parse()));
 }
 
 TEST(Parser_ParseRefTest){

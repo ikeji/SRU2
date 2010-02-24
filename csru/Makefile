@@ -8,6 +8,7 @@ basic_object.o \
 binding.o \
 boolean.o \
 class.o \
+constants.o \
 interpreter.o \
 library.o \
 logging.o \
@@ -91,6 +92,14 @@ tags:
 
 parser.cc: parser parser_generator/parser.cc
 	cp $(CPFLAGS) parser_generator/parser.cc parser.cc
+
+constants.h: constants_generator.rb
+	ruby constants_generator.rb -h > $@.tmp
+	mv $@.tmp $@
+
+constants.cc: constants_generator.rb
+	ruby constants_generator.rb -c > $@.tmp
+	mv $@.tmp $@
 
 parser:
 	make -C parser_generator

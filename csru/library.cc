@@ -102,26 +102,26 @@ void Library::Impl::initialiseInteralClasses(){
   Parser = BasicObject::New();
 
   // Define class path.
-  Class->Set(fCLASS, Class);
-  Object->Set(fCLASS, Class);
-  Proc->Set(fCLASS, Class);
-  Array->Set(fCLASS, Class);
-  Hash->Set(fCLASS, Class);
-  String->Set(fCLASS, Class);
-  Numeric->Set(fCLASS, Class);
-  Boolean->Set(fCLASS, Class);
-  True->Set(fCLASS, Boolean);
-  False->Set(fCLASS, Boolean);
+  Class->Set(sym::klass(), Class);
+  Object->Set(sym::klass(), Class);
+  Proc->Set(sym::klass(), Class);
+  Array->Set(sym::klass(), Class);
+  Hash->Set(sym::klass(), Class);
+  String->Set(sym::klass(), Class);
+  Numeric->Set(sym::klass(), Class);
+  Boolean->Set(sym::klass(), Class);
+  True->Set(sym::klass(), Boolean);
+  False->Set(sym::klass(), Boolean);
 
   // Define inheritance path.
-  Class->Set(fSUPERCLASS, Object);
-  Object->Set(fSUPERCLASS, Nil);
-  Proc->Set(fSUPERCLASS, Object);
-  Array->Set(fSUPERCLASS, Object);
-  Hash->Set(fSUPERCLASS, Object);
-  String->Set(fSUPERCLASS, Object);
-  Numeric->Set(fSUPERCLASS, Object);
-  Boolean->Set(fSUPERCLASS, Object);
+  Class->Set(sym::superclass(), Object);
+  Object->Set(sym::superclass(), Nil);
+  Proc->Set(sym::superclass(), Object);
+  Array->Set(sym::superclass(), Object);
+  Hash->Set(sym::superclass(), Object);
+  String->Set(sym::superclass(), Object);
+  Numeric->Set(sym::superclass(), Object);
+  Boolean->Set(sym::superclass(), Object);
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
@@ -138,27 +138,27 @@ void Library::Impl::initialiseInteralClasses(){
   Class::InitializeClassClassLast(Class);
 
   // TODO: Move this to nill.cc
-  Nil->Set(fNAME, SRUString::New("Nil"));
+  Nil->Set(sym::name(), SRUString::New(sym::nil()));
   // TODO: Move this to array.cc
-  Array->Set(fNAME, SRUString::New("Array"));
+  Array->Set(sym::name(), SRUString::New(sym::Array()));
   // TODO: Move this to hash.cc
-  Hash->Set(fNAME, SRUString::New("Hash"));
+  Hash->Set(sym::name(), SRUString::New(sym::Hash()));
   // TODO: Move this to string.cc
-  String->Set(fNAME, SRUString::New("String"));
+  String->Set(sym::name(), SRUString::New(sym::String()));
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
-  frame->Set("nil",Instance()->Nil());
-  frame->Set("Binding",Instance()->Binding());
-  frame->Set("Class",Instance()->Class());
-  frame->Set("Object",Instance()->Object());
-  frame->Set("Proc",Instance()->Proc());
-  frame->Set("Array",Instance()->Array());
-  frame->Set("Hash",Instance()->Hash());
-  frame->Set("String",Instance()->String());
-  frame->Set("Numeric",Instance()->Numeric());
-  frame->Set("Boolean",Instance()->Boolean());
-  frame->Set("true",Instance()->True());
-  frame->Set("false",Instance()->False());
-  frame->Set("sru_parser", Instance()->Parser());
+  frame->Set(sym::nil(),Instance()->Nil());
+  frame->Set(sym::Binding(),Instance()->Binding());
+  frame->Set(sym::Class(),Instance()->Class());
+  frame->Set(sym::Object(),Instance()->Object());
+  frame->Set(sym::Proc(),Instance()->Proc());
+  frame->Set(sym::Array(),Instance()->Array());
+  frame->Set(sym::Hash(),Instance()->Hash());
+  frame->Set(sym::String(),Instance()->String());
+  frame->Set(sym::Numeric(),Instance()->Numeric());
+  frame->Set(sym::Boolean(),Instance()->Boolean());
+  frame->Set(sym::tlue(),Instance()->True());
+  frame->Set(sym::farse(),Instance()->False());
+  frame->Set(sym::sru_parser(), Instance()->Parser());
 }

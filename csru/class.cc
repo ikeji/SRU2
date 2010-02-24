@@ -18,10 +18,10 @@ using namespace std;
 
 void Class::InitializeInstance(const BasicObjectPtr& obj,
                                const BasicObjectPtr& klass){
-  obj->Set(fCLASS,klass);
+  obj->Set(sym::klass(),klass);
   // TODO: InsertClassSystem
   LOG_TRACE << "Use findSlotMethod";
-  obj->Set(fFIND_SLOT, klass->Get(fCLASS)->Get("findSlotMethod"));
+  obj->Set(sym::findSlot(), klass->Get(sym::klass())->Get(sym::findSlotMethod()));
 }
 
 void Class::SetAsSubclass(const BasicObjectPtr& obj,
@@ -29,27 +29,27 @@ void Class::SetAsSubclass(const BasicObjectPtr& obj,
   BasicObjectPtr klass = super_klass;
   if(klass.get() == NULL) klass = Library::Instance()->Object();
   InitializeInstance(obj, Library::Instance()->Class());
-  obj->Set(fSUPERCLASS, klass);
+  obj->Set(sym::superclass(), klass);
 }
 
 void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
                                 const string& name,
                                 const BasicObjectPtr& method){
-  if(! klass->HasSlot(fINSTANCE_METHODS))
+  if(! klass->HasSlot(sym::instanceMethods()))
     // TODO: Use Map class here!
-    klass->Set(fINSTANCE_METHODS,BasicObject::New());
-  klass->Get(fINSTANCE_METHODS)->Set(name, method);
+    klass->Set(sym::instanceMethods(),BasicObject::New());
+  klass->Get(sym::instanceMethods())->Set(name, method);
 }
 
 DEFINE_SRU_PROC_SMASH(findSlot){
   assert(args.size() >= 2);
   const BasicObjectPtr& obj = args[0];
   const string& name = SRUString::GetValue(args[1]);
-  if(obj->HasSlot(fCLASS)){
-    const BasicObjectPtr& klass = obj->Get(fCLASS);
+  if(obj->HasSlot(sym::klass())){
+    const BasicObjectPtr& klass = obj->Get(sym::klass());
     LOG << "Find in class." << klass->Inspect();
-    if(klass->HasSlot(fINSTANCE_METHODS)){
-      const BasicObjectPtr& instance_slots = klass->Get(fINSTANCE_METHODS);
+    if(klass->HasSlot(sym::instanceMethods())){
+      const BasicObjectPtr& instance_slots = klass->Get(sym::instanceMethods());
       LOG << "Find in instance slot." << instance_slots->Inspect();
       if(instance_slots->HasSlot(name)){
         // Slot found.
@@ -75,16 +75,16 @@ DEFINE_SRU_PROC_SMASH(findSlot){
 }
 
 void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
-  klass->Set(fCLASS, klass);
+  klass->Set(sym::klass(), klass);
   BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
-  klass->Set("findSlotMethod", find_slot_method);
+  klass->Set(sym::findSlotMethod(), find_slot_method);
   LOG << "Setup findSlotMethod";
 }
 
 void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
-  Proc::Initialize(klass->Get("findSlotMethod"));
+  Proc::Initialize(klass->Get(sym::findSlotMethod()));
 
-  klass->Set(fNAME, SRUString::New("Class"));
+  klass->Set(sym::name(), SRUString::New(sym::Class()));
   SetAsSubclass(klass,NULL);
 }
 

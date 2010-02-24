@@ -45,8 +45,8 @@ string BasicObject::Inspect(int limit){
   if(Data()) r = Data()->Inspect();
   if(r.empty()){
     string name = "";
-    if(HasSlot(fNAME))
-      name = SRUString::GetValue(Get(fNAME));
+    if(HasSlot(sym::name()))
+      name = SRUString::GetValue(Get(sym::name()));
     ostringstream s;
     if(name != ""){
       s << "<" << name;

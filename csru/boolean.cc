@@ -19,7 +19,7 @@ namespace sru {
 
 void InitializeBooleanClassObject(const BasicObjectPtr& boolean){
   Class::SetAsSubclass(boolean,NULL);
-  boolean->Set(fNAME, SRUString::New("Boolean"));
+  boolean->Set(sym::name(), SRUString::New(sym::Boolean()));
 }
 
 DECLARE_SRU_PROC(True_ifTrue);
@@ -29,18 +29,18 @@ DECLARE_SRU_PROC(False_ifTrueFalse);
 
 void InitializeTrueObject(const BasicObjectPtr& tlue){
   Class::InitializeInstance(tlue, Library::Instance()->Boolean());
-  tlue->Set(fNAME,         SRUString::New("True"));
-  tlue->Set("ifTrue",      CREATE_SRU_PROC(True_ifTrue));
-  tlue->Set("ifFalse",      CREATE_SRU_PROC(False_ifTrue));
-  tlue->Set("ifTrueFalse", CREATE_SRU_PROC(True_ifTrueFalse));
+  tlue->Set(sym::name(),        SRUString::New(sym::True()));
+  tlue->Set(sym::ifTrue(),      CREATE_SRU_PROC(True_ifTrue));
+  tlue->Set(sym::ifFalse(),     CREATE_SRU_PROC(False_ifTrue));
+  tlue->Set(sym::ifTrueFalse(), CREATE_SRU_PROC(True_ifTrueFalse));
 }
 
 void InitializeFalseObject(const BasicObjectPtr& farse){
   Class::InitializeInstance(farse, Library::Instance()->Boolean());
-  farse->Set(fNAME,         SRUString::New("False"));
-  farse->Set("ifTrue",      CREATE_SRU_PROC(False_ifTrue));
-  farse->Set("ifFalse",      CREATE_SRU_PROC(True_ifTrue));
-  farse->Set("ifTrueFalse", CREATE_SRU_PROC(False_ifTrueFalse));
+  farse->Set(sym::name(),        SRUString::New(sym::False()));
+  farse->Set(sym::ifTrue(),      CREATE_SRU_PROC(False_ifTrue));
+  farse->Set(sym::ifFalse(),     CREATE_SRU_PROC(True_ifTrue));
+  farse->Set(sym::ifTrueFalse(), CREATE_SRU_PROC(False_ifTrueFalse));
 
 }
 

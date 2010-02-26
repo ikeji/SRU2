@@ -23,10 +23,11 @@ BasicObjectPtr SRUString::New(const string& val){
   return ret;
 }
 
-string SRUString::GetValue(BasicObjectPtr obj){
+const string& SRUString::GetValue(BasicObjectPtr obj){
   SRUString* s = obj->GetData<SRUString>();
+  static string empty = "";
   if(!s)
-    return "";
+    return empty;
   return s->pimpl->value;
 }
 

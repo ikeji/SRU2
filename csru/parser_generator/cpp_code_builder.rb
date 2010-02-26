@@ -148,7 +148,7 @@ DEFINE_SRU_PROC(term#{term.num}){
   const static string target = "#{term.string}";
   assert(args.size()>2);
   // TODO: Check argument.
-  string src = SRUString::GetValue(args[1]);
+  const string& src = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   // TODO: Define ParserResult type.
   BasicObjectPtr ret = BasicObject::New();

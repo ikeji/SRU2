@@ -53,7 +53,7 @@ BasicObjectPtr CreateResult(bool status,
 
 DEFINE_SRU_PROC(spc){
   assert(args.size() > 2);
-  string str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   LOG << "spc start: pos = " << epos;
@@ -72,7 +72,7 @@ DEFINE_SRU_PROC(spc){
 DEFINE_SRU_PROC(id){
   LOG << "checkid";
   assert(args.size() > 2);
-  string str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){
@@ -104,7 +104,7 @@ DEFINE_SRU_PROC(id){
 DEFINE_SRU_PROC(stringliteral){
   LOG << "checkstringliteral";
   assert(args.size() > 2);
-  string str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   BasicObjectPtr ret = BasicObject::New();
   if(str[pos] != '"'){  // this is not string literal.
@@ -131,7 +131,7 @@ DEFINE_SRU_PROC(stringliteral){
 
 DEFINE_SRU_PROC(numericliteral){
   assert(args.size() > 2);
-  string str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]);
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){

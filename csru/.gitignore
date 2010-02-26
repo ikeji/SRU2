@@ -6,3 +6,7 @@ testing_ast.h
 testing_sru.h
 sru
 sru_test
+parser.cc
+parser_generator/parser.cc
+constants.h
+constants.cc

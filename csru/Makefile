@@ -43,7 +43,7 @@ stack_frame_test.o \
 string_test.o \
 
 DFLAGS   = -DDEBUG -g -O0
-GENFILES = testing_ast.h testing_sru.h
+GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ $(DFLAGS)
 LDFLAGS  = $(DFLAGS)
 CPFLAGS  = -u
@@ -75,9 +75,9 @@ sru_test: testing.o $(TESTS) $(OBJS)
 
 clean:
 	make -C parser_generator clean
-	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES) parser.cc
+	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES)
 
-depend: parser $(GENFILES) parser.cc
+depend: parser $(GENFILES)
 	make -C parser_generator depend
 	makedepend *.cc
 
@@ -123,9 +123,10 @@ class.o: class.h basic_object.h logging.h constants.h library.h string.h
 class.o: native_proc.h proc.h object_container.h interpreter.h stack_frame.h
 class_test.o: testing.h class.h basic_object.h logging.h constants.h
 class_test.o: library.h
+constants.o: constants.h
 interpreter.o: interpreter.h object_container.h ast.h basic_object.h
 interpreter.o: logging.h stack_frame.h library.h binding.h native_proc.h
-interpreter.o: proc.h
+interpreter.o: proc.h constants.h
 interpreter_test.o: interpreter.h object_container.h testing.h testing_ast.h
 interpreter_test.o: ast.h basic_object.h logging.h string.h library.h
 interpreter_test.o: constants.h
@@ -158,7 +159,7 @@ parser.o: library.h testing_ast.h ast.h testing_sru.h interpreter.h
 parser.o: stack_frame.h
 parser_helper.o: native_proc.h proc.h basic_object.h logging.h
 parser_helper.o: object_container.h string.h numeric.h library.h ast.h
-parser_helper.o: testing_ast.h
+parser_helper.o: constants.h testing_ast.h
 parser_test.o: parser.h basic_object.h logging.h testing.h interpreter.h
 parser_test.o: object_container.h numeric.h library.h constants.h string.h
 proc.o: proc.h basic_object.h logging.h object_container.h ast.h binding.h

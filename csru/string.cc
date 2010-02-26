@@ -26,7 +26,7 @@ BasicObjectPtr SRUString::New(const symbol& val){
 
 const symbol& SRUString::GetValue(BasicObjectPtr obj){
   SRUString* s = obj->GetData<SRUString>();
-  static symbol empty = "";
+  static symbol empty("");
   if(!s)
     return empty;
   return s->pimpl->value;

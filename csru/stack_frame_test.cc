@@ -10,6 +10,7 @@
 #include "ast.h"
 #include "binding.h"
 #include "logging.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
@@ -24,7 +25,7 @@ TEST(StackFrame_EvalStepTest){
   BasicObjectPtr s = StackFrame::New(Binding::New());
   StackFrame* st = s->GetData<StackFrame>();
   ptr_vector ast;
-  ast.push_back(BasicObject::New(new StringExpression("Hello")));
+  ast.push_back(BasicObject::New(new StringExpression(symbol("Hello"))));
   st->Setup(ast);
   int counter = 0;
   while(! st->EndOfTrees()){

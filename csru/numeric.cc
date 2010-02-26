@@ -110,7 +110,7 @@ DEFINE_SRU_PROC(Slash){
 void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::SetAsSubclass(numeric, NULL);
   numeric->Set(sym::parse(),CREATE_SRU_PROC(NumericParse));
-  numeric->Set(sym::name(), SRUString::New("Numeric"));
+  numeric->Set(sym::name(), SRUString::New(symbol("Numeric")));
   Class::SetAsInstanceMethod(numeric, sym::equal(), CREATE_SRU_PROC(Equal));
   Class::SetAsInstanceMethod(numeric, sym::notEqual(), CREATE_SRU_PROC(NotEqual));
   Class::SetAsInstanceMethod(numeric, sym::greaterThan(), CREATE_SRU_PROC(GreaterThan));

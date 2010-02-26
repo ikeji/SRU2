@@ -67,7 +67,7 @@ TEST(Interpreter_ComplexExpressionTest){
 
 TEST(Interpreter_RefExpressionTest){
   // " Class "
-  BasicObjectPtr p = RefExpression::New(NULL,"Class");
+  BasicObjectPtr p = RefExpression::New(NULL,sym::Class());
   LOG << InspectAST(p);
   assert(InspectAST(p) == "Class");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
@@ -77,15 +77,15 @@ TEST(Interpreter_RefExpressionTest){
 
 TEST(Interpreter_LetExpressionTest){
   // " hoge = Class "
-  BasicObjectPtr ref = RefExpression::New(NULL,"Class");
-  BasicObjectPtr p = LetExpression::New(NULL,"hoge",ref);
+  BasicObjectPtr ref = RefExpression::New(NULL,sym::Class());
+  BasicObjectPtr p = LetExpression::New(NULL,symbol("hoge"),ref);
   LOG << InspectAST(p);
   assert(InspectAST(p) == "(hoge = Class)");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
   assert(r == Library::Instance()->Class());
   // " hoge "
-  p = RefExpression::New(NULL,"hoge");
+  p = RefExpression::New(NULL,symbol("hoge"));
   LOG << InspectAST(p);
   assert(InspectAST(p) == "hoge");
   r = Interpreter::Instance()->Eval(p);
@@ -147,7 +147,8 @@ TEST(Interpreter_LetExpressionRegTest){
 TEST(Interpreter_EvalCallExpressionRegTest){
   // NOTE: I found bug in stack_frame.cc .
   // (Numeric).parse((Numeric), "10")
-  BasicObjectPtr p = C(R(R("Numeric"),"parse"), R("Numeric"), S("10"));
+  BasicObjectPtr p = C(R(R(sym::Numeric()),sym::parse()),
+      R(sym::Numeric()), S("10"));
   LOG << InspectAST(p);
   assert(InspectAST(p) == "(Numeric).parse(Numeric, \"10\")");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);

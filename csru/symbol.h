@@ -25,7 +25,7 @@ namespace sru {
 
 class symbol {
  public:
-  symbol(const char* str) : str(str), id(0){}
+  explicit symbol(const char* str) : str(str), id(0){}
   int getid() const{
     if(id == 0){
       int& i = symbol_table[str];

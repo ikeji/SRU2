@@ -10,6 +10,7 @@
 #include "basic_object.h"
 #include "constants.h"
 #include "library.h"
+#include "symbol.h"
 
 using namespace std;
 using namespace sru;
@@ -40,7 +41,7 @@ TEST(Class_SubClassTest){
 TEST(Class_InstanceMethodTest){
   BasicObjectPtr klass = BasicObject::New();
   BasicObjectPtr method = BasicObject::New();
-  Class::SetAsInstanceMethod(klass, "AMethod", method);
+  Class::SetAsInstanceMethod(klass, symbol("AMethod"), method);
   assert(klass->HasSlot(sym::instanceMethods()));
   // TODO: Test field named instance method has "AMethod".
 }

@@ -108,7 +108,7 @@ DEFINE_SRU_PROC(stringliteral){
   int pos = SRUNumeric::GetValue(args[2]);
   BasicObjectPtr ret = BasicObject::New();
   if(str[pos] != '"'){  // this is not string literal.
-    ret->Set("status", Library::Instance()->False());
+    ret->Set(sym::status(), Library::Instance()->False());
     return ret;
   }
   int epos = pos + 1;

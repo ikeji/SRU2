@@ -15,6 +15,7 @@
 #include "logging.h"
 #include "numeric.h"
 #include "symbol.h"
+#include "constants.h"
 
 using namespace std;
 using namespace sru;
@@ -30,7 +31,7 @@ TEST(Proc_NewTest){
 
 TEST(Proc_EvalTest){
   // " { Class }() "
-  BasicObjectPtr ref = RefExpression::New(NULL,"Class");
+  BasicObjectPtr ref = RefExpression::New(NULL,sym::Class());
   vector<symbol> varg;
   symbol retval("");
   ptr_vector expressions;
@@ -47,14 +48,14 @@ TEST(Proc_EvalTest){
 
 TEST(Proc_EvalTest2){
   // " {|a| a }(Class) "
-  BasicObjectPtr ref = RefExpression::New(NULL,"a");
+  BasicObjectPtr ref = RefExpression::New(NULL,symbol("a"));
   vector<symbol> varg;
   varg.push_back(symbol("a"));
   symbol retval("");
   ptr_vector expressions;
   expressions.push_back(ref);
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
-  BasicObjectPtr ref2 = RefExpression::New(NULL,"Class");
+  BasicObjectPtr ref2 = RefExpression::New(NULL,sym::Class());
   ptr_vector arg;
   arg.push_back(ref2);
   BasicObjectPtr call = CallExpression::New(proc,arg);
@@ -68,10 +69,10 @@ TEST(Proc_EvalTest2){
 TEST(Proc_EvalTest3){
   // " { a = Class;{a} }()() "
   // let <= a = Class
-  BasicObjectPtr ref = RefExpression::New(NULL,"Class");
-  BasicObjectPtr let = LetExpression::New(NULL,"a",ref);
+  BasicObjectPtr ref = RefExpression::New(NULL,sym::Class());
+  BasicObjectPtr let = LetExpression::New(NULL,symbol("a"),ref);
   // proc <= {a}
-  BasicObjectPtr ref2 = RefExpression::New(NULL,"a");
+  BasicObjectPtr ref2 = RefExpression::New(NULL,symbol("a"));
   vector<symbol> varg;
   symbol retval("");
   ptr_vector expressions;

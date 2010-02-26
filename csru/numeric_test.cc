@@ -35,8 +35,8 @@ TEST(SRUNumeric_InspectTest){
 }
 
 TEST(SRUNumeric_ParseTest){
-  const BasicObjectPtr res = Call(Library::Instance()->Numeric(),"parse",
-                                  SRUString::New("3"));
+  const BasicObjectPtr res = Call(Library::Instance()->Numeric(),sym::parse(),
+                                  SRUString::New(symbol("3")));
   assert(res.get());
   assert(res->Get(sym::klass()) == Library::Instance()->Numeric());
   assert(SRUNumeric::GetValue(res) == 3);

@@ -6,6 +6,7 @@
 #include <vector>
 #include "ast.h"
 #include "object_container.h"
+#include "symbol.h"
 
 namespace sru {
 class BasicObjectPtr;
@@ -24,16 +25,34 @@ inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
   return sru::LetExpression::New(env,name,rv);
 }
 
+inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
+                             const char* name,
+                             const sru::BasicObjectPtr& rv){
+  return L(env, sru::symbol(name),rv);
+}
+
 inline sru::BasicObjectPtr L(const sru::symbol& name,const sru::BasicObjectPtr& rv){
   return sru::LetExpression::New(NULL,name,rv);
+}
+
+inline sru::BasicObjectPtr L(const char* name,const sru::BasicObjectPtr& rv){
+  return L(sru::symbol(name),rv);
 }
 
 inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,const sru::symbol& name){
   return sru::RefExpression::New(env,name);
 }
 
+inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,const char* name){
+  return R(env,sru::symbol(name));
+}
+
 inline sru::BasicObjectPtr R(const sru::symbol& name){
   return sru::RefExpression::New(NULL,name);
+}
+
+inline sru::BasicObjectPtr R(const char* name){
+  return R(sru::symbol(name));
 }
 
 <% 20.times do |n| %>
@@ -56,8 +75,21 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
   sru::ptr_vector expressions;
 <% e.times do |j| %>  expressions.push_back(expression<%= j %>);
 <% end %>
-  return sru::ProcExpression::New(varg,"",expressions);
+  return sru::ProcExpression::New(varg,sru::symbol(""),expressions);
 }
+<% if s != 0 %>
+inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
+                      <% end %>const char* varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
+                      <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
+  std::vector<sru::symbol> varg;
+<% s.times do |i| %>  varg.push_back(sru::symbol(varg<%= i %>));
+<% end %>
+  sru::ptr_vector expressions;
+<% e.times do |j| %>  expressions.push_back(expression<%= j %>);
+<% end %>
+  return sru::ProcExpression::New(varg,sru::symbol(""),expressions);
+}
+<% end %>
 <% end %><% end %>
 
 <% 20.times do |e| %><% 5.times do |s| %>
@@ -73,11 +105,26 @@ inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
 <% end %>
   return sru::ProcExpression::New(varg,retval,expressions);
 }
+inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
+                      <% end %>const char* varg<%= i %><% end; if s !=0 %>,
+                      <% end %>const char* retval<% e.times do |j| %>,
+                      const sru::BasicObjectPtr& expression<%= j %><% end %>){
+  std::vector<sru::symbol> varg;
+<% s.times do |i| %>  varg.push_back(sru::symbol(varg<%= i %>));
+<% end %>
+  sru::ptr_vector expressions;
+<% e.times do |j| %>  expressions.push_back(expression<%= j %>);
+<% end %>
+  return sru::ProcExpression::New(varg,sru::symbol(retval),expressions);
+}
 <% end %><% end %>
 
 
 inline sru::BasicObjectPtr S(const sru::symbol& str){
   return sru::StringExpression::New(str);
+}
+inline sru::BasicObjectPtr S(const char* str){
+  return S(sru::symbol(str));
 }
 
 }  // namespace sru_test

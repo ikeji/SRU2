@@ -58,7 +58,7 @@ class Visitor{
 class LetExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const symbol& name,
+                            const BasicObjectPtr& name,
                             const BasicObjectPtr& rightvalue){
     BasicObjectPtr r = BasicObject::New(
         new LetExpression(env,name,rightvalue));
@@ -66,7 +66,7 @@ class LetExpression : public Expression{
   }
 
   LetExpression(const BasicObjectPtr& env,
-                const symbol& name,
+                const BasicObjectPtr& name,
                 const BasicObjectPtr& rightvalue);
   ~LetExpression();
 
@@ -77,7 +77,7 @@ class LetExpression : public Expression{
 
   BasicObjectPtr Env();
   BasicObjectPtr SetEnv(BasicObjectPtr env);
-  const symbol& Name();
+  BasicObjectPtr Name();
   BasicObjectPtr RightValue();
   
   std::string InspectAST();
@@ -92,13 +92,13 @@ class LetExpression : public Expression{
 class RefExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const sru::symbol& name){
+                            const BasicObjectPtr& name){
     BasicObjectPtr r = BasicObject::New(
         new RefExpression(env,name));
     return r;
   }
 
-  RefExpression(const BasicObjectPtr& env, const sru::symbol& name);
+  RefExpression(const BasicObjectPtr& env, const BasicObjectPtr& name);
   ~RefExpression();
 
   void Visit(Visitor* visitor,BasicObjectPtr obj){
@@ -108,7 +108,7 @@ class RefExpression : public Expression{
 
   BasicObjectPtr Env();
   BasicObjectPtr SetEnv(BasicObjectPtr env);
-  const sru::symbol& Name();
+  BasicObjectPtr Name();
   
   std::string InspectAST();
  private:

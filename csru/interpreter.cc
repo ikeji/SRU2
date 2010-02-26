@@ -14,6 +14,7 @@
 #include "native_proc.h"
 #include "logging.h"
 #include "constants.h"
+#include "string.h"
 
 using namespace sru;
 using namespace std;
@@ -97,11 +98,13 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   // Paser.parse("str")
   ptr_vector args;
   // Parser
-  args.push_back(RefExpression::New(NULL, sym::sru_parser()));
+  args.push_back(RefExpression::New(NULL, SRUString::New(sym::sru_parser())));
   // "str"
   args.push_back(StringExpression::New(symbol(str.c_str())));
   BasicObjectPtr call_parser = CallExpression::New(
-      RefExpression::New(RefExpression::New(NULL,sym::sru_parser()), sym::parse()), args);
+      RefExpression::New(
+        RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
+        SRUString::New(sym::parse())), args);
 
   BasicObjectPtr ast = Eval(call_parser);
   if(ast == Library::Instance()->Nil()) {

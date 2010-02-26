@@ -131,18 +131,19 @@ class EvalVisitor : public Visitor{
 
     // find slot
     BasicObjectPtr e = env;
-    while(!(e->HasSlot(exp->Name()))){
+    const symbol& name = SRUString::GetValue(exp->Name());
+    while(!(e->HasSlot(name))){
       if(! e->HasSlot(sym::parent())) break;
       e = e->Get(sym::parent());
     }
-    if(e->HasSlot(exp->Name())){
+    if(e->HasSlot(name)){
       // if found exist slot, use the slot.
-      e->Set(exp->Name(),rightValue);
+      e->Set(name,rightValue);
     }else{
       // if not found exist slot, use current frame's enviroment.
-      env->Set(exp->Name(),rightValue);
+      env->Set(name,rightValue);
     }
-    LOG << "EVAL-LET: " << exp->Name().to_str() << " = " << rightValue->Inspect();
+    LOG << "EVAL-LET: " << name.to_str() << " = " << rightValue->Inspect();
     LOG << "CURRENT-SCOPE: " << binding->Inspect();
     Push(rightValue);
   }
@@ -154,16 +155,17 @@ class EvalVisitor : public Visitor{
       env = binding;
     }
     // find slot
-    if(env->HasSlot(exp->Name())){
-      LOG << "EVAL-REF: " << env->Get(exp->Name())->Inspect();
-      Push(env->Get(exp->Name()));
+    const symbol& name = SRUString::GetValue(exp->Name());
+    if(env->HasSlot(name)){
+      LOG << "EVAL-REF: " << env->Get(name)->Inspect();
+      Push(env->Get(name));
       return;
     }
     if(env->HasSlot(sym::findSlot())){
       LOG << "EVAL-REF-FIND_SLOT";
       ptr_vector args;
       args.push_back(env);
-      args.push_back(SRUString::New(exp->Name()));
+      args.push_back(exp->Name());
       BasicObjectPtr find_slot_proc = env->Get(sym::findSlot());
       Proc::Invoke(find_slot_proc, args);
       return;

@@ -109,6 +109,7 @@ parser:
 # DO NOT DELETE
 
 ast.o: ast.h basic_object.h logging.h symbol.h object_container.h library.h
+ast.o: string.h
 ast_test.o: testing.h ast.h basic_object.h logging.h symbol.h
 ast_test.o: object_container.h
 basic_object.o: basic_object.h logging.h symbol.h object_pool.h constants.h
@@ -118,7 +119,8 @@ binding.o: binding.h basic_object.h logging.h symbol.h string.h class.h
 binding.o: library.h constants.h native_proc.h proc.h object_container.h
 binding.o: interpreter.h stack_frame.h
 binding_test.o: testing.h testing_ast.h ast.h basic_object.h logging.h
-binding_test.o: symbol.h object_container.h interpreter.h library.h
+binding_test.o: symbol.h object_container.h string.h interpreter.h library.h
+binding_test.o: constants.h
 boolean.o: boolean.h basic_object.h logging.h symbol.h class.h library.h
 boolean.o: native_proc.h proc.h object_container.h string.h constants.h
 boolean.o: testing_sru.h interpreter.h stack_frame.h
@@ -132,7 +134,7 @@ class_test.o: library.h
 constants.o: constants.h symbol.h
 interpreter.o: interpreter.h object_container.h ast.h basic_object.h
 interpreter.o: logging.h symbol.h stack_frame.h library.h binding.h
-interpreter.o: native_proc.h proc.h constants.h
+interpreter.o: native_proc.h proc.h constants.h string.h
 interpreter_test.o: interpreter.h object_container.h testing.h testing_ast.h
 interpreter_test.o: ast.h basic_object.h logging.h symbol.h string.h
 interpreter_test.o: library.h constants.h
@@ -176,8 +178,8 @@ proc.o: proc.h basic_object.h logging.h symbol.h object_container.h ast.h
 proc.o: binding.h interpreter.h library.h stack_frame.h constants.h class.h
 proc.o: native_proc.h string.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
-proc_test.o: object_container.h ast.h interpreter.h testing_ast.h library.h
-proc_test.o: string.h numeric.h
+proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
+proc_test.o: library.h numeric.h constants.h
 scheme_like_test.o: parser.h basic_object.h logging.h symbol.h testing.h
 scheme_like_test.o: interpreter.h object_container.h
 stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h

@@ -9,6 +9,7 @@
 #include <vector>
 #include "object_container.h"
 #include "library.h"
+#include "string.h"
 
 using namespace sru;
 using namespace std;
@@ -20,10 +21,10 @@ string InspectExpression(BasicObjectPtr obj){
 /* -------------------- LetExpression -------------------- */
 
 struct LetExpression::Impl {
-  Impl(BasicObject* env, const symbol& name, BasicObject* rightvalue) :
+  Impl(BasicObject* env, BasicObject* name, BasicObject* rightvalue) :
       env(env), name(name), rightvalue(rightvalue){}
   BasicObject* env;
-  symbol name;
+  BasicObject* name;
   BasicObject* rightvalue;
  private:
   Impl(const Impl& obj);
@@ -31,9 +32,9 @@ struct LetExpression::Impl {
 };
 
 LetExpression::LetExpression(const BasicObjectPtr& env,
-                             const symbol& name,
+                             const BasicObjectPtr& name,
                              const BasicObjectPtr& rightvalue) :
-      pimpl(new Impl(env.get(),name,rightvalue.get())) {
+      pimpl(new Impl(env.get(),name.get(),rightvalue.get())) {
 }
 LetExpression::~LetExpression(){
   delete pimpl;
@@ -45,7 +46,7 @@ BasicObjectPtr LetExpression::SetEnv(BasicObjectPtr env){
   pimpl->env = env.get();
   return env;
 }
-const symbol& LetExpression::Name(){
+BasicObjectPtr LetExpression::Name(){
   return pimpl->name;
 }
 BasicObjectPtr LetExpression::RightValue(){
@@ -54,34 +55,36 @@ BasicObjectPtr LetExpression::RightValue(){
 
 void LetExpression::Mark(){
   if(pimpl->env) pimpl->env->Mark();
+  if(pimpl->name) pimpl->name->Mark();
   if(pimpl->rightvalue) pimpl->rightvalue->Mark();
 }
 
 string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
   if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
-    return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name.to_str() +
+    return string("((") + InspectExpression(pimpl->env) + ")." +
+           SRUString::GetValue(pimpl->name).to_str() +
            " = " + rv + ")";
   }else{
-    return string("(") + pimpl->name.to_str() + " = " + rv + ")";
+    return string("(") + SRUString::GetValue(pimpl->name).to_str() + " = " + rv + ")";
   }
 }
 
 /* -------------------- RefExpression -------------------- */
 
 struct RefExpression::Impl {
-  Impl(BasicObject* env, symbol name) :
+  Impl(BasicObject* env, BasicObject* name) :
       env(env), name(name){}
   BasicObject* env;
-  symbol name;
+  BasicObject* name;
  private:
   Impl(const Impl& obj);
   Impl* operator=(const Impl& obj);
 };
 
 RefExpression::RefExpression(const BasicObjectPtr& env,
-                             const symbol& name):
-    pimpl(new Impl(env.get(), name)){
+                             const BasicObjectPtr& name):
+    pimpl(new Impl(env.get(), name.get())){
 }
 RefExpression::~RefExpression(){
   delete pimpl;
@@ -93,7 +96,7 @@ BasicObjectPtr RefExpression::SetEnv(BasicObjectPtr env){
   pimpl->env = env.get();
   return env;
 }
-const symbol& RefExpression::Name(){
+BasicObjectPtr RefExpression::Name(){
   return pimpl->name;
 }
 void RefExpression::Mark(){
@@ -102,9 +105,10 @@ void RefExpression::Mark(){
 
 string RefExpression::InspectAST(){
   if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
-    return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name.to_str();
+    return string("(") + InspectExpression(pimpl->env) + ")." + 
+           SRUString::GetValue(pimpl->name).to_str();
   }else{
-    return pimpl->name.to_str();
+    return SRUString::GetValue(pimpl->name).to_str();
   }
 }
 

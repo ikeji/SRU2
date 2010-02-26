@@ -195,7 +195,7 @@ DEFINE_SRU_PROC(lamb_arg){ // this, src, pos, lamb_begin, id
   CHECK(p) << "Need ProcExpression for lambda";
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
   CHECK(ref) << "Need RefExpression for lambda";
-  p->Varg()->push_back(ref->Name());
+  p->Varg()->push_back(SRUString::GetValue(ref->Name()));
   return CreateResult(true, args[3]->Get(sym::ast()), args[2]);
 }
 

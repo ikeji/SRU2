@@ -89,7 +89,7 @@ tags:
 .SUFFIXES: .h .herb
 
 .herb.h:
-	$(ERB) < $< > $@.tmp
+	ruby -e 'n=2;ARGF.each{|l|puts "#{l}#line #{n} \"#{ARGF.filename}\"";n+=1}' $< | $(ERB) > $@.tmp
 	mv $@.tmp $@
 
 parser.cc: parser parser_generator/parser.cc

@@ -1,7 +1,6 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
 // 
-#line 5 "testing_ast.herb"
 
 #include <string>
 #include <vector>
@@ -38,7 +37,6 @@ inline sru::BasicObjectPtr R(const sru::symbol& name){
 }
 
 <% 20.times do |n| %>
-#line 40 "testing_ast.herb"
 inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>,
                       const sru::BasicObjectPtr& arg<%= i %><% end %>){
   sru::ptr_vector arg;
@@ -49,7 +47,6 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 <% end %>
 
 <% 25.times do |e| %><% 5.times do |s| %>
-#line 52 "testing_ast.herb"
 inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
                       <% end %>const sru::symbol& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
                       <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
@@ -64,7 +61,6 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
 <% end %><% end %>
 
 <% 20.times do |e| %><% 5.times do |s| %>
-#line 67 "testing_ast.herb"
 inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
                       <% end %>const sru::symbol& varg<%= i %><% end; if s !=0 %>,
                       <% end %>const sru::symbol& retval<% e.times do |j| %>,

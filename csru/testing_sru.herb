@@ -1,7 +1,6 @@
 // Programing Language SRU
 // Copyright(C) 2005-2010 IKeJI
 // 
-#line 5 "testing_sru.herb"
 
 #ifndef TESTING_SRU_H_
 #define TESTING_SRU_H_
@@ -38,7 +37,6 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 }
 
 <% 20.times do |n| %>
-#line 41 "testing_sru.herb"
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
                                 const sru::symbol& method<% n.times do |i| %>,
                                 const sru::BasicObjectPtr& arg<%= i %><% end %>){
@@ -50,13 +48,11 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 }
 <% end %>
 
-#line 53 "testing_sru.herb"
 inline sru::ptr_vector A(){
   return sru::ptr_vector();
 }
 
 <% 60.times do |n| %>
-#line 59 "testing_sru.herb"
 inline sru::ptr_vector A(const sru::BasicObjectPtr& obj<% n.times do |i| %>,
     const sru::BasicObjectPtr& obj<%= i %><% end %>){
   sru::ptr_vector ret;

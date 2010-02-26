@@ -53,7 +53,7 @@ BasicObjectPtr CreateResult(bool status,
 
 DEFINE_SRU_PROC(spc){
   assert(args.size() > 2);
-  const string& str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   LOG << "spc start: pos = " << epos;
@@ -72,7 +72,7 @@ DEFINE_SRU_PROC(spc){
 DEFINE_SRU_PROC(id){
   LOG << "checkid";
   assert(args.size() > 2);
-  const string& str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){
@@ -95,7 +95,7 @@ DEFINE_SRU_PROC(id){
     string substr = str.substr(pos, epos-pos);
     LOG << "Match to id: " << substr;
     ret->Set(sym::status(), Library::Instance()->True());
-    ret->Set(sym::ast(), R(substr));
+    ret->Set(sym::ast(), R(symbol(substr.c_str())));
     ret->Set(sym::pos(), SRUNumeric::New(epos));
   }
   return ret;
@@ -104,7 +104,7 @@ DEFINE_SRU_PROC(id){
 DEFINE_SRU_PROC(stringliteral){
   LOG << "checkstringliteral";
   assert(args.size() > 2);
-  const string& str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   BasicObjectPtr ret = BasicObject::New();
   if(str[pos] != '"'){  // this is not string literal.
@@ -123,7 +123,7 @@ DEFINE_SRU_PROC(stringliteral){
     string substr = str.substr(pos+1, epos-pos-1); // cut " s
     LOG << "Match to string: " << substr;
     ret->Set(sym::status(), Library::Instance()->True());
-    ret->Set(sym::ast(), S(substr));
+    ret->Set(sym::ast(), S(symbol(substr.c_str())));
     ret->Set(sym::pos(), SRUNumeric::New(epos + 1));
   }
   return ret;
@@ -131,7 +131,7 @@ DEFINE_SRU_PROC(stringliteral){
 
 DEFINE_SRU_PROC(numericliteral){
   assert(args.size() > 2);
-  const string& str = SRUString::GetValue(args[1]);
+  const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
   while(true){
@@ -145,7 +145,7 @@ DEFINE_SRU_PROC(numericliteral){
   }else{
     string substr = str.substr(pos, epos-pos);
     ret->Set(sym::status(), Library::Instance()->True());
-    ret->Set(sym::ast(), C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(substr)));
+    ret->Set(sym::ast(), C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(symbol(substr.c_str()))));
     ret->Set(sym::pos(), SRUNumeric::New(epos));
   }
   return ret;

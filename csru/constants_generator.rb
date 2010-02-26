@@ -122,6 +122,7 @@ class CppCodeBuilder
 //
 
 #include "constants.h"
+#include "symbol.h"
 #include <string>
 
 namespace sym {
@@ -130,8 +131,8 @@ using namespace std;
     EOL
     constants.each do |sym|
     result += <<-EOL
-const string& #{sym.name}(){
-  static string ret = "#{sym.text}";
+const sru::symbol& #{sym.name}(){
+  static sru::symbol ret("#{sym.text}");
   return ret;
 }
     EOL
@@ -155,14 +156,16 @@ class HCodeBuilder
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-#include <string>
+namespace sru{
+class symbol;
+}
 
 namespace sym {
 
     EOL
     constants.each do |sym|
     result += <<-EOL
-const std::string& #{sym.name}();
+const sru::symbol& #{sym.name}();
     EOL
     end
 

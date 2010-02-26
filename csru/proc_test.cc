@@ -14,14 +14,15 @@
 #include "string.h"
 #include "logging.h"
 #include "numeric.h"
+#include "symbol.h"
 
 using namespace std;
 using namespace sru;
 using namespace sru_test;
 
 TEST(Proc_NewTest){
-  vector<string> varg;
-  string retval;
+  vector<symbol> varg;
+  symbol retval("");
   ptr_vector expressions;
   BasicObjectPtr binding = BasicObject::New();
   assert(Proc::New(varg,retval,expressions,binding).get());
@@ -30,8 +31,8 @@ TEST(Proc_NewTest){
 TEST(Proc_EvalTest){
   // " { Class }() "
   BasicObjectPtr ref = RefExpression::New(NULL,"Class");
-  vector<string> varg;
-  string retval;
+  vector<symbol> varg;
+  symbol retval("");
   ptr_vector expressions;
   expressions.push_back(ref);
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
@@ -47,9 +48,9 @@ TEST(Proc_EvalTest){
 TEST(Proc_EvalTest2){
   // " {|a| a }(Class) "
   BasicObjectPtr ref = RefExpression::New(NULL,"a");
-  vector<string> varg;
-  varg.push_back("a");
-  string retval;
+  vector<symbol> varg;
+  varg.push_back(symbol("a"));
+  symbol retval("");
   ptr_vector expressions;
   expressions.push_back(ref);
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
@@ -71,14 +72,14 @@ TEST(Proc_EvalTest3){
   BasicObjectPtr let = LetExpression::New(NULL,"a",ref);
   // proc <= {a}
   BasicObjectPtr ref2 = RefExpression::New(NULL,"a");
-  vector<string> varg;
-  string retval;
+  vector<symbol> varg;
+  symbol retval("");
   ptr_vector expressions;
   expressions.push_back(ref2);
   BasicObjectPtr proc = ProcExpression::New(varg,retval,expressions);
   // proc2 <= { 'let';'proc' }
-  vector<string> varg2;
-  string retval2;
+  vector<symbol> varg2;
+  symbol retval2("");
   ptr_vector expressions2;
   expressions2.push_back(let);
   expressions2.push_back(proc);
@@ -160,7 +161,7 @@ TEST(Proc_ContinationTest){
       "}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());
-  assert(SRUString::GetValue(r) == "2");
+  assert(SRUString::GetValue(r).to_str() == "2");
 }
 
 TEST(Proc_ContinationComplexAndJumpInTest){
@@ -202,7 +203,7 @@ TEST(Proc_ContinationComplexAndJumpInTest){
       "}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(call2);
   assert(r.get());
-  assert(SRUString::GetValue(r) == "1");
+  assert(SRUString::GetValue(r).to_str() == "1");
 }
 
 // TODO: test instance methods "whileTrue".

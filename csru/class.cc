@@ -12,6 +12,7 @@
 #include "interpreter.h"
 #include "stack_frame.h"
 #include "logging.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
@@ -33,7 +34,7 @@ void Class::SetAsSubclass(const BasicObjectPtr& obj,
 }
 
 void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
-                                const string& name,
+                                const symbol& name,
                                 const BasicObjectPtr& method){
   if(! klass->HasSlot(sym::instanceMethods()))
     // TODO: Use Map class here!
@@ -44,7 +45,7 @@ void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
 DEFINE_SRU_PROC_SMASH(findSlot){
   assert(args.size() >= 2);
   const BasicObjectPtr& obj = args[0];
-  const string& name = SRUString::GetValue(args[1]);
+  const symbol& name = SRUString::GetValue(args[1]);
   if(obj->HasSlot(sym::klass())){
     const BasicObjectPtr& klass = obj->Get(sym::klass());
     LOG << "Find in class." << klass->Inspect();

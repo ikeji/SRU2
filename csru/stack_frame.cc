@@ -142,7 +142,7 @@ class EvalVisitor : public Visitor{
       // if not found exist slot, use current frame's enviroment.
       env->Set(exp->Name(),rightValue);
     }
-    LOG << "EVAL-LET: " << exp->Name() << " = " << rightValue->Inspect();
+    LOG << "EVAL-LET: " << exp->Name().to_str() << " = " << rightValue->Inspect();
     LOG << "CURRENT-SCOPE: " << binding->Inspect();
     Push(rightValue);
   }
@@ -200,7 +200,7 @@ class EvalVisitor : public Visitor{
              Conv(*(exp->Expressions())),binding));
   }
   void Accept(StringExpression* exp,const BasicObjectPtr& obj){
-    LOG << "EVAL-STRING:" << exp->String();
+    LOG << "EVAL-STRING:" << exp->String().to_str();
     Push(SRUString::New(exp->String()));
   }
   object_vector* local_stack;

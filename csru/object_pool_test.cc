@@ -52,8 +52,8 @@ TEST(ObjectPool_GCTest){
   // ring test
   BasicObject * objr = BasicObject::New().get();
   BasicObject * objr2 = BasicObject::New().get();
-  objr->Set(string("test"),objr2);
-  objr2->Set(string("test"),objr);
+  objr->Set(symbol("test"),objr2);
+  objr2->Set(symbol("test"),objr);
   assert(ObjectPool::Instance()->Size() == 2);
   ObjectPool::Instance()->GarbageCollect();
   assert(ObjectPool::Instance()->Size() == 0);

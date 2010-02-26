@@ -58,7 +58,7 @@ class Visitor{
 class LetExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const std::string& name,
+                            const symbol& name,
                             const BasicObjectPtr& rightvalue){
     BasicObjectPtr r = BasicObject::New(
         new LetExpression(env,name,rightvalue));
@@ -66,7 +66,7 @@ class LetExpression : public Expression{
   }
 
   LetExpression(const BasicObjectPtr& env,
-                const std::string& name,
+                const symbol& name,
                 const BasicObjectPtr& rightvalue);
   ~LetExpression();
 
@@ -77,7 +77,7 @@ class LetExpression : public Expression{
 
   BasicObjectPtr Env();
   BasicObjectPtr SetEnv(BasicObjectPtr env);
-  const std::string& Name();
+  const symbol& Name();
   BasicObjectPtr RightValue();
   
   std::string InspectAST();
@@ -92,13 +92,13 @@ class LetExpression : public Expression{
 class RefExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const std::string& name){
+                            const sru::symbol& name){
     BasicObjectPtr r = BasicObject::New(
         new RefExpression(env,name));
     return r;
   }
 
-  RefExpression(const BasicObjectPtr& env, const std::string& name);
+  RefExpression(const BasicObjectPtr& env, const sru::symbol& name);
   ~RefExpression();
 
   void Visit(Visitor* visitor,BasicObjectPtr obj){
@@ -108,7 +108,7 @@ class RefExpression : public Expression{
 
   BasicObjectPtr Env();
   BasicObjectPtr SetEnv(BasicObjectPtr env);
-  const std::string& Name();
+  const sru::symbol& Name();
   
   std::string InspectAST();
  private:
@@ -151,16 +151,16 @@ class CallExpression : public Expression{
 
 class ProcExpression : public Expression{
  public:
-  static BasicObjectPtr New(const std::vector<std::string>& varg,
-                            const std::string& retval,
+  static BasicObjectPtr New(const std::vector<sru::symbol>& varg,
+                            const sru::symbol& retval,
                             const ptr_vector& expressions){
     BasicObjectPtr r = BasicObject::New(
         new ProcExpression(varg,retval,expressions));
     return r;
   }
 
-  ProcExpression(const std::vector<std::string>& varg,
-                 const std::string& retval,
+  ProcExpression(const std::vector<sru::symbol>& varg,
+                 const sru::symbol& retval,
                  const ptr_vector& expressions);
   ~ProcExpression();
 
@@ -169,8 +169,8 @@ class ProcExpression : public Expression{
   }
   void Mark();
 
-  std::vector<std::string>* Varg();
-  const std::string& RetVal();
+  std::vector<sru::symbol>* Varg();
+  const sru::symbol& RetVal();
   object_vector* Expressions();
   
   std::string InspectAST();
@@ -184,20 +184,20 @@ class ProcExpression : public Expression{
 
 class StringExpression : public Expression{
  public:
-  static BasicObjectPtr New(const std::string& str){
+  static BasicObjectPtr New(const sru::symbol& str){
     BasicObjectPtr r = BasicObject::New(
         new StringExpression(str));
     return r;
   }
 
-  StringExpression(const std::string& str);
+  StringExpression(const sru::symbol& str);
   ~StringExpression();
 
   void Visit(Visitor* visitor,BasicObjectPtr obj){
     visitor->Accept(this,obj);
   }
  
-  const std::string& String();
+  const sru::symbol& String();
   
   std::string InspectAST();
  private:

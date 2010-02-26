@@ -42,7 +42,7 @@ TEST(SRUNumeric_ParseTest){
   assert(SRUNumeric::GetValue(res) == 3);
 }
 
-void check_has(const string& sym){
+void check_has(const symbol& sym){
   assert(Library::Instance()->Numeric()->HasSlot(sym::instanceMethods()));
   assert(Library::Instance()->Numeric()->Get(sym::instanceMethods())->HasSlot(sym));
 }

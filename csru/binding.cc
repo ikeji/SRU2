@@ -13,6 +13,7 @@
 #include "native_proc.h"
 #include "interpreter.h"
 #include "stack_frame.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
@@ -38,7 +39,7 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
   assert(args.size() >= 2);
   const BasicObjectPtr& env = args[0];
   LOG_TRACE << env->Inspect();
-  const string& name = SRUString::GetValue(args[1]);
+  const symbol& name = SRUString::GetValue(args[1]);
   if(!env->HasSlot(sym::parent())){
     LOG << "Parent not found.";
     Interpreter::Instance()->

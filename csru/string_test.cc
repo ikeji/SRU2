@@ -8,14 +8,15 @@
 #include "library.h"
 #include "constants.h"
 #include "logging.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
 
 TEST(SRUString_InitialiseTest){
-  BasicObjectPtr obj = SRUString::New("hoge");
+  BasicObjectPtr obj = SRUString::New(symbol("hoge"));
   assert(obj->Get(sym::klass()).get() == Library::Instance()->String().get());
-  assert(SRUString::GetValue(obj) == "hoge");
+  assert(SRUString::GetValue(obj).to_str() == "hoge");
   assert(obj->Inspect() == "<\"hoge\">");
 }
 

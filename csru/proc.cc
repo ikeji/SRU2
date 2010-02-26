@@ -19,6 +19,7 @@
 #include "string.h"
 #include "class.h"
 #include "logging.h"
+#include "symbol.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -61,8 +62,8 @@ void Proc::Invoke(const BasicObjectPtr& proc,
 
 class SRUProc : public Proc{
  public:
-  SRUProc(const vector<string>& vargs,
-          const string retval,
+  SRUProc(const vector<symbol>& vargs,
+          const symbol retval,
           const ptr_vector& expressions,
           const BasicObjectPtr& binding):
       vargs(vargs),
@@ -78,8 +79,8 @@ class SRUProc : public Proc{
   }
   string Inspect();
  private:
-  vector<string> vargs;
-  string retval;
+  vector<symbol> vargs;
+  symbol retval;
   object_vector expressions;
   BasicObject* binding;
 
@@ -87,8 +88,8 @@ class SRUProc : public Proc{
   SRUProc* operator=(const SRUProc& obj);
 };
 
-BasicObjectPtr Proc::New(const std::vector<std::string>& vargs,
-             const std::string& retval,
+BasicObjectPtr Proc::New(const std::vector<symbol>& vargs,
+             const symbol& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding){
   BasicObjectPtr obj = BasicObject::New(
@@ -99,26 +100,26 @@ BasicObjectPtr Proc::New(const std::vector<std::string>& vargs,
 
 string SRUProc::Inspect(){
   string ret = "";
-  for(vector<string>::iterator it = vargs.begin();
+  for(vector<symbol>::iterator it = vargs.begin();
       it != vargs.end();
       it++){
     if(it != vargs.begin())
       ret += ",";
-    ret += *it;
+    ret += it->to_str();
   }
-  if(!retval.empty()) ret += ":" + retval;
+  if(!retval.to_str().empty()) ret += ":" + retval.to_str();
   if(!ret.empty()) ret = "|" + ret + "|";
   ret = "<Proc: {";
-  if(vargs.size() > 0 || !retval.empty()){
+  if(vargs.size() > 0 || !retval.to_str().empty()){
     ret += "|";
-    for(vector<string>::const_iterator it = vargs.begin();
+    for(vector<symbol>::const_iterator it = vargs.begin();
         it != vargs.end();
         it++){
       if(it != vargs.begin()) ret += ",";
-      ret += (*it);
+      ret += (*it).to_str();
     }
-    if(!retval.empty()){
-      ret += ":" + retval;
+    if(!retval.to_str().empty()){
+      ret += ":" + retval.to_str();
     }
     ret += "|";
   }
@@ -136,14 +137,14 @@ void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){
   Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);
   for(unsigned int i=0;i<vargs.size();i++){
     if(i<args.size()){
-      LOG << "Bind-arg: " << vargs[i] << " = " << args[i]->Inspect();
+      LOG << "Bind-arg: " << vargs[i].to_str() << " = " << args[i]->Inspect();
       new_binding->Set(vargs[i],args[i]);
     }else{
-      LOG << "Bind-arg: " << vargs[i] << " = Nil";
+      LOG << "Bind-arg: " << vargs[i].to_str() << " = Nil";
       new_binding->Set(vargs[i],Library::Instance()->Nil());
     }
   }
-  if(!retval.empty())
+  if(!retval.to_str().empty())
     new_binding->Set(retval,Interpreter::Instance()->GetContinationToEscapeFromCurrentStack());
   LOG << "Current-Binding: " << new_binding->Inspect();
 }

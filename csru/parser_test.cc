@@ -20,7 +20,7 @@ using namespace sru_test;
 TEST(Parser_ParserObjectTest){
   BasicObjectPtr sru_parser = Library::Instance()->Parser();
   assert(sru_parser.get());
-  assert(SRUString::GetValue(sru_parser->Get(sym::name())) == "sru_parser");
+  assert(SRUString::GetValue(sru_parser->Get(sym::name())).to_str() == "sru_parser");
   assert(sru_parser->HasSlot(sym::parse()));
 }
 
@@ -37,7 +37,7 @@ TEST(Parser_ParseStringTest){
   string code = "\"hoge\"";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
-  assert(SRUString::GetValue(r) == "hoge");
+  assert(SRUString::GetValue(r).to_str() == "hoge");
 }
 
 TEST(Parser_ParseSpaceTest){
@@ -45,7 +45,7 @@ TEST(Parser_ParseSpaceTest){
   string code = "     \"hoge\" ";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
-  assert(SRUString::GetValue(r) == "hoge");
+  assert(SRUString::GetValue(r).to_str() == "hoge");
 }
 
 TEST(Parser_ParseManipulatorTest){
@@ -54,5 +54,5 @@ TEST(Parser_ParseManipulatorTest){
   string code = "\"hoge\"   \"foo\" \"bar\" ";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
-  assert(SRUString::GetValue(r) == "bar");
+  assert(SRUString::GetValue(r).to_str() == "bar");
 }

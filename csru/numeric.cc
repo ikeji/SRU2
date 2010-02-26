@@ -30,7 +30,7 @@ BasicObjectPtr SRUNumeric::New(int value){
 
 DEFINE_SRU_PROC(NumericParse){
   assert(args.size() >= 2);
-  string narg = SRUString::GetValue(args[1]);
+  string narg = SRUString::GetValue(args[1]).to_str();
   return SRUNumeric::New(atoi(narg.c_str()));
 }
 

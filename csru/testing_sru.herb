@@ -13,11 +13,12 @@
 #include "object_container.h"
 #include "stack_frame.h"
 #include "logging.h"
+#include "symbol.h"
 
 namespace sru_test {
 
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
-                                const std::string& method,
+                                const sru::symbol& method,
                                 const sru::ptr_vector& v){
   assert(obj.get());
   const sru::BasicObjectPtr& m = obj->Get(method);
@@ -39,7 +40,7 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 <% 20.times do |n| %>
 #line 41 "testing_sru.herb"
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
-                                const std::string& method<% n.times do |i| %>,
+                                const sru::symbol& method<% n.times do |i| %>,
                                 const sru::BasicObjectPtr& arg<%= i %><% end %>){
   sru::ptr_vector args;
   args.push_back(obj);

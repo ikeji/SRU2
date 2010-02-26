@@ -8,17 +8,18 @@
 
 #include <string>
 #include "logging.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
 
 TEST(AST_StringExpressionTest){
   string test = "hogehoge";
-  StringExpression* obj = new StringExpression(test);
+  StringExpression* obj = new StringExpression(symbol(test.c_str()));
   test = "foobar";
   LOG << obj->InspectAST();
   assert(obj->InspectAST() == "\"hogehoge\"");
-  assert(obj->String() != test);
-  assert(obj->String() == "hogehoge");
+  assert(obj->String().to_str() != test);
+  assert(obj->String().to_str()  == "hogehoge");
 }
 

@@ -9,17 +9,18 @@
 
 #include <string>
 #include "basic_object.h"
+#include "symbol.h"
 
 namespace sru {
 
 class SRUString : public Value{
  public:
-  static BasicObjectPtr New(const std::string& val);
-  static const std::string& GetValue(BasicObjectPtr obj);
+  static BasicObjectPtr New(const symbol& val);
+  static const symbol& GetValue(BasicObjectPtr obj);
   std::string Inspect();
   static const char* name(){ return "SRUString"; }
  private:
-  SRUString(const std::string& val);
+  SRUString(const symbol& val);
   ~SRUString();
 
   struct Impl;

@@ -10,6 +10,7 @@
 #include "object_pool.h"
 #include "constants.h"
 #include "string.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace std;
@@ -46,7 +47,7 @@ string BasicObject::Inspect(int limit){
   if(r.empty()){
     string name = "";
     if(HasSlot(sym::name()))
-      name = SRUString::GetValue(Get(sym::name()));
+      name = SRUString::GetValue(Get(sym::name())).to_str();
     ostringstream s;
     if(name != ""){
       s << "<" << name;
@@ -57,25 +58,26 @@ string BasicObject::Inspect(int limit){
     if(limit > titlesize){
       s << " ";
       int sum = 0;
-      vector<string> keys;
+      vector<symbol> keys;
       for(fields_type::iterator it = fields.begin();
           it != fields.end();
           it++){
-        sum += (int)it->first.size() + 5;
-        keys.push_back(it->first);
+        symbol sym = symbol::from_id(it->first);
+        sum += (int)sym.to_str().size() + 5;
+        keys.push_back(sym);
       }
       sort(keys.begin(), keys.end());
       bool show_details = (sum < (limit - titlesize));
       int detailsize = (limit - titlesize - sum) / (fields.size()+1);
       if(detailsize < 0) detailsize = 0;
-      for(vector<string>::iterator it = keys.begin();
+      for(vector<symbol>::iterator it = keys.begin();
           it != keys.end();
           it++){
         if(it != keys.begin()) s << ", ";
         if(show_details){
-          s << *it << ":" << fields[*it]->Inspect(detailsize);
+          s << it->to_str() << ":" << fields[it->getid()]->Inspect(detailsize);
         }else{
-          s << *it << ":...";
+          s << it->to_str() << ":...";
         }
       }
     }

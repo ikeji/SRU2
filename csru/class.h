@@ -8,10 +8,9 @@
 #ifndef CLASS_H_ 
 #define CLASS_H_
 
-#include <string>
-
 namespace sru {
 
+class symbol;
 class BasicObjectPtr;
 
 class Class {
@@ -21,7 +20,7 @@ class Class {
   static void SetAsSubclass(const BasicObjectPtr& obj,
                             const BasicObjectPtr& super_klass);
   static void SetAsInstanceMethod(const BasicObjectPtr& klass,
-                                  const std::string& name,
+                                  const symbol& name,
                                   const BasicObjectPtr& method);
   static void InitializeClassClassFirst(const BasicObjectPtr& klass);
   static void InitializeClassClassLast(const BasicObjectPtr& klass);

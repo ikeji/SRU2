@@ -20,10 +20,10 @@ string InspectExpression(BasicObjectPtr obj){
 /* -------------------- LetExpression -------------------- */
 
 struct LetExpression::Impl {
-  Impl(BasicObject* env, const string& name, BasicObject* rightvalue) :
+  Impl(BasicObject* env, const symbol& name, BasicObject* rightvalue) :
       env(env), name(name), rightvalue(rightvalue){}
   BasicObject* env;
-  string name;
+  symbol name;
   BasicObject* rightvalue;
  private:
   Impl(const Impl& obj);
@@ -31,7 +31,7 @@ struct LetExpression::Impl {
 };
 
 LetExpression::LetExpression(const BasicObjectPtr& env,
-                             const string& name,
+                             const symbol& name,
                              const BasicObjectPtr& rightvalue) :
       pimpl(new Impl(env.get(),name,rightvalue.get())) {
 }
@@ -45,7 +45,7 @@ BasicObjectPtr LetExpression::SetEnv(BasicObjectPtr env){
   pimpl->env = env.get();
   return env;
 }
-const string& LetExpression::Name(){
+const symbol& LetExpression::Name(){
   return pimpl->name;
 }
 BasicObjectPtr LetExpression::RightValue(){
@@ -60,27 +60,27 @@ void LetExpression::Mark(){
 string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
   if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
-    return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name +
+    return string("((") + InspectExpression(pimpl->env) + ")." + pimpl->name.to_str() +
            " = " + rv + ")";
   }else{
-    return string("(") + pimpl->name + " = " + rv + ")";
+    return string("(") + pimpl->name.to_str() + " = " + rv + ")";
   }
 }
 
 /* -------------------- RefExpression -------------------- */
 
 struct RefExpression::Impl {
-  Impl(BasicObject* env, string name) :
+  Impl(BasicObject* env, symbol name) :
       env(env), name(name){}
   BasicObject* env;
-  string name;
+  symbol name;
  private:
   Impl(const Impl& obj);
   Impl* operator=(const Impl& obj);
 };
 
 RefExpression::RefExpression(const BasicObjectPtr& env,
-                             const string& name):
+                             const symbol& name):
     pimpl(new Impl(env.get(), name)){
 }
 RefExpression::~RefExpression(){
@@ -93,7 +93,7 @@ BasicObjectPtr RefExpression::SetEnv(BasicObjectPtr env){
   pimpl->env = env.get();
   return env;
 }
-const string& RefExpression::Name(){
+const symbol& RefExpression::Name(){
   return pimpl->name;
 }
 void RefExpression::Mark(){
@@ -102,9 +102,9 @@ void RefExpression::Mark(){
 
 string RefExpression::InspectAST(){
   if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
-    return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name;
+    return string("(") + InspectExpression(pimpl->env) + ")." + pimpl->name.to_str();
   }else{
-    return pimpl->name;
+    return pimpl->name.to_str();
   }
 }
 
@@ -159,28 +159,28 @@ string CallExpression::InspectAST(){
 /* -------------------- ProcExpression -------------------- */
 
 struct ProcExpression::Impl {
-  Impl(vector<string> varg, string retval, object_vector expressions):
+  Impl(vector<symbol> varg, symbol retval, object_vector expressions):
       varg(varg),retval(retval),expressions(expressions){}
-  vector<string> varg;
-  string retval;
+  vector<symbol> varg;
+  symbol retval;
   object_vector expressions;
  private:
   Impl(const Impl& obj);
   Impl* operator=(const Impl& obj);
 };
 
-ProcExpression::ProcExpression(const vector<string>& varg,
-                               const string& retval,
+ProcExpression::ProcExpression(const vector<symbol>& varg,
+                               const symbol& retval,
                                const ptr_vector& expressions):
       pimpl(new Impl(varg,retval,Conv(expressions))){
 }
 ProcExpression::~ProcExpression(){
   delete pimpl;
 }
-vector<string>* ProcExpression::Varg(){
+vector<symbol>* ProcExpression::Varg(){
   return &(pimpl->varg);
 }
-const string& ProcExpression::RetVal(){
+const symbol& ProcExpression::RetVal(){
   return pimpl->retval;
 }
 object_vector* ProcExpression::Expressions(){
@@ -197,16 +197,16 @@ void ProcExpression::Mark(){
 
 string ProcExpression::InspectAST(){
   string argv = "";
-  vector<string>::iterator i = pimpl->varg.begin();
+  vector<symbol>::iterator i = pimpl->varg.begin();
   while(true){
     if(i == pimpl->varg.end()) break;
-    argv+= *i;
+    argv+= i->to_str();
     i++;
     if(i == pimpl->varg.end()) break;
     argv+= ",";
   }
-  if(!pimpl->retval.empty())
-    argv+= ":" + pimpl->retval;
+  if(!pimpl->retval.to_str().empty())
+    argv+= ":" + pimpl->retval.to_str();
   if(!argv.empty())
     argv = "|" + argv + "|";
   string main = "";
@@ -221,23 +221,23 @@ string ProcExpression::InspectAST(){
 /* -------------------- StringExpression -------------------- */
 
 struct StringExpression::Impl {
-  Impl(string str) : str(str) {}
-  string str;
+  Impl(symbol str) : str(str) {}
+  symbol str;
  private:
   Impl(const Impl& obj);
   Impl* operator=(const Impl& obj);
 };
 
-StringExpression::StringExpression(const string& str):
+StringExpression::StringExpression(const symbol& str):
     pimpl(new Impl(str)){
 }
 StringExpression::~StringExpression(){
   delete pimpl;
 }
-const string& StringExpression::String(){
+const symbol& StringExpression::String(){
   return pimpl->str;
 }
 
 string StringExpression::InspectAST(){
-  return string("\"") + pimpl->str + "\"";
+  return string("\"") + pimpl->str.to_str() + "\"";
 }

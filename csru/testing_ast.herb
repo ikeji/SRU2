@@ -10,6 +10,7 @@
 
 namespace sru {
 class BasicObjectPtr;
+class symbol;
 }
 
 namespace sru_test {
@@ -19,20 +20,20 @@ inline std::string InspectAST(const sru::BasicObjectPtr& obj){
 }
 
 inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
-                             const std::string& name,
+                             const sru::symbol& name,
                              const sru::BasicObjectPtr& rv){
   return sru::LetExpression::New(env,name,rv);
 }
 
-inline sru::BasicObjectPtr L(const std::string& name,const sru::BasicObjectPtr& rv){
+inline sru::BasicObjectPtr L(const sru::symbol& name,const sru::BasicObjectPtr& rv){
   return sru::LetExpression::New(NULL,name,rv);
 }
 
-inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,const std::string& name){
+inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,const sru::symbol& name){
   return sru::RefExpression::New(env,name);
 }
 
-inline sru::BasicObjectPtr R(const std::string& name){
+inline sru::BasicObjectPtr R(const sru::symbol& name){
   return sru::RefExpression::New(NULL,name);
 }
 
@@ -50,9 +51,9 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 <% 25.times do |e| %><% 5.times do |s| %>
 #line 52 "testing_ast.herb"
 inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
-                      <% end %>const std::string& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
+                      <% end %>const sru::symbol& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
                       <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
-  std::vector<std::string> varg;
+  std::vector<sru::symbol> varg;
 <% s.times do |i| %>  varg.push_back(varg<%= i %>);
 <% end %>
   sru::ptr_vector expressions;
@@ -65,10 +66,10 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
 <% 20.times do |e| %><% 5.times do |s| %>
 #line 67 "testing_ast.herb"
 inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
-                      <% end %>const std::string& varg<%= i %><% end; if s !=0 %>,
-                      <% end %>const std::string& retval<% e.times do |j| %>,
+                      <% end %>const sru::symbol& varg<%= i %><% end; if s !=0 %>,
+                      <% end %>const sru::symbol& retval<% e.times do |j| %>,
                       const sru::BasicObjectPtr& expression<%= j %><% end %>){
-  std::vector<std::string> varg;
+  std::vector<sru::symbol> varg;
 <% s.times do |i| %>  varg.push_back(varg<%= i %>);
 <% end %>
   sru::ptr_vector expressions;
@@ -79,7 +80,7 @@ inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
 <% end %><% end %>
 
 
-inline sru::BasicObjectPtr S(const std::string& str){
+inline sru::BasicObjectPtr S(const sru::symbol& str){
   return sru::StringExpression::New(str);
 }
 

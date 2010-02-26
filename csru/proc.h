@@ -14,11 +14,13 @@
 
 namespace sru {
 
+class symbol;
+
 class Proc : public Value{
  public:
   static BasicObjectPtr New(
-             const std::vector<std::string>& vargs,
-             const std::string& retval,
+             const std::vector<symbol>& vargs,
+             const symbol& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding);
   virtual void Call(const BasicObjectPtr& proc, const ptr_vector& args) = 0;

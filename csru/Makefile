@@ -22,6 +22,7 @@ parser_helper.o \
 proc.o \
 stack_frame.o \
 string.o \
+symbol.o \
 
 TESTS    = \
 ast_test.o \
@@ -41,6 +42,7 @@ proc_test.o \
 scheme_like_test.o \
 stack_frame_test.o \
 string_test.o \
+symbol_test.o \
 
 DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
@@ -106,74 +108,86 @@ parser:
 
 # DO NOT DELETE
 
-ast.o: ast.h basic_object.h logging.h object_container.h library.h
-ast_test.o: testing.h ast.h basic_object.h logging.h object_container.h
-basic_object.o: basic_object.h logging.h object_pool.h constants.h string.h
-basic_object_test.o: testing.h basic_object.h logging.h
-binding.o: binding.h basic_object.h logging.h string.h class.h library.h
-binding.o: constants.h native_proc.h proc.h object_container.h interpreter.h
-binding.o: stack_frame.h
+ast.o: ast.h basic_object.h logging.h symbol.h object_container.h library.h
+ast_test.o: testing.h ast.h basic_object.h logging.h symbol.h
+ast_test.o: object_container.h
+basic_object.o: basic_object.h logging.h symbol.h object_pool.h constants.h
+basic_object.o: string.h
+basic_object_test.o: testing.h basic_object.h logging.h symbol.h
+binding.o: binding.h basic_object.h logging.h symbol.h string.h class.h
+binding.o: library.h constants.h native_proc.h proc.h object_container.h
+binding.o: interpreter.h stack_frame.h
 binding_test.o: testing.h testing_ast.h ast.h basic_object.h logging.h
-binding_test.o: object_container.h interpreter.h library.h
-boolean.o: boolean.h basic_object.h logging.h class.h library.h native_proc.h
-boolean.o: proc.h object_container.h string.h constants.h testing_sru.h
-boolean.o: interpreter.h stack_frame.h
-boolean_test.o: testing.h library.h basic_object.h logging.h constants.h
-class.o: class.h basic_object.h logging.h constants.h library.h string.h
-class.o: native_proc.h proc.h object_container.h interpreter.h stack_frame.h
-class_test.o: testing.h class.h basic_object.h logging.h constants.h
+binding_test.o: symbol.h object_container.h interpreter.h library.h
+boolean.o: boolean.h basic_object.h logging.h symbol.h class.h library.h
+boolean.o: native_proc.h proc.h object_container.h string.h constants.h
+boolean.o: testing_sru.h interpreter.h stack_frame.h
+boolean_test.o: testing.h library.h basic_object.h logging.h symbol.h
+boolean_test.o: constants.h
+class.o: class.h basic_object.h logging.h symbol.h constants.h library.h
+class.o: string.h native_proc.h proc.h object_container.h interpreter.h
+class.o: stack_frame.h
+class_test.o: testing.h class.h basic_object.h logging.h symbol.h constants.h
 class_test.o: library.h
-constants.o: constants.h
+constants.o: constants.h symbol.h
 interpreter.o: interpreter.h object_container.h ast.h basic_object.h
-interpreter.o: logging.h stack_frame.h library.h binding.h native_proc.h
-interpreter.o: proc.h constants.h
+interpreter.o: logging.h symbol.h stack_frame.h library.h binding.h
+interpreter.o: native_proc.h proc.h constants.h
 interpreter_test.o: interpreter.h object_container.h testing.h testing_ast.h
-interpreter_test.o: ast.h basic_object.h logging.h string.h library.h
-interpreter_test.o: constants.h
-library.o: library.h basic_object.h logging.h numeric.h parser.h object.h
-library.o: string.h constants.h binding.h boolean.h proc.h object_container.h
-library.o: class.h
-library_test.o: testing.h library.h basic_object.h logging.h
+interpreter_test.o: ast.h basic_object.h logging.h symbol.h string.h
+interpreter_test.o: library.h constants.h
+library.o: library.h basic_object.h logging.h symbol.h numeric.h parser.h
+library.o: object.h string.h constants.h binding.h boolean.h proc.h
+library.o: object_container.h class.h
+library_test.o: testing.h library.h basic_object.h logging.h symbol.h
 logging.o: logging.h
-main.o: interpreter.h object_container.h basic_object.h logging.h
-native_proc.o: native_proc.h proc.h basic_object.h logging.h
+main.o: interpreter.h object_container.h basic_object.h logging.h symbol.h
+native_proc.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 native_proc.o: object_container.h interpreter.h stack_frame.h
 native_proc_test.o: testing.h native_proc.h proc.h basic_object.h logging.h
-native_proc_test.o: object_container.h library.h stack_frame.h interpreter.h
-numeric.o: numeric.h basic_object.h logging.h class.h library.h native_proc.h
-numeric.o: proc.h object_container.h string.h constants.h
-numeric_test.o: testing.h numeric.h basic_object.h logging.h library.h
-numeric_test.o: testing_sru.h proc.h object_container.h interpreter.h
-numeric_test.o: stack_frame.h string.h constants.h testing_ast.h ast.h
-object.o: object.h basic_object.h logging.h string.h constants.h class.h
-object.o: library.h
-object_container.o: object_container.h basic_object.h logging.h
+native_proc_test.o: symbol.h object_container.h library.h stack_frame.h
+native_proc_test.o: interpreter.h
+numeric.o: numeric.h basic_object.h logging.h symbol.h class.h library.h
+numeric.o: native_proc.h proc.h object_container.h string.h constants.h
+numeric_test.o: testing.h numeric.h basic_object.h logging.h symbol.h
+numeric_test.o: library.h testing_sru.h proc.h object_container.h
+numeric_test.o: interpreter.h stack_frame.h string.h constants.h
+numeric_test.o: testing_ast.h ast.h
+object.o: object.h basic_object.h logging.h symbol.h string.h constants.h
+object.o: class.h library.h
+object_container.o: object_container.h basic_object.h logging.h symbol.h
 object_container_test.o: testing.h object_container.h basic_object.h
-object_container_test.o: logging.h object_pool.h
-object_pool.o: object_pool.h basic_object.h logging.h object_container.h
-object_pool_test.o: testing.h basic_object.h logging.h object_pool.h
-object_test.o: testing.h object.h basic_object.h logging.h
-parser.o: parser.h basic_object.h logging.h native_proc.h proc.h
+object_container_test.o: logging.h symbol.h object_pool.h
+object_pool.o: object_pool.h basic_object.h logging.h symbol.h
+object_pool.o: object_container.h
+object_pool_test.o: testing.h basic_object.h logging.h symbol.h object_pool.h
+object_test.o: testing.h object.h basic_object.h logging.h symbol.h
+parser.o: parser.h basic_object.h logging.h symbol.h native_proc.h proc.h
 parser.o: object_container.h constants.h binding.h string.h numeric.h
 parser.o: library.h testing_ast.h ast.h testing_sru.h interpreter.h
 parser.o: stack_frame.h
-parser_helper.o: native_proc.h proc.h basic_object.h logging.h
+parser_helper.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_helper.o: object_container.h string.h numeric.h library.h ast.h
 parser_helper.o: constants.h testing_ast.h
-parser_test.o: parser.h basic_object.h logging.h testing.h interpreter.h
-parser_test.o: object_container.h numeric.h library.h constants.h string.h
-proc.o: proc.h basic_object.h logging.h object_container.h ast.h binding.h
-proc.o: interpreter.h library.h stack_frame.h constants.h class.h
+parser_test.o: parser.h basic_object.h logging.h symbol.h testing.h
+parser_test.o: interpreter.h object_container.h numeric.h library.h
+parser_test.o: constants.h string.h
+proc.o: proc.h basic_object.h logging.h symbol.h object_container.h ast.h
+proc.o: binding.h interpreter.h library.h stack_frame.h constants.h class.h
 proc.o: native_proc.h string.h testing_ast.h testing_sru.h
-proc_test.o: testing.h proc.h basic_object.h logging.h object_container.h
-proc_test.o: ast.h interpreter.h testing_ast.h library.h string.h numeric.h
-scheme_like_test.o: parser.h basic_object.h logging.h testing.h interpreter.h
-scheme_like_test.o: object_container.h
-stack_frame.o: stack_frame.h basic_object.h logging.h object_container.h
-stack_frame.o: string.h ast.h proc.h library.h binding.h constants.h
-stack_frame_test.o: testing.h stack_frame.h basic_object.h logging.h
+proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
+proc_test.o: object_container.h ast.h interpreter.h testing_ast.h library.h
+proc_test.o: string.h numeric.h
+scheme_like_test.o: parser.h basic_object.h logging.h symbol.h testing.h
+scheme_like_test.o: interpreter.h object_container.h
+stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h
+stack_frame.o: object_container.h string.h ast.h proc.h library.h binding.h
+stack_frame.o: constants.h
+stack_frame_test.o: testing.h stack_frame.h basic_object.h logging.h symbol.h
 stack_frame_test.o: object_container.h ast.h binding.h
-string.o: string.h basic_object.h logging.h library.h class.h
-string_test.o: testing.h string.h basic_object.h logging.h library.h
+string.o: string.h basic_object.h logging.h symbol.h library.h class.h
+string_test.o: testing.h string.h basic_object.h logging.h symbol.h library.h
 string_test.o: constants.h
+symbol.o: symbol.h logging.h
+symbol_test.o: symbol.h testing.h
 testing.o: testing.h logging.h

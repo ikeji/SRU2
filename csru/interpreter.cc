@@ -99,7 +99,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   // Parser
   args.push_back(RefExpression::New(NULL, sym::sru_parser()));
   // "str"
-  args.push_back(StringExpression::New(str));
+  args.push_back(StringExpression::New(symbol(str.c_str())));
   BasicObjectPtr call_parser = CallExpression::New(
       RefExpression::New(RefExpression::New(NULL,sym::sru_parser()), sym::parse()), args);
 

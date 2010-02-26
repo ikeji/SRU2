@@ -15,6 +15,7 @@
 #include "library.h"
 #include "constants.h"
 #include "logging.h"
+#include "symbol.h"
 
 using namespace sru;
 using namespace sru_test;
@@ -22,13 +23,13 @@ using namespace std;
 
 TEST(Interpreter_StringExpressionTest){
   string str = "Hello";
-  StringExpression* se = new StringExpression(str);
+  StringExpression* se = new StringExpression(symbol(str.c_str()));
   BasicObjectPtr p = BasicObject::New(se);
   LOG << se->InspectAST();
   assert(se->InspectAST() == "\"Hello\"");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
-  string rstr = SRUString::GetValue(r.get());
+  string rstr = SRUString::GetValue(r.get()).to_str();
   if(!( str == rstr) ){
     LOG << "str:"  << str;
     LOG << "rstr:" << rstr;
@@ -40,14 +41,14 @@ TEST(Interpreter_ComplexExpressionTest){
   string str = "Hello";
   // { "hello" }()
   ptr_vector  args;
-  vector<string> vargs;
+  vector<symbol> vargs;
   ptr_vector expressions;
-  expressions.push_back(StringExpression::New(str));
+  expressions.push_back(StringExpression::New(symbol(str.c_str())));
   BasicObjectPtr p = 
   CallExpression::New(
     ProcExpression::New(
       vargs,
-      string(""),
+      symbol(""),
       expressions
     ),
     args
@@ -56,7 +57,7 @@ TEST(Interpreter_ComplexExpressionTest){
   assert(InspectAST(p) == "{\"Hello\";}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(p);
   assert(r.get());
-  string rstr = SRUString::GetValue(r.get());
+  string rstr = SRUString::GetValue(r.get()).to_str();
   if(!( str == rstr) ){
     LOG << "str:"  << str;
     LOG << "rstr:" << rstr;
@@ -97,7 +98,7 @@ TEST(Interpreter_StringExpressionRegTest){
   string code = "\"Hello\"";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
-  string rstr = SRUString::GetValue(r.get());
+  string rstr = SRUString::GetValue(r.get()).to_str();
   if(!( str == rstr) ){
     LOG << "str:"  << str;
     LOG << "rstr:" << rstr;
@@ -112,7 +113,7 @@ TEST(Interpreter_ComplexExpressionRegTest){
   string code = "{ \"Hello\" }()";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
-  string rstr = SRUString::GetValue(r.get());
+  string rstr = SRUString::GetValue(r.get()).to_str();
   if(!( str == rstr) ){
     LOG << "str:"  << str;
     LOG << "rstr:" << rstr;

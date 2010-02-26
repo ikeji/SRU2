@@ -19,18 +19,11 @@
 #include <string>
 #ifdef USEOLDGCC
 #include <ext/hash_map>
-namespace __gnu_cxx {
-template <>
-struct hash<std::string>{
-  size_t operator()(const std::string&x) const {
-    return hash<const char*>()(x.c_str());
-  }
-};
-}  // namespace __gnu_cxx;
 #else
 #include <tr1/unordered_map>
 #endif
 #include "logging.h"
+#include "symbol.h"
 
 namespace sru {
 
@@ -64,9 +57,9 @@ class BasicObjectPtr {
 class BasicObject {
  public:
 #ifdef USEOLDGCC
-  typedef __gnu_cxx::hash_map<std::string,BasicObject* > fields_type;
+  typedef __gnu_cxx::hash_map<int,BasicObject* > fields_type;
 #else
-  typedef std::tr1::unordered_map<std::string,BasicObject* > fields_type;
+  typedef std::tr1::unordered_map<int,BasicObject* > fields_type;
 #endif
 
   // Always use New method to allocate BasicObject instead of new operator.
@@ -74,30 +67,30 @@ class BasicObject {
   static BasicObjectPtr New(Value * value);
 
   // Setting or getting from this object's slot.
-  void Set(const std::string& name,BasicObjectPtr ref){
+  void Set(const symbol& name,BasicObjectPtr ref){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
     CHECK(ref.get()) << "Don't set NULL";
-    fields[name] = ref.get();
+    fields[name.getid()] = ref.get();
   }
-  BasicObjectPtr Get(const std::string& name){
+  BasicObjectPtr Get(const symbol& name){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
-    fields_type::iterator it = fields.find(name);
-    CHECK(it != fields.end()) << "Error: unknwn slot: " << name << " in: " << Inspect();
+    fields_type::iterator it = fields.find(name.getid());
+    CHECK(it != fields.end()) << "Error: unknwn slot: " << name.getid() << " in: " << Inspect();
     assert(it != fields.end());
     return it->second;
   };
-  bool HasSlot(const std::string& name){
+  bool HasSlot(const symbol& name){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
     assert(!deleted);
 #endif
-    return (fields.find(name) != fields.end());
+    return (fields.find(name.getid()) != fields.end());
   }
   const fields_type& Fields() const{
 #ifdef DEBUG_GC

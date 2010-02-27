@@ -101,6 +101,7 @@ BasicObjectPtr RefExpression::Name(){
 }
 void RefExpression::Mark(){
   if(pimpl->env) pimpl->env->Mark();
+  if(pimpl->name) pimpl->name->Mark();
 }
 
 string RefExpression::InspectAST(){

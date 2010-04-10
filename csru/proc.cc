@@ -53,9 +53,8 @@ string Proc::Inspect(){
 void Proc::Invoke(const BasicObjectPtr& proc,
                   const ptr_vector& args){
   // TODO: Show more meaningful error.
-  CHECK(dynamic_cast<Proc*>(proc->Data())) <<
-    "Can't invoke " << proc->Inspect() << " object";
   Proc* p = proc->GetData<Proc>();
+  CHECK(p) << "Can't invoke " << proc->Inspect() << " object";
   p->Call(proc, args);
 }
 
@@ -125,7 +124,9 @@ string SRUProc::Inspect(){
   for(object_vector::const_iterator it = expressions.begin();
       it != expressions.end();
       it++){
-    ret += (*it)->GetData<Expression>()->InspectAST() + ";";
+    Expression* exp = (*it)->GetData<Expression>();
+    assert(exp);
+    ret += exp->InspectAST() + ";";
   }
   return ret + "}>";
 }

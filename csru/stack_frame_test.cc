@@ -24,6 +24,7 @@ TEST(StackFrame_BackupTest){
 TEST(StackFrame_EvalStepTest){
   BasicObjectPtr s = StackFrame::New(Binding::New());
   StackFrame* st = s->GetData<StackFrame>();
+  assert(st);
   ptr_vector ast;
   ast.push_back(BasicObject::New(new StringExpression(symbol("Hello"))));
   st->Setup(ast);

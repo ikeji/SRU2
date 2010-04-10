@@ -40,7 +40,9 @@ DECLARE_SRU_PROC(SimpleMethod2);
 TEST(NativeProc_DeclareTest){
   ptr_vector v;
   BasicObjectPtr proc = CREATE_SRU_PROC(SimpleMethod2);
-  proc->GetData<Proc>()->Call(proc,v);
+  Proc* p = proc->GetData<Proc>();
+  assert(p);
+  p->Call(proc,v);
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue().get());

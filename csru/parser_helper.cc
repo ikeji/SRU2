@@ -170,6 +170,7 @@ DEFINE_SRU_PROC(prog_rep){ // this, src, pos, prog_begin, expression
   assert(args.size() >= 5);
   LOG << "prog_rep called with " << args[3]->Inspect() << ", " << args[4]->Inspect();
   ProcExpression* pr = args[3]->Get(sym::ast())->GetData<ProcExpression>();
+  CHECK(pr) << "Need proc for prog_rep";
   pr->Expressions()->push_back(args[4]->Get(sym::ast()).get());
   return CreateResult(true, args[3]->Get(sym::ast()), args[2]);
 }
@@ -228,6 +229,7 @@ DEFINE_SRU_PROC(call_rep){ // this, src, pos, call_begin, expression
   assert(args.size() >= 5);
   LOG << "call_rep";
   CallExpression* call = args[3]->Get(sym::ast())->GetData<CallExpression>();
+  CHECK(call) << "Need call expression for call_rep";
   call->Arg()->push_back(args[4]->Get(sym::ast()).get());
   return CreateResult(true, args[3]->Get(sym::ast()), args[2]);
 }

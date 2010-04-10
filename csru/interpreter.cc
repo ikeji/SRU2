@@ -38,7 +38,9 @@ void Interpreter::InitializeInterpreter(){
   BasicObjectPtr st = StackFrame::New(Binding::New());
   pimpl->current_frame = st;
   pimpl->root_frame = st;
-  BasicObjectPtr bind = st->GetData<StackFrame>()->Binding();
+  StackFrame* stackframe = st->GetData<StackFrame>();
+  assert(stackframe);
+  BasicObjectPtr bind = stackframe->Binding();
   Library::BindPrimitiveObjects(bind);
 }
 
@@ -48,6 +50,7 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 
   BasicObjectPtr new_frame_object = StackFrame::New(binding);
   StackFrame* new_frame = new_frame_object->GetData<StackFrame>();
+  assert(new_frame);
   LOG << "Step in: " << new_frame_object->Inspect();
   new_frame->SetUpperStack(old_frame_object);
   pimpl->current_frame = new_frame_object;
@@ -57,7 +60,9 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 
 DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
-  *Interpreter::Instance()->CurrentStackFrame() = *proc->Get(sym::CurrentStackFrame())->GetData<StackFrame>();
+  StackFrame* cur_frame = proc->Get(sym::CurrentStackFrame())->GetData<StackFrame>();
+  assert(cur_frame);
+  *Interpreter::Instance()->CurrentStackFrame() = *cur_frame;
   if(args.size() > 0){
     LOG << "Contination invoked with: " << args[0]->Inspect();
     return args[0];
@@ -74,11 +79,15 @@ BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
 }
 
 StackFrame* Interpreter::CurrentStackFrame(){
-  return pimpl->current_frame->GetData<StackFrame>();
+  StackFrame* s = pimpl->current_frame->GetData<StackFrame>();
+  assert(s);
+  return s;
 }
 
 StackFrame* Interpreter::RootStackFrame(){
-  return pimpl->root_frame->GetData<StackFrame>();
+  StackFrame* s = pimpl->root_frame->GetData<StackFrame>();
+  assert(s);
+  return s;
 }
 
 BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){

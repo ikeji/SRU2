@@ -15,7 +15,10 @@ using namespace sru;
 using namespace std;
 
 string InspectExpression(BasicObjectPtr obj){
-  return obj->GetData<Expression>()->InspectAST();
+  Expression* exp = obj->GetData<Expression>();
+  CHECK(exp) << "Couldn't Inspect " << obj->Inspect() <<
+                " as a Expression";
+  return exp->InspectAST();
 }
 
 /* -------------------- LetExpression -------------------- */

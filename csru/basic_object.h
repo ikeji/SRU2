@@ -148,7 +148,6 @@ class BasicObject {
     CHECK(!deleted) << "Why use deleted object?";
 #endif
     T* r = dynamic_cast<T*>(data);
-    CHECK(r) << "Can't cast " << Inspect() << " to real type " << T::name();
     return r;
   }
 

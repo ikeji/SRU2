@@ -63,7 +63,9 @@ class TraceVisitor : public Visitor{
   TraceVisitor(object_vector* res):
         result(res),noerror(true){}
   void VisitTo(BasicObjectPtr obj){
-    obj->GetData<Expression>()->Visit(this, obj);
+    Expression* exp = obj->GetData<Expression>();
+    CHECK(exp) << "Trace non ast value";
+    exp->Visit(this, obj);
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     LOG_TRACE << "TRACE-LET: " << exp->Inspect();

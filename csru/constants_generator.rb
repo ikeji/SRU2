@@ -56,6 +56,7 @@ status
 trueResult
 program
 # TODO: get from parser_generator
+error
 program
 expression
 list
@@ -88,6 +89,9 @@ result#{i}
 last#{i}
 block#{i}
 break#{i}
+error#{i}
+left#{i}
+right#{i}
 EOL
 end
 

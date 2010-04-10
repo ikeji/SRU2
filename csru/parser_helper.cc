@@ -91,6 +91,8 @@ DEFINE_SRU_PROC(id){
   BasicObjectPtr ret = BasicObject::New();
   if(pos == epos){
     ret->Set(sym::status(), Library::Instance()->False());
+    ret->Set(sym::pos(), args[2]);
+    ret->Set(sym::error(), SRUString::New(symbol("ID not found.")));
   }else{
     string substr = str.substr(pos, epos-pos);
     LOG << "Match to id: " << substr;
@@ -109,6 +111,8 @@ DEFINE_SRU_PROC(stringliteral){
   BasicObjectPtr ret = BasicObject::New();
   if(str[pos] != '"'){  // this is not string literal.
     ret->Set(sym::status(), Library::Instance()->False());
+    ret->Set(sym::pos(), args[2]);
+    ret->Set(sym::error(), SRUString::New(symbol("String not found.")));
     return ret;
   }
   int epos = pos + 1;
@@ -119,6 +123,8 @@ DEFINE_SRU_PROC(stringliteral){
   }
   if(str[epos] != '"'){ // This is't complete string literal
     ret->Set(sym::status(), Library::Instance()->False());
+    ret->Set(sym::pos(), SRUNumeric::New(epos));
+    ret->Set(sym::error(), SRUString::New(symbol("Don't close string.")));
   }else{
     string substr = str.substr(pos+1, epos-pos-1); // cut " s
     LOG << "Match to string: " << substr;
@@ -142,6 +148,8 @@ DEFINE_SRU_PROC(numericliteral){
   BasicObjectPtr ret = BasicObject::New();
   if(pos == epos){
     ret->Set(sym::status(), Library::Instance()->False());
+    ret->Set(sym::pos(), args[2]);
+    ret->Set(sym::error(), SRUString::New(symbol("number not found.")));
   }else{
     string substr = str.substr(pos, epos-pos);
     ret->Set(sym::status(), Library::Instance()->True());

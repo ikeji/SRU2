@@ -96,13 +96,10 @@ DEFINE_SRU_PROC_SMASH(Parse){
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
       A(
-        R(
-          C(R(R(sym::self()),sym::program()),
-            R(sym::self()),
-            R(sym::src()),
-            C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(symbol("0")))),
-          sym::ast()
-        )
+        C(R(R(sym::self()),sym::program()),
+          R(sym::self()),
+          R(sym::src()),
+          C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(symbol("0"))))
       ),
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
@@ -157,6 +154,8 @@ DEFINE_SRU_PROC(term#{term.num}){
     ret->Set(sym::pos(), SRUNumeric::New(pos + target.size()));
   } else {
     ret->Set(sym::status(), Library::Instance()->False());
+    ret->Set(sym::pos(), args[2]);
+    ret->Set(sym::error(), SRUString::New(symbol("#{term.string} not found.")));
   }
   return ret;
 }
@@ -211,9 +210,27 @@ L(sym::result#{n}(),
     R(sym::status#{n}()),
     P(R(sym::result#{n+1}())),
     P(
+      L(sym::error#{n}(), R(sym::result#{n+1}())),
 #{spc(6,peg.right.accept(self, n+1))}
       ,
-      R(sym::result#{n+1}())
+      L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+      C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
+        R(sym::status#{n}()),
+        P(R(sym::result#{n+1}())),
+        // If each side was failed, I return longest one.
+        P(
+          L(sym::left#{n}(), R(R(sym::error#{n}()), sym::pos())),
+          L(sym::right#{n}(), R(R(sym::result#{n+1}()), sym::pos())),
+          L(sym::status#{n}(),
+            C(R(R(sym::left#{n}()),sym::greaterThan()),
+              R(sym::left#{n}()), R(sym::right#{n}()))),
+          C(R(R(sym::status#{n}()),sym::ifTrueFalse()),
+            R(sym::status#{n}()),
+            P(R(sym::error#{n}())),
+            P(R(sym::result#{n+1}()))
+          )
+        )
+      )
     )
   )
 )

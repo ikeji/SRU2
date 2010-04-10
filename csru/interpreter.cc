@@ -106,12 +106,17 @@ BasicObjectPtr Interpreter::Eval(const string& str){
         RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
         SRUString::New(sym::parse())), args);
 
-  BasicObjectPtr ast = Eval(call_parser);
-  if(ast == Library::Instance()->Nil()) {
+  BasicObjectPtr obj = Eval(call_parser);
+  if(!obj->HasSlot(sym::ast()) ||
+     obj->Get(sym::ast()) == Library::Instance()->Nil()){
     // TODO: Check more detail..
-    LOG_ERROR << "Parse error";
+    LOG_ERROR << "Parse error: " <<
+      SRUString::GetValue(
+        obj->Get(sym::error())
+      ).to_str();
     return NULL;
   }
+  BasicObjectPtr ast = obj->Get(sym::ast());
   LOG_ERROR << "Parse OK : " << ast->Inspect();
 
   BasicObjectPtr result = Eval(ast);

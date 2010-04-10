@@ -56,7 +56,6 @@ void Proc::Invoke(const BasicObjectPtr& proc,
   CHECK(dynamic_cast<Proc*>(proc->Data())) <<
     "Can't invoke " << proc->Inspect() << " object";
   Proc* p = proc->GetData<Proc>();
-  assert(p || !"First error: Call target is must proc");
   p->Call(proc, args);
 }
 

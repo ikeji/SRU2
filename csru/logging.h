@@ -11,10 +11,11 @@ namespace sru_logging{
 
 class Logging{
  public:
-  Logging(const char* fname, int line);
+  Logging(const char* fname, int line, bool cond=true);
   ~Logging();
   std::ostream& ostream();
  private:
+  bool cond;
   Logging(const Logging&);
   Logging &operator=(const Logging&);
 };
@@ -28,7 +29,7 @@ class Logging{
 #ifdef DEBUG
 
 #define CHECK(assert) \
-  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__,assert).ostream()
 #define LOG_ERROR \
   if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
 

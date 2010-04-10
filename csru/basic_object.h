@@ -70,7 +70,6 @@ class BasicObject {
   void Set(const symbol& name,BasicObjectPtr ref){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     CHECK(ref.get()) << "Don't set NULL";
     fields[name.getid()] = ref.get();
@@ -78,24 +77,20 @@ class BasicObject {
   BasicObjectPtr Get(const symbol& name){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     fields_type::iterator it = fields.find(name.getid());
     CHECK(it != fields.end()) << "Error: unknwn slot: " << name.getid() << " in: " << Inspect();
-    assert(it != fields.end());
     return it->second;
   };
   bool HasSlot(const symbol& name){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     return (fields.find(name.getid()) != fields.end());
   }
   const fields_type& Fields() const{
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     return fields;
   }
@@ -105,21 +100,18 @@ class BasicObject {
   int GcCounter() const { 
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     return gc_counter;
   }
   void SetGcCounter(int i) {
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     gc_counter = i; 
   }
   void IncrementGcCounter() {
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     gc_counter++; 
     LOG_TRACE <<"inc:" << Inspect() << " -> " << gc_counter;
@@ -127,7 +119,6 @@ class BasicObject {
   void DecrementGcCounter() {
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     gc_counter--; 
 #ifdef DEBUG_GC
@@ -141,14 +132,12 @@ class BasicObject {
   Value* Data(){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     return data; 
   }
   void SetData(Value* dat){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     data = dat; 
   }
@@ -157,11 +146,9 @@ class BasicObject {
   T* GetData(){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
-    assert(!deleted);
 #endif
     T* r = dynamic_cast<T*>(data);
     CHECK(r) << "Can't cast " << Inspect() << " to real type " << T::name();
-    assert(r);
     return r;
   }
 

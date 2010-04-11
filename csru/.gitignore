@@ -8,5 +8,7 @@ sru
 sru_test
 parser.cc
 parser_generator/parser.cc
+symbols
+parser_generator/symbols
 constants.h
 constants.cc

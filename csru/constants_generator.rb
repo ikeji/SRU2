@@ -55,29 +55,7 @@ pos
 status
 trueResult
 program
-# TODO: get from parser_generator
 error
-program
-expression
-list
-define
-lamb
-call
-ref
-literal
-target
-spc
-id
-stringliteral
-numericliteral
-ref_ins
-def_creat
-lamb_begin
-lamb_arg
-lamb_end
-call_begin
-call_rep
-call_end
 EOL
 
 100.times do |i|
@@ -94,6 +72,8 @@ left#{i}
 right#{i}
 EOL
 end
+
+constants_data += File.read("symbols")
 
 require "optparse"
 

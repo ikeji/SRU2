@@ -25,6 +25,9 @@ class Logging{
 #define LOGOBJ(name) \
   sru_logging::Logging name(__FILE__,__LINE__);
 
+#define LOG_ALWAYS \
+  sru_logging::Logging(__FILE__,__LINE__).ostream()
+
 
 #ifdef DEBUG
 

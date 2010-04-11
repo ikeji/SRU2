@@ -71,7 +71,7 @@ TEST(Scheme_Test1){
                "}"
              ");"
            "}>");
-  LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
+  LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
   TestCode("(fib 0)", "<Numeric: 1 >");
   TestCode("(fib 1)", "<Numeric: 1 >");
   TestCode("(fib 2)", "<Numeric: 2 >");
@@ -80,11 +80,11 @@ TEST(Scheme_Test1){
   TestCode("(fib 5)", "<Numeric: 8 >");
   start = clock();
   TestCode("(fib 10)", "<Numeric: 89 >");
-  LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
+  LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
   start = clock();
   TestCode("(fib 20)", "<Numeric: 10946 >");
-  LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
-  LOG_ERROR << "TODO: enable tak function.";
+  LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
+  LOG_ALWAYS << "TODO: enable tak function.";
   return;
   start = clock();
   TestCode("(define tak (lambda (x,y,z) "
@@ -111,5 +111,5 @@ TEST(Scheme_Test1){
                    "tak((z).minus(z, (Numeric).parse(Numeric, \"1\")), x, y));"
                "});"
            "}>");
-  LOG_ERROR << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
+  LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
 }

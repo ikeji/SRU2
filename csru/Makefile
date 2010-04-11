@@ -18,7 +18,8 @@ object.o \
 object_pool.o \
 object_container.o \
 parser.o \
-parser_helper.o \
+parser_spacing.o \
+parser_constants.o \
 proc.o \
 stack_frame.o \
 string.o \
@@ -39,7 +40,6 @@ object_test.o \
 object_container_test.o \
 parser_test.o \
 proc_test.o \
-scheme_like_test.o \
 stack_frame_test.o \
 string_test.o \
 symbol_test.o \

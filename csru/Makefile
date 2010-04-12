@@ -35,11 +35,12 @@ interpreter_test.o \
 library_test.o \
 native_proc_test.o \
 numeric_test.o \
+object_container_test.o \
 object_pool_test.o \
 object_test.o \
-object_container_test.o \
 parser_test.o \
 proc_test.o \
+sru_regression_test.o \
 stack_frame_test.o \
 string_test.o \
 symbol_test.o \

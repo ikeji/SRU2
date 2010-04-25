@@ -136,7 +136,7 @@ TEST(Proc_InspectTest){
   BasicObjectPtr r = Interpreter::Instance()->Eval(m);
   assert(r.get());
   LOG_ERROR << r->Inspect();
-  assert(r->Inspect() == "<Proc({(a = Class);{a;};}) findSlot:<Proc({ -- Native Code -- }) ... >>");
+  assert(r->Inspect() == "<Proc({(a = Class);{a;};}) >");
 }
 
 TEST(Proc_ContinationTest){

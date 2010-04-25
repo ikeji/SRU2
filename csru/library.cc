@@ -138,13 +138,13 @@ void Library::Impl::initialiseInteralClasses(){
   Class::InitializeClassClassLast(Class);
 
   // TODO: Move this to nill.cc
-  Nil->Set(sym::name(), SRUString::New(sym::nil()));
+  Nil->Set(sym::__name(), SRUString::New(sym::nil()));
   // TODO: Move this to array.cc
-  Array->Set(sym::name(), SRUString::New(sym::Array()));
+  Array->Set(sym::__name(), SRUString::New(sym::Array()));
   // TODO: Move this to hash.cc
-  Hash->Set(sym::name(), SRUString::New(sym::Hash()));
+  Hash->Set(sym::__name(), SRUString::New(sym::Hash()));
   // TODO: Move this to string.cc
-  String->Set(sym::name(), SRUString::New(sym::String()));
+  String->Set(sym::__name(), SRUString::New(sym::String()));
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

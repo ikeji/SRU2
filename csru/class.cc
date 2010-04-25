@@ -22,7 +22,7 @@ void Class::InitializeInstance(const BasicObjectPtr& obj,
   obj->Set(sym::klass(),klass);
   // TODO: InsertClassSystem
   LOG_TRACE << "Use findSlotMethod";
-  obj->Set(sym::findSlot(), klass->Get(sym::klass())->Get(sym::findSlotMethod()));
+  obj->Set(sym::__findSlot(), klass->Get(sym::klass())->Get(sym::findSlotMethod()));
 }
 
 void Class::SetAsSubclass(const BasicObjectPtr& obj,
@@ -85,7 +85,7 @@ void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
 void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
   Proc::Initialize(klass->Get(sym::findSlotMethod()));
 
-  klass->Set(sym::name(), SRUString::New(sym::Class()));
+  klass->Set(sym::__name(), SRUString::New(sym::Class()));
   SetAsSubclass(klass,NULL);
 }
 

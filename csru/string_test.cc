@@ -18,11 +18,11 @@ TEST(SRUString_InitialiseTest){
   assert(obj->Get(sym::klass()).get() == Library::Instance()->String().get());
   assert(SRUString::GetValue(obj).to_str() == "hoge");
   LOG_ERROR << obj->Inspect();
-  assert(obj->Inspect() == "<String(\"hoge\") findSlot:<Proc({ -- Native Code -- }) ... >>");
+  assert(obj->Inspect() == "<String(\"hoge\") >");
 }
 
 TEST(SRUString_ClassTest){
   LOG_ERROR << Library::Instance()->String()->Inspect();
   // TODO: Fix output format like <String>.
-  assert(Library::Instance()->String()->Inspect() == "<String class:<Class class:..., findSlot:..., findSlotMethod:..., name:...>, name:<String(\"String\") ... >>");
+  assert(Library::Instance()->String()->Inspect() == "<String class:<Class class:..., findSlotMethod:...>>");
 }

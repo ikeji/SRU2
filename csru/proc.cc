@@ -41,7 +41,7 @@ DECLARE_SRU_PROC(loop);
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
   Class::SetAsSubclass(proc, NULL);
-  proc->Set(sym::name(), SRUString::New(sym::Proc()));
+  proc->Set(sym::__name(), SRUString::New(sym::Proc()));
   Class::SetAsInstanceMethod(proc, sym::whileTrue(), CREATE_SRU_PROC(whileTrue));
   Class::SetAsInstanceMethod(proc, sym::loop(), CREATE_SRU_PROC(loop));
 }

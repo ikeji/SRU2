@@ -1,12 +1,12 @@
 constants_data = <<EOL
 # Default fields
-class,klass
-parent
-name
 self
+class,klass
+_parent
+__name
 superclass
 instanceMethods
-findSlot
+__findSlot
 #
 CurrentStackFrame
 findSlotMethod

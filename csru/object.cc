@@ -19,7 +19,7 @@ namespace sru {
 
 void InitializeObjectClass(const BasicObjectPtr& obj){
   Class::SetAsSubclass(obj, Library::Instance()->Nil());
-  obj->Set(sym::name(), SRUString::New(symbol("Object")));
+  obj->Set(sym::__name(), SRUString::New(symbol("Object")));
 }
 
 }  // namespace sru

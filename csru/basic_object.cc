@@ -50,8 +50,8 @@ string BasicObject::Inspect(int limit){
     s << "<" << r;
   } else {
     string name = "";
-    if(HasSlot(sym::name()))
-      name = SRUString::GetValue(Get(sym::name())).to_str();
+    if(HasSlot(sym::__name()))
+      name = SRUString::GetValue(Get(sym::__name())).to_str();
     if(name != ""){
       s << "<" << name;
     }else {

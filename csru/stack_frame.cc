@@ -135,8 +135,8 @@ class EvalVisitor : public Visitor{
     BasicObjectPtr e = env;
     const symbol& name = SRUString::GetValue(exp->Name());
     while(!(e->HasSlot(name))){
-      if(! e->HasSlot(sym::parent())) break;
-      e = e->Get(sym::parent());
+      if(! e->HasSlot(sym::_parent())) break;
+      e = e->Get(sym::_parent());
     }
     if(e->HasSlot(name)){
       // if found exist slot, use the slot.
@@ -163,12 +163,12 @@ class EvalVisitor : public Visitor{
       Push(env->Get(name));
       return;
     }
-    if(env->HasSlot(sym::findSlot())){
+    if(env->HasSlot(sym::__findSlot())){
       LOG << "EVAL-REF-FIND_SLOT";
       ptr_vector args;
       args.push_back(env);
       args.push_back(exp->Name());
-      BasicObjectPtr find_slot_proc = env->Get(sym::findSlot());
+      BasicObjectPtr find_slot_proc = env->Get(sym::__findSlot());
       Proc::Invoke(find_slot_proc, args);
       return;
     }

@@ -62,7 +62,7 @@ DECLARE_SRU_PROC(Parse);
 DECLARE_SRU_PROC(TrueResult);
 
 void InitializeParserObject(BasicObjectPtr& parser){
-  parser->Set(sym::name(), SRUString::New(symbol("sru_parser")));
+  parser->Set(sym::__name(), SRUString::New(symbol("sru_parser")));
   parser->Set(sym::parse(), CREATE_SRU_PROC(Parse));
   parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
 

@@ -39,5 +39,5 @@ class CodeTestCase : public sru_test::TestCase {
 #define TEST_CODE(name, src, result) \
   CodeTestCase TEST_##name("Regression_" #name, src, result)
 
-TEST_CODE(number,"1", "<Numeric(1) findSlot:<Proc({ -- Native Code -- }) ... >>");
+TEST_CODE(number,"1", "<Numeric(1) >");
 

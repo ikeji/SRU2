@@ -63,7 +63,6 @@ string BasicObject::Inspect(int limit){
   } else if(limit < titlesize){
     s << " ... ";
   } else {
-    s << " ";
     int sum = 0;
     vector<symbol> keys;
     for(fields_type::iterator it = fields.begin();
@@ -86,7 +85,7 @@ string BasicObject::Inspect(int limit){
     for(vector<symbol>::iterator it = keys.begin();
         it != keys.end();
         it++){
-      if(it != keys.begin()) s << ", ";
+      s << " ";
       if(show_details){
         s << it->to_str() << ":" << fields[it->getid()]->Inspect(detailsize);
       }else{

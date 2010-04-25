@@ -29,11 +29,11 @@ TEST(SRUNumeric_InitializeTest){
 
 TEST(SRUNumeric_InspectTest){
   LOG_ERROR << SRUNumeric::New(123)->Inspect();
-  assert(SRUNumeric::New(123)->Inspect() == "<Numeric(123) >");
+  assert(SRUNumeric::New(123)->Inspect() == "<Numeric(123)>");
   LOG_ERROR << SRUNumeric::New(0)->Inspect();
-  assert(SRUNumeric::New(0)->Inspect() == "<Numeric(0) >");
+  assert(SRUNumeric::New(0)->Inspect() == "<Numeric(0)>");
   LOG_ERROR << SRUNumeric::New(-123)->Inspect();
-  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric(-123) >");
+  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric(-123)>");
 }
 
 TEST(SRUNumeric_ParseTest){

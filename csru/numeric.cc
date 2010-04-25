@@ -130,7 +130,7 @@ int SRUNumeric::GetValue(BasicObjectPtr obj){
 
 string SRUNumeric::Inspect(){
   ostringstream o;
-  o << "<Numeric: " << pimpl->value << " >";
+  o << "Numeric(" << pimpl->value << ")";
   return o.str();
 }
 

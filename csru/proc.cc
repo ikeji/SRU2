@@ -47,7 +47,7 @@ void Proc::InitializeClassObject(const BasicObjectPtr& proc){
 }
 
 string Proc::Inspect(){
-  return "<Proc>";
+  return "Proc";
 }
 
 void Proc::Invoke(const BasicObjectPtr& proc,
@@ -107,7 +107,7 @@ string SRUProc::Inspect(){
   }
   if(!retval.to_str().empty()) ret += ":" + retval.to_str();
   if(!ret.empty()) ret = "|" + ret + "|";
-  ret = "<Proc: {";
+  ret = "Proc({";
   if(vargs.size() > 0 || !retval.to_str().empty()){
     ret += "|";
     for(vector<symbol>::const_iterator it = vargs.begin();
@@ -128,7 +128,7 @@ string SRUProc::Inspect(){
     assert(exp);
     ret += exp->InspectAST() + ";";
   }
-  return ret + "}>";
+  return ret + "})";
 }
 
 void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){

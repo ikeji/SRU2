@@ -33,5 +33,5 @@ void NativeProcWithStackSmash::Call(const BasicObjectPtr& proc,
 }
 
 string NativeProc::Inspect(){
-  return "<Proc: { -- Native Code -- }>";
+  return "Proc({ -- Native Code -- })";
 }

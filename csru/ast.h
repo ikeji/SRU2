@@ -30,7 +30,7 @@ class Expression : public Value{
   // TODO: use template?
   virtual void Visit(Visitor* visitor,BasicObjectPtr obj) = 0;
   virtual std::string Inspect(){
-    return std::string("<Expression:") + InspectAST() + ">";
+    return std::string("Expression(") + InspectAST() + ")";
   }
   virtual std::string InspectAST() = 0;
   static const char* name(){ return "Expression"; }

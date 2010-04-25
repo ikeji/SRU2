@@ -89,7 +89,7 @@ TEST(NativeProc_PassArgTest){
 }
 
 TEST(NativeProc_InspectTest){
-  LOG << CREATE_SRU_PROC(ReturnString)->Inspect();
-  assert("<Proc: { -- Native Code -- }>" ==
+  LOG_ERROR << CREATE_SRU_PROC(ReturnString)->Inspect();
+  assert("<Proc({ -- Native Code -- }) findSlot:<Proc({ -- Native Code -- }) ... >>" ==
          CREATE_SRU_PROC(ReturnString)->Inspect());
 }

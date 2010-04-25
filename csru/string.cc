@@ -33,7 +33,7 @@ const symbol& SRUString::GetValue(BasicObjectPtr obj){
 }
 
 string SRUString::Inspect(){
-  return string("<\"") + pimpl->value.to_str() + "\">";
+  return string("String(\"") + pimpl->value.to_str() + "\")";
 }
 
 SRUString::SRUString(const symbol& val):

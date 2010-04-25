@@ -28,10 +28,12 @@ TEST(SRUNumeric_InitializeTest){
 }
 
 TEST(SRUNumeric_InspectTest){
-  LOG << SRUNumeric::New(123)->Inspect();
-  assert(SRUNumeric::New(123)->Inspect() == "<Numeric: 123 >");
-  assert(SRUNumeric::New(0)->Inspect() == "<Numeric: 0 >");
-  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric: -123 >");
+  LOG_ERROR << SRUNumeric::New(123)->Inspect();
+  assert(SRUNumeric::New(123)->Inspect() == "<Numeric(123) findSlot:<Proc({ -- Native Code -- }) ... >>");
+  LOG_ERROR << SRUNumeric::New(0)->Inspect();
+  assert(SRUNumeric::New(0)->Inspect() == "<Numeric(0) findSlot:<Proc({ -- Native Code -- }) ... >>");
+  LOG_ERROR << SRUNumeric::New(-123)->Inspect();
+  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric(-123) findSlot:<Proc({ -- Native Code -- }) ... >>");
 }
 
 TEST(SRUNumeric_ParseTest){

@@ -11,7 +11,11 @@
 
 namespace sru {
 class BasicObjectPtr;
-class symbol;
+}
+
+namespace sym {
+const sru::symbol& src();
+const sru::symbol& pos();
 }
 
 namespace sru_test {
@@ -150,6 +154,14 @@ inline sru::BasicObjectPtr S(const sru::symbol& str){
 }
 inline sru::BasicObjectPtr S(const char* str){
   return S(sru::symbol(str));
+}
+
+inline sru::BasicObjectPtr E(const sru::BasicObjectPtr& src,
+                             const sru::BasicObjectPtr& pos,
+                             const sru::BasicObjectPtr obj){
+  obj->Set(sym::src(), src);
+  obj->Set(sym::pos(), pos);
+  return obj;
 }
 
 }  // namespace sru_test

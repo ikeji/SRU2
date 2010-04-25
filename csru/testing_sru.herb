@@ -13,6 +13,7 @@
 #include "stack_frame.h"
 #include "logging.h"
 #include "symbol.h"
+#include "library.h"
 
 namespace sru_test {
 
@@ -30,7 +31,7 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
     LOG << "Target: " << obj->Inspect();
     assert(proc);
   }
-  proc->Call(m, v);
+  proc->Call(sru::Library::Instance()->Nil(), m, v);
   sru::StackFrame* st = sru::Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   return st->ReturnValue();

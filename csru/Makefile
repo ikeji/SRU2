@@ -172,9 +172,14 @@ parser.o: parser.h basic_object.h logging.h symbol.h native_proc.h proc.h
 parser.o: object_container.h constants.h binding.h string.h numeric.h
 parser.o: library.h testing_ast.h ast.h testing_sru.h interpreter.h
 parser.o: stack_frame.h
+parser_constants.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_constants.o: object_container.h constants.h library.h string.h
+parser_constants.o: numeric.h testing_ast.h ast.h
 parser_helper.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_helper.o: object_container.h string.h numeric.h library.h ast.h
 parser_helper.o: constants.h testing_ast.h
+parser_spacing.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_spacing.o: object_container.h string.h numeric.h constants.h library.h
 parser_test.o: parser.h basic_object.h logging.h symbol.h testing.h
 parser_test.o: interpreter.h object_container.h numeric.h library.h
 parser_test.o: constants.h string.h
@@ -186,6 +191,8 @@ proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
 proc_test.o: library.h numeric.h constants.h
 scheme_like_test.o: parser.h basic_object.h logging.h symbol.h testing.h
 scheme_like_test.o: interpreter.h object_container.h
+sru_regression_test.o: testing.h logging.h basic_object.h symbol.h
+sru_regression_test.o: interpreter.h object_container.h
 stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h
 stack_frame.o: object_container.h string.h ast.h proc.h library.h binding.h
 stack_frame.o: constants.h

@@ -48,14 +48,14 @@ DEFINE_SRU_PROC_SMASH(True_ifTrue){
   assert(args.size() > 1);
   Proc* p = args[1]->GetData<Proc>();
   CHECK(p) << "ifTrue requires Proc";
-  p->Call(args[1], sru_test::A());
+  p->Call(statement, args[1], sru_test::A());
 }
 
 DEFINE_SRU_PROC_SMASH(True_ifTrueFalse){
   assert(args.size() > 2);
   Proc* p = args[1]->GetData<Proc>();
   CHECK(p) << "ifTrueFalse requires Proc";
-  p->Call(args[1], sru_test::A());
+  p->Call(statement, args[1], sru_test::A());
 }
 
 DEFINE_SRU_PROC(False_ifTrue){
@@ -66,7 +66,7 @@ DEFINE_SRU_PROC_SMASH(False_ifTrueFalse){
   assert(args.size() > 2);
   Proc* p = args[2]->GetData<Proc>();
   CHECK(p) << "ifTrueFalse requires Proc";
-  p->Call(args[2], sru_test::A());
+  p->Call(statement, args[2], sru_test::A());
 }
 
 }  // namespace sru

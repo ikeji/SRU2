@@ -59,7 +59,7 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
     ptr_vector next_args;
     next_args.push_back(parent);
     next_args.push_back(args[1]);
-    Proc::Invoke(parent->Get(sym::__findSlot()),next_args);
+    Proc::Invoke(statement, parent->Get(sym::__findSlot()), next_args);
     return;
   }
   LOG << "Not found.";

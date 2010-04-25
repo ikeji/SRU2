@@ -169,7 +169,7 @@ class EvalVisitor : public Visitor{
       args.push_back(env);
       args.push_back(exp->Name());
       BasicObjectPtr find_slot_proc = env->Get(sym::__findSlot());
-      Proc::Invoke(find_slot_proc, args);
+      Proc::Invoke(obj, find_slot_proc, args);
       return;
     }
     // if not found exist slot
@@ -193,7 +193,7 @@ class EvalVisitor : public Visitor{
 
     BasicObjectPtr proc = Pop();
     LOG << "EVAL-CALL: { ";
-    Proc::Invoke(proc,args);
+    Proc::Invoke(obj, proc, args);
     LOG << "EVAL-CALL: } ";
     // Caller must push return value.
   }

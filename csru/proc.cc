@@ -50,12 +50,13 @@ string Proc::Inspect(){
   return "Proc";
 }
 
-void Proc::Invoke(const BasicObjectPtr& proc,
+void Proc::Invoke(const BasicObjectPtr& statement,
+                  const BasicObjectPtr& proc,
                   const ptr_vector& args){
   // TODO: Show more meaningful error.
   Proc* p = proc->GetData<Proc>();
   CHECK(p) << "Can't invoke " << proc->Inspect() << " object";
-  p->Call(proc, args);
+  p->Call(statement, proc, args);
 }
 
 class SRUProc : public Proc{
@@ -70,7 +71,9 @@ class SRUProc : public Proc{
       expressions(Conv(expressions)),
       binding(binding.get()){
   }
-  void Call(const BasicObjectPtr& proc, const ptr_vector& args);
+  void Call(const BasicObjectPtr& statement,
+            const BasicObjectPtr& proc,
+            const ptr_vector& args);
   void Mark(){
     binding->Mark();
     MarkVector(&expressions);
@@ -131,7 +134,9 @@ string SRUProc::Inspect(){
   return ret + "})";
 }
 
-void SRUProc::Call(const BasicObjectPtr& proc, const ptr_vector& args){
+void SRUProc::Call(const BasicObjectPtr& statement,
+                   const BasicObjectPtr& proc,
+                   const ptr_vector& args){
   LOG << "Call sru function";
   BasicObjectPtr new_binding = Binding::New(binding);
   Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);

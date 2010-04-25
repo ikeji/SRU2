@@ -20,7 +20,8 @@ DEFINE_SRU_PROC(SimpleMethod){
 
 TEST(NativeProc_CallTest){
   ptr_vector v;
-  METHOD_SimpleMethod().Call(CREATE_SRU_PROC(SimpleMethod), v);
+  METHOD_SimpleMethod().Call(
+      Library::Instance()->Nil(), CREATE_SRU_PROC(SimpleMethod), v);
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue().get());
@@ -32,7 +33,7 @@ DEFINE_SRU_PROC_SMASH(SimpleMethodSmash){
 TEST(NativeProc_CallSmashTest){
   ptr_vector v;
   METHOD_SimpleMethodSmash().Call(
-      CREATE_SRU_PROC(SimpleMethodSmash),v);
+      Library::Instance()->Nil(), CREATE_SRU_PROC(SimpleMethodSmash),v);
 }
 
 DECLARE_SRU_PROC(SimpleMethod2);
@@ -42,7 +43,7 @@ TEST(NativeProc_DeclareTest){
   BasicObjectPtr proc = CREATE_SRU_PROC(SimpleMethod2);
   Proc* p = proc->GetData<Proc>();
   assert(p);
-  p->Call(proc,v);
+  p->Call(Library::Instance()->Nil(), proc, v);
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
   assert(st->ReturnValue().get());
@@ -62,7 +63,7 @@ TEST(NativeProc_EvalTest){
   Proc* proc = obj->GetData<Proc>();
   assert(proc);
   ptr_vector v;
-  proc->Call(obj,v);
+  proc->Call(Library::Instance()->Nil(),obj,v);
 
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);
@@ -81,7 +82,7 @@ TEST(NativeProc_PassArgTest){
   assert(proc);
   ptr_vector v;
   v.push_back(Library::Instance()->Numeric());
-  proc->Call(obj,v);
+  proc->Call(Library::Instance()->Nil(),obj,v);
 
   StackFrame* st = Interpreter::Instance()->CurrentStackFrame();
   assert(st);

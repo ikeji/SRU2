@@ -8,6 +8,7 @@
 #include "numeric.h"
 #include "constants.h"
 #include "library.h"
+#include "parser_util.h"
 
 using namespace sru;
 using namespace std;
@@ -26,10 +27,7 @@ DEFINE_SRU_PROC(spc){
     epos++;
   }
   LOG << "spc result: epos = " << epos;
-  BasicObjectPtr ret = BasicObject::New();
-  ret->Set(sym::status(), Library::Instance()->True());
-  ret->Set(sym::pos(), SRUNumeric::New(epos));
-  return ret;
+  return CreateTrue(epos, Library::Instance()->Nil());
 }
 
 DEFINE_SRU_PROC(spc_or_lf){
@@ -44,12 +42,8 @@ DEFINE_SRU_PROC(spc_or_lf){
     epos++;
   }
   LOG << "spc result: epos = " << epos;
-  BasicObjectPtr ret = BasicObject::New();
-  ret->Set(sym::status(), Library::Instance()->True());
-  ret->Set(sym::pos(), SRUNumeric::New(epos));
-  return ret;
+  return CreateTrue(epos, Library::Instance()->Nil());
 }
-
 
 
 } // namespace sru_parser

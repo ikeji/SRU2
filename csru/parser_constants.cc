@@ -6,9 +6,9 @@
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
-#include "library.h"
 #include "string.h"
 #include "numeric.h"
+#include "parser_util.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -16,35 +16,6 @@
 using namespace sru;
 using namespace std;
 using namespace sru_test;
-
-BasicObjectPtr CreateFalse(BasicObjectPtr pos, BasicObjectPtr error_message){
-  BasicObjectPtr ret = BasicObject::New();
-  ret->Set(sym::status(), Library::Instance()->False());
-  ret->Set(sym::pos(), pos);
-  ret->Set(sym::error(), error_message);
-  return ret;
-}
-
-BasicObjectPtr CreateFalse(BasicObjectPtr pos, const char* error_message){
-  return CreateFalse(pos, SRUString::New(symbol(error_message)));
-}
-
-BasicObjectPtr CreateFalse(int pos, const char* error_message){
-  return CreateFalse(SRUNumeric::New(pos),
-      SRUString::New(symbol(error_message)));
-}
-
-BasicObjectPtr CreateTrue(BasicObjectPtr pos, BasicObjectPtr ast){
-  BasicObjectPtr ret = BasicObject::New();
-  ret->Set(sym::status(), Library::Instance()->True());
-  ret->Set(sym::pos(), pos);
-  ret->Set(sym::ast(), ast);
-  return ret;
-}
-
-BasicObjectPtr CreateTrue(int pos, BasicObjectPtr ast){
-  return CreateTrue(SRUNumeric::New(pos), ast);
-}
 
 namespace sru_parser {
 

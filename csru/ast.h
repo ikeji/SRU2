@@ -170,8 +170,11 @@ class ProcExpression : public Expression{
   void Mark();
 
   std::vector<sru::symbol>* Varg();
+  void SetVarg(const std::vector<sru::symbol>& varg);
   const sru::symbol& RetVal();
+  void SetRetVal(const sru::symbol& retval);
   object_vector* Expressions();
+  void SetExpressions(const object_vector& expressions);
   
   std::string InspectAST();
  private:

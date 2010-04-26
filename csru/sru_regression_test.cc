@@ -32,6 +32,9 @@ class CodeTestCase : public sru_test::TestCase {
     BasicObjectPtr r = Interpreter::Instance()->Eval(src);
     assert(r.get());
     LOG_ERROR << r->Inspect();
+    if(r->Inspect() != result){
+      LOG_ALWAYS << "Result: " << r->Inspect();
+    }
     assert(r->Inspect() == result);
     LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
   }
@@ -53,8 +56,13 @@ TEST_CODE(number,"1", "<Numeric(1)>");
 TEST_CODE(number2,"123", "<Numeric(123)>");
 TEST_CODE(string,"\"a\"", "<String(\"a\")>");
 TEST_CODE(string2,"\"abc\"", "<String(\"abc\")>");
+TEST_CODE(lambda,"{x}", "<Proc({x;})>");
+TEST_CODE(lambda2,"{|a|x}", "<Proc({|a|x;})>");
+TEST_CODE(lambda3,"{|a,b|x}", "<Proc({|a,b|x;})>");
+TEST_CODE(lambda4,"{||x}", "<Proc({x;})>");
+TEST_CODE(lambda5,"{a|x}", "<Proc({|a|x;})>");
+TEST_CODE(lambda6,"{a,b|x}", "<Proc({|a,b|x;})>");
 /*
-TEST_CODE(lambda,"{|x|x;}", "<Proc: {|x|x;}>");
 TEST_CODE(let,"x = 3", "<Numeric: 1 >");
 TEST_CODE2(let-result, "x = 3", "x", "<Numeric: 3 >");
 TEST_CODE(let-proc, "s = {|x|x;}", "<Proc: {|x|x;}>");

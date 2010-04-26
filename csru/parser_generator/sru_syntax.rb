@@ -136,21 +136,30 @@ primary <= primitive
 
 primitive <= reference | literal
 
-#literal <= closure_literal | const_literal
-literal <= const_literal
+literal <= closure_literal | const_literal
 
 reference <= ident
 
+manipulator :closure_begin, :closure_merge_varg, :closure_statement, :closure_end
 closure_literal <=
-spc * "{" *
-o(closure_varg) *
-r( spc_or_lf * statement ) *
- spc_or_lf * "}"
+spc * "{" * closure_begin *
+o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) *
+r(
+  spc_or_lf * statement * 
+  closure_statement(:closure_begin, :statement)
+) * spc_or_lf * "}" * closure_end(:closure_begin)
 
-closure_varg <= spc * o( "|" ) *
-o( spc_or_lf * ident *
-r( spc_or_lf * "," * spc_or_lf * ident ) ) *
-o( closure_retarg ) * spc_or_lf * "|"
+manipulator :closure_varg_begin, :closure_varg_idents,
+            :closure_varg_retarg, :closure_varg_end
+closure_varg <= spc * o( "|" ) * closure_varg_begin *
+o( spc_or_lf * ident * closure_varg_idents(:closure_varg_begin, :ident) *
+r(
+  spc_or_lf * "," * spc_or_lf * ident *
+  closure_varg_idents(:closure_varg_begin, :ident)
+) ) *
+o( ":" * ident * 
+  closure_varg_retarg(:closure_varg_begin, :ident)
+) * spc_or_lf * "|" * closure_varg_end(:closure_varg_begin)
 
 closure_retarg <= ":" * ident
 

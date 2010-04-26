@@ -21,6 +21,7 @@ parser.o \
 parser_constants.o \
 parser_spacing.o \
 parser_util.o \
+parser_closure.o \
 proc.o \
 stack_frame.o \
 string.o \

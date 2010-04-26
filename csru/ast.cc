@@ -188,11 +188,20 @@ ProcExpression::~ProcExpression(){
 vector<symbol>* ProcExpression::Varg(){
   return &(pimpl->varg);
 }
+void ProcExpression::SetVarg(const vector<symbol>& varg){
+  pimpl->varg = varg;
+}
 const symbol& ProcExpression::RetVal(){
   return pimpl->retval;
 }
+void ProcExpression::SetRetVal(const symbol& retval){
+  pimpl->retval = retval;
+}
 object_vector* ProcExpression::Expressions(){
   return &(pimpl->expressions);
+}
+void ProcExpression::SetExpressions(const object_vector& expressions){
+  pimpl->expressions = expressions;
 }
 void ProcExpression::Mark(){
   for(object_vector::iterator it = pimpl->expressions.begin();

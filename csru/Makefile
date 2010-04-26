@@ -22,6 +22,7 @@ parser_constants.o \
 parser_spacing.o \
 parser_util.o \
 parser_closure.o \
+parser_call.o \
 proc.o \
 stack_frame.o \
 string.o \
@@ -174,6 +175,12 @@ parser.o: parser.h basic_object.h logging.h symbol.h native_proc.h proc.h
 parser.o: object_container.h constants.h binding.h string.h numeric.h
 parser.o: library.h testing_ast.h ast.h testing_sru.h interpreter.h
 parser.o: stack_frame.h
+parser_call.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_call.o: object_container.h constants.h library.h numeric.h
+parser_call.o: parser_util.h testing_ast.h ast.h string.h
+parser_closure.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_closure.o: object_container.h constants.h library.h numeric.h
+parser_closure.o: parser_util.h testing_ast.h ast.h string.h
 parser_constants.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_constants.o: object_container.h constants.h string.h numeric.h
 parser_constants.o: parser_util.h testing_ast.h ast.h

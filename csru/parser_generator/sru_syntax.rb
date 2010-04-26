@@ -117,10 +117,6 @@ spc_or_lf * ")"
 ) *
 proc_call
 
-#method_call <=
-#primary * proc_call
-method_call <= primary
-
 proc_call <=
 spc * r(
 "(" *
@@ -128,11 +124,29 @@ o( statement * r( spc_or_lf * "," * statement ) ) *
 spc_or_lf * ")" |
 "[" * statement * spc_or_lf * "]" )
 
-#primary <=
-#primitive |
-#spc * "-" * primary |
-#"(" * statement * spc_or_lf * ")"
-primary <= primitive
+manipulator :method_call_primary, :method_call_method_begin, :method_call_method_arg, :method_call_method_end, :method_call_method_index, :method_call_end
+method_call <=
+primary * method_call_primary(:primary) *
+spc * r((
+  "(" * method_call_method_begin(:primary) *
+  o(
+    statement * method_call_method_arg(:method_call_method_begin, :statement) * 
+    r(
+      spc_or_lf * "," * statement * method_call_method_arg(:method_call_method_begin, :statement)
+    )
+  ) *
+  spc_or_lf * ")" * method_call_method_end(:method_call_primary, :method_call_method_begin)
+)|(
+  "[" * statement * spc_or_lf * "]" * method_call_method_index(:method_call_primary, :statement)
+)) * method_call_end(:method_call_primary)
+
+manipulator :primary_minous, :parent
+primary <=
+primitive |
+spc * (
+"-" * primary * primary_minous(:primary) |
+"(" * spc_or_lf * statement * spc_or_lf * ")" * parent(:statement)
+)
 
 primitive <= reference | literal
 

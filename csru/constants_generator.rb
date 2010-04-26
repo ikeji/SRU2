@@ -10,6 +10,8 @@ __findSlot
 #
 CurrentStackFrame
 findSlotMethod
+#
+$$,doldol
 # Classes
 nil
 Binding
@@ -40,6 +42,10 @@ plus
 minus
 asterisk
 slash
+invert
+# map
+get
+set
 # proc
 loop
 whileTrue

@@ -107,6 +107,12 @@ DEFINE_SRU_PROC(Slash){
   return SRUNumeric::New(left/right);
 }
 
+DEFINE_SRU_PROC(Invert){
+  assert(args.size() >= 1);
+  const int& v = SRUNumeric::GetValue(args[0]);
+  return SRUNumeric::New(-v);
+}
+
 void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::SetAsSubclass(numeric, NULL);
   numeric->Set(sym::parse(),CREATE_SRU_PROC(NumericParse));
@@ -119,6 +125,7 @@ void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minous));
   Class::SetAsInstanceMethod(numeric, sym::asterisk(), CREATE_SRU_PROC(Asterisk));
   Class::SetAsInstanceMethod(numeric, sym::slash(), CREATE_SRU_PROC(Slash));
+  Class::SetAsInstanceMethod(numeric, sym::invert(), CREATE_SRU_PROC(Invert));
 }
 
 int SRUNumeric::GetValue(BasicObjectPtr obj){

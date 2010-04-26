@@ -62,6 +62,8 @@ TEST_CODE(lambda3,"{|a,b|x}", "<Proc({|a,b|x;})>");
 TEST_CODE(lambda4,"{||x}", "<Proc({x;})>");
 TEST_CODE(lambda5,"{a|x}", "<Proc({|a|x;})>");
 TEST_CODE(lambda6,"{a,b|x}", "<Proc({|a,b|x;})>");
+TEST_CODE(call, "{3}()", "<Numeric(3)>");
+TEST_CODE(call2, "{|x|x}(3)", "<Numeric(3)>");
 /*
 TEST_CODE(let,"x = 3", "<Numeric: 1 >");
 TEST_CODE2(let-result, "x = 3", "x", "<Numeric: 3 >");

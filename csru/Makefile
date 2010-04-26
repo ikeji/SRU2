@@ -189,8 +189,6 @@ proc.o: native_proc.h string.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
 proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
 proc_test.o: library.h numeric.h constants.h
-scheme_like_test.o: parser.h basic_object.h logging.h symbol.h testing.h
-scheme_like_test.o: interpreter.h object_container.h
 sru_regression_test.o: testing.h logging.h basic_object.h symbol.h
 sru_regression_test.o: interpreter.h object_container.h
 stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h

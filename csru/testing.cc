@@ -28,6 +28,7 @@ TestCollection::~TestCollection(){
 }
 
 void TestCollection::AddTestCase(const string& name,TestCase* test_case){
+  assert(pimpl->tests.find(name) == pimpl->tests.end());
   pimpl->tests.insert(make_pair(name,test_case));
 }
 

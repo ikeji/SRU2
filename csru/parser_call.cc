@@ -30,7 +30,7 @@ DEFINE_SRU_PROC(method_call_method_begin){ // this, src, pos, primary
   assert(args.size() >= 3);
   LOG << "method_call_method_begin";
   BasicObjectPtr pri = args[3]->Get(sym::ast());
-  return CreateTrue(args[2], C(pri));
+  return CreateTrue(args[2], E(args[1],args[2], C(pri)));
 }
 
 DEFINE_SRU_PROC(method_call_method_arg){ // this, src, pos, method_call_method_begin, statement
@@ -77,13 +77,15 @@ DEFINE_SRU_PROC(primary_minous){ // this, src, pos, primary
   assert(args.size() >= 4);
   LOG << "primary_minous";
   return CreateTrue(args[2],
-                    C(
-                      P(sym::doldol(),
-                        C(R(R(sym::doldol()), sym::invert()),
-                          R(sym::doldol())
-                        )
-                      ),
-                      args[3]->Get(sym::ast())
+                    E(args[1],args[2],
+                      C(
+                        P(sym::doldol(),
+                          C(R(R(sym::doldol()), sym::invert()),
+                            R(sym::doldol())
+                          )
+                        ),
+                        args[3]->Get(sym::ast())
+                      )
                     )
                    );
 }

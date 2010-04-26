@@ -23,7 +23,7 @@ namespace sru_parser {
 DEFINE_SRU_PROC(closure_begin){ // this, src, pos, 
   assert(args.size() >= 3);
   LOG << "closure_begin";
-  return CreateTrue(args[2], P());
+  return CreateTrue(args[2], E(args[1], args[2], P()));
 }
 
 DEFINE_SRU_PROC(closure_merge_varg){ // this, src, pos, closure_begin, closure_varg

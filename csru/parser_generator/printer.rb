@@ -12,7 +12,11 @@ class Printer
     peg.left.accept(self) + " | " + peg.right.accept(self)
   end
   def visit_And(peg)
-    peg.left.accept(self) + " " + peg.right.accept(self)
+    l = peg.left.accept(self)
+    l = "( " + l + " )" if peg.left.is_a? Or
+    r = peg.right.accept(self)
+    r = "( " + r + " )" if peg.right.is_a? Or
+    l + " " + r
   end
   def visit_NonTerminalSymbol(peg)
     peg.symbol.to_s
@@ -30,7 +34,7 @@ class Printer
     "[" + peg.cont.accept(self) + "]"
   end
   def visit_Manipulator(peg)
-    " { " + peg.name.to_s + " } "
+    " {{ " + peg.name.to_s + " }} "
   end
 end
 

@@ -61,7 +61,7 @@ DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primar
           args[4]->Get(sym::ast())
         )
       ),
-    args[3]->Get(sym::ast())
+      args[3]->Get(sym::ast())
     );
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);

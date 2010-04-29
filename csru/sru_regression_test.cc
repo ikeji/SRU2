@@ -64,6 +64,8 @@ TEST_CODE(lambda5,"{a|x}", "<Proc({|a|x;})>");
 TEST_CODE(lambda6,"{a,b|x}", "<Proc({|a,b|x;})>");
 TEST_CODE(call, "{3}()", "<Numeric(3)>");
 TEST_CODE(call2, "{|x|x}(3)", "<Numeric(3)>");
+TEST_CODE(inst_call, "3.plus(2)", "<Numeric(5)>");
+TEST_CODE(inst_call_call, "3.invert().invert()", "<Numeric(3)>");
 /*
 TEST_CODE(let,"x = 3", "<Numeric: 1 >");
 TEST_CODE2(let-result, "x = 3", "x", "<Numeric: 3 >");

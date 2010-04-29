@@ -2,8 +2,7 @@
 symbol :program, :statements, :statement, :let_statement, :flow_statement, :if_statement,
        :while_statement, :class_statement, :def_statement, :expression, :if_main,
        :bool_term, :comp, :bit_sim, :bit_term, :bit_shift, :sim, :term, :factor, 
-       :instance_method, :instance_call, :method_call, :proc_call,
-       :primary, :primitive, :reference, :literal,
+       :instance_method, :method_call, :primary, :primitive, :reference, :literal,
        :closure_literal, :closure_varg, :closure_retarg, :const_literal
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string
@@ -101,36 +100,42 @@ term <= factor
 #instance_method
 factor <= instance_method
 
-#instance_method <=
-#(
-#spc * "." * spc_or_lf * instance_call |
-#method_call
-#) * "." *  spc_or_lf * instance_call
-manipulator :instance_method_implicit_self, :instance_method_self
+manipulator :instance_method_begin, :instance_method_self, :instance_method_method_begin, :instance_method_method_arg, :instance_method_method_end, :instance_method_ref, :instance_method_call_begin, :instance_method_call_arg, :instance_method_call_end, :instance_method_call_index, :instance_method_end
 instance_method <=
-((
-  spc * "." * spc_or_lf * ident *
-  instance_method_implicit_self(:ident) *
-  instance_method_self(:instance_method_implicit_self)
-)|(
-  method_call * instance_method_self(:method_call)
-))
-
-instance_call <=
-spc * ident *
+instance_method_begin *
 o(
-"(" * spc_or_lf * statement * spc_or_lf *
-r( "," * spc_or_lf * statement * spc_or_lf ) *
-spc_or_lf * ")"
+  method_call * instance_method_self(:instance_method_begin, :method_call)
 ) *
-proc_call
-
-proc_call <=
-spc * r(
-"(" *
-o( statement * r( spc_or_lf * "," * statement ) ) *
-spc_or_lf * ")" |
-"[" * statement * spc_or_lf * "]" )
+r( "." * ident * spc *
+  ((
+    "(" * instance_method_method_begin(:ident) *
+    o( 
+      spc_or_lf * statement *
+      instance_method_method_arg(:instance_method_method_begin, :statement) *
+      r( spc_or_lf * "," * spc_or_lf * statement *
+         instance_method_method_arg(:instance_method_method_begin, :statement) * spc_or_lf )
+    ) *
+    spc_or_lf * ")" *
+    instance_method_method_end(:instance_method_method_begin, :instance_method_begin)
+  )|(
+    instance_method_ref(:instance_method_begin, :ident)
+  )) *
+  r((
+    "(" * instance_method_call_begin(:instance_method_begin) *
+    o(
+      spc_or_lf * statement *
+      instance_method_call_arg(:instance_method_call_begin, :statement) *
+      r(
+        spc_or_lf * "," * spc_or_lf * statement *
+        instance_method_call_arg(:instance_method_call_begin, :statement)
+      )
+    ) * spc_or_lf * ")" *
+    instance_method_call_end(:instance_method_begin, :instance_method_call_begin)
+  )|(
+    "[" * statement * spc_or_lf * "]" *
+    instance_method_call_index(:instance_method_begin, :statement)
+  ))
+) * instance_method_end(:instance_method_begin)
 
 manipulator :method_call_primary, :method_call_method_begin, :method_call_method_arg, :method_call_method_end, :method_call_method_index, :method_call_end
 method_call <=

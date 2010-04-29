@@ -70,7 +70,7 @@ endif
 
 all: parser sru
 
-test: all
+test: all sru_test
 	./sru_test
 
 sru: $(OBJS) main.o

@@ -121,12 +121,12 @@ class ParserBuilder
           found = nil
           @manipulators.each do|m|
             next if(m.name != mani)
-            raise Exception.new("duplicated manipulator name") if m.varg_list != arg
+            raise Exception.new("duplicated manipulator name") if m.varg_list.size != arg.size
             found = m
             break
           end
-          return found if found
           m = Manipulator.new(mani, arg)
+          return m if found
           @manipulators << m
           return m
         end

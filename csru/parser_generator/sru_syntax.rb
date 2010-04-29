@@ -110,9 +110,10 @@ manipulator :instance_method_implicit_self, :instance_method_self
 instance_method <=
 ((
   spc * "." * spc_or_lf * ident *
-  instance_method_implicit_self(:ident)
+  instance_method_implicit_self(:ident) *
+  instance_method_self(:instance_method_implicit_self)
 )|(
-  method_call
+  method_call * instance_method_self(:method_call)
 ))
 
 instance_call <=

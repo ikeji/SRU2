@@ -29,4 +29,10 @@ DEFINE_SRU_PROC(instance_method_implicit_self){ // this, src, pos, ident
   return args[3];
 }
 
+DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_implicit_self
+  assert(args.size() >= 4);
+  LOG << "instance_method_self";
+  return CreateTrue(args[2], args[3]->Get(sym::ast()));
+}
+
 }  // namespace sru_parser

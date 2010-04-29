@@ -12,7 +12,7 @@ using namespace sru;
 using namespace std;
 using namespace sru_logging;
 
-void NativeProc::Call(const BasicObjectPtr& statement,
+void NativeProc::Call(const BasicObjectPtr& context,
                       const BasicObjectPtr& proc,
                       const ptr_vector& arg){
   // TODO: Refacter this.
@@ -25,14 +25,14 @@ void NativeProc::Call(const BasicObjectPtr& statement,
       log.ostream() << (*it)->Inspect() << " ";
     }
   }
-  BasicObjectPtr ret = method_body(statement, proc, arg);
+  BasicObjectPtr ret = method_body(context, proc, arg);
   StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
   current_frame->PushResult(ret);
 }
-void NativeProcWithStackSmash::Call(const BasicObjectPtr& statement,
+void NativeProcWithStackSmash::Call(const BasicObjectPtr& context,
                                     const BasicObjectPtr& proc,
                                     const ptr_vector& arg){
-  method_body_smash(statement, proc, arg);
+  method_body_smash(context, proc, arg);
 }
 
 string NativeProc::Inspect(){

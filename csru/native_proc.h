@@ -18,10 +18,10 @@ class BasicObjectPtr;
 
 class NativeProc: public Proc{
  public:
-  void Call(const BasicObjectPtr& statement,
+  void Call(const BasicObjectPtr& context,
             const BasicObjectPtr& ptr,
             const ptr_vector& args);
-  virtual BasicObjectPtr method_body(const BasicObjectPtr& statement,
+  virtual BasicObjectPtr method_body(const BasicObjectPtr& context,
                                      const BasicObjectPtr& proc,
                                      const ptr_vector& args) = 0;
   virtual std::string Inspect();
@@ -30,14 +30,14 @@ class NativeProc: public Proc{
 // TODO: Change object hierarchy.
 class NativeProcWithStackSmash: public NativeProc{
  public:
-  void Call(const BasicObjectPtr& statement,
+  void Call(const BasicObjectPtr& context,
             const BasicObjectPtr& ptr,
             const ptr_vector& args);
   // TODO: Remove this.
-  BasicObjectPtr method_body(const BasicObjectPtr& statement,
+  BasicObjectPtr method_body(const BasicObjectPtr& context,
                              const BasicObjectPtr& proc,
                              const ptr_vector& args){assert(false);return NULL;};
-  virtual void method_body_smash(const BasicObjectPtr& statement,
+  virtual void method_body_smash(const BasicObjectPtr& context,
                                  const BasicObjectPtr& proc,
                                  const ptr_vector& args) = 0;
 };
@@ -45,7 +45,7 @@ class NativeProcWithStackSmash: public NativeProc{
 #define DEFINE_SRU_PROC(name) \
   class METHOD_##name:public NativeProc { \
    private: \
-    BasicObjectPtr method_body(const BasicObjectPtr& statement, \
+    BasicObjectPtr method_body(const BasicObjectPtr& context, \
                                const BasicObjectPtr& proc, \
                                const ptr_vector& args); \
   }; \
@@ -54,14 +54,14 @@ class NativeProcWithStackSmash: public NativeProc{
     METHOD_##name::Initialize(result); \
     return result; \
   } \
-  BasicObjectPtr METHOD_##name::method_body(const BasicObjectPtr& statement, \
+  BasicObjectPtr METHOD_##name::method_body(const BasicObjectPtr& context, \
                                             const BasicObjectPtr& proc, \
                                             const ptr_vector& args)
 
 #define DEFINE_SRU_PROC_SMASH(name) \
   class METHOD_##name:public NativeProcWithStackSmash { \
    private: \
-    void method_body_smash(const BasicObjectPtr& statement, \
+    void method_body_smash(const BasicObjectPtr& context, \
                            const BasicObjectPtr& proc, \
                            const ptr_vector& args); \
   }; \
@@ -70,7 +70,7 @@ class NativeProcWithStackSmash: public NativeProc{
     METHOD_##name::Initialize(result); \
     return result; \
   } \
-  void METHOD_##name::method_body_smash(const BasicObjectPtr& statement, \
+  void METHOD_##name::method_body_smash(const BasicObjectPtr& context, \
                                         const BasicObjectPtr& proc, \
                                         const ptr_vector& args)
 

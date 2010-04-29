@@ -23,12 +23,12 @@ class Proc : public Value{
              const symbol& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding);
-  virtual void Call(const BasicObjectPtr& statement,
+  virtual void Call(const BasicObjectPtr& context,
                     const BasicObjectPtr& proc,
                     const ptr_vector& args) = 0;
   virtual std::string Inspect();
   static void InitializeClassObject(const BasicObjectPtr& proc);
-  static void Invoke(const BasicObjectPtr& statement,
+  static void Invoke(const BasicObjectPtr& context,
                      const BasicObjectPtr& proc,
                      const ptr_vector& args);
   static void Initialize(const BasicObjectPtr& ptr);

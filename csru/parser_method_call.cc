@@ -43,10 +43,12 @@ DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
   BasicObjectPtr r = args[3]->Get(sym::ast());
   RefExpression* ref = r->GetData<RefExpression>();
   CHECK(ref) << "instance_method_method_begin needs ref expression : " << args[3]->Inspect();
-  return CreateTrue(args[2], C(
-                               R(R(sym::doldol()),ref->Name()),
-                               R(sym::doldol())
-                               ));
+  return CreateTrue(args[2], E(args[1], args[2],
+                               C(
+                                 R(R(sym::doldol()),ref->Name()),
+                                 R(sym::doldol())
+                               )
+                             ));
 }
 
 DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_method_begin, statement
@@ -64,12 +66,12 @@ DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_
   LOG << "instance_method_method_end";
   BasicObjectPtr self = args[4]->Get(sym::ast());
   BasicObjectPtr call =
-    C(
+    E(args[1], args[2], C(
       P(sym::doldol(),
         args[3]->Get(sym::ast())
       ),
       self
-    );
+    ));
   args[4]->Set(sym::ast(), call);
   return CreateTrue(args[2], call);
 }
@@ -91,7 +93,7 @@ DEFINE_SRU_PROC(instance_method_call_begin){ // this, src, pos, instance_method_
   assert(args.size() >= 3);
   LOG << "instance_method_call_begin";
   BasicObjectPtr self = args[3]->Get(sym::ast());
-  return CreateTrue(args[2], C(self));
+  return CreateTrue(args[2], E(args[1], args[2], C(self)));
 }
 
 DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_call_begin, statement
@@ -115,16 +117,18 @@ DEFINE_SRU_PROC(instance_method_call_end){ // this, src, pos, instance_method_be
 DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_begin, statement
   assert(args.size() >= 5);
   LOG << "instance_method_call_index";
-  BasicObjectPtr ast =
+  BasicObjectPtr ast = E(args[1], args[2],
     C(
       P(sym::doldol(),
-        C(R(R(sym::doldol()), sym::get()),
-          R(sym::doldol()),
-          args[4]->Get(sym::ast())
+        E(args[1], args[2],
+          C(R(R(sym::doldol()), sym::get()),
+            R(sym::doldol()),
+            args[4]->Get(sym::ast())
+          ) 
         )
       ),
       args[3]->Get(sym::ast())
-    );
+    ));
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);
 }

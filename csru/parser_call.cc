@@ -80,8 +80,10 @@ DEFINE_SRU_PROC(primary_minous){ // this, src, pos, primary
                     E(args[1],args[2],
                       C(
                         P(sym::doldol(),
-                          C(R(R(sym::doldol()), sym::invert()),
-                            R(sym::doldol())
+                          E(args[1],args[2],
+                            C(R(R(sym::doldol()), sym::invert()),
+                              R(sym::doldol())
+                            )
                           )
                         ),
                         args[3]->Get(sym::ast())

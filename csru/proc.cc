@@ -17,6 +17,7 @@
 #include "class.h"
 #include "native_proc.h"
 #include "string.h"
+#include "numeric.h"
 #include "class.h"
 #include "logging.h"
 #include "symbol.h"
@@ -50,11 +51,45 @@ string Proc::Inspect(){
   return "Proc";
 }
 
+void PrintErrorPosition(const BasicObjectPtr& context){
+  // Abort if context not found.
+  if (!(context->HasSlot(sym::src()) && 
+        context->HasSlot(sym::pos()))) return;
+  const string& src = SRUString::GetValue(context->Get(sym::src())).to_str();
+  const size_t pos = SRUNumeric::GetValue(context->Get(sym::pos()));
+  // Unmatchd src.
+  if (src.size() < pos) return;
+  size_t start = pos;
+  while(true){
+    if(src[start] == '\n' || src[start] == '\r') break;
+    if(start == 0) break;
+    start--;
+  }
+  size_t end = pos;
+  string post = "";
+  while(true){
+    if(end >= src.size()) break;
+    if(src[end] == '\n' || src[end] == '\r') break;
+    if(end-start > 50){
+      post = " ... ";
+      break;
+    }
+    end++;
+  }
+  LOG_ALWAYS << src.substr(start, end-start) << post;
+  string spc = "";
+  for(size_t i=0;i<pos-start;i++) spc+=" ";
+  LOG_ALWAYS << spc + "^";
+}
+
 void Proc::Invoke(const BasicObjectPtr& context,
                   const BasicObjectPtr& proc,
                   const ptr_vector& args){
   // TODO: Show more meaningful error.
   Proc* p = proc->GetData<Proc>();
+  if (!p) {
+    PrintErrorPosition(context);
+  }
   CHECK(p) << "Can't invoke " << proc->Inspect() << " object";
   p->Call(context, proc, args);
 }

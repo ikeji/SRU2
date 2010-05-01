@@ -14,7 +14,9 @@
 #include "native_proc.h"
 #include "logging.h"
 #include "constants.h"
+#include "numeric.h"
 #include "string.h"
+#include "utils.h"
 
 using namespace sru;
 using namespace std;
@@ -118,6 +120,9 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   BasicObjectPtr obj = Eval(call_parser);
   if(!obj->HasSlot(sym::ast()) ||
      obj->Get(sym::ast()) == Library::Instance()->Nil()){
+    if(obj->HasSlot(sym::pos())){
+      PrintErrorPosition(str, SRUNumeric::GetValue(obj->Get(sym::pos())));
+    }
     // TODO: Check more detail..
     LOG_ERROR << "Parse error: " <<
       SRUString::GetValue(

@@ -28,6 +28,7 @@ proc.o \
 stack_frame.o \
 string.o \
 symbol.o \
+utils.o \
 
 TESTS    = \
 ast_test.o \

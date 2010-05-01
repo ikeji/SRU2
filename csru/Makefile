@@ -69,7 +69,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 
-all: parser sru
+all: parser sru tags
 
 test: all sru_test
 	./sru_test

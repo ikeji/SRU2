@@ -70,7 +70,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 
-all: parser sru tags
+all: sru tags
 
 test: all sru_test
 	./sru_test
@@ -98,11 +98,15 @@ tags:
 	ruby -e 'n=2;ARGF.each{|l|puts "#{l}#line #{n} \"#{ARGF.filename}\"";n+=1}' $< | $(ERB) > $@.tmp
 	mv $@.tmp $@
 
-parser.cc: parser parser_generator/parser.cc
+parser.cc: parser_generator/parser.cc
 	cp $(CPFLAGS) parser_generator/parser.cc parser.cc
 
-symbols: parser parser_generator/symbols
+parser_generator/parser.cc: parser
+
+symbols: parser_generator/symbols
 	cp $(CPFLAGS) parser_generator/symbols symbols
+
+parser_generator/symbols: parser
 
 constants.h: constants_generator.rb symbols
 	ruby constants_generator.rb -h > $@.tmp

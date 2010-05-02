@@ -82,11 +82,11 @@ sru_test: testing.o $(TESTS) $(OBJS)
 	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
 
 clean:
-	make -C parser_generator clean
+	$(MAKE) -C parser_generator clean
 	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES)
 
 depend: parser $(GENFILES)
-	make -C parser_generator depend
+	$(MAKE) -C parser_generator depend
 	makedepend *.cc
 
 tags:
@@ -117,7 +117,7 @@ constants.cc: constants_generator.rb symbols
 	mv $@.tmp $@
 
 parser:
-	make -C parser_generator
+	$(MAKE) -C parser_generator
 
 # DO NOT DELETE
 

@@ -18,12 +18,13 @@ object.o \
 object_pool.o \
 object_container.o \
 parser.o \
+parser_call.o \
+parser_closure.o \
 parser_constants.o \
+parser_let.o \
+parser_method_call.o \
 parser_spacing.o \
 parser_util.o \
-parser_closure.o \
-parser_call.o \
-parser_method_call.o \
 proc.o \
 stack_frame.o \
 string.o \

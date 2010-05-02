@@ -13,12 +13,13 @@ program <= statements
 statements <= spc_or_lf * statement
 
 #statement <= spc_or_lf * ( let_statement | flow_statement )
-statement <= flow_statement
+statement <= let_statement | flow_statement
 
-let_statement <= (
-  flow_statement  |  # only returns ref
-  spc_or_lf * ident
-) * spc * "=" * spc_or_lf * statement
+manipulator :let_statement_end
+let_statement <= 
+flow_statement * # only returns ref
+spc * "=" * spc_or_lf * statement *
+let_statement_end(:flow_statement, :statement)
 
 #flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
 flow_statement <= expression

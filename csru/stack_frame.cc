@@ -239,6 +239,9 @@ void StackFrame::Setup(const ptr_vector& asts){
   pimpl->tree_it = 0;
   pimpl->operations.clear();
   pimpl->it = 0;
+
+  // Return nil when expressions is empty.
+  PushResult(Library::Instance()->Nil());
 }
 
 void StackFrame::SetUpperStack(BasicObjectPtr obj){

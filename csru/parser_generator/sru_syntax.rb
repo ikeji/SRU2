@@ -154,11 +154,11 @@ spc * r((
   "[" * statement * spc_or_lf * "]" * method_call_method_index(:method_call_primary, :statement)
 )) * method_call_end(:method_call_primary)
 
-manipulator :primary_minous, :parent
+manipulator :primary_minus, :parent
 primary <=
 primitive |
 spc * (
-"-" * primary * primary_minous(:primary) |
+"-" * primary * primary_minus(:primary) |
 "(" * spc_or_lf * statement * spc_or_lf * ")" * parent(:statement)
 )
 

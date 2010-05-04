@@ -67,9 +67,9 @@ DEFINE_SRU_PROC(method_call_end){ // this, src, pos, method_call_primary
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
-DEFINE_SRU_PROC(primary_minous){ // this, src, pos, primary
+DEFINE_SRU_PROC(primary_minus){ // this, src, pos, primary
   assert(args.size() >= 4);
-  LOG << "primary_minous";
+  LOG << "primary_minus";
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()), sym::invert()));

@@ -84,7 +84,7 @@ sru_test: testing.o $(TESTS) $(OBJS)
 
 clean:
 	$(MAKE) -C parser_generator clean
-	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags $(GENFILES)
+	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
 
 depend: parser $(GENFILES)
 	$(MAKE) -C parser_generator depend

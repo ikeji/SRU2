@@ -11,20 +11,20 @@ class BasicObjectPtr;
 namespace sru_parser {
 
 sru::BasicObjectPtr CreateFalse(
-    sru::BasicObjectPtr pos,
-    sru::BasicObjectPtr error_message);
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& error_message);
 sru::BasicObjectPtr CreateFalse(
-    sru::BasicObjectPtr pos,
+    const sru::BasicObjectPtr& pos,
     const char* error_message);
 sru::BasicObjectPtr CreateFalse(
     int pos,
     const char* error_message);
 
 sru::BasicObjectPtr CreateTrue(
-    sru::BasicObjectPtr pos,
-    sru::BasicObjectPtr ast);
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& ast);
 sru::BasicObjectPtr CreateTrue(
     int pos,
-    sru::BasicObjectPtr ast);
+    const sru::BasicObjectPtr& ast);
 
 }  // namespace sru_parser

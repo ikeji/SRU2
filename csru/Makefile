@@ -148,7 +148,7 @@ class_test.o: library.h
 constants.o: constants.h symbol.h
 interpreter.o: interpreter.h object_container.h ast.h basic_object.h
 interpreter.o: logging.h symbol.h stack_frame.h library.h binding.h
-interpreter.o: native_proc.h proc.h constants.h string.h
+interpreter.o: native_proc.h proc.h constants.h numeric.h string.h utils.h
 interpreter_test.o: interpreter.h object_container.h testing.h testing_ast.h
 interpreter_test.o: ast.h basic_object.h logging.h symbol.h string.h
 interpreter_test.o: library.h constants.h
@@ -194,6 +194,9 @@ parser_constants.o: parser_util.h testing_ast.h ast.h
 parser_helper.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_helper.o: object_container.h string.h numeric.h library.h ast.h
 parser_helper.o: constants.h testing_ast.h
+parser_let.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_let.o: object_container.h constants.h library.h numeric.h
+parser_let.o: parser_util.h testing_ast.h ast.h string.h
 parser_method_call.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_method_call.o: object_container.h constants.h library.h numeric.h
 parser_method_call.o: parser_util.h testing_ast.h ast.h string.h
@@ -207,7 +210,7 @@ parser_util.o: basic_object.h logging.h symbol.h constants.h library.h
 parser_util.o: string.h numeric.h
 proc.o: proc.h basic_object.h logging.h symbol.h object_container.h ast.h
 proc.o: binding.h interpreter.h library.h stack_frame.h constants.h class.h
-proc.o: native_proc.h string.h testing_ast.h testing_sru.h
+proc.o: native_proc.h string.h numeric.h utils.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
 proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
 proc_test.o: library.h numeric.h constants.h
@@ -224,3 +227,4 @@ string_test.o: constants.h
 symbol.o: symbol.h logging.h
 symbol_test.o: symbol.h testing.h
 testing.o: testing.h logging.h
+utils.o: utils.h logging.h

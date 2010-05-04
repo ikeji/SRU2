@@ -23,17 +23,25 @@ spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)
 
 #flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
-flow_statement <= expression
+flow_statement <= if_statement | expression
+
 
 if_statement <= "if" * if_main
 
-if_main <= spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
-statements * spc_or_lf *
+
+manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_else
+if_main <=
+spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
+if_main_cond(:statement) *
+statements * if_main_then(:statements) * spc_or_lf *
 (
-  "elsif" * if_main |
-  "else" * statements * spc_or_lf * "end" |
-  "end"
+  "elsif" * if_main *
+      if_main_else(:if_main_cond, :if_main_then, :if_main) |
+  "else" * statements * spc_or_lf * "end" *
+      if_main_else(:if_main_cond, :if_main_then, :statements)|
+  "end" * if_main_end(:if_main_cond, :if_main_then)
 )
+
 
 while_statement <= "while" * spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
 spc_or_lf * statements * spc_or_lf *

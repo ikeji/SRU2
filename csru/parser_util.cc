@@ -85,4 +85,27 @@ sru::BasicObjectPtr CreateAst(
          );
 }
 
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const symbol& method,
+    const sru::BasicObjectPtr& arg1,
+    const sru::BasicObjectPtr& arg2){
+  return E(src, pos,
+           C(
+             P(sym::doldol(),
+               E(src,pos,
+                 C(R(R(sym::doldol()), method),
+                   R(sym::doldol()),
+                   arg1,
+                   arg2
+                 )
+               )
+             ),
+             self
+           )
+         );
+}
+
 }  // namespace sru_parser

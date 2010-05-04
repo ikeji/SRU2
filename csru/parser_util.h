@@ -41,4 +41,12 @@ sru::BasicObjectPtr CreateAst(
     const sru::symbol& method,
     const sru::BasicObjectPtr& arg1);
 
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const sru::symbol& method,
+    const sru::BasicObjectPtr& arg1,
+    const sru::BasicObjectPtr& arg2);
+
 }  // namespace sru_parser

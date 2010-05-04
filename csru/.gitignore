@@ -1,6 +1,7 @@
 *.o
 *.exe
 *.bak
+*.core
 tags
 testing_ast.h
 testing_sru.h

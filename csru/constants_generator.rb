@@ -32,6 +32,18 @@ ifFalse
 ifTrueFalse
 True
 False
+# for methods which can overwritten
+pipepipe
+ampamp
+superEqual
+greaterOrEqual
+lessOrEqual
+pipe
+amp
+ltlt
+gtgt
+exclamation
+tilde
 # for numeric
 parse
 equal

@@ -77,6 +77,19 @@ TEST_CODE(call3, "(3.plus)(3,3)", "<Numeric(6)>");
 TEST_CODE2(call4, "x = 3", "(x.plus)(x,3)", "<Numeric(6)>");
 TEST_CODE(let_func, "t={|x|(x.plus)(x,3)}", "<Proc({|x|(x).plus(x, (Numeric).parse(Numeric, \"3\"));})>");
 TEST_CODE2(call_func, "t={|x|(x.plus)(x,3)}", "t(5)", "<Numeric(8)>");
+TEST_CODE(let_func2, "plus={|x,y|x+y}", "<Proc({|x,y|{|$$|($$).plus($$, y);}(x);})>");
+TEST_CODE2(use_func2, "plus={|x,y|x+y}", "plus(4,3)", "<Numeric(7)>");
+TEST_CODE2(use_func3, "plus={|x,y|x+y}", "plus(plus(4,3),plus(1,2))", "<Numeric(10)>");
+TEST_CODE2(use_func4, "plus={|x,y|x+y}", "plus(4,3).plus(plus(1,2))", "<Numeric(10)>");
+TEST_CODE(true_false, "(true.ifTrueFalse)(true,{1},{2})", "<Numeric(1)>");
+TEST_CODE(true_false2, "(false.ifTrueFalse)(true,{1},{2})", "<Numeric(2)>");
+TEST_CODE(true_false3, "true.ifTrueFalse({1},{2})", "<Numeric(1)>");
+TEST_CODE(true_false4, "false.ifTrueFalse({1},{2})", "<Numeric(2)>");
+TEST_CODE(add, "1+4", "<Numeric(5)>");
+TEST_CODE(sub, "1-4", "<Numeric(-3)>");
+TEST_CODE(mul, "1*4", "<Numeric(4)>");
+TEST_CODE(div, "5/2", "<Numeric(2)>");
+// TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE2(let_proc_result, "s = {|x|x;}",
@@ -88,12 +101,4 @@ TEST_CODE2(let_proc_result2, "s = {|x|x;}",
 TEST_CODE2(result_field, "s = {|x|x;}",
            "s(4).plus",
            "<Proc({ -- Native Code -- })>");
-TEST_CODE(let-func2, "plus={|x,y|x+y}", "<Proc: {|x,y|(x).plus(x, y);}>");
-TEST_CODE2(use-func2, "plus={|x,y|x+y}", "plus(4,3)", "<Numeric: 7 >");
-TEST_CODE2(use-func3, "plus={|x,y|x+y}", "plus(plus(4,3),plus(1,2))", "<Numeric: 10 >");
-TEST_CODE2(use-func4, "plus={|x,y|x+y}", "plus(4,3).plus(plus(4,3),plus(1,2))", "<Numeric: 10 >");
-TEST_CODE(true-false, "(true.ifTrueFalse)(true,{1},{2})", "<Numeric: 1 >");
-TEST_CODE(true-false2, "(false.ifTrueFalse)(true,{1},{2})", "<Numeric: 2 >");
-TEST_CODE(true-false3, "true.ifTrueFalse({1},{2})", "<Numeric: 1 >");
-TEST_CODE(true-false4, "false.ifTrueFalse({1},{2})", "<Numeric: 2 >");
 */

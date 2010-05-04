@@ -8,8 +8,10 @@
 #include "library.h"
 #include "string.h"
 #include "numeric.h"
+#include "testing_ast.h"
 
 using namespace sru;
+using namespace sru_test;
 
 namespace sru_parser {
 
@@ -41,6 +43,46 @@ BasicObjectPtr CreateTrue(const BasicObjectPtr& pos, const BasicObjectPtr& ast){
 
 BasicObjectPtr CreateTrue(int pos, const BasicObjectPtr& ast){
   return CreateTrue(SRUNumeric::New(pos), ast);
+}
+
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const symbol& method){
+  return E(src, pos,
+           C(
+             P(sym::doldol(),
+               E(src,pos,
+                 C(R(R(sym::doldol()), method),
+                   R(sym::doldol())
+                 )
+               )
+             ),
+             self
+           )
+         );
+}
+
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const symbol& method,
+    const sru::BasicObjectPtr& arg1){
+  return E(src, pos,
+           C(
+             P(sym::doldol(),
+               E(src,pos,
+                 C(R(R(sym::doldol()), method),
+                   R(sym::doldol()),
+                   arg1
+                 )
+               )
+             ),
+             self
+           )
+         );
 }
 
 }  // namespace sru_parser

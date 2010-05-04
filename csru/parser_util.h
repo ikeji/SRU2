@@ -6,6 +6,7 @@
 
 namespace sru {
 class BasicObjectPtr;
+class symbol;
 } // namespace sru
 
 namespace sru_parser {
@@ -26,5 +27,18 @@ sru::BasicObjectPtr CreateTrue(
 sru::BasicObjectPtr CreateTrue(
     int pos,
     const sru::BasicObjectPtr& ast);
+
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const sru::symbol& method);
+
+sru::BasicObjectPtr CreateAst(
+    const sru::BasicObjectPtr& src,
+    const sru::BasicObjectPtr& pos,
+    const sru::BasicObjectPtr& self,
+    const sru::symbol& method,
+    const sru::BasicObjectPtr& arg1);
 
 }  // namespace sru_parser

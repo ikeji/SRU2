@@ -54,15 +54,9 @@ DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primar
   assert(args.size() >= 5);
   LOG << "method_call_method_index";
   BasicObjectPtr ast = 
-    C(
-      P(sym::doldol(),
-        C(R(R(sym::doldol()), sym::get()),
-          R(sym::doldol()),
-          args[4]->Get(sym::ast())
-        )
-      ),
-      args[3]->Get(sym::ast())
-    );
+    CreateAst(args[1], args[2],
+              args[3]->Get(sym::ast()), sym::invert(),
+              args[4]->Get(sym::ast()));
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);
 }
@@ -77,19 +71,8 @@ DEFINE_SRU_PROC(primary_minous){ // this, src, pos, primary
   assert(args.size() >= 4);
   LOG << "primary_minous";
   return CreateTrue(args[2],
-                    E(args[1],args[2],
-                      C(
-                        P(sym::doldol(),
-                          E(args[1],args[2],
-                            C(R(R(sym::doldol()), sym::invert()),
-                              R(sym::doldol())
-                            )
-                          )
-                        ),
-                        args[3]->Get(sym::ast())
-                      )
-                    )
-                   );
+                    CreateAst(args[1], args[2],
+                              args[3]->Get(sym::ast()), sym::invert()));
 }
 
 DEFINE_SRU_PROC(parent){ // this, src, pos, statement

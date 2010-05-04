@@ -207,7 +207,7 @@ parser_test.o: parser.h basic_object.h logging.h symbol.h testing.h
 parser_test.o: interpreter.h object_container.h numeric.h library.h
 parser_test.o: constants.h string.h
 parser_util.o: basic_object.h logging.h symbol.h constants.h library.h
-parser_util.o: string.h numeric.h
+parser_util.o: string.h numeric.h testing_ast.h ast.h object_container.h
 proc.o: proc.h basic_object.h logging.h symbol.h object_container.h ast.h
 proc.o: binding.h interpreter.h library.h stack_frame.h constants.h class.h
 proc.o: native_proc.h string.h numeric.h utils.h testing_ast.h testing_sru.h

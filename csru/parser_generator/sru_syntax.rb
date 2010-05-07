@@ -5,7 +5,7 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement, :if_s
        :instance_method, :method_call, :primary, :primitive, :reference, :literal,
        :closure_literal, :closure_varg, :closure_retarg, :const_literal
 # Implimented in C++
-symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string
+symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
 
 program <= statement
 

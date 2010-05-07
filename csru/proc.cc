@@ -174,6 +174,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
         L(sym::result(), C(R(sym::condition()))),  // result = condition()
         C(
           R(R(sym::result()),sym::ifTrue()),       // if(result){
+          R(sym::result()),
           P(C(R(sym::block())),                    //   block();
             C(R(sym::whileTrue_internal()))        //   whileTrue_internal();
           )                                        // }
@@ -184,7 +185,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
 // TODO: test this function.
 DEFINE_SRU_PROC_SMASH(whileTrue){
   static BasicObjectPtr whileTrue_internal;
-  assert(args.size() > 1);
+  assert(args.size() >= 2);
   BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(sym::whileTrue_internal()))),

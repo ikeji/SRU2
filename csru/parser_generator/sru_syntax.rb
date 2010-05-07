@@ -22,7 +22,7 @@ spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)
 
 #flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
-flow_statement <= if_statement | expression
+flow_statement <= if_statement | while_statement | expression
 
 
 if_statement <= "if" * if_main
@@ -42,9 +42,10 @@ statement * if_main_then(:statement) * spc_or_lf *
 )
 
 
+manipulator :while_statement_end
 while_statement <= "while" * spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
 spc_or_lf * statements * spc_or_lf *
-spc_or_lf * "end"
+spc_or_lf * "end" * while_statement_end(:statement, :statements)
 
 class_statement <= "class" *
 (

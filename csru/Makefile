@@ -27,6 +27,7 @@ parser_let.o \
 parser_method_call.o \
 parser_spacing.o \
 parser_util.o \
+parser_while.o \
 proc.o \
 stack_frame.o \
 string.o \

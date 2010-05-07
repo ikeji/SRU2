@@ -7,13 +7,12 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement, :if_s
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string
 
-program <= statements
+program <= statement
 
 #statements <= r( spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement )
 statements <= spc_or_lf * statement
 
-#statement <= spc_or_lf * ( let_statement | flow_statement )
-statement <= let_statement | flow_statement
+statement <= spc_or_lf * ( let_statement | flow_statement )
 
 
 manipulator :let_statement_end
@@ -31,9 +30,9 @@ if_statement <= "if" * if_main
 
 manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_else
 if_main <=
-spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
-if_main_cond(:statement) *
-statements * if_main_then(:statements) * spc_or_lf *
+spc_or_lf * "(" * spc_or_lf * statement * if_main_cond(:statement) * spc_or_lf * ")" *
+# TODO: Use statements instead of statement.
+statement * if_main_then(:statement) * spc_or_lf *
 (
   "elsif" * if_main *
       if_main_else(:if_main_cond, :if_main_then, :if_main) |

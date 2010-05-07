@@ -23,6 +23,7 @@ namespace sru_parser {
 DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
   assert(args.size() >= 4);
   LOG << "if_main_cond";
+  LOG << args[3]->Inspect();
   
   return args[3];
 }
@@ -30,6 +31,7 @@ DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
 DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
   assert(args.size() >= 4);
   LOG << "if_main_then";
+  LOG << args[3]->Inspect();
 
   return args[3];
 }
@@ -40,7 +42,7 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, if
 
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
-                              args[3],
+                              args[3]->Get(sym::ast()),
                               sym::ifTrueFalse(),
                               P(args[4]->Get(sym::ast())),
                               P(args[5]->Get(sym::ast()))
@@ -55,7 +57,7 @@ DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then
 
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
-                              args[3],
+                              args[3]->Get(sym::ast()),
                               sym::ifTrue(),
                               P(args[4]->Get(sym::ast()))
                              )

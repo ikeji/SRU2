@@ -176,7 +176,7 @@ r( "." * ident * spc *
     "[" * statement * spc_or_lf * "]" *
     instance_method_call_index(:instance_method_begin, :statement)
   ))
-) * instance_method_end(:instance_method_begin)
+) * instance_method_end(:instance_method_begin, :method_call)
 
 
 manipulator :method_call_primary, :method_call_method_begin, :method_call_method_arg,

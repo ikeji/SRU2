@@ -133,12 +133,12 @@ DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_
   return CreateTrue(args[2], ast);
 }
 
-DEFINE_SRU_PROC(instance_method_end){ // this, src, pos, instance_method_begin
+DEFINE_SRU_PROC(instance_method_end){ // this, src, pos, instance_method_begin, method_call
   assert(args.size() >= 4);
   LOG << "instance_method_end";
   BasicObjectPtr self = args[3]->Get(sym::ast());
   if (self->HasSlot(sym::error())){
-    return CreateFalse(args[2], "self not found");
+    return args[4];
   }
   return CreateTrue(args[2], self);
 }

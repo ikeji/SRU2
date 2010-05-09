@@ -21,8 +21,8 @@ flow_statement * # only returns ref
 spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)
 
-#flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
-flow_statement <= if_statement | while_statement | def_statement | expression
+
+flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
 
 
 if_statement <= "if" * if_main
@@ -48,16 +48,50 @@ spc_or_lf * statements * spc_or_lf *
 spc_or_lf * "end" * while_statement_end(:statement, :statements)
 
 
+# NOTE: class statement is convert as follow.
+# class A < B
+#   def x()
+#     hoge()
+#   end
+#   def y(i)
+#     fuga(i)
+#   end
+# end
+#       |
+#       v
+# A = {
+#   $$ = B.subclass
+#   $$.instanceMethods.x = {|self:return| hoge() }
+#   $$.instanceMethods.y = {|self,i:return| fuga(i) }
+# }
+manipulator :class_statement_begin, :class_statement_method_begin,
+            :class_statement_method_varg, :class_statement_method_end,
+            :class_statement_end
 class_statement <= "class" *
-(
-  spc_or_lf * statement * "." * ident |
-  spc_or_lf * ident
-) * o( ":" * spc_or_lf * statement) *
-r( "def" * spc_or_lf * ident * spc_or_lf *
-  "(" * spc_or_lf * o( ident * spc_or_lf *
-  r( "," * spc_or_lf * ident ) ) * ")" *
-  spc_or_lf * statements * spc_or_lf * "end"
-) * spc_or_lf * "end"
+spc_or_lf * ident *
+spc_or_lf *
+o( "<" * spc_or_lf * statement) *
+class_statement_begin(:ident, :statement) *
+spc_or_lf *
+r(
+  "def" * spc_or_lf * ident * spc_or_lf *
+  class_statement_method_begin(:ident) *
+  "(" * spc_or_lf * o(
+    ident *
+    class_statement_method_varg(:class_statement_method_begin, :ident) *
+    spc_or_lf *
+    r(
+      "," * spc_or_lf * ident *
+      class_statement_method_varg(:class_statement_method_begin, :ident)
+    )
+  ) * ")" *
+  spc_or_lf * statements * spc_or_lf * "end" *
+  class_statement_method_end(
+      :class_statement_begin,
+      :class_statement_method_begin,
+      :statements)
+) * spc_or_lf * "end" *
+class_statement_end(:class_statement_begin)
 
 
 manipulator :def_statement_begin, :def_statement_varg, :def_statement_end

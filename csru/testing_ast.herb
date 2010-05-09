@@ -94,7 +94,7 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 }
 <% end %>
 
-<% 40.times do |e| %><% 5.times do |s| %>
+<% 45.times do |e| %><% 5.times do |s| %>
 inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
                       <% end %>const sru::symbol& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
                       <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){

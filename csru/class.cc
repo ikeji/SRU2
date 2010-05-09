@@ -31,6 +31,7 @@ void Class::SetAsSubclass(const BasicObjectPtr& obj,
   if(klass.get() == NULL) klass = Library::Instance()->Object();
   InitializeInstance(obj, Library::Instance()->Class());
   obj->Set(sym::superclass(), klass);
+  obj->Set(sym::instanceMethods(), BasicObject::New());
 }
 
 void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
@@ -75,6 +76,23 @@ DEFINE_SRU_PROC_SMASH(findSlot){
   PushResult(Library::Instance()->Nil());
 }
 
+DEFINE_SRU_PROC(subclass){
+  assert(args.size() >= 1);
+  BasicObjectPtr new_class = BasicObject::New();
+  Class::SetAsSubclass(new_class, args[0]);
+  if(args.size() == 2){
+    new_class->Set(sym::__name(), args[1]);
+  }
+  return new_class;
+}
+
+DEFINE_SRU_PROC(object_new){
+  assert(args.size() >= 1);
+  BasicObjectPtr obj = BasicObject::New();
+  Class::InitializeInstance(obj, args[0]);
+  return obj;
+}
+
 void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
   klass->Set(sym::klass(), klass);
   BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
@@ -87,5 +105,8 @@ void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
 
   klass->Set(sym::__name(), SRUString::New(sym::Class()));
   SetAsSubclass(klass,NULL);
+
+  SetAsInstanceMethod(klass, sym::subclass(), CREATE_SRU_PROC(subclass)); 
+  SetAsInstanceMethod(klass, sym::mew(), CREATE_SRU_PROC(object_new));
 }
 

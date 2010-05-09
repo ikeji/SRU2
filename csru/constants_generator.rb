@@ -10,6 +10,7 @@ __findSlot
 #
 CurrentStackFrame
 findSlotMethod
+subclass
 #
 $$,doldol
 # Classes
@@ -66,6 +67,8 @@ block
 whileTrue_internal
 loop_internal
 result
+# Object
+new,mew
 # for sru_parser
 src
 ast

@@ -3,6 +3,7 @@
 //
 
 #include <ctime>
+#include <string>
 
 #include "testing.h"
 #include "logging.h"
@@ -10,6 +11,18 @@
 #include "interpreter.h"
 
 using namespace sru;
+using namespace std;
+
+string RemoveMemAddr(const string& src){
+  string ret = src;
+  unsigned int start = string::npos;
+  while((start = ret.find("basic_object(0x")) != string::npos){
+    unsigned int end = ret.find(")", start);
+    assert(end != string::npos);
+    ret = ret.substr(0, start) + "basic_object" + ret.substr(end+1);
+  }
+  return ret;
+}
 
 class CodeTestCase : public sru_test::TestCase {
  public:
@@ -33,16 +46,16 @@ class CodeTestCase : public sru_test::TestCase {
     BasicObjectPtr r = Interpreter::Instance()->Eval(src);
     assert(r.get());
     LOG_ERROR << "ExpectResult:" << result;
-    LOG_ERROR << "Result      :" << r->Inspect();
-    assert(r->Inspect() == result);
+    LOG_ERROR << "Result      :" << RemoveMemAddr(r->Inspect());
+    assert(RemoveMemAddr(r->Inspect()) == result);
     LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
   }
   const char* before;
   const char* src;
   const char* result;
+
   CodeTestCase(const CodeTestCase& obj);
   CodeTestCase &operator=(const CodeTestCase&obj);
-
 };
 
 
@@ -62,7 +75,7 @@ TEST_CODE(lambda4,"{||x}", "<Proc({x;})>");
 TEST_CODE(lambda5,"{a|x}", "<Proc({|a|x;})>");
 TEST_CODE(lambda6,"{a,b|x}", "<Proc({|a,b|x;})>");
 TEST_CODE(nil, "nil", "<nil>");
-TEST_CODE(klass, "Class", "<Class class:<Class ... > findSlotMethod:<Proc({ -- Native Code -- }) ... >>");
+TEST_CODE(klass_v, "Class", "<Class class:<Class ... > findSlotMethod:<Proc({ -- Native Code -- }) ... >>");
 TEST_CODE(call, "{3}()", "<Numeric(3)>");
 TEST_CODE(call2, "{|x|x}(3)", "<Numeric(3)>");
 TEST_CODE(nulllambda,"{}", "<Proc({})>");
@@ -102,6 +115,18 @@ TEST_CODE(div, "5/2", "<Numeric(2)>");
 TEST_CODE(while, "{a=1 while(a<1000) a = a + a end a}()", "<Numeric(1024)>");
 // TODO: insert ';' like "{ def a(x) x * x; end; a(10);}()"
 TEST_CODE(def, "{ def a(x) x * x end a(10) }()", "<Numeric(100)>");
+TEST_CODE(obj, "Object.new()", "<basic_object class:<Object class:...>>");
+TEST_CODE(obj2, "Object.subclass(\"Hoge\").new()", "<basic_object class:<Hoge class:...>>");
+TEST_CODE(klass, "class MyClass end", "<MyClass class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass2, "class MyClass end", "MyClass", "<MyClass class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass3, "class MyClass end", "MyClass.new()", "<basic_object class:<MyClass class:...>>");
+TEST_CODE2(klass4, "class MyClass < Numeric end", "MyClass", "<MyClass class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass5, "class MyClass end", "class MyClass2 < MyClass end", "<MyClass2 class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass6, "class MyClass end", "MyClass.superclass", "<Object class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass7, "class MyClass < Numeric end", "MyClass.superclass", "<Numeric class:<Class ... > parse:<Proc({ -- Native Code -- }) ... >>");
+TEST_CODE(klass8, "{class MyClass end class MyClass2 < MyClass end MyClass2.superclass}()", "<MyClass class:<Class class:... findSlotMethod:...>>");
+TEST_CODE2(klass9, "class MyClass def hoge() fuga() end end", "MyClass.new()", "<basic_object class:<MyClass class:...>>");
+TEST_CODE2(klass10, "class MyClass def hoge() fuga() end end", "MyClass.new().hoge", "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");

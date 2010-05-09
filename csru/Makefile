@@ -19,6 +19,7 @@ object_pool.o \
 object_container.o \
 parser.o \
 parser_call.o \
+parser_class.o \
 parser_closure.o \
 parser_constants.o \
 parser_def.o \

@@ -74,6 +74,8 @@ status
 trueResult
 program
 error
+# for syntax
+return,leturn
 EOL
 
 100.times do |i|

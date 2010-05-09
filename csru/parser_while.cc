@@ -24,8 +24,8 @@ namespace sru_parser {
 DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
   assert(args.size() >= 5);
   LOG << "while_statement_end";
-  LOG << args[3]->Inspect();
-  LOG << args[4]->Inspect();
+  LOG_TRACE << args[3]->Inspect();
+  LOG_TRACE << args[4]->Inspect();
 
   return CreateTrue(
       args[2],

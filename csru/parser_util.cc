@@ -21,6 +21,7 @@ BasicObjectPtr CreateFalse(const BasicObjectPtr& pos,
   ret->Set(sym::status(), Library::Instance()->False());
   ret->Set(sym::pos(), pos);
   ret->Set(sym::error(), error_message);
+  LOG << error_message->Inspect();
   return ret;
 }
 

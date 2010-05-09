@@ -22,7 +22,7 @@ spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)
 
 #flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
-flow_statement <= if_statement | while_statement | expression
+flow_statement <= if_statement | while_statement | def_statement | expression
 
 
 if_statement <= "if" * if_main
@@ -47,6 +47,7 @@ while_statement <= "while" * spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf
 spc_or_lf * statements * spc_or_lf *
 spc_or_lf * "end" * while_statement_end(:statement, :statements)
 
+
 class_statement <= "class" *
 (
   spc_or_lf * statement * "." * ident |
@@ -58,11 +59,18 @@ r( "def" * spc_or_lf * ident * spc_or_lf *
   spc_or_lf * statements * spc_or_lf * "end"
 ) * spc_or_lf * "end"
 
+
+manipulator :def_statement_begin, :def_statement_varg, :def_statement_end
 def_statement <=
-"def" * spc_or_lf * ident *
-"(" * spc_or_lf * o( ident * spc_or_lf *
-r( "," * spc_or_lf * ident ) ) * ")" *
-spc_or_lf * statements * spc_or_lf * "end"
+"def" * spc_or_lf * ident * def_statement_begin(:ident) *
+"(" * spc_or_lf * o(
+  ident * def_statement_varg(:def_statement_begin, :ident) *
+  spc_or_lf * r(
+    "," * spc_or_lf * ident * def_statement_varg(:def_statement_begin, :ident)
+  )
+) * ")" *
+spc_or_lf * statements * spc_or_lf *
+"end" * def_statement_end(:def_statement_begin, :statements)
 
 
 manipulator :expression_begin, :expression_pipepipe, :expression_end

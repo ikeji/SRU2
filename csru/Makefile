@@ -21,6 +21,7 @@ parser.o \
 parser_call.o \
 parser_closure.o \
 parser_constants.o \
+parser_def.o \
 parser_expression.o \
 parser_if.o \
 parser_let.o \

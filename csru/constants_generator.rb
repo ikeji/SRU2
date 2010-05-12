@@ -77,6 +77,7 @@ status
 trueResult
 program
 error
+memoize
 # for syntax
 return,leturn
 EOL

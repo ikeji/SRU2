@@ -19,6 +19,9 @@ class CppCodeBuilder
 #include "numeric.h"
 #include "library.h"
 #include "logging.h"
+#include "parser_helper.h"
+#include "stack_frame.h"
+#include "interpreter.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -30,6 +33,7 @@ using namespace sru_test;
 
 namespace sru_parser {
 
+DECLARE_SRU_PROC(memoize);
     EOL
     parser.symbols.each do|sym|
       ret += <<-EOL
@@ -66,6 +70,7 @@ void InitializeParserObject(BasicObjectPtr& parser){
   parser->Set(sym::parse(), CREATE_SRU_PROC(Parse));
   parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
 
+  parser->Set(sym::memoize(), CREATE_SRU_PROC(memoize));
     EOL
     parser.symbols.each do|sym|
       ret += <<-EOL
@@ -115,6 +120,13 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
 #{pri2(parser,sym)}
   assert(args.size()>2);
   // TODO: Check argument.
+  
+  BasicObjectPtr r = memoize::GetFromMemoize(proc, args[1], args[2]);
+  if(r.get() != NULL) {
+    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
+    current_frame->PushResult(r);
+  }
+
   static ptr_vector exps = 
       A(
       EOL
@@ -126,7 +138,12 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       ret += <<-EOL
 #{spc(8,parser.syntaxes[sym].accept(self, 0))}
         ,
-        R(sym::result0())
+        C(R(R(sym::self()),sym::memoize()),
+          R(sym::self()),
+          R(R(sym::self()),sym::#{sym}()),
+          R(sym::src()),
+          R(sym::pos()),
+          R(sym::result0()))
       );
   Interpreter::Instance()->DigIntoNewFrame(exps,
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));

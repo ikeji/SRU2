@@ -157,7 +157,7 @@ class String
 end
 
 class PEG
-  def convert(arg)
+  def self.convert(arg)
     return arg if arg.is_a?(PEG)
     return TerminalSymbol.new(arg) if arg.is_a?(String)
     return RegexpSymbol.new(arg) if arg.is_a?(Regexp)
@@ -168,10 +168,10 @@ class PEG
     visitor.send("visit_#{self.class}",*args)
   end
   def *(right)
-    And.new(self,convert(right))
+    And.new(self,PEG.convert(right))
   end
   def |(right)
-    Or.new(self,convert(right))
+    Or.new(self,PEG.convert(right))
   end
   def ~@
     Optional.new(self)
@@ -197,21 +197,21 @@ end
 class Not < PEG
   attr_accessor :cont
   def initialize(cont)
-    @cont = convert cont
+    @cont = PEG.convert cont
   end
 end
 
 class Repeater < PEG
   attr_accessor :cont
   def initialize(cont)
-    @cont = convert cont
+    @cont = PEG.convert cont
   end
 end
 
 class Optional < PEG
   attr_accessor :cont
   def initialize(cont)
-    @cont = convert cont
+    @cont = PEG.convert cont
   end
 end
 
@@ -226,7 +226,7 @@ class NonTerminalSymbol < PEG
   attr_accessor :parser, :symbol, :capture
   def <=(right)
     raise Exception.new if @parser == nil
-    @parser.syntaxes[@symbol] = convert(right)
+    @parser.syntaxes[@symbol] = PEG.convert(right)
   end
   def initialize(symbol)
     @symbol = symbol

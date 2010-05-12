@@ -30,6 +30,7 @@ parser_method_call.o \
 parser_spacing.o \
 parser_util.o \
 parser_while.o \
+parser_helper.o \
 proc.o \
 stack_frame.o \
 string.o \

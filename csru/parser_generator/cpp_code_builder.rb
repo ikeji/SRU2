@@ -142,7 +142,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
           R(sym::self()),
           R(R(sym::self()),sym::#{sym}()),
           R(sym::src()),
-          R(sym::pos()),
+          R(sym::pos0()),
           R(sym::result0()))
       );
   Interpreter::Instance()->DigIntoNewFrame(exps,

@@ -17,6 +17,7 @@ int main(){
     cout << ">> ";
     string source;
     getline(cin, source);
+    if(source.empty()) break;
     BasicObjectPtr r = Interpreter::Instance()->Eval(source);
     cout << r->Inspect() << endl;
     cout << endl;

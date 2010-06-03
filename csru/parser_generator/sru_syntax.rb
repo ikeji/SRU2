@@ -266,14 +266,16 @@ literal <= closure_literal | const_literal
 reference <= ident
 
 
-manipulator :closure_begin, :closure_merge_varg, :closure_statement, :closure_end
+manipulator :closure_begin, :closure_merge_varg, :closure_statements, :closure_end
 closure_literal <=
 spc * "{" * closure_begin *
-o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) *
-r(
-  spc_or_lf * statement * 
-  closure_statement(:closure_begin, :statement)
-) * spc_or_lf * "}" * closure_end(:closure_begin)
+o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) * ((
+  statements *
+  closure_statements(:closure_begin, :statements) *
+  spc_or_lf
+)|(
+  spc_or_lf 
+)) * "}" * closure_end(:closure_begin)
 
 
 manipulator :closure_varg_begin, :closure_varg_idents,

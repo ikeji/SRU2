@@ -123,7 +123,7 @@ TEST_CODE2(klass4, "class MyClass < Numeric end", "MyClass", "<MyClass class:<Cl
 TEST_CODE2(klass5, "class MyClass end", "class MyClass2 < MyClass end", "<MyClass2 class:<Class class:... findSlotMethod:...>>");
 TEST_CODE2(klass6, "class MyClass end", "MyClass.superclass", "<Object class:<Class class:... findSlotMethod:...>>");
 TEST_CODE2(klass7, "class MyClass < Numeric end", "MyClass.superclass", "<Numeric class:<Class ... > parse:<Proc({ -- Native Code -- }) ... >>");
-TEST_CODE(klass8, "{class MyClass end class MyClass2 < MyClass end MyClass2.superclass}()", "<MyClass class:<Class class:... findSlotMethod:...>>");
+TEST_CODE(klass8, "class MyClass end;class MyClass2 < MyClass end;MyClass2.superclass", "<MyClass class:<Class class:... findSlotMethod:...>>");
 TEST_CODE2(klass9, "class MyClass def hoge() fuga() end end", "MyClass.new()", "<basic_object class:<MyClass class:...>>");
 TEST_CODE2(klass10, "class MyClass def hoge() fuga() end end", "MyClass.new().hoge", "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
@@ -133,6 +133,7 @@ TEST_CODE(multi_if2,"if(true) 3\n2 end", "<Numeric(2)>");
 TEST_CODE(multi_def,"def x() 1;2 end; x()", "<Numeric(2)>");
 TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b", "<Numeric(5050)>");
 //TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");
+TEST_CODE(multi_closure,"{1;2;3}()", "<Numeric(3)>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE2(let_proc_result, "s = {|x|x;}",

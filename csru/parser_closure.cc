@@ -40,13 +40,20 @@ DEFINE_SRU_PROC(closure_merge_varg){ // this, src, pos, closure_begin, closure_v
   return args[4];
 }
 
-DEFINE_SRU_PROC(closure_statement){ // this, src, pos, closure_begin, statement
+DEFINE_SRU_PROC(closure_statements){ // this, src, pos, closure_begin, statements
   assert(args.size() >= 5);
   LOG << "closure_statement";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   CHECK(p) << "Need proc for closure_statement";
-  BasicObjectPtr prog = args[4]->Get(sym::ast());
-  p->Expressions()->push_back(prog.get());
+  ProcExpression* s = args[4]->Get(sym::ast())->GetData<ProcExpression>();
+  CHECK(s) << "Need proc as statements for closure_statement";
+
+  for (object_vector::iterator it = s->Expressions()->begin();
+      it != s->Expressions()->end();
+      it++) {
+    p->Expressions()->push_back(*it);
+  }
+
   return args[4];
 }
 

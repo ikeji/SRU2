@@ -106,34 +106,43 @@ BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
 }
 
 BasicObjectPtr Interpreter::Eval(const string& str){
-  // Paser.parse("str")
-  ptr_vector args;
-  // Parser
-  args.push_back(RefExpression::New(NULL, SRUString::New(sym::sru_parser())));
-  // "str"
-  args.push_back(StringExpression::New(symbol(str.c_str())));
-  BasicObjectPtr call_parser = CallExpression::New(
-      RefExpression::New(
-        RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
-        SRUString::New(sym::parse())), args);
-
-  BasicObjectPtr obj = Eval(call_parser);
-  if(!obj->HasSlot(sym::ast()) ||
-     obj->Get(sym::ast()) == Library::Instance()->Nil()){
-    if(obj->HasSlot(sym::pos())){
-      PrintErrorPosition(str, SRUNumeric::GetValue(obj->Get(sym::pos())));
+  BasicObjectPtr result;
+  string src = str;
+  while(true) {
+    LOG << "Start parse: " << src;
+    // Paser.parse("str")
+    ptr_vector args;
+    // Parser
+    args.push_back(RefExpression::New(NULL, SRUString::New(sym::sru_parser())));
+    // "str"
+    args.push_back(StringExpression::New(symbol(src.c_str())));
+    BasicObjectPtr call_parser = CallExpression::New(
+        RefExpression::New(
+          RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
+          SRUString::New(sym::parse())), args);
+  
+    BasicObjectPtr obj = Eval(call_parser);
+    if(!obj->HasSlot(sym::ast()) ||
+       obj->Get(sym::ast()) == Library::Instance()->Nil()){
+      if(obj->HasSlot(sym::pos())){
+        PrintErrorPosition(src, SRUNumeric::GetValue(obj->Get(sym::pos())));
+      }
+      // TODO: Check more detail..
+      LOG_ERROR << "Parse error: " <<
+        SRUString::GetValue(
+          obj->Get(sym::error())
+        ).to_str();
+      return NULL;
     }
-    // TODO: Check more detail..
-    LOG_ERROR << "Parse error: " <<
-      SRUString::GetValue(
-        obj->Get(sym::error())
-      ).to_str();
-    return NULL;
-  }
-  BasicObjectPtr ast = obj->Get(sym::ast());
-  LOG_ERROR << "Parse OK : " << ast->Inspect();
+    BasicObjectPtr ast = obj->Get(sym::ast());
+    LOG_ERROR << "Parse OK : " << ast->Inspect();
+  
+    result = Eval(ast);
 
-  BasicObjectPtr result = Eval(ast);
+    size_t pos = SRUNumeric::GetValue(obj->Get(sym::pos()));
+    if(pos == src.size()) break;
+    src = src.substr(pos);
+  }
   return result;
 }
 

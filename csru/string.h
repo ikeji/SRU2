@@ -21,10 +21,9 @@ class SRUString : public Value{
   static const char* name(){ return "SRUString"; }
  private:
   SRUString(const symbol& val);
-  ~SRUString();
+  ~SRUString() {};
 
-  struct Impl;
-  Impl* pimpl;
+  symbol value;
 
   SRUString(const SRUString& obj);
   SRUString* operator=(const SRUString& obj);

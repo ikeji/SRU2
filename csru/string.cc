@@ -12,11 +12,6 @@
 using namespace sru;
 using namespace std;
 
-struct SRUString::Impl{
-  Impl(symbol value): value(value){}
-  symbol value;
-};
-
 BasicObjectPtr SRUString::New(const symbol& val){
   // TODO: instance-nize
   BasicObjectPtr ret = BasicObject::New(new SRUString(val));
@@ -29,18 +24,13 @@ const symbol& SRUString::GetValue(BasicObjectPtr obj){
   static symbol empty("");
   if(!s)
     return empty;
-  return s->pimpl->value;
+  return s->value;
 }
 
 string SRUString::Inspect(){
-  return string("String(\"") + pimpl->value.to_str() + "\")";
+  return string("String(\"") + value.to_str() + "\")";
 }
 
 SRUString::SRUString(const symbol& val):
-      pimpl(new Impl(val)){
+      value(val){
 }
-
-SRUString::~SRUString(){
-  delete pimpl;
-}
-

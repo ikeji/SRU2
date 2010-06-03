@@ -125,6 +125,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
   if(r.get() != NULL) {
     StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
     current_frame->PushResult(r);
+    return;
   }
 
   static ptr_vector exps = 

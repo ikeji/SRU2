@@ -25,10 +25,7 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
   LOG << "def_statement_begin";
   LOG << args[3]->Inspect();
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
-  if(!ref){
-    return CreateFalse(args[3]->Get(sym::pos()),
-                       "def statement need RefExpression for name.");
-  }
+  PARSER_CHECK(ref, args[2], "def statement need RefExpression for name.");
   BasicObjectPtr p = P();
   p->GetData<ProcExpression>()->SetRetVal(sym::leturn());
   BasicObjectPtr ret = CreateTrue(args[2], L(ref->Env(),
@@ -42,15 +39,9 @@ DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ide
   assert(args.size() >= 5);
   LOG << "def_statement_varg";
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[3]->Get(sym::pos()),
-                       "def statement varg need ProcExpression.");
-  }
+  PARSER_CHECK(p, args[2], "def statement varg need ProcExpression.");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
-  if(!ref){
-    return CreateFalse(args[3]->Get(sym::pos()),
-                       "def statement varg need RefExpression.");
-  }
+  PARSER_CHECK(ref, args[2], "def statement varg need RefExpression.");
   p->Varg()->push_back(SRUString::GetValue(ref->Name()));
   return args[4];
 }
@@ -59,15 +50,11 @@ DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, stat
   assert(args.size() >= 5);
   LOG << "def_statement_end";
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[3]->Get(sym::pos()),
-                       "def statement end need ProcExpression.");
-  }
+  PARSER_CHECK(p, args[2], 
+      "def statement end need ProcExpression.");
   ProcExpression* s = args[4]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[4]->Get(sym::pos()),
-                       "def statement end need ProcExpression as statement.");
-  }
+  PARSER_CHECK(s, args[2],
+      "def statement end need ProcExpression as statement.");
   
   for (object_vector::iterator it = s->Expressions()->begin();
        it != s->Expressions()->end();

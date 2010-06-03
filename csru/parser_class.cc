@@ -24,10 +24,8 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
   assert(args.size() >= 5);
   LOG << "class_statement_begin";
   RefExpression* ident = args[3]->Get(sym::ast())->GetData<RefExpression>();
-  if(!ident){
-    return CreateFalse(args[2],
-        "Class statement need RefExpression as name.");
-  }
+  PARSER_CHECK(ident,args[2],
+      "Class statement need RefExpression as name.");
   BasicObjectPtr superClass;
   if(args[4].get() != Library::Instance()->Nil().get() &&
      args[4]->Get(sym::status()) == Library::Instance()->True()){
@@ -61,15 +59,11 @@ DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement
   assert(args.size() >= 5);
   LOG << "class_statement_method_varg";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[2],
-        "Class statement method varg need ProcExpression.");
-  }
+  PARSER_CHECK(p, args[2],
+      "Class statement method varg need ProcExpression.");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
-  if(!ref){
-    return CreateFalse(args[2],
-        "Class statement method varg need RefExpression.");
-  }
+  PARSER_CHECK(ref, args[2],
+      "Class statement method varg need RefExpression.");
   p->Varg()->push_back(SRUString::GetValue(ref->Name()));
   return args[4];
 }
@@ -78,27 +72,19 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
   assert(args.size() >= 6);
   LOG << "class_statement_method_end";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[2],
-        "Class statement method end need ProcExpression.");
-  }
+  PARSER_CHECK(p, args[2],
+      "Class statement method end need ProcExpression.");
   RefExpression* ref = args[4]->Get(sym::ast())->
       Get(sym::__name())->
       GetData<RefExpression>();
-  if(!ref){
-    return CreateFalse(args[2],
-        "Class statement method end need RefExpression.");
-  }
+  PARSER_CHECK(ref, args[2],
+      "Class statement method end need RefExpression.");
   ProcExpression* method = args[4]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!method){
-    return CreateFalse(args[2],
-        "Class statement method end need ProcExpression as method.");
-  }
+  PARSER_CHECK(method, args[2],
+      "Class statement method end need ProcExpression as method.");
   ProcExpression* statement = args[5]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!statement){
-    return CreateFalse(args[2],
-        "Class statement method end need ProcExpression as statement.");
-  }
+  PARSER_CHECK(statement, args[2],
+      "Class statement method end need ProcExpression as statement.");
 
   for (object_vector::iterator it = statement->Expressions()->begin();
        it != statement->Expressions()->end();
@@ -117,16 +103,12 @@ DEFINE_SRU_PROC(class_statement_end){ // this, src, pos, class_statement_begin
   assert(args.size() >= 4);
   LOG << "class_statement_end";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!p){
-    return CreateFalse(args[2],
-        "Class statement method end need ProcExpression.");
-  }
+  PARSER_CHECK(p, args[2],
+      "Class statement method end need ProcExpression.");
   RefExpression* ref = args[3]->Get(sym::ast())->
       Get(sym::__name())->GetData<RefExpression>();
-  if(!ref){
-    return CreateFalse(args[2],
-        "Class statement end need RefExpression.");
-  }
+  PARSER_CHECK(ref, args[2],
+      "Class statement end need RefExpression.");
 
   p->Expressions()->push_back(R(sym::doldol()).get());
 

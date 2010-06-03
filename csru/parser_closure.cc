@@ -31,9 +31,9 @@ DEFINE_SRU_PROC(closure_merge_varg){ // this, src, pos, closure_begin, closure_v
   LOG << "closure_merge_varg";
   LOG << "Merge: " << args[3]->Inspect() << " and " << args[4]->Inspect();
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p) << "Need proc for closure_statement";
+  PARSER_CHECK(p, args[2], "Need proc for closure_statement");
   ProcExpression* p2 = args[4]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p2) << "Need two proc for closure_statement";
+  PARSER_CHECK(p2, args[2], "Need two proc for closure_statement");
   p->SetVarg(*p2->Varg());
   p->SetRetVal(p2->RetVal());
   p->SetExpressions(*p2->Expressions());
@@ -44,9 +44,9 @@ DEFINE_SRU_PROC(closure_statements){ // this, src, pos, closure_begin, statement
   assert(args.size() >= 5);
   LOG << "closure_statement";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p) << "Need proc for closure_statement";
+  PARSER_CHECK(p, args[2], "Need proc for closure_statement");
   ProcExpression* s = args[4]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(s) << "Need proc as statements for closure_statement";
+  PARSER_CHECK(s, args[2], "Need proc as statements for closure_statement");
 
   for (object_vector::iterator it = s->Expressions()->begin();
       it != s->Expressions()->end();
@@ -73,9 +73,9 @@ DEFINE_SRU_PROC(closure_varg_idents){ // this, src, pos, closure_varg_begin, ide
   assert(args.size() >= 5);
   LOG << "closure_varg_idents";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p) << "Need proc for closure_varg_idents";
+  PARSER_CHECK(p, args[2], "Need proc for closure_varg_idents");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
-  CHECK(ref) << "Need RefExpression for closure_varg_idents";
+  PARSER_CHECK(ref, args[2], "Need RefExpression for closure_varg_idents");
   p->Varg()->push_back(SRUString::GetValue(ref->Name()));
   return args[4];
 }
@@ -84,9 +84,9 @@ DEFINE_SRU_PROC(closure_varg_retarg){ // this, src, pos, closure_varg_begin, ide
   assert(args.size() >= 5);
   LOG << "closure_varg_retarg";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p) << "Need proc for closure_varg_retarg";
+  PARSER_CHECK(p, args[2], "Need proc for closure_varg_retarg");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
-  CHECK(ref) << "Need RefExpression for closure_varg_retarg";
+  PARSER_CHECK(ref, args[2],  "Need RefExpression for closure_varg_retarg");
   p->SetRetVal(SRUString::GetValue(ref->Name()));
   return args[4];
 }

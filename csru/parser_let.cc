@@ -24,10 +24,8 @@ DEFINE_SRU_PROC(let_statement_end){ // this, src, pos, flow_statement, statement
   assert(args.size() >= 5);
   LOG << "let_statement_end";
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
-  if(!ref) {
-    return CreateFalse(args[3]->Get(sym::pos()),
-                       "Let need RefExpression in left side.");
-  }
+  PARSER_CHECK(ref, args[2],
+      "Let need RefExpression in left side.");
   return CreateTrue(args[2],
                     L(ref->Env(),
                       ref->Name(),

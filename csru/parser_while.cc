@@ -28,9 +28,7 @@ DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
   LOG_TRACE << args[4]->Inspect();
 
   ProcExpression* p = args[4]->Get(sym::ast())->GetData<ProcExpression>();
-  if(!p) {
-    return CreateFalse(args[2], "while request proc expression");
-  }
+  PARSER_CHECK(p, args[2], "while request proc expression");
   p->SetRetVal(sym::next());
   return CreateTrue(
       args[2],

@@ -49,4 +49,8 @@ sru::BasicObjectPtr CreateAst(
     const sru::BasicObjectPtr& arg1,
     const sru::BasicObjectPtr& arg2);
 
+#define PARSER_CHECK(cond, pos, message) \
+  if (cond) {} else \
+    return CreateFalse(pos, message)
+
 }  // namespace sru_parser

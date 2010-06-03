@@ -38,7 +38,7 @@ DEFINE_SRU_PROC(method_call_method_arg){ // this, src, pos, method_call_method_b
   LOG << "method_call_method_arg";
   BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
-  CHECK(call) << "method_call_method_arg needs call expression : " << args[3]->Inspect();
+  PARSER_CHECK(call, args[2], "method_call_method_arg needs call expression");
   call->Arg()->push_back(args[4]->Get(sym::ast()).get());
   return CreateTrue(args[2], c);
 }

@@ -42,7 +42,8 @@ DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
   LOG << "instance_method_method_begin";
   BasicObjectPtr r = args[3]->Get(sym::ast());
   RefExpression* ref = r->GetData<RefExpression>();
-  CHECK(ref) << "instance_method_method_begin needs ref expression : " << args[3]->Inspect();
+  PARSER_CHECK(ref, args[2],
+      "instance_method_method_begin needs ref expression");
   return CreateTrue(args[2], E(args[1], args[2],
                                C(
                                  R(R(sym::doldol()),ref->Name()),
@@ -56,7 +57,8 @@ DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_
   LOG << "instance_method_method_arg";
   BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
-  CHECK(call) << "instance_method_method_arg needs call expression : " << args[3]->Inspect();
+  PARSER_CHECK(call, args[2],
+      "instance_method_method_arg needs call expression");
   call->Arg()->push_back(args[4]->Get(sym::ast()).get());
   return CreateTrue(args[2], c);
 }
@@ -81,7 +83,8 @@ DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, 
   LOG << "instance_method_ref";
   BasicObjectPtr self = args[3]->Get(sym::ast());
   RefExpression* id = args[4]->Get(sym::ast())->GetData<RefExpression>();
-  CHECK(id) << "instance_method_ref needs RefExpression.";
+  PARSER_CHECK(id, args[2],
+      "instance_method_ref needs RefExpression.");
   BasicObjectPtr ident = id->Name();
   BasicObjectPtr ref = R(self, ident);
   args[3]->Set(sym::ast(), ref);
@@ -101,7 +104,8 @@ DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_ca
   LOG << "instance_method_call_arg";
   BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
-  CHECK(call) << "instance_method_call_arg needs call expression : " << args[3]->Inspect();
+  PARSER_CHECK(call, args[2],
+      "instance_method_call_arg needs call expression");
   call->Arg()->push_back(args[4]->Get(sym::ast()).get());
   return CreateTrue(args[2], c);
 

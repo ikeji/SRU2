@@ -30,7 +30,7 @@ DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, stat
   assert(args.size() >= 5);
   LOG << "statements_statement";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
-  CHECK(p) << "Need proc for statements_statement";
+  PARSER_CHECK(p, args[2], "Need proc for statements_statement");
   BasicObjectPtr prog = args[4]->Get(sym::ast());
   p->Expressions()->push_back(prog.get());
   return args[4];

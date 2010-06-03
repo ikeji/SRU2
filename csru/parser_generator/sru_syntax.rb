@@ -7,7 +7,8 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement, :if_s
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
 
-program <= statement
+manipulator :program_end
+program <= statement * ( lf | ";" | eos) * program_end(:statement)
 
 #statements <= r( spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement )
 statements <= spc_or_lf * statement

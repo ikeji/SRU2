@@ -128,7 +128,7 @@ TEST_CODE(klass8, "{class MyClass end class MyClass2 < MyClass end MyClass2.supe
 TEST_CODE2(klass9, "class MyClass def hoge() fuga() end end", "MyClass.new()", "<basic_object class:<MyClass class:...>>");
 TEST_CODE2(klass10, "class MyClass def hoge() fuga() end end", "MyClass.new().hoge", "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
-TEST_CODE(multi,"a=1 2 3 a", "<Numeric(1)>");
+TEST_CODE(multi,"a=1; 2;\n 3; a", "<Numeric(1)>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE2(let_proc_result, "s = {|x|x;}",

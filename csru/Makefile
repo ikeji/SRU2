@@ -28,6 +28,7 @@ parser_if.o \
 parser_let.o \
 parser_method_call.o \
 parser_spacing.o \
+parser_program.o \
 parser_util.o \
 parser_while.o \
 parser_helper.o \

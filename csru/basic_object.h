@@ -79,7 +79,9 @@ class BasicObject {
     CHECK(!deleted) << "Why use deleted object?";
 #endif
     fields_type::iterator it = fields.find(name.getid());
-    CHECK(it != fields.end()) << "Error: unknwn slot: " << name.getid() << " in: " << Inspect();
+    CHECK(it != fields.end()) << 
+      "Error: unknwn slot: " << name.getid() << "(" << name.to_str() << ")" <<
+      " in: " << Inspect();
     return it->second;
   };
   bool HasSlot(const symbol& name){

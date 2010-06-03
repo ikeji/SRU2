@@ -26,9 +26,11 @@ DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
   LOG_TRACE << args[3]->Inspect();
   LOG_TRACE << args[4]->Inspect();
 
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* p = args[4]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "while request proc expression");
   p->SetRetVal(sym::next());
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(
       args[2],
       C(B(sym::bleak(),

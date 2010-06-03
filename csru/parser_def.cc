@@ -23,6 +23,7 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "def_statement_begin";
   LOG << args[3]->Inspect();
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2], "def statement need RefExpression for name.");
   BasicObjectPtr p = P();
@@ -37,8 +38,10 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
 DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ident
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "def_statement_varg";
+  PARSER_CHECK(args[3]->HasSlot(sym::doldol()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "def statement varg need ProcExpression.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2], "def statement varg need RefExpression.");
   p->Varg()->push_back(SRUString::GetValue(ref->Name()));
@@ -48,9 +51,11 @@ DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ide
 DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, statements
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "def_statement_end";
+  PARSER_CHECK(args[3]->HasSlot(sym::doldol()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], 
       "def statement end need ProcExpression.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* s = args[4]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(s, args[2],
       "def statement end need ProcExpression as statement.");
@@ -61,6 +66,7 @@ DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, stat
     p->Expressions()->push_back(*it);
   }
 
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 

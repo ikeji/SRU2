@@ -28,8 +28,10 @@ DEFINE_SRU_PROC(statements_begin){ // this, src, pos,
 DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, statement
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "statements_statement";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "Need proc for statements_statement");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   BasicObjectPtr prog = args[4]->Get(sym::ast());
   p->Expressions()->push_back(prog.get());
   return args[4];
@@ -38,6 +40,7 @@ DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, stat
 DEFINE_SRU_PROC(statements_end){ // this, src, pos, statements_begin
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "statements_end";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 

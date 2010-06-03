@@ -39,6 +39,9 @@ DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, i
   PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "if_main_else";
 
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[5]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),
@@ -53,6 +56,9 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, st
   PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "if_main_else";
 
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[5]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),
@@ -67,6 +73,8 @@ DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "if_main_end";
 
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2],
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),

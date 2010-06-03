@@ -49,9 +49,29 @@ sru::BasicObjectPtr CreateAst(
     const sru::BasicObjectPtr& arg1,
     const sru::BasicObjectPtr& arg2);
 
+#ifdef DEBUG
+
+#define PARSER_CHECK(cond, pos, message) \
+  if (cond) {} else {\
+    LOG_ERROR << "An internal error happened at " << \
+        __FILE__ << ":" << __LINE__; \
+    return CreateFalse(pos, message); \
+  }
+
+#define PARSER_CHECK_SMASH(cond, pos, message) \
+  if (cond) {} else { \
+    LOG_ERROR << "An internal error happened at " << \
+        __FILE__ << ":" << __LINE__; \
+    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame(); \
+    current_frame->PushResult(CreateFalse(pos, message)); \
+    return; \
+  }
+
+#else
+
 #define PARSER_CHECK(cond, pos, message) \
   if (cond) {} else \
-    return CreateFalse(pos, message)
+    return CreateFalse(pos, message); \
 
 #define PARSER_CHECK_SMASH(cond, pos, message) \
   if (cond) {} else { \
@@ -59,5 +79,7 @@ sru::BasicObjectPtr CreateAst(
     current_frame->PushResult(CreateFalse(pos, message)); \
     return; \
   }
+
+#endif
 
 }  // namespace sru_parser

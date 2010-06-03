@@ -22,13 +22,19 @@ namespace sru_parser {
 DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_begin";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* ident = args[3]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ident,args[2],
       "Class statement need RefExpression as name.");
   BasicObjectPtr superClass;
+  PARSER_CHECK(
+      args[4].get() == Library::Instance()->Nil().get() ||
+      args[4]->HasSlot(sym::status()),
+      args[2], "Internal parser error.");
   if(args[4].get() != Library::Instance()->Nil().get() &&
      args[4]->Get(sym::status()) == Library::Instance()->True()){
     LOG << "Use super class";
+    PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
     superClass = args[4]->Get(sym::ast());
   } else {
     LOG << "Use Object class";
@@ -40,6 +46,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
                   superClass,
                   sym::subclass(),
                   S(SRUString::GetValue(ident->Name())))));
+  // We already check args[3]->Get(ast).
   ast->Set(sym::__name(), args[3]->Get(sym::ast()));
   return CreateTrue(args[2], ast);
 }
@@ -50,6 +57,8 @@ DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
   BasicObjectPtr ast = P();
   ast->GetData<ProcExpression>()->SetRetVal(sym::leturn());
   ast->GetData<ProcExpression>()->Varg()->push_back(sym::self());
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  // TODO: use string instead of ref expression.
   ast->Set(sym::__name(), args[3]->Get(sym::ast()));
   return CreateTrue(args[2], ast);
 }
@@ -57,9 +66,11 @@ DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
 DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement_method_begin, ident
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_method_varg";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],
       "Class statement method varg need ProcExpression.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* ref = args[4]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2],
       "Class statement method varg need RefExpression.");
@@ -70,9 +81,13 @@ DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement
 DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_begin, class_statement_method_begin, statements
   PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "class_statement_method_end";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],
       "Class statement method end need ProcExpression.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[4]->Get(sym::ast())->HasSlot(sym::__name()),
+      args[2], "Internal parser error.");
   RefExpression* ref = args[4]->Get(sym::ast())->
       Get(sym::__name())->
       GetData<RefExpression>();
@@ -81,6 +96,7 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
   ProcExpression* method = args[4]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(method, args[2],
       "Class statement method end need ProcExpression as method.");
+  PARSER_CHECK(args[5]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* statement = args[5]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(statement, args[2],
       "Class statement method end need ProcExpression as statement.");
@@ -101,9 +117,12 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
 DEFINE_SRU_PROC(class_statement_end){ // this, src, pos, class_statement_begin
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_end";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],
       "Class statement method end need ProcExpression.");
+  PARSER_CHECK(args[3]->Get(sym::ast())->HasSlot(sym::__name()),
+      args[2], "Internal parser error.");
   RefExpression* ref = args[3]->Get(sym::ast())->
       Get(sym::__name())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2],

@@ -9,6 +9,7 @@
 #include "library.h"
 #include "numeric.h"
 #include "parser_util.h"
+#include "utils.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -31,7 +32,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
       args[4].get() == Library::Instance()->Nil().get() ||
       args[4]->HasSlot(sym::status()),
       args[2], "Internal parser error.");
-  if(args[4].get() != Library::Instance()->Nil().get() &&
+  if(!IsNil(args[4]) &&
      args[4]->Get(sym::status()) == Library::Instance()->True()){
     LOG << "Use super class";
     PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");

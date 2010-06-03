@@ -123,7 +123,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   
     BasicObjectPtr obj = Eval(call_parser);
     if(!obj->HasSlot(sym::ast()) ||
-       obj->Get(sym::ast()) == Library::Instance()->Nil()){
+       IsNil(obj->Get(sym::ast()))){
       if(obj->HasSlot(sym::pos())){
         PrintErrorPosition(src, SRUNumeric::GetValue(obj->Get(sym::pos())));
       }

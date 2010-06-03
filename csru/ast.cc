@@ -10,6 +10,7 @@
 #include "object_container.h"
 #include "library.h"
 #include "string.h"
+#include "utils.h"
 
 using namespace sru;
 using namespace std;
@@ -64,7 +65,7 @@ void LetExpression::Mark(){
 
 string LetExpression::InspectAST(){
   string rv = InspectExpression(pimpl->rightvalue);
-  if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
+  if(!IsNil(pimpl->env)){
     return string("((") + InspectExpression(pimpl->env) + ")." +
            SRUString::GetValue(pimpl->name).to_str() +
            " = " + rv + ")";
@@ -108,7 +109,7 @@ void RefExpression::Mark(){
 }
 
 string RefExpression::InspectAST(){
-  if(pimpl->env && Library::Instance()->Nil().get() != pimpl->env){
+  if(!IsNil(pimpl->env)){
     return string("(") + InspectExpression(pimpl->env) + ")." + 
            SRUString::GetValue(pimpl->name).to_str();
   }else{

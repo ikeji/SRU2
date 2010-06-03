@@ -6,6 +6,7 @@
 
 #include <string>
 #include "logging.h"
+#include "library.h"
 
 using namespace std;
 
@@ -35,6 +36,15 @@ void PrintErrorPosition(const string& src, size_t pos){
   string spc = "";
   for(size_t i=0;i<pos-start;i++) spc+=" ";
   LOG_ALWAYS << spc + "^";
+}
+
+bool IsNil(const BasicObjectPtr& ptr){
+  return IsNil(ptr.get());
+}
+
+bool IsNil(const BasicObject* ptr){
+  return ptr == NULL ||
+    ptr == Library::Instance()->Nil().get();
 }
 
 }  // namespace sru

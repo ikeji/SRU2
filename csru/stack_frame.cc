@@ -14,6 +14,7 @@
 #include "binding.h"
 #include "constants.h"
 #include "logging.h"
+#include "utils.h"
 
 using namespace std;
 using namespace sru;
@@ -69,14 +70,14 @@ class TraceVisitor : public Visitor{
   }
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     LOG_TRACE << "TRACE-LET: " << exp->Inspect();
-    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil())
+    if(!IsNil(exp->Env()))
       VisitTo(exp->Env());
     VisitTo(exp->RightValue());
     result->push_back(obj.get());
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
     LOG_TRACE << "TRACE-REF: " << exp->Inspect();
-    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil())
+    if(!IsNil(exp->Env()))
       VisitTo(exp->Env());
     result->push_back(obj.get());
   }
@@ -125,7 +126,7 @@ class EvalVisitor : public Visitor{
   void Accept(LetExpression* exp,const BasicObjectPtr& obj){
     const BasicObjectPtr& rightValue = Pop();
     BasicObjectPtr env;
-    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil()){
+    if(!IsNil(exp->Env())){
       env = Pop();
     }else{
       env = binding;
@@ -151,7 +152,7 @@ class EvalVisitor : public Visitor{
   }
   void Accept(RefExpression* exp,const BasicObjectPtr& obj){
     BasicObjectPtr env;
-    if(exp->Env() != NULL && exp->Env() != Library::Instance()->Nil()){
+    if(!IsNil(exp->Env())){
       env = Pop();
     }else{
       env = binding;

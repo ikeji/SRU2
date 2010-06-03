@@ -8,8 +8,13 @@
 #include <string>
 
 namespace sru {
+class BasicObject;
+class BasicObjectPtr;
 
 void PrintErrorPosition(const std::string& src, size_t pos);
+
+bool IsNil(const BasicObjectPtr& ptr);
+bool IsNil(const BasicObject* ptr);
 
 }  // namespace sru
 

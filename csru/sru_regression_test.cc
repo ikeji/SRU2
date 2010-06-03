@@ -111,10 +111,9 @@ TEST_CODE(add, "1+4", "<Numeric(5)>");
 TEST_CODE(sub, "1-4", "<Numeric(-3)>");
 TEST_CODE(mul, "1*4", "<Numeric(4)>");
 TEST_CODE(div, "5/2", "<Numeric(2)>");
-// TODO: insert ';' like "{a=1; while(a<1000) a = a + a end; a}()"
-TEST_CODE(while, "{a=1 while(a<1000) a = a + a end a}()", "<Numeric(1024)>");
-// TODO: insert ';' like "{ def a(x) x * x; end; a(10);}()"
-TEST_CODE(def, "{ def a(x) x * x end a(10) }()", "<Numeric(100)>");
+TEST_CODE(while, "a=1;while(a<1000) a = a + a end; a", "<Numeric(1024)>");
+//TEST_CODE(while_break, "while(true) break(3) end", "<Numeric(3)>");
+TEST_CODE(def, "def a(x) x * x end; a(10)", "<Numeric(100)>");
 TEST_CODE(obj, "Object.new()", "<basic_object class:<Object class:...>>");
 TEST_CODE(obj2, "Object.subclass(\"Hoge\").new()", "<basic_object class:<Hoge class:...>>");
 TEST_CODE(klass, "class MyClass end", "<MyClass class:<Class class:... findSlotMethod:...>>");
@@ -129,6 +128,10 @@ TEST_CODE2(klass9, "class MyClass def hoge() fuga() end end", "MyClass.new()", "
 TEST_CODE2(klass10, "class MyClass def hoge() fuga() end end", "MyClass.new().hoge", "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
 TEST_CODE(multi,"a=1; 2;\n 3; a", "<Numeric(1)>");
+//TEST_CODE(multi_if,"if(true) 3;2 end", "<Numeric(2)>");
+TEST_CODE(multi_def,"def x() 1;2 end; x()", "<Numeric(2)>");
+TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b", "<Numeric(5050)>");
+//TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE2(let_proc_result, "s = {|x|x;}",

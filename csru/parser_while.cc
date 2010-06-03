@@ -32,7 +32,7 @@ DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
       CreateAst(args[1],args[2],
                 P(args[3]->Get(sym::ast())),
                 sym::whileTrue(),
-                P(args[4]->Get(sym::ast()))
+                args[4]->Get(sym::ast())
                 )
       );
 }

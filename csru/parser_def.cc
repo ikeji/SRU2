@@ -63,7 +63,18 @@ DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, stat
     return CreateFalse(args[3]->Get(sym::pos()),
                        "def statement end need ProcExpression.");
   }
-  p->Expressions()->push_back(args[4]->Get(sym::ast()).get());
+  ProcExpression* s = args[4]->Get(sym::ast())->GetData<ProcExpression>();
+  if(!p){
+    return CreateFalse(args[4]->Get(sym::pos()),
+                       "def statement end need ProcExpression as statement.");
+  }
+  
+  for (object_vector::iterator it = s->Expressions()->begin();
+       it != s->Expressions()->end();
+       it++) {
+    p->Expressions()->push_back(*it);
+  }
+
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 

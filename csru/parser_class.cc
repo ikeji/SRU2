@@ -94,8 +94,17 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
     return CreateFalse(args[2],
         "Class statement method end need ProcExpression as method.");
   }
+  ProcExpression* statement = args[5]->Get(sym::ast())->GetData<ProcExpression>();
+  if(!statement){
+    return CreateFalse(args[2],
+        "Class statement method end need ProcExpression as statement.");
+  }
 
-  method->Expressions()->push_back(args[5]->Get(sym::ast()).get());
+  for (object_vector::iterator it = statement->Expressions()->begin();
+       it != statement->Expressions()->end();
+       it++) {
+    method->Expressions()->push_back(*it);
+  }
 
   p->Expressions()->push_back(
       L(R(R(sym::doldol()), sym::instanceMethods()),

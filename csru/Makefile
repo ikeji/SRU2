@@ -28,6 +28,7 @@ parser_if.o \
 parser_let.o \
 parser_method_call.o \
 parser_spacing.o \
+parser_statements.o \
 parser_program.o \
 parser_util.o \
 parser_while.o \
@@ -187,17 +188,23 @@ object_pool_test.o: testing.h basic_object.h logging.h symbol.h object_pool.h
 object_test.o: testing.h object.h basic_object.h logging.h symbol.h
 parser.o: parser.h basic_object.h logging.h symbol.h native_proc.h proc.h
 parser.o: object_container.h constants.h binding.h string.h numeric.h
-parser.o: library.h testing_ast.h ast.h testing_sru.h interpreter.h
-parser.o: stack_frame.h
+parser.o: library.h parser_helper.h stack_frame.h interpreter.h testing_ast.h
+parser.o: ast.h testing_sru.h
 parser_call.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_call.o: object_container.h constants.h library.h numeric.h
 parser_call.o: parser_util.h testing_ast.h ast.h string.h
+parser_class.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_class.o: object_container.h constants.h library.h numeric.h
+parser_class.o: parser_util.h testing_ast.h ast.h string.h
 parser_closure.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_closure.o: object_container.h constants.h library.h numeric.h
 parser_closure.o: parser_util.h testing_ast.h ast.h string.h
 parser_constants.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_constants.o: object_container.h constants.h string.h numeric.h
 parser_constants.o: parser_util.h testing_ast.h ast.h
+parser_def.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_def.o: object_container.h constants.h library.h numeric.h
+parser_def.o: parser_util.h testing_ast.h ast.h string.h
 parser_expression.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_expression.o: object_container.h constants.h library.h numeric.h
 parser_expression.o: parser_util.h testing_ast.h ast.h string.h
@@ -213,14 +220,23 @@ parser_let.o: parser_util.h testing_ast.h ast.h string.h
 parser_method_call.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_method_call.o: object_container.h constants.h library.h numeric.h
 parser_method_call.o: parser_util.h testing_ast.h ast.h string.h
+parser_program.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_program.o: object_container.h constants.h library.h numeric.h
+parser_program.o: parser_util.h testing_ast.h ast.h string.h
 parser_spacing.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_spacing.o: object_container.h string.h numeric.h constants.h library.h
 parser_spacing.o: parser_util.h
+parser_statements.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_statements.o: object_container.h constants.h library.h numeric.h
+parser_statements.o: parser_util.h testing_ast.h ast.h string.h
 parser_test.o: parser.h basic_object.h logging.h symbol.h testing.h
 parser_test.o: interpreter.h object_container.h numeric.h library.h
 parser_test.o: constants.h string.h
 parser_util.o: basic_object.h logging.h symbol.h constants.h library.h
 parser_util.o: string.h numeric.h testing_ast.h ast.h object_container.h
+parser_while.o: native_proc.h proc.h basic_object.h logging.h symbol.h
+parser_while.o: object_container.h constants.h library.h numeric.h
+parser_while.o: parser_util.h testing_ast.h ast.h string.h
 proc.o: proc.h basic_object.h logging.h symbol.h object_container.h ast.h
 proc.o: binding.h interpreter.h library.h stack_frame.h constants.h class.h
 proc.o: native_proc.h string.h numeric.h utils.h testing_ast.h testing_sru.h

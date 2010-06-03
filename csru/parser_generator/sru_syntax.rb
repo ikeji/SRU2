@@ -10,8 +10,16 @@ symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
 manipulator :program_end
 program <= statement * ( lf | ";" | eos) * program_end(:statement)
 
-#statements <= r( spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement )
-statements <= spc_or_lf * statement
+manipulator :statements_begin, :statements_statement, :statements_end
+statements <= statements_begin *
+spc_or_lf * ~"end" * ~"else" * ~"elsif" * 
+statement * statements_statement(:statements_begin, :statement) *
+r(
+  (lf | ";" | eos) *
+  spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement *
+  statements_statement(:statements_begin, :statement)
+) * statements_end(:statements_begin)
+
 
 statement <= spc_or_lf * ( let_statement | flow_statement )
 
@@ -29,14 +37,14 @@ flow_statement <= if_statement | while_statement | class_statement | def_stateme
 if_statement <= "if" * if_main
 
 
-manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_else
+manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif, :if_main_else
 if_main <=
 spc_or_lf * "(" * spc_or_lf * statement * if_main_cond(:statement) * spc_or_lf * ")" *
 # TODO: Use statements instead of statement.
 statement * if_main_then(:statement) * spc_or_lf *
 (
   "elsif" * if_main *
-      if_main_else(:if_main_cond, :if_main_then, :if_main) |
+      if_main_elsif(:if_main_cond, :if_main_then, :if_main) |
   "else" * statements * spc_or_lf * "end" *
       if_main_else(:if_main_cond, :if_main_then, :statements)|
   "end" * if_main_end(:if_main_cond, :if_main_then)

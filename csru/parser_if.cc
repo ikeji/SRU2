@@ -36,7 +36,7 @@ DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
   return args[3];
 }
 
-DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, if_main
+DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, if_main
   assert(args.size() >= 6);
   LOG << "if_main_else";
 
@@ -48,7 +48,20 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, if
                               P(args[5]->Get(sym::ast()))
                              )
                    );
+}
 
+DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, statements
+  assert(args.size() >= 6);
+  LOG << "if_main_else";
+
+  return CreateTrue(args[2],
+                    CreateAst(args[1], args[2],
+                              args[3]->Get(sym::ast()),
+                              sym::ifTrueFalse(),
+                              P(args[4]->Get(sym::ast())),
+                              args[5]->Get(sym::ast())
+                             )
+                   );
 }
 
 DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then

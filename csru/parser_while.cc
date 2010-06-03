@@ -27,14 +27,20 @@ DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
   LOG_TRACE << args[3]->Inspect();
   LOG_TRACE << args[4]->Inspect();
 
+  ProcExpression* p = args[4]->Get(sym::ast())->GetData<ProcExpression>();
+  if(!p) {
+    return CreateFalse(args[2], "while request proc expression");
+  }
+  p->SetRetVal(sym::next());
   return CreateTrue(
       args[2],
-      CreateAst(args[1],args[2],
-                P(args[3]->Get(sym::ast())),
-                sym::whileTrue(),
-                args[4]->Get(sym::ast())
-                )
-      );
+      C(B(sym::bleak(),
+          CreateAst(args[1],args[2],
+                    P(args[3]->Get(sym::ast())),
+                    sym::whileTrue(),
+                    args[4]->Get(sym::ast())
+                    )
+      )));
 }
 
 

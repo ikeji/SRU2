@@ -67,6 +67,8 @@ block
 whileTrue_internal
 loop_internal
 result
+break,bleak
+next
 # Object
 new,mew
 # for sru_parser

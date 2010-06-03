@@ -53,4 +53,11 @@ sru::BasicObjectPtr CreateAst(
   if (cond) {} else \
     return CreateFalse(pos, message)
 
+#define PARSER_CHECK_SMASH(cond, pos, message) \
+  if (cond) {} else { \
+    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame(); \
+    current_frame->PushResult(CreateFalse(pos, message)); \
+    return; \
+  }
+
 }  // namespace sru_parser

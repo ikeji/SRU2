@@ -19,9 +19,10 @@ class CppCodeBuilder
 #include "numeric.h"
 #include "library.h"
 #include "logging.h"
-#include "parser_helper.h"
 #include "stack_frame.h"
 #include "interpreter.h"
+#include "parser_helper.h"
+#include "parser_util.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -97,7 +98,7 @@ void InitializeParserObject(BasicObjectPtr& parser){
 }
 
 DEFINE_SRU_PROC_SMASH(Parse){
-  assert(args.size() > 1);
+  PARSER_CHECK_SMASH(args.size() >= 2, SRUNumeric::New(0), "Internal parser error.");
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
       A(
@@ -118,7 +119,7 @@ DEFINE_SRU_PROC_SMASH(Parse){
       ret += <<-EOL
 DEFINE_SRU_PROC_SMASH(#{sym}){
 #{pri2(parser,sym)}
-  assert(args.size()>2);
+  PARSER_CHECK_SMASH(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   
   BasicObjectPtr r = memoize::GetFromMemoize(proc, args[1], args[2]);
@@ -161,7 +162,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       ret += <<-EOL
 DEFINE_SRU_PROC(term#{term.num}){
   const static string target = "#{term.string}";
-  assert(args.size()>2);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   const string& src = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);

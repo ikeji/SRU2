@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,7 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(let_statement_end){ // this, src, pos, flow_statement, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "let_statement_end";
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2],

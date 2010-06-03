@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -22,14 +21,14 @@ namespace sru_parser {
 
 
 DEFINE_SRU_PROC(expression_begin){ // this, src, pos, bool_term
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "expression_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(expression_pipepipe){ // this, src, pos, expression_begin, bool_term
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "expression_pipepipe";
   // TODO: Lazy evaluation second arg.
   BasicObjectPtr ast = CreateAst(args[1], args[2],
@@ -40,21 +39,21 @@ DEFINE_SRU_PROC(expression_pipepipe){ // this, src, pos, expression_begin, bool_
 }
 
 DEFINE_SRU_PROC(expression_end){ // this, src, pos, expression_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "expression_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(bool_term_begin){ // this, src, pos, comp
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bool_term_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(bool_term_ampamp){ // this, src, pos, bool_term_begin, comp
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "bool_term_ampamp";
   // TODO: Lazy evaluation second arg.
   BasicObjectPtr ast = CreateAst(args[1], args[2],
@@ -65,21 +64,21 @@ DEFINE_SRU_PROC(bool_term_ampamp){ // this, src, pos, bool_term_begin, comp
 }
 
 DEFINE_SRU_PROC(bool_term_end){ // this, src, pos, bool_term_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bool_term_end";
   
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(comp_begin){ // this, src, pos, bit_sim
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "comp_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(comp_equal){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_equal";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::equal(),
@@ -89,7 +88,7 @@ DEFINE_SRU_PROC(comp_equal){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_super_equal){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_super_equal";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::superEqual(),
@@ -99,7 +98,7 @@ DEFINE_SRU_PROC(comp_super_equal){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_not_equal){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_not_equal";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::notEqual(),
@@ -109,7 +108,7 @@ DEFINE_SRU_PROC(comp_not_equal){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_greater_than){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_greater_than";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::greaterThan(),
@@ -119,7 +118,7 @@ DEFINE_SRU_PROC(comp_greater_than){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_less_than){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_less_than";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::lessThan(),
@@ -129,7 +128,7 @@ DEFINE_SRU_PROC(comp_less_than){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_greater_or_equal){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_greater_or_equal";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::greaterOrEqual(),
@@ -139,7 +138,7 @@ DEFINE_SRU_PROC(comp_greater_or_equal){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_less_or_equal){ // this, src, pos, comp_begin, bit_sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "comp_less_or_equal";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::lessOrEqual(),
@@ -149,21 +148,21 @@ DEFINE_SRU_PROC(comp_less_or_equal){ // this, src, pos, comp_begin, bit_sim
 }
 
 DEFINE_SRU_PROC(comp_end){ // this, src, pos, comp_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "comp_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(bit_sim_begin){ // this, src, pos, bit_term
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_sim_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(bit_sim_pipe){ // this, src, pos, bit_sim_begin, bit_term
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "bit_sim_pipe";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::pipe(),
@@ -173,21 +172,21 @@ DEFINE_SRU_PROC(bit_sim_pipe){ // this, src, pos, bit_sim_begin, bit_term
 }
 
 DEFINE_SRU_PROC(bit_sim_end){ // this, src, pos, bit_sim_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_sim_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(bit_term_begin){ // this, src, pos, bit_shift
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_term_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(bit_term_amp){ // this, src, pos, bit_term_begin, bit_shift
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "bit_term_amp";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::amp(),
@@ -197,21 +196,21 @@ DEFINE_SRU_PROC(bit_term_amp){ // this, src, pos, bit_term_begin, bit_shift
 }
 
 DEFINE_SRU_PROC(bit_term_end){ // this, src, pos, bit_term_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_term_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(bit_shift_begin){ // this, src, pos, sim
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_shift_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(bit_shift_ltlt){ // this, src, pos, bit_shift_begin, sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "bit_shift_ltlt";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::ltlt(),
@@ -221,7 +220,7 @@ DEFINE_SRU_PROC(bit_shift_ltlt){ // this, src, pos, bit_shift_begin, sim
 }
 
 DEFINE_SRU_PROC(bit_shift_gtgt){ // this, src, pos, bit_shift_begin, sim
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "bit_shift_gtgt";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::gtgt(),
@@ -231,21 +230,21 @@ DEFINE_SRU_PROC(bit_shift_gtgt){ // this, src, pos, bit_shift_begin, sim
 }
 
 DEFINE_SRU_PROC(bit_shift_end){ // this, src, pos, bit_shift_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "bit_shift_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(sim_begin){ // this, src, pos, term
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "sim_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(sim_plus){ // this, src, pos, sim_begin, term
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "sim_plus";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::plus(),
@@ -255,7 +254,7 @@ DEFINE_SRU_PROC(sim_plus){ // this, src, pos, sim_begin, term
 }
 
 DEFINE_SRU_PROC(sim_minus){ // this, src, pos, sim_begin, term
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "sim_minus";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::minus(),
@@ -265,21 +264,21 @@ DEFINE_SRU_PROC(sim_minus){ // this, src, pos, sim_begin, term
 }
 
 DEFINE_SRU_PROC(sim_end){ // this, src, pos, sim_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "sim_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(term_begin){ // this, src, pos, factor
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "term_begin";
 
   return args[3];
 }
 
 DEFINE_SRU_PROC(term_asterisk){ // this, src, pos, term_begin, factor
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "term_asterisk";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::asterisk(),
@@ -289,7 +288,7 @@ DEFINE_SRU_PROC(term_asterisk){ // this, src, pos, term_begin, factor
 }
 
 DEFINE_SRU_PROC(term_slash){ // this, src, pos, term_begin, factor
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "term_slash";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::slash(),
@@ -299,14 +298,14 @@ DEFINE_SRU_PROC(term_slash){ // this, src, pos, term_begin, factor
 }
 
 DEFINE_SRU_PROC(term_end){ // this, src, pos, term_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "term_end";
 
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(factor_exclamation){ // this, src, pos, factor
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "factor_exclamation";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::exclamation(),
@@ -316,7 +315,7 @@ DEFINE_SRU_PROC(factor_exclamation){ // this, src, pos, factor
 }
 
 DEFINE_SRU_PROC(factor_tilde){ // this, src, pos, factor
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "factor_tilde";
   BasicObjectPtr ast = CreateAst(args[1], args[2],
                                  args[3]->Get(sym::ast()), sym::tilde(),

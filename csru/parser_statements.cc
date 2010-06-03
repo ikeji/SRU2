@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,13 +20,13 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(statements_begin){ // this, src, pos, 
-  assert(args.size() >= 3);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "statements_begin";
   return CreateTrue(args[2], E(args[1],args[2], P()));
 }
 
 DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "statements_statement";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "Need proc for statements_statement");
@@ -37,7 +36,7 @@ DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, stat
 }
 
 DEFINE_SRU_PROC(statements_end){ // this, src, pos, statements_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "statements_end";
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }

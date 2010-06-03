@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,7 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "def_statement_begin";
   LOG << args[3]->Inspect();
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
@@ -36,7 +35,7 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
 }
 
 DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ident
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "def_statement_varg";
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "def statement varg need ProcExpression.");
@@ -47,7 +46,7 @@ DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ide
 }
 
 DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, statements
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "def_statement_end";
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], 

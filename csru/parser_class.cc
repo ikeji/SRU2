@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,7 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_begin";
   RefExpression* ident = args[3]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ident,args[2],
@@ -46,7 +45,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
 }
 
 DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_method_begin";
   BasicObjectPtr ast = P();
   ast->GetData<ProcExpression>()->SetRetVal(sym::leturn());
@@ -56,7 +55,7 @@ DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
 }
 
 DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement_method_begin, ident
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_method_varg";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],
@@ -69,7 +68,7 @@ DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement
 }
 
 DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_begin, class_statement_method_begin, statements
-  assert(args.size() >= 6);
+  PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "class_statement_method_end";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],
@@ -100,7 +99,7 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
 }
 
 DEFINE_SRU_PROC(class_statement_end){ // this, src, pos, class_statement_begin
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_end";
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2],

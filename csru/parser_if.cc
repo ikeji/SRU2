@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,7 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "if_main_cond";
   LOG << args[3]->Inspect();
   
@@ -29,7 +28,7 @@ DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
 }
 
 DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "if_main_then";
   LOG << args[3]->Inspect();
 
@@ -37,7 +36,7 @@ DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
 }
 
 DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, if_main
-  assert(args.size() >= 6);
+  PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "if_main_else";
 
   return CreateTrue(args[2],
@@ -51,7 +50,7 @@ DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, i
 }
 
 DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, statements
-  assert(args.size() >= 6);
+  PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "if_main_else";
 
   return CreateTrue(args[2],
@@ -65,7 +64,7 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, st
 }
 
 DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "if_main_end";
 
   return CreateTrue(args[2],

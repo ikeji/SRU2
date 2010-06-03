@@ -15,6 +15,7 @@
 #include "logging.h"
 #include "ast.h"
 #include "constants.h"
+#include "parser_util.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -66,7 +67,7 @@ BasicObjectPtr SetToMemoize(
 }  // namespace memoize
 
 DEFINE_SRU_PROC(memoize) { // this, func, src, pos, result
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   return memoize::SetToMemoize(args[1], args[2], args[3], args[4]);
 }
 

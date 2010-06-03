@@ -3,7 +3,6 @@
 // 
 
 #include <string>
-#include <cassert>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
@@ -21,7 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(instance_method_begin){ // this, src, pos, 
-  assert(args.size() >= 3);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_begin";
   // TODO: remove marker
   BasicObjectPtr r = R(sym::self());
@@ -30,7 +29,7 @@ DEFINE_SRU_PROC(instance_method_begin){ // this, src, pos,
 }
 
 DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_begin, method_call
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_self";
   BasicObjectPtr method_call = args[4]->Get(sym::ast());
   args[3]->Set(sym::ast(), method_call);
@@ -38,7 +37,7 @@ DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_begin,
 }
 
 DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
-  assert(args.size() >= 3);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_method_begin";
   BasicObjectPtr r = args[3]->Get(sym::ast());
   RefExpression* ref = r->GetData<RefExpression>();
@@ -53,7 +52,7 @@ DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
 }
 
 DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_method_begin, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_arg";
   BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
@@ -64,7 +63,7 @@ DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_method_begin, instance_method_begin
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_end";
   BasicObjectPtr self = args[4]->Get(sym::ast());
   BasicObjectPtr call =
@@ -79,7 +78,7 @@ DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, ident
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_ref";
   BasicObjectPtr self = args[3]->Get(sym::ast());
   RefExpression* id = args[4]->Get(sym::ast())->GetData<RefExpression>();
@@ -93,14 +92,14 @@ DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, 
 }
 
 DEFINE_SRU_PROC(instance_method_call_begin){ // this, src, pos, instance_method_begin
-  assert(args.size() >= 3);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_call_begin";
   BasicObjectPtr self = args[3]->Get(sym::ast());
   return CreateTrue(args[2], E(args[1], args[2], C(self)));
 }
 
 DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_call_begin, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_arg";
   BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
@@ -112,14 +111,14 @@ DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_ca
 }
 
 DEFINE_SRU_PROC(instance_method_call_end){ // this, src, pos, instance_method_begin, instance_method_call_begin
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_end";
   args[3]->Set(sym::ast(), args[4]->Get(sym::ast()));
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 
 DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_begin, statement
-  assert(args.size() >= 5);
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_index";
   BasicObjectPtr ast = E(args[1], args[2],
     C(
@@ -138,7 +137,7 @@ DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_end){ // this, src, pos, instance_method_begin, method_call
-  assert(args.size() >= 4);
+  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "instance_method_end";
   BasicObjectPtr self = args[3]->Get(sym::ast());
   if (self->HasSlot(sym::error())){

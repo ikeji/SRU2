@@ -21,7 +21,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(ident){
   LOG << "checkid";
-  assert(args.size() > 2);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
@@ -48,7 +48,7 @@ DEFINE_SRU_PROC(ident){
 
 DEFINE_SRU_PROC(const_string){
   LOG << "checkstringliteral";
-  assert(args.size() > 2);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   if(str[pos] != '"'){  // this is not string literal.
@@ -69,7 +69,7 @@ DEFINE_SRU_PROC(const_string){
 }
 
 DEFINE_SRU_PROC(number){
-  assert(args.size() > 2);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;
@@ -90,7 +90,7 @@ DEFINE_SRU_PROC(number){
 }
 
 DEFINE_SRU_PROC(real){
-  assert(args.size() > 2);
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   int epos = pos;

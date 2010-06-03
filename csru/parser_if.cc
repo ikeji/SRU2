@@ -44,7 +44,7 @@ DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, i
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),
                               sym::ifTrueFalse(),
-                              P(args[4]->Get(sym::ast())),
+                              args[4]->Get(sym::ast()),
                               P(args[5]->Get(sym::ast()))
                              )
                    );
@@ -58,7 +58,7 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, st
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),
                               sym::ifTrueFalse(),
-                              P(args[4]->Get(sym::ast())),
+                              args[4]->Get(sym::ast()),
                               args[5]->Get(sym::ast())
                              )
                    );
@@ -72,7 +72,7 @@ DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then
                     CreateAst(args[1], args[2],
                               args[3]->Get(sym::ast()),
                               sym::ifTrue(),
-                              P(args[4]->Get(sym::ast()))
+                              args[4]->Get(sym::ast())
                              )
                    );
 }

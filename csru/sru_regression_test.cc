@@ -128,7 +128,8 @@ TEST_CODE2(klass9, "class MyClass def hoge() fuga() end end", "MyClass.new()", "
 TEST_CODE2(klass10, "class MyClass def hoge() fuga() end end", "MyClass.new().hoge", "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
 TEST_CODE(multi,"a=1; 2;\n 3; a", "<Numeric(1)>");
-//TEST_CODE(multi_if,"if(true) 3;2 end", "<Numeric(2)>");
+TEST_CODE(multi_if,"if(true) 3;2 end", "<Numeric(2)>");
+TEST_CODE(multi_if2,"if(true) 3\n2 end", "<Numeric(2)>");
 TEST_CODE(multi_def,"def x() 1;2 end; x()", "<Numeric(2)>");
 TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b", "<Numeric(5050)>");
 //TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");

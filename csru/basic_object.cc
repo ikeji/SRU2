@@ -59,25 +59,25 @@ string BasicObject::Inspect(int limit){
     }
   }
   int titlesize = (int)s.str().size() + 2;
-  if(fields.size() == 0) {
+  int sum = 0;
+  vector<symbol> keys;
+  for(fields_type::iterator it = fields.begin();
+      it != fields.end();
+      it++){
+    symbol s = symbol::from_id(it->first);
+    // Please add non useful fields here.
+    if(!r.empty() && s == sym::klass()) continue;
+    if(s == sym::superclass() ||
+        s == sym::instanceMethods() ||
+        s.to_str()[0] == '_')
+      continue;
+    sum += (int)s.to_str().size() + 5;
+    keys.push_back(s);
+  }
+  if(keys.size() == 0) {
   } else if(limit < titlesize){
     s << " ... ";
   } else {
-    int sum = 0;
-    vector<symbol> keys;
-    for(fields_type::iterator it = fields.begin();
-        it != fields.end();
-        it++){
-      symbol s = symbol::from_id(it->first);
-      // Please add non useful fields here.
-      if(!r.empty() && s == sym::klass()) continue;
-      if(s == sym::superclass() ||
-         s == sym::instanceMethods() ||
-         s.to_str()[0] == '_')
-        continue;
-      sum += (int)s.to_str().size() + 5;
-      keys.push_back(s);
-    }
     sort(keys.begin(), keys.end());
     bool show_details = (sum < (limit - titlesize));
     int detailsize = (limit - titlesize - sum) / (fields.size()+1);

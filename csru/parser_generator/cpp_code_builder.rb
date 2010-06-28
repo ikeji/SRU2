@@ -35,6 +35,8 @@ using namespace sru_test;
 namespace sru_parser {
 
 DECLARE_SRU_PROC(memoize);
+DECLARE_SRU_PROC(clearMemoize);
+
     EOL
     parser.symbols.each do|sym|
       ret += <<-EOL
@@ -72,6 +74,8 @@ void InitializeParserObject(BasicObjectPtr& parser){
   parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
 
   parser->Set(sym::memoize(), CREATE_SRU_PROC(memoize));
+  parser->Set(sym::clearMemoize(), CREATE_SRU_PROC(clearMemoize));
+
     EOL
     parser.symbols.each do|sym|
       ret += <<-EOL
@@ -102,10 +106,14 @@ DEFINE_SRU_PROC_SMASH(Parse){
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
       A(
-        C(R(R(sym::self()),sym::program()),
+        C(R(R(sym::self()),sym::clearMemoize()),
           R(sym::self()),
-          R(sym::src()),
-          C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(symbol("0"))))
+          C(R(R(sym::self()),sym::program()),
+            R(sym::self()),
+            R(sym::src()),
+            C(R(R(sym::Numeric()),sym::parse()),R(sym::Numeric()),S(symbol("0")))
+          )
+        )
       ),
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local

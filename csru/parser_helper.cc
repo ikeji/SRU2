@@ -64,11 +64,21 @@ BasicObjectPtr SetToMemoize(
   return memory[func.get()][src.get()][p] = result;
 }
 
+void CleanUpMemoize(){
+  memory.clear();
+}
+
 }  // namespace memoize
 
 DEFINE_SRU_PROC(memoize) { // this, func, src, pos, result
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARSER_CHECK(args.size() >= 5, args[3], "Internal parser error.");
   return memoize::SetToMemoize(args[1], args[2], args[3], args[4]);
+}
+
+DEFINE_SRU_PROC(clearMemoize) { // this, arg
+  memoize::CleanUpMemoize();
+  if(args.size() < 2) return Library::Instance()->Nil();
+  return args[1];
 }
 
 }  // namespace sru_parser

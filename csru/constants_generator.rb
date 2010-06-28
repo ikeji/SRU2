@@ -80,6 +80,7 @@ trueResult
 program
 error
 memoize
+clearMemoize
 # for syntax
 return,leturn
 EOL

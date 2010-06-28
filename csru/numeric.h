@@ -1,6 +1,6 @@
 // Programing Language SRU
 // Copyright(C) 2005-2009 IKeJI
-// 
+//
 // SRUNumeric
 //
 

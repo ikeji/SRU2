@@ -1,9 +1,10 @@
 # Generate by yapp.
-symbol :program, :statements, :statement, :let_statement, :flow_statement, :if_statement,
-       :while_statement, :class_statement, :def_statement, :expression, :if_main,
-       :bool_term, :comp, :bit_sim, :bit_term, :bit_shift, :sim, :term, :factor, 
-       :instance_method, :method_call, :primary, :primitive, :reference, :literal,
-       :closure_literal, :closure_varg, :closure_retarg, :const_literal
+symbol :program, :statements, :statement, :let_statement, :flow_statement,
+       :if_statement, :while_statement, :class_statement, :def_statement,
+       :expression, :if_main, :bool_term, :comp, :bit_sim, :bit_term,
+       :bit_shift, :sim, :term, :factor, :instance_method, :method_call,
+       :primary, :primitive, :reference, :literal, :closure_literal,
+       :closure_varg, :closure_retarg, :const_literal
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
 
@@ -31,15 +32,18 @@ spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)
 
 
-flow_statement <= if_statement | while_statement | class_statement | def_statement | expression
+flow_statement <=
+if_statement | while_statement | class_statement | def_statement | expression
 
 
 if_statement <= "if" * if_main
 
 
-manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif, :if_main_else
+manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif,
+            :if_main_else
 if_main <=
-spc_or_lf * "(" * spc_or_lf * statement * if_main_cond(:statement) * spc_or_lf * ")" *
+spc_or_lf * "(" * spc_or_lf * statement *
+if_main_cond(:statement) * spc_or_lf * ")" *
 statements * if_main_then(:statements) * spc_or_lf *
 (
   "elsif" * if_main *
@@ -51,7 +55,8 @@ statements * if_main_then(:statements) * spc_or_lf *
 
 
 manipulator :while_statement_end
-while_statement <= "while" * spc_or_lf * "(" * spc_or_lf * statement * spc_or_lf * ")" *
+while_statement <= "while" * spc_or_lf *
+"(" * spc_or_lf * statement * spc_or_lf * ")" *
 spc_or_lf * statements * spc_or_lf *
 spc_or_lf * "end" * while_statement_end(:statement, :statements)
 
@@ -117,7 +122,8 @@ spc_or_lf * statements * spc_or_lf *
 
 manipulator :expression_begin, :expression_pipepipe, :expression_end
 expression <= bool_term * expression_begin(:bool_term) * r(
- spc * "||" * spc_or_lf * bool_term * expression_pipepipe(:expression_begin, :bool_term)
+ spc * "||" * spc_or_lf * bool_term *
+ expression_pipepipe(:expression_begin, :bool_term)
 ) * expression_end(:expression_begin)
 
 
@@ -189,10 +195,12 @@ spc * "~" * spc_or_lf * factor * factor_tilde(:factor) |
 instance_method
 
 
-manipulator :instance_method_begin, :instance_method_self, :instance_method_method_begin,
-            :instance_method_method_arg, :instance_method_method_end, :instance_method_ref,
+manipulator :instance_method_begin, :instance_method_self,
+            :instance_method_method_begin, :instance_method_method_arg,
+            :instance_method_method_end, :instance_method_ref,
             :instance_method_call_begin, :instance_method_call_arg,
-            :instance_method_call_end, :instance_method_call_index, :instance_method_end
+            :instance_method_call_end, :instance_method_call_index,
+            :instance_method_end
 instance_method <=
 instance_method_begin *
 o(
@@ -204,8 +212,11 @@ r( "." * ident * spc *
     o( 
       spc_or_lf * statement *
       instance_method_method_arg(:instance_method_method_begin, :statement) *
-      r( spc_or_lf * "," * spc_or_lf * statement *
-         instance_method_method_arg(:instance_method_method_begin, :statement) * spc_or_lf )
+      r(
+        spc_or_lf * "," * spc_or_lf * statement *
+        instance_method_method_arg(:instance_method_method_begin, :statement) *
+        spc_or_lf
+      )
     ) *
     spc_or_lf * ")" *
     instance_method_method_end(:instance_method_method_begin, :instance_method_begin)
@@ -222,7 +233,8 @@ r( "." * ident * spc *
         instance_method_call_arg(:instance_method_call_begin, :statement)
       )
     ) * spc_or_lf * ")" *
-    instance_method_call_end(:instance_method_begin, :instance_method_call_begin)
+    instance_method_call_end(:instance_method_begin,
+        :instance_method_call_begin)
   )|(
     "[" * statement * spc_or_lf * "]" *
     instance_method_call_index(:instance_method_begin, :statement)
@@ -230,21 +242,25 @@ r( "." * ident * spc *
 ) * instance_method_end(:instance_method_begin, :method_call)
 
 
-manipulator :method_call_primary, :method_call_method_begin, :method_call_method_arg,
-            :method_call_method_end, :method_call_method_index, :method_call_end
+manipulator :method_call_primary, :method_call_method_begin,
+            :method_call_method_arg, :method_call_method_end,
+            :method_call_method_index, :method_call_end
 method_call <=
 primary * method_call_primary(:primary) *
 spc * r((
   "(" * method_call_method_begin(:primary) *
   o(
-    statement * method_call_method_arg(:method_call_method_begin, :statement) * 
+    statement * method_call_method_arg(:method_call_method_begin, :statement) *
     r(
-      spc_or_lf * "," * statement * method_call_method_arg(:method_call_method_begin, :statement)
+      spc_or_lf * "," * statement *
+      method_call_method_arg(:method_call_method_begin, :statement)
     )
   ) *
-  spc_or_lf * ")" * method_call_method_end(:method_call_primary, :method_call_method_begin)
+  spc_or_lf * ")" *
+  method_call_method_end(:method_call_primary, :method_call_method_begin)
 )|(
-  "[" * statement * spc_or_lf * "]" * method_call_method_index(:method_call_primary, :statement)
+  "[" * statement * spc_or_lf * "]" *
+   method_call_method_index(:method_call_primary, :statement)
 )) * method_call_end(:method_call_primary)
 
 
@@ -266,7 +282,8 @@ literal <= closure_literal | const_literal
 reference <= ident
 
 
-manipulator :closure_begin, :closure_merge_varg, :closure_statements, :closure_end
+manipulator :closure_begin, :closure_merge_varg, :closure_statements,
+            :closure_end
 closure_literal <=
 spc * "{" * closure_begin *
 o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) * ((

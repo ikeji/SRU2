@@ -107,7 +107,7 @@ BasicObjectPtr Proc::New(const std::vector<symbol>& vargs,
              const symbol& retval,
              const ptr_vector& expressions,
              const BasicObjectPtr& binding){
-  BasicObjectPtr obj = BasicObject::New(
+  const BasicObjectPtr obj = BasicObject::New(
       new SRUProc(vargs,retval,expressions,binding));
   Initialize(obj);
   return obj;
@@ -152,7 +152,7 @@ void SRUProc::Call(const BasicObjectPtr& context,
                    const BasicObjectPtr& proc,
                    const ptr_vector& args){
   LOG << "Call sru function";
-  BasicObjectPtr new_binding = Binding::New(binding);
+  const BasicObjectPtr new_binding = Binding::New(binding);
   Interpreter::Instance()->DigIntoNewFrame(Conv(expressions),new_binding);
   for(unsigned int i=0;i<vargs.size();i++){
     if(i<args.size()){
@@ -186,7 +186,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
 DEFINE_SRU_PROC_SMASH(whileTrue){
   static BasicObjectPtr whileTrue_internal;
   assert(args.size() >= 2);
-  BasicObjectPtr new_binding = Binding::New();
+  const BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(sym::whileTrue_internal()))),
       new_binding);
@@ -211,7 +211,7 @@ DEFINE_SRU_PROC_SMASH(_loop_internal){
 DEFINE_SRU_PROC_SMASH(loop){
   static BasicObjectPtr loop_internal;
   assert(args.size() > 0);
-  BasicObjectPtr new_binding = Binding::New();
+  const BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(sym::loop_internal()))),
       new_binding);

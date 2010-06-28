@@ -60,7 +60,7 @@ class LetExpression : public Expression{
   static BasicObjectPtr New(const BasicObjectPtr& env,
                             const BasicObjectPtr& name,
                             const BasicObjectPtr& rightvalue){
-    BasicObjectPtr r = BasicObject::New(
+    const BasicObjectPtr r = BasicObject::New(
         new LetExpression(env,name,rightvalue));
     return r;
   }
@@ -93,7 +93,7 @@ class RefExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& env,
                             const BasicObjectPtr& name){
-    BasicObjectPtr r = BasicObject::New(
+    const BasicObjectPtr r = BasicObject::New(
         new RefExpression(env,name));
     return r;
   }
@@ -123,7 +123,7 @@ class CallExpression : public Expression{
  public:
   static BasicObjectPtr New(const BasicObjectPtr& proc,
              const ptr_vector& arg){
-    BasicObjectPtr r = BasicObject::New(
+    const BasicObjectPtr r = BasicObject::New(
         new CallExpression(proc,arg));
     return r;
   }
@@ -154,7 +154,7 @@ class ProcExpression : public Expression{
   static BasicObjectPtr New(const std::vector<sru::symbol>& varg,
                             const sru::symbol& retval,
                             const ptr_vector& expressions){
-    BasicObjectPtr r = BasicObject::New(
+    const BasicObjectPtr r = BasicObject::New(
         new ProcExpression(varg,retval,expressions));
     return r;
   }
@@ -188,7 +188,7 @@ class ProcExpression : public Expression{
 class StringExpression : public Expression{
  public:
   static BasicObjectPtr New(const sru::symbol& str){
-    BasicObjectPtr r = BasicObject::New(
+    const BasicObjectPtr r = BasicObject::New(
         new StringExpression(str));
     return r;
   }

@@ -41,7 +41,7 @@ struct StackFrame::Impl {
   BasicObject* binding; 
   BasicObject* upper_frame;
 
-  bool SetupTree(BasicObjectPtr ast);
+  bool SetupTree(const BasicObjectPtr& ast);
  private:
   Impl(const Impl& obj);
   Impl* operator=(const Impl& obj);
@@ -63,7 +63,7 @@ class TraceVisitor : public Visitor{
  public:
   TraceVisitor(object_vector* res):
         result(res),noerror(true){}
-  void VisitTo(BasicObjectPtr obj){
+  void VisitTo(const BasicObjectPtr& obj){
     Expression* exp = obj->GetData<Expression>();
     CHECK(exp) << "Trace non ast value";
     exp->Visit(this, obj);
@@ -113,7 +113,7 @@ class EvalVisitor : public Visitor{
       local_stack(st),binding(binding),noerror(true){}
   BasicObjectPtr Pop(){
     assert(local_stack->size() > 0);
-    BasicObjectPtr r = local_stack->back();
+    const BasicObjectPtr r = local_stack->back();
     local_stack->pop_back();
     return r;
   }
@@ -169,7 +169,7 @@ class EvalVisitor : public Visitor{
       ptr_vector args;
       args.push_back(env);
       args.push_back(exp->Name());
-      BasicObjectPtr find_slot_proc = env->Get(sym::__findSlot());
+      const BasicObjectPtr find_slot_proc = env->Get(sym::__findSlot());
       Proc::Invoke(obj, find_slot_proc, args);
       return;
     }
@@ -192,7 +192,7 @@ class EvalVisitor : public Visitor{
         it++)
       args.push_back(*it);
 
-    BasicObjectPtr proc = Pop();
+    const BasicObjectPtr proc = Pop();
     LOG << "EVAL-CALL: { ";
     Proc::Invoke(obj, proc, args);
     LOG << "EVAL-CALL: } ";
@@ -216,7 +216,7 @@ class EvalVisitor : public Visitor{
   EvalVisitor* operator=(const EvalVisitor& obj);
 };
 
-bool StackFrame::Impl::SetupTree(BasicObjectPtr ast){
+bool StackFrame::Impl::SetupTree(const BasicObjectPtr& ast){
   LOG << "SetupTree: " << ast->GetData<Expression>()->Inspect();
   local_stack.clear();
   operations.clear();
@@ -245,7 +245,7 @@ void StackFrame::Setup(const ptr_vector& asts){
   PushResult(Library::Instance()->Nil());
 }
 
-void StackFrame::SetUpperStack(BasicObjectPtr obj){
+void StackFrame::SetUpperStack(const BasicObjectPtr& obj){
   LOG_TRACE << "SetUpperStack";
   pimpl->upper_frame = obj.get();
 }
@@ -274,7 +274,7 @@ bool StackFrame::EvalNode(){
     LOG_TRACE << "LastOperation";
     if(pimpl->expressions.size() == pimpl->tree_it){
       LOG_TRACE << "LastExpression";
-      BasicObjectPtr rv = ReturnValue();
+      const BasicObjectPtr rv = ReturnValue();
       StackFrame* st = pimpl->upper_frame->GetData<StackFrame>();
       if(st == NULL)
         return false;
@@ -290,7 +290,7 @@ bool StackFrame::EvalNode(){
   }
   EvalVisitor visit(&(pimpl->local_stack),pimpl->binding);
   // We need step forward before exec each code.
-  BasicObjectPtr cur = pimpl->operations[pimpl->it];
+  const BasicObjectPtr cur = pimpl->operations[pimpl->it];
   pimpl->it++;
   LOG << "Eval: " << cur->GetData<Expression>()->Inspect();
   // Execute immidentry

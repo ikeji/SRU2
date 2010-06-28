@@ -23,7 +23,7 @@ class StackFrame : public Value{
   ~StackFrame();
 
   void Setup(const ptr_vector& expressions);
-  void SetUpperStack(BasicObjectPtr obj);
+  void SetUpperStack(const BasicObjectPtr& obj);
   BasicObjectPtr GetUpperStack();
   bool EndOfTrees();
   bool EvalNode();

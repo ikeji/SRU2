@@ -41,7 +41,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
     LOG << "Use Object class";
     superClass = R(sym::Object());
   }
-  BasicObjectPtr ast = P(
+  const BasicObjectPtr ast = P(
       L(sym::doldol(),
         CreateAst(args[1],args[2],
                   superClass,
@@ -55,7 +55,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
 DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_method_begin";
-  BasicObjectPtr ast = P();
+  const BasicObjectPtr ast = P();
   ast->GetData<ProcExpression>()->SetRetVal(sym::leturn());
   ast->GetData<ProcExpression>()->Varg()->push_back(sym::self());
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");

@@ -25,7 +25,7 @@ void NativeProc::Call(const BasicObjectPtr& context,
       log.ostream() << (*it)->Inspect() << " ";
     }
   }
-  BasicObjectPtr ret = method_body(context, proc, arg);
+  const BasicObjectPtr ret = method_body(context, proc, arg);
   StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
   current_frame->PushResult(ret);
 }

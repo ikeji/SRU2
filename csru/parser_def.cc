@@ -26,11 +26,11 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* ref = args[3]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2], "def statement need RefExpression for name.");
-  BasicObjectPtr p = P();
+  const BasicObjectPtr p = P();
   p->GetData<ProcExpression>()->SetRetVal(sym::leturn());
-  BasicObjectPtr ret = CreateTrue(args[2], L(ref->Env(),
-                                             ref->Name(),
-                                             p));
+  const BasicObjectPtr ret = CreateTrue(args[2], L(ref->Env(),
+                                                   ref->Name(),
+                                                   p));
   ret->Set(sym::doldol(), p);
   return ret;
 }

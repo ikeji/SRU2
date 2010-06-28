@@ -16,7 +16,7 @@ namespace sru {
 class SRUString : public Value{
  public:
   static BasicObjectPtr New(const symbol& val);
-  static const symbol& GetValue(BasicObjectPtr obj);
+  static const symbol& GetValue(const BasicObjectPtr& obj);
   std::string Inspect();
   static const char* name(){ return "SRUString"; }
  private:

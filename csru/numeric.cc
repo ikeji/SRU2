@@ -23,7 +23,7 @@ struct SRUNumeric::Impl{
 };
 
 BasicObjectPtr SRUNumeric::New(int value){
-  BasicObjectPtr ret = BasicObject::New(new SRUNumeric(value));
+  const BasicObjectPtr ret = BasicObject::New(new SRUNumeric(value));
   Class::InitializeInstance(ret, Library::Instance()->Numeric());
   return ret;
 }
@@ -113,7 +113,7 @@ DEFINE_SRU_PROC(Invert){
   return SRUNumeric::New(-v);
 }
 
-void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
+void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsSubclass(numeric, NULL);
   numeric->Set(sym::parse(),CREATE_SRU_PROC(NumericParse));
   numeric->Set(sym::__name(), SRUString::New(symbol("Numeric")));
@@ -128,7 +128,7 @@ void SRUNumeric::InitializeClassObject(BasicObjectPtr numeric){
   Class::SetAsInstanceMethod(numeric, sym::invert(), CREATE_SRU_PROC(Invert));
 }
 
-int SRUNumeric::GetValue(BasicObjectPtr obj){
+int SRUNumeric::GetValue(const BasicObjectPtr& obj){
   SRUNumeric* n = obj->GetData<SRUNumeric>();
   if(!n)
     return 0;

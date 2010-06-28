@@ -45,9 +45,9 @@ typedef HashMap<BasicObject*,  // func
 memory_map memory;
 
 BasicObjectPtr GetFromMemoize(
-  BasicObjectPtr func,
-  BasicObjectPtr src,
-  BasicObjectPtr pos) {
+  const BasicObjectPtr& func,
+  const BasicObjectPtr& src,
+  const BasicObjectPtr& pos) {
   int p = SRUNumeric::GetValue(pos);
   result_map& rmap = memory[func.get()][src.get()];
   HashMap<int, BasicObjectPtr>::iterator it = rmap.find(p);
@@ -56,10 +56,10 @@ BasicObjectPtr GetFromMemoize(
 }
 
 BasicObjectPtr SetToMemoize(
-  BasicObjectPtr func,
-  BasicObjectPtr src,
-  BasicObjectPtr pos,
-  BasicObjectPtr result) {
+  const BasicObjectPtr& func,
+  const BasicObjectPtr& src,
+  const BasicObjectPtr& pos,
+  const BasicObjectPtr& result) {
   int p = SRUNumeric::GetValue(pos);
   return memory[func.get()][src.get()][p] = result;
 }

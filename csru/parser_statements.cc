@@ -32,7 +32,7 @@ DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, stat
   ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
   PARSER_CHECK(p, args[2], "Need proc for statements_statement");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr prog = args[4]->Get(sym::ast());
+  const BasicObjectPtr prog = args[4]->Get(sym::ast());
   p->Expressions()->push_back(prog.get());
   return args[4];
 }

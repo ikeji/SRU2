@@ -16,13 +16,13 @@ using namespace sru;
 using namespace std;
 
 BasicObjectPtr BasicObject::New(){
-  BasicObjectPtr obj = new BasicObject();
+  const BasicObjectPtr obj = new BasicObject();
   allocator::ObjectPool::Instance()->Register(obj.get());
   return obj;
 }
 
 BasicObjectPtr BasicObject::New(Value * data){
-  BasicObjectPtr obj = New();
+  const BasicObjectPtr obj = New();
   obj->SetData(data);
   return obj;
 }

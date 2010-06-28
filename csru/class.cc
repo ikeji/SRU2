@@ -78,7 +78,7 @@ DEFINE_SRU_PROC_SMASH(findSlot){
 
 DEFINE_SRU_PROC(subclass){
   assert(args.size() >= 1);
-  BasicObjectPtr new_class = BasicObject::New();
+  const BasicObjectPtr new_class = BasicObject::New();
   Class::SetAsSubclass(new_class, args[0]);
   if(args.size() == 2){
     new_class->Set(sym::__name(), args[1]);
@@ -88,14 +88,14 @@ DEFINE_SRU_PROC(subclass){
 
 DEFINE_SRU_PROC(object_new){
   assert(args.size() >= 1);
-  BasicObjectPtr obj = BasicObject::New();
+  const BasicObjectPtr obj = BasicObject::New();
   Class::InitializeInstance(obj, args[0]);
   return obj;
 }
 
 void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
   klass->Set(sym::klass(), klass);
-  BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
+  const BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
   klass->Set(sym::findSlotMethod(), find_slot_method);
   LOG << "Setup findSlotMethod";
 }

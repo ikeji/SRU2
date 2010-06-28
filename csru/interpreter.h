@@ -18,7 +18,7 @@ class StackFrame;
 
 class Interpreter{
  public:
-  BasicObjectPtr Eval(BasicObjectPtr obj);
+  BasicObjectPtr Eval(const BasicObjectPtr& obj);
   BasicObjectPtr Eval(const std::string& str);
   static Interpreter* Instance(){
     static Interpreter inst;

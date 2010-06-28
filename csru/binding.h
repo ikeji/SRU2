@@ -11,7 +11,7 @@ namespace sru {
 
 class Binding {
  public:
-  static void InitializeClassObject(BasicObjectPtr numeric);
+  static void InitializeClassObject(const BasicObjectPtr& numeric);
   static BasicObjectPtr New(const BasicObjectPtr& parent=NULL);
 };
 

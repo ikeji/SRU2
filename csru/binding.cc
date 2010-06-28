@@ -20,14 +20,14 @@ using namespace std;
 
 DECLARE_SRU_PROC(FindSlot);
 
-void Binding::InitializeClassObject(BasicObjectPtr binding){
+void Binding::InitializeClassObject(const BasicObjectPtr& binding){
   Class::InitializeInstance(binding, Library::Instance()->Class());
   binding->Set(sym::__name(), SRUString::New(sym::Binding()));
   binding->Set(sym::findSlotMethod(), CREATE_SRU_PROC(FindSlot));
 }
 
 BasicObjectPtr Binding::New(const BasicObjectPtr& parent){
-  BasicObjectPtr r = BasicObject::New();
+  const BasicObjectPtr r = BasicObject::New();
   Class::InitializeInstance(r,Library::Instance()->Binding());
   if(parent.get() != NULL)
     r->Set(sym::_parent(), parent);

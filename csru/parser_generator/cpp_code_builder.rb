@@ -68,7 +68,7 @@ DECLARE_SRU_PROC(#{mani.name}); // this, src, pos, #{mani.varg_list.map{|m|m.to_
 DECLARE_SRU_PROC(Parse);
 DECLARE_SRU_PROC(TrueResult);
 
-void InitializeParserObject(BasicObjectPtr& parser){
+void InitializeParserObject(const BasicObjectPtr& parser){
   parser->Set(sym::__name(), SRUString::New(symbol("sru_parser")));
   parser->Set(sym::parse(), CREATE_SRU_PROC(Parse));
   parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
@@ -117,7 +117,8 @@ DEFINE_SRU_PROC_SMASH(Parse){
       ),
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
-  BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
+  const BasicObjectPtr binding =
+      Interpreter::Instance()->CurrentStackFrame()->Binding();
   binding->Set(sym::self(), args[0]);
   binding->Set(sym::src(), args[1]);
 }
@@ -130,14 +131,14 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
   PARSER_CHECK_SMASH(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   
-  BasicObjectPtr r = memoize::GetFromMemoize(proc, args[1], args[2]);
+  const BasicObjectPtr& r = memoize::GetFromMemoize(proc, args[1], args[2]);
   if(r.get() != NULL) {
     StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
     current_frame->PushResult(r);
     return;
   }
 
-  static ptr_vector exps = 
+  const static ptr_vector exps =
       A(
       EOL
       parser.captures[sym].each do |cap|
@@ -158,7 +159,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
   Interpreter::Instance()->DigIntoNewFrame(exps,
       Binding::New(Interpreter::Instance()->RootStackFrame()->Binding()));
   // Push args to local
-  BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
+  const BasicObjectPtr binding = Interpreter::Instance()->CurrentStackFrame()->Binding();
   binding->Set(sym::self(), args[0]);
   binding->Set(sym::src(), args[1]);
   binding->Set(sym::pos0(), args[2]);
@@ -175,7 +176,7 @@ DEFINE_SRU_PROC(term#{term.num}){
   const string& src = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetValue(args[2]);
   // TODO: Define ParserResult type.
-  BasicObjectPtr ret = BasicObject::New();
+  const BasicObjectPtr ret = BasicObject::New();
   if(src.compare(pos, target.size(), target) == 0){
     ret->Set(sym::status(), Library::Instance()->True());
     ret->Set(sym::pos(), SRUNumeric::New(pos + target.size()));
@@ -192,7 +193,7 @@ DEFINE_SRU_PROC(term#{term.num}){
 
 DEFINE_SRU_PROC(TrueResult){ // this, pos
   LOG << args[1]->Inspect();
-  BasicObjectPtr ret = BasicObject::New();
+  const BasicObjectPtr ret = BasicObject::New();
   ret->Set(sym::status(), Library::Instance()->True());
   ret->Set(sym::pos(), args[1]);
   return ret;

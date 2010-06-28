@@ -67,7 +67,7 @@ class BasicObject {
   static BasicObjectPtr New(Value * value);
 
   // Setting or getting from this object's slot.
-  void Set(const symbol& name,BasicObjectPtr ref){
+  void Set(const symbol& name,const BasicObjectPtr& ref){
 #ifdef DEBUG_GC
     CHECK(!deleted) << "Why use deleted object?";
 #endif

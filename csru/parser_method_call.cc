@@ -23,7 +23,7 @@ DEFINE_SRU_PROC(instance_method_begin){ // this, src, pos,
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_begin";
   // TODO: remove marker
-  BasicObjectPtr r = R(sym::self());
+  const BasicObjectPtr r = R(sym::self());
   r->Set(sym::error(), Library::Instance()->Nil());
   return CreateTrue(args[2], E(args[1], args[2], r));
 }
@@ -32,7 +32,7 @@ DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_begin,
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_self";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr method_call = args[4]->Get(sym::ast());
+  const BasicObjectPtr method_call = args[4]->Get(sym::ast());
   args[3]->Set(sym::ast(), method_call);
   return CreateTrue(args[2], method_call);
 }
@@ -41,7 +41,7 @@ DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_method_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr r = args[3]->Get(sym::ast());
+  const BasicObjectPtr r = args[3]->Get(sym::ast());
   RefExpression* ref = r->GetData<RefExpression>();
   PARSER_CHECK(ref, args[2],
       "instance_method_method_begin needs ref expression");
@@ -57,7 +57,7 @@ DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr c = args[3]->Get(sym::ast());
+  const BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
   PARSER_CHECK(call, args[2],
       "instance_method_method_arg needs call expression");
@@ -70,9 +70,9 @@ DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_end";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr self = args[4]->Get(sym::ast());
+  const BasicObjectPtr self = args[4]->Get(sym::ast());
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr call =
+  const BasicObjectPtr call =
     E(args[1], args[2], C(
       P(sym::doldol(),
         args[3]->Get(sym::ast())
@@ -87,13 +87,13 @@ DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, 
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_ref";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr self = args[3]->Get(sym::ast());
+  const BasicObjectPtr self = args[3]->Get(sym::ast());
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   RefExpression* id = args[4]->Get(sym::ast())->GetData<RefExpression>();
   PARSER_CHECK(id, args[2],
       "instance_method_ref needs RefExpression.");
-  BasicObjectPtr ident = id->Name();
-  BasicObjectPtr ref = R(self, ident);
+  const BasicObjectPtr ident = id->Name();
+  const BasicObjectPtr ref = R(self, ident);
   args[3]->Set(sym::ast(), ref);
   return CreateTrue(args[2], ref);
   
@@ -103,7 +103,7 @@ DEFINE_SRU_PROC(instance_method_call_begin){ // this, src, pos, instance_method_
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_call_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr self = args[3]->Get(sym::ast());
+  const BasicObjectPtr self = args[3]->Get(sym::ast());
   return CreateTrue(args[2], E(args[1], args[2], C(self)));
 }
 
@@ -111,7 +111,7 @@ DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_ca
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr c = args[3]->Get(sym::ast());
+  const BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
   PARSER_CHECK(call, args[2],
       "instance_method_call_arg needs call expression");
@@ -135,7 +135,7 @@ DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_
   LOG << "instance_method_call_index";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr ast = E(args[1], args[2],
+  const BasicObjectPtr ast = E(args[1], args[2],
     C(
       P(sym::doldol(),
         E(args[1], args[2],
@@ -155,7 +155,7 @@ DEFINE_SRU_PROC(instance_method_end){ // this, src, pos, instance_method_begin, 
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "instance_method_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr self = args[3]->Get(sym::ast());
+  const BasicObjectPtr self = args[3]->Get(sym::ast());
   if (self->HasSlot(sym::error())){
     return args[4];
   }

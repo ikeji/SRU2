@@ -9,9 +9,8 @@
 
 namespace sru_parser {
 
-void InitializeParserObject(sru::BasicObjectPtr& parser);
+void InitializeParserObject(const sru::BasicObjectPtr& parser);
 
 } // namespace sru_parser
 
 #endif  // PARSER_H_
-

@@ -10,15 +10,15 @@ namespace sru_parser {
 namespace memoize {
 
 sru::BasicObjectPtr GetFromMemoize(
-  sru::BasicObjectPtr func,
-  sru::BasicObjectPtr src,
-  sru::BasicObjectPtr pos);
+  const sru::BasicObjectPtr& func,
+  const sru::BasicObjectPtr& src,
+  const sru::BasicObjectPtr& pos);
 
 sru::BasicObjectPtr SetToMemoize(
-  sru::BasicObjectPtr func,
-  sru::BasicObjectPtr src,
-  sru::BasicObjectPtr pos,
-  sru::BasicObjectPtr result);
+  const sru::BasicObjectPtr& func,
+  const sru::BasicObjectPtr& src,
+  const sru::BasicObjectPtr& pos,
+  const sru::BasicObjectPtr& result);
 
 }  // namespace memoize
 }  // namespace sru_parser

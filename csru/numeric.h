@@ -14,9 +14,9 @@ namespace sru {
 
 class SRUNumeric : public Value{
  public:
-  static void InitializeClassObject(BasicObjectPtr numeric);
+  static void InitializeClassObject(const BasicObjectPtr& numeric);
   static BasicObjectPtr New(int i);
-  static int GetValue(BasicObjectPtr obj);
+  static int GetValue(const BasicObjectPtr& obj);
   std::string Inspect();
   static const char* name(){ return "SRUNumeric"; }
  private:
@@ -33,6 +33,3 @@ class SRUNumeric : public Value{
 } // namespace sru
 
 #endif  // SRU_NUMERIC_H_
-
-
-

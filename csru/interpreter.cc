@@ -37,20 +37,20 @@ Interpreter::~Interpreter(){
 }
 
 void Interpreter::InitializeInterpreter(){
-  BasicObjectPtr st = StackFrame::New(Binding::New());
+  const BasicObjectPtr st = StackFrame::New(Binding::New());
   pimpl->current_frame = st;
   pimpl->root_frame = st;
   StackFrame* stackframe = st->GetData<StackFrame>();
   assert(stackframe);
-  BasicObjectPtr bind = stackframe->Binding();
+  const BasicObjectPtr bind = stackframe->Binding();
   Library::BindPrimitiveObjects(bind);
 }
 
 void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
                                   const BasicObjectPtr& binding){
-  BasicObjectPtr old_frame_object = pimpl->current_frame;
+  const BasicObjectPtr old_frame_object = pimpl->current_frame;
 
-  BasicObjectPtr new_frame_object = StackFrame::New(binding);
+  const BasicObjectPtr new_frame_object = StackFrame::New(binding);
   StackFrame* new_frame = new_frame_object->GetData<StackFrame>();
   assert(new_frame);
   LOG << "Step in: " << new_frame_object->Inspect();
@@ -75,7 +75,7 @@ DEFINE_SRU_PROC(ContinationInvoke){
 }
 
 BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
-  BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
+  const BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
   cont->Set(sym::CurrentStackFrame(), CurrentStackFrame()->GetUpperStack());
   return cont;
 }
@@ -92,7 +92,7 @@ StackFrame* Interpreter::RootStackFrame(){
   return s;
 }
 
-BasicObjectPtr Interpreter::Eval(BasicObjectPtr ast){
+BasicObjectPtr Interpreter::Eval(const BasicObjectPtr& ast){
   ptr_vector asts;
   asts.push_back(ast);
   CurrentStackFrame()->Setup(asts);
@@ -116,12 +116,12 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     args.push_back(RefExpression::New(NULL, SRUString::New(sym::sru_parser())));
     // "str"
     args.push_back(StringExpression::New(symbol(src.c_str())));
-    BasicObjectPtr call_parser = CallExpression::New(
+    const BasicObjectPtr call_parser = CallExpression::New(
         RefExpression::New(
           RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
           SRUString::New(sym::parse())), args);
   
-    BasicObjectPtr obj = Eval(call_parser);
+    const BasicObjectPtr obj = Eval(call_parser);
     if(!obj->HasSlot(sym::ast()) ||
        IsNil(obj->Get(sym::ast()))){
       if(obj->HasSlot(sym::pos())){
@@ -134,7 +134,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
         ).to_str();
       return NULL;
     }
-    BasicObjectPtr ast = obj->Get(sym::ast());
+    const BasicObjectPtr ast = obj->Get(sym::ast());
     LOG_ERROR << "Parse OK : " << ast->Inspect();
   
     result = Eval(ast);

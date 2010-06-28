@@ -29,7 +29,7 @@ DEFINE_SRU_PROC(method_call_method_begin){ // this, src, pos, primary
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "method_call_method_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr pri = args[3]->Get(sym::ast());
+  const BasicObjectPtr pri = args[3]->Get(sym::ast());
   return CreateTrue(args[2], E(args[1],args[2], C(pri)));
 }
 
@@ -37,7 +37,7 @@ DEFINE_SRU_PROC(method_call_method_arg){ // this, src, pos, method_call_method_b
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "method_call_method_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr c = args[3]->Get(sym::ast());
+  const BasicObjectPtr c = args[3]->Get(sym::ast());
   CallExpression* call = c->GetData<CallExpression>();
   PARSER_CHECK(call, args[2], "method_call_method_arg needs call expression");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -59,7 +59,7 @@ DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primar
   LOG << "method_call_method_index";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  BasicObjectPtr ast = 
+  const BasicObjectPtr ast =
     CreateAst(args[1], args[2],
               args[3]->Get(sym::ast()), sym::invert(),
               args[4]->Get(sym::ast()));

@@ -14,12 +14,12 @@ using namespace std;
 
 BasicObjectPtr SRUString::New(const symbol& val){
   // TODO: instance-nize
-  BasicObjectPtr ret = BasicObject::New(new SRUString(val));
+  const BasicObjectPtr ret = BasicObject::New(new SRUString(val));
   Class::InitializeInstance(ret,Library::Instance()->String());
   return ret;
 }
 
-const symbol& SRUString::GetValue(BasicObjectPtr obj){
+const symbol& SRUString::GetValue(const BasicObjectPtr& obj){
   SRUString* s = obj->GetData<SRUString>();
   static symbol empty("");
   if(!s)

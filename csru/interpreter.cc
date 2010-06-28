@@ -17,6 +17,7 @@
 #include "numeric.h"
 #include "string.h"
 #include "utils.h"
+#include "require.h"
 
 using namespace sru;
 using namespace std;
@@ -44,6 +45,7 @@ void Interpreter::InitializeInterpreter(){
   assert(stackframe);
   const BasicObjectPtr bind = stackframe->Binding();
   Library::BindPrimitiveObjects(bind);
+  SetupRequireFunction(bind);
 }
 
 void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,

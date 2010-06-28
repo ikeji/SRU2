@@ -146,6 +146,8 @@ TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b",
     "<Numeric(5050)>");
 TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");
 TEST_CODE(multi_closure,"{1;2;3}()", "<Numeric(3)>");
+TEST_CODE(require_native,"require_native(\"./lib/hello.so\").ifTrue({1})","<Numeric(1)>");
+TEST_CODE(require_native_exec,"require_native(\"./lib/hello.so\");hello2()","<String(\"Hello world\")>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

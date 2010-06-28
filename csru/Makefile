@@ -15,8 +15,8 @@ logging.o \
 native_proc.o \
 numeric.o \
 object.o \
-object_pool.o \
 object_container.o \
+object_pool.o \
 parser.o \
 parser_call.o \
 parser_class.o \
@@ -24,16 +24,17 @@ parser_closure.o \
 parser_constants.o \
 parser_def.o \
 parser_expression.o \
+parser_helper.o \
 parser_if.o \
 parser_let.o \
 parser_method_call.o \
+parser_program.o \
 parser_spacing.o \
 parser_statements.o \
-parser_program.o \
 parser_util.o \
 parser_while.o \
-parser_helper.o \
 proc.o \
+require.o \
 stack_frame.o \
 string.o \
 symbol.o \
@@ -62,7 +63,7 @@ symbol_test.o \
 DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ $(DFLAGS)
-LDFLAGS  = $(DFLAGS)
+LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic -ldl
 CPFLAGS  = -u
 ERB      = erb
 
@@ -79,7 +80,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 
-all: sru tags
+all: sru tags library
 
 test: all sru_test
 	./sru_test
@@ -92,7 +93,7 @@ sru_test: testing.o $(TESTS) $(OBJS)
 
 clean:
 	$(MAKE) -C parser_generator clean
-	rm -f *.o sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
+	rm -f *.o *.so sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
 
 depend: parser $(GENFILES)
 	$(MAKE) -C parser_generator depend
@@ -128,6 +129,9 @@ constants.cc: constants_generator.rb symbols
 parser:
 	$(MAKE) -C parser_generator
 
+library:
+	$(MAKE) -C lib
+
 # DO NOT DELETE
 
 ast.o: ast.h basic_object.h logging.h symbol.h object_container.h library.h
@@ -157,6 +161,7 @@ constants.o: constants.h symbol.h
 interpreter.o: interpreter.h object_container.h ast.h basic_object.h
 interpreter.o: logging.h symbol.h stack_frame.h library.h binding.h
 interpreter.o: native_proc.h proc.h constants.h numeric.h string.h utils.h
+interpreter.o: require.h
 interpreter_test.o: interpreter.h object_container.h testing.h testing_ast.h
 interpreter_test.o: ast.h basic_object.h logging.h symbol.h string.h
 interpreter_test.o: library.h constants.h
@@ -243,6 +248,12 @@ proc.o: native_proc.h string.h numeric.h utils.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
 proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
 proc_test.o: library.h numeric.h constants.h
+require.o: require.h /usr/include/dlfcn.h /usr/include/features.h
+require.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
+require.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h
+require.o: /usr/include/bits/dlfcn.h native_proc.h proc.h basic_object.h
+require.o: logging.h symbol.h object_container.h library.h string.h
+require.o: interpreter.h stack_frame.h constants.h
 sru_regression_test.o: testing.h logging.h basic_object.h symbol.h
 sru_regression_test.o: interpreter.h object_container.h
 stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h

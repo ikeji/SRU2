@@ -83,6 +83,9 @@ memoize
 clearMemoize
 # for syntax
 return,leturn
+# for basic library
+require
+require_native
 EOL
 
 100.times do |i|

@@ -131,7 +131,7 @@ parser:
 # DO NOT DELETE
 
 ast.o: ast.h basic_object.h logging.h symbol.h object_container.h library.h
-ast.o: string.h
+ast.o: string.h utils.h
 ast_test.o: testing.h ast.h basic_object.h logging.h symbol.h
 ast_test.o: object_container.h
 basic_object.o: basic_object.h logging.h symbol.h object_pool.h constants.h
@@ -188,14 +188,14 @@ object_pool_test.o: testing.h basic_object.h logging.h symbol.h object_pool.h
 object_test.o: testing.h object.h basic_object.h logging.h symbol.h
 parser.o: parser.h basic_object.h logging.h symbol.h native_proc.h proc.h
 parser.o: object_container.h constants.h binding.h string.h numeric.h
-parser.o: library.h parser_helper.h stack_frame.h interpreter.h testing_ast.h
-parser.o: ast.h testing_sru.h
+parser.o: library.h stack_frame.h interpreter.h parser_helper.h parser_util.h
+parser.o: testing_ast.h ast.h testing_sru.h
 parser_call.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_call.o: object_container.h constants.h library.h numeric.h
 parser_call.o: parser_util.h testing_ast.h ast.h string.h
 parser_class.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_class.o: object_container.h constants.h library.h numeric.h
-parser_class.o: parser_util.h testing_ast.h ast.h string.h
+parser_class.o: parser_util.h utils.h testing_ast.h ast.h string.h
 parser_closure.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_closure.o: object_container.h constants.h library.h numeric.h
 parser_closure.o: parser_util.h testing_ast.h ast.h string.h
@@ -210,7 +210,7 @@ parser_expression.o: object_container.h constants.h library.h numeric.h
 parser_expression.o: parser_util.h testing_ast.h ast.h string.h
 parser_helper.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_helper.o: object_container.h string.h numeric.h library.h ast.h
-parser_helper.o: constants.h testing_ast.h
+parser_helper.o: constants.h parser_util.h testing_ast.h
 parser_if.o: native_proc.h proc.h basic_object.h logging.h symbol.h
 parser_if.o: object_container.h constants.h library.h numeric.h parser_util.h
 parser_if.o: testing_ast.h ast.h string.h
@@ -247,7 +247,7 @@ sru_regression_test.o: testing.h logging.h basic_object.h symbol.h
 sru_regression_test.o: interpreter.h object_container.h
 stack_frame.o: stack_frame.h basic_object.h logging.h symbol.h
 stack_frame.o: object_container.h string.h ast.h proc.h library.h binding.h
-stack_frame.o: constants.h
+stack_frame.o: constants.h utils.h
 stack_frame_test.o: testing.h stack_frame.h basic_object.h logging.h symbol.h
 stack_frame_test.o: object_container.h ast.h binding.h
 string.o: string.h basic_object.h logging.h symbol.h library.h class.h
@@ -256,4 +256,4 @@ string_test.o: constants.h
 symbol.o: symbol.h logging.h
 symbol_test.o: symbol.h testing.h
 testing.o: testing.h logging.h
-utils.o: utils.h logging.h
+utils.o: utils.h logging.h library.h basic_object.h symbol.h

@@ -97,11 +97,11 @@ class ParserBuilder
     symbols.each do|sym|
       self.class.module_eval do
         define_method(sym) do |*cap|
-          raise Exception.new "syntax error" if(cap.size > 1)
+          raise Exception.new("syntax error") if(cap.size > 1)
           s = NonTerminalSymbol.new(sym)
           s.parser = parser
           if cap.size() == 1
-            raise Exception.new "syntax error" if !cap[0].instance_of?(Symbol)
+            raise Exception.new("syntax error") if !cap[0].instance_of?(Symbol)
             s.capture = cap[0]
           else
             s.capture = sym

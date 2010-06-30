@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -Werror -Weffc++ -I../..
+CXXFLAGS=-Wall -Werror -Weffc++ -I../.. -fPIC
 LDFLAGS=-shared
 
 hello.so: hellolib.cc

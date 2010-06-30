@@ -63,13 +63,17 @@ symbol_test.o \
 DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ $(DFLAGS)
-LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic -ldl
+LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
 CPFLAGS  = -u
 ERB      = erb
 
 ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
   # BSD cp doesn't support -u option.
   CPFLAGS = -p
+endif
+
+ifeq ($(findstring Linux,$(shell uname)),Linux)
+  LDFLAGS  = $(LDFLAGS) -ldl
 endif
 
 ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
@@ -248,10 +252,7 @@ proc.o: native_proc.h string.h numeric.h utils.h testing_ast.h testing_sru.h
 proc_test.o: testing.h proc.h basic_object.h logging.h symbol.h
 proc_test.o: object_container.h ast.h interpreter.h testing_ast.h string.h
 proc_test.o: library.h numeric.h constants.h
-require.o: require.h /usr/include/dlfcn.h /usr/include/features.h
-require.o: /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h
-require.o: /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h
-require.o: /usr/include/bits/dlfcn.h native_proc.h proc.h basic_object.h
+require.o: require.h native_proc.h proc.h basic_object.h
 require.o: logging.h symbol.h object_container.h library.h string.h
 require.o: interpreter.h stack_frame.h constants.h
 sru_regression_test.o: testing.h logging.h basic_object.h symbol.h

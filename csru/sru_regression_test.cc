@@ -15,9 +15,9 @@ using namespace std;
 
 string RemoveMemAddr(const string& src){
   string ret = src;
-  unsigned int start = string::npos;
+  string::size_type start = string::npos;
   while((start = ret.find("basic_object(0x")) != string::npos){
-    unsigned int end = ret.find(")", start);
+    string::size_type end = ret.find(")", start);
     assert(end != string::npos);
     ret = ret.substr(0, start) + "basic_object" + ret.substr(end+1);
   }

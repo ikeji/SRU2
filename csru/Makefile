@@ -73,7 +73,7 @@ ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
 endif
 
 ifeq ($(findstring Linux,$(shell uname)),Linux)
-  LDFLAGS  = $(LDFLAGS) -ldl
+  LDFLAGS  += -ldl
 endif
 
 ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)

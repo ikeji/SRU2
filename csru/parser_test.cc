@@ -26,7 +26,7 @@ TEST(Parser_ParserObjectTest){
 
 TEST(Parser_ParseRefTest){
   // "sru_parser"
-  string code = "sru_parser";
+  string code = "__parser";
   BasicObjectPtr r = Interpreter::Instance()->Eval(code);
   assert(r.get());
   assert(r == Library::Instance()->Parser());

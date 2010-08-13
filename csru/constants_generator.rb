@@ -8,7 +8,7 @@ superclass
 instanceMethods
 __findSlot
 #
-CurrentStackFrame
+currentStackFrame
 findSlotMethod
 subclass
 #
@@ -26,11 +26,12 @@ Numeric
 Boolean
 true,tlue
 false,farse
-sru_parser
+__parser
 # for boolean
 ifTrue
 ifFalse
 ifTrueFalse
+#  names for boolean.
 True
 False
 # for methods which can overwritten
@@ -71,7 +72,7 @@ break,bleak
 next
 # Object
 new,mew
-# for sru_parser
+# for __parser
 src
 ast
 pos
@@ -85,7 +86,7 @@ clearMemoize
 return,leturn
 # for basic library
 require
-require_native
+requireNative
 EOL
 
 100.times do |i|

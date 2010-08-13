@@ -160,5 +160,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set(sym::Boolean(),Instance()->Boolean());
   frame->Set(sym::tlue(),Instance()->True());
   frame->Set(sym::farse(),Instance()->False());
-  frame->Set(sym::sru_parser(), Instance()->Parser());
+  frame->Set(sym::__parser(), Instance()->Parser());
 }

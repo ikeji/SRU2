@@ -64,7 +64,7 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
 
 DEFINE_SRU_PROC(ContinationInvoke){
   // Move into target stack position.
-  StackFrame* cur_frame = proc->Get(sym::CurrentStackFrame())->GetData<StackFrame>();
+  StackFrame* cur_frame = proc->Get(sym::currentStackFrame())->GetData<StackFrame>();
   assert(cur_frame);
   *Interpreter::Instance()->CurrentStackFrame() = *cur_frame;
   if(args.size() > 0){
@@ -78,7 +78,7 @@ DEFINE_SRU_PROC(ContinationInvoke){
 
 BasicObjectPtr Interpreter::GetContinationToEscapeFromCurrentStack(){
   const BasicObjectPtr cont = CREATE_SRU_PROC(ContinationInvoke);
-  cont->Set(sym::CurrentStackFrame(), CurrentStackFrame()->GetUpperStack());
+  cont->Set(sym::currentStackFrame(), CurrentStackFrame()->GetUpperStack());
   return cont;
 }
 
@@ -115,12 +115,12 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     // Paser.parse("str")
     ptr_vector args;
     // Parser
-    args.push_back(RefExpression::New(NULL, SRUString::New(sym::sru_parser())));
+    args.push_back(RefExpression::New(NULL, SRUString::New(sym::__parser())));
     // "str"
     args.push_back(StringExpression::New(symbol(src.c_str())));
     const BasicObjectPtr call_parser = CallExpression::New(
         RefExpression::New(
-          RefExpression::New(NULL,SRUString::New(sym::sru_parser())),
+          RefExpression::New(NULL,SRUString::New(sym::__parser())),
           SRUString::New(sym::parse())), args);
   
     const BasicObjectPtr obj = Eval(call_parser);

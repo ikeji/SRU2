@@ -17,7 +17,7 @@ using namespace std;
 
 typedef bool require_proc(const BasicObjectPtr& env);
 
-DEFINE_SRU_PROC(require_native) {
+DEFINE_SRU_PROC(requireNative) {
   if(args.size() < 1)
     return Library::Instance()->False();
   string name = SRUString::GetValue(args[0]).to_str();
@@ -48,7 +48,7 @@ DEFINE_SRU_PROC(require_native) {
 namespace sru {
 
 void SetupRequireFunction(const BasicObjectPtr& env){
-  env->Set(sym::require_native(), CREATE_SRU_PROC(require_native));
+  env->Set(sym::requireNative(), CREATE_SRU_PROC(requireNative));
 }
 
 } // namespace sru

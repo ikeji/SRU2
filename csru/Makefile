@@ -35,8 +35,9 @@ parser_util.o \
 parser_while.o \
 proc.o \
 require.o \
-stack_frame.o \
+sru_array.o \
 sru_string.o \
+stack_frame.o \
 symbol.o \
 utils.o \
 

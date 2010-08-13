@@ -14,6 +14,7 @@
 #include "boolean.h"
 #include "proc.h"
 #include "class.h"
+#include "sru_array.h"
 
 using namespace sru;
 
@@ -136,11 +137,10 @@ void Library::Impl::initialiseInteralClasses(){
   InitializeFalseObject(False);
   Proc::InitializeClassObject(Proc);
   Class::InitializeClassClassLast(Class);
+  Array::InitializeClass(Array);
 
   // TODO: Move this to nill.cc
   Nil->Set(sym::__name(), SRUString::New(sym::nil()));
-  // TODO: Move this to array.cc
-  Array->Set(sym::__name(), SRUString::New(sym::Array()));
   // TODO: Move this to hash.cc
   Hash->Set(sym::__name(), SRUString::New(sym::Hash()));
   // TODO: Move this to string.cc

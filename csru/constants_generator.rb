@@ -87,6 +87,56 @@ return,leturn
 # for basic library
 require
 requireNative
+# for Array
+at
+slice
+assoc
+choice
+clear
+collect!,collectEx
+combination
+compact
+compact!,compactEx
+concat
+delete,derete
+delete_if,derete_if
+each
+each_index
+empty?,emptyQ
+fetch
+fill
+flatten
+flatten!,flattenEx
+index
+insert
+join
+last
+length
+map!,mapEx
+nitems
+pack
+permutation
+pop
+product
+push
+rassoc
+reject!,rejectEx
+replace
+reverse
+reverse!,reverseEx
+rindex
+shift
+shuffle
+shuffle!,shuffleEx
+size
+slice!,sliceEx
+sort!,sortEx
+to_a
+transpose
+uniq
+uniqEx
+unshift
+values_at
 EOL
 
 100.times do |i|

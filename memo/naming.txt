@@ -1,0 +1,11 @@
+* The naming rule of SRU.
+
+ClassName
+CONSTANT_NAME
+valiableName
+_valiableNameUsedInClassSystem
+__valiableNameUsedInSRUSystem
+
+
+
+

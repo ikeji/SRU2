@@ -37,7 +37,7 @@ class Expression : public Value{
   void Dispose();
  private:
   Expression(const Expression& obj);
-  Expression* &operator=(const Expression& obj);
+  Expression& operator=(const Expression& obj);
 };
 
 class LetExpression;
@@ -84,7 +84,7 @@ class LetExpression : public Expression{
   Impl* pimpl;
 
   LetExpression(const LetExpression& obj);
-  LetExpression* &operator=(const LetExpression& obj);
+  LetExpression& operator=(const LetExpression& obj);
 };
 
 class RefExpression : public Expression{
@@ -113,7 +113,7 @@ class RefExpression : public Expression{
   Impl* pimpl;
 
   RefExpression(const RefExpression& obj);
-  RefExpression* &operator=(const RefExpression& obj);
+  RefExpression& operator=(const RefExpression& obj);
 };
 
 class CallExpression : public Expression{
@@ -141,7 +141,7 @@ class CallExpression : public Expression{
   Impl* pimpl;
 
   CallExpression(const CallExpression& obj);
-  CallExpression* &operator=(const CallExpression& obj);
+  CallExpression& operator=(const CallExpression& obj);
 };
 
 class ProcExpression : public Expression{
@@ -174,7 +174,7 @@ class ProcExpression : public Expression{
   Impl* pimpl;
 
   ProcExpression(const ProcExpression& obj);
-  ProcExpression* &operator=(const ProcExpression& obj);
+  ProcExpression& operator=(const ProcExpression& obj);
 };
 
 class StringExpression : public Expression{
@@ -196,7 +196,7 @@ class StringExpression : public Expression{
   Impl* pimpl;
 
   StringExpression(const StringExpression& obj);
-  StringExpression* &operator=(const StringExpression& obj);
+  StringExpression& operator=(const StringExpression& obj);
 };
 
 #ifdef SRU_MAIN

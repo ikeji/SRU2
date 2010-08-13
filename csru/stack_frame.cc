@@ -356,3 +356,6 @@ StackFrame &StackFrame::operator=(const StackFrame& obj){
   return *this;
 }
 
+void StackFrame::Dispose(){
+  delete this;
+}

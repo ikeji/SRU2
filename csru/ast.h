@@ -34,6 +34,7 @@ class Expression : public Value{
   }
   virtual std::string InspectAST() = 0;
   static const char* name(){ return "Expression"; }
+  void Dispose();
  private:
   Expression(const Expression& obj);
   Expression* &operator=(const Expression& obj);

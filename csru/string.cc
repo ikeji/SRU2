@@ -34,3 +34,7 @@ string SRUString::Inspect(){
 SRUString::SRUString(const symbol& val):
       value(val){
 }
+
+void SRUString::Dispose(){
+  delete this;
+}

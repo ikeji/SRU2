@@ -148,3 +148,7 @@ SRUNumeric::SRUNumeric(int n):
 SRUNumeric::~SRUNumeric(){
   delete pimpl;
 }
+
+void SRUNumeric::Dispose(){
+  delete this;
+}

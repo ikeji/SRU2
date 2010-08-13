@@ -11,6 +11,8 @@ using namespace sru;
 using namespace std;
 using namespace sru::allocator;
 
+namespace {  // anonymous namespace
+
 class MyValue : public Value{
  public:
   MyValue():MyObject(BasicObject::New().get()){
@@ -25,6 +27,9 @@ class MyValue : public Value{
   BasicObject * MyObject;
   static int Count;
   static const char* name(){ return "MyObject"; }
+  void Dispose(){
+    delete this;
+  }
  private:
   MyValue(const MyValue& obj);
   MyValue* operator=(const MyValue& obj);
@@ -85,7 +90,9 @@ TEST(ObjectPool_RefTest){
 TEST(ObjectPool_ValueTest){
   assert(ObjectPool::Instance()->Size() == 0);
   // Value Test
-  BasicObjectPtr pv = BasicObject::New(new MyValue());
+  MyValue* v = new MyValue();
+  assert(ObjectPool::Instance()->Size() == 1);
+  BasicObjectPtr pv = BasicObject::New(v);
   assert(ObjectPool::Instance()->Size() == 2);
   assert(MyValue::Count == 1);
   ObjectPool::Instance()->GarbageCollect();
@@ -129,3 +136,4 @@ TEST(ObjectPool_ValueTest){
 
 #endif
 
+}  // anonymous namespace

@@ -33,6 +33,7 @@ class Proc : public Value{
                      const ptr_vector& args);
   static void Initialize(const BasicObjectPtr& ptr);
   static const char* name(){ return "Proc"; }
+  void Dispose();
 };
 
 } // namespace sru

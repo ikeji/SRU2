@@ -27,6 +27,8 @@ class SRUString : public Value{
 
   SRUString(const SRUString& obj);
   SRUString* operator=(const SRUString& obj);
+
+  void Dispose();
 };
 
 } // namespace sru

@@ -39,6 +39,8 @@ class StackFrame : public Value{
 
   StackFrame(const StackFrame& obj);
   StackFrame &operator=(const StackFrame& obj);
+
+  void Dispose();
  private:
   struct Impl;
   Impl *pimpl;

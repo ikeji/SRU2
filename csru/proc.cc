@@ -73,6 +73,10 @@ void Proc::Invoke(const BasicObjectPtr& context,
   p->Call(context, proc, args);
 }
 
+void Proc::Dispose(){
+  delete this;
+}
+
 class SRUProc : public Proc{
  public:
   SRUProc(const vector<symbol>& vargs,

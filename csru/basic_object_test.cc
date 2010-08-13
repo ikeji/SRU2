@@ -11,6 +11,8 @@ using namespace std;
 using namespace sru_test;
 using namespace sru;
 
+namespace {  // anonymous namespace
+
 TEST(BasicObject_CreateObjectTest){
   BasicObjectPtr obj = BasicObject::New();
   assert(obj.get());
@@ -22,8 +24,14 @@ TEST(BasicObject_WithoutValueTest){
   assert(obj->Data() == NULL);
 }
 
+class MyValue : public Value{
+  void Dispose(){
+    delete this;
+  }
+};
+
 TEST(BasicObject_WithValueTest){
-  BasicObjectPtr obj = BasicObject::New(new Value());
+  BasicObjectPtr obj = BasicObject::New(new MyValue());
   assert(obj.get());
   assert(obj->Data());
 }
@@ -39,3 +47,4 @@ TEST(BasicObject_ObjectPtrTest){
   assert( p4.get() == NULL );
 }
 
+} // anonymous namespace

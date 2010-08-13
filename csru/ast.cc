@@ -21,6 +21,10 @@ string InspectExpression(const BasicObjectPtr& obj){
                 " as a Expression";
   return exp->InspectAST();
 }
+/* -------------------- Expression -------------------- */
+void Expression::Dispose(){
+  delete this;
+};
 
 /* -------------------- LetExpression -------------------- */
 

@@ -177,6 +177,7 @@ class Value {
   virtual ~Value(){}
   virtual void Mark(){}
   virtual std::string Inspect(){ return ""; }
+  virtual void Dispose() = 0;
 };
 
 // NOTE: Mark as inline follow functions by performance issue.

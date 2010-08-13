@@ -15,7 +15,7 @@ class CppCodeBuilder
 #include "native_proc.h"
 #include "constants.h"
 #include "binding.h"
-#include "string.h"
+#include "sru_string.h"
 #include "numeric.h"
 #include "library.h"
 #include "logging.h"

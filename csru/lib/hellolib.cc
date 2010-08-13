@@ -1,7 +1,7 @@
 #include <csru/basic_object.h>
 #include <csru/native_proc.h>
 #include <csru/library.h>
-#include <csru/string.h>
+#include <csru/sru_string.h>
 #include <iostream>
 
 using namespace sru;

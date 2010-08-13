@@ -7,7 +7,7 @@
 #include "basic_object.h"
 #include "constants.h"
 #include "library.h"
-#include "string.h"
+#include "sru_string.h"
 #include "native_proc.h"
 #include "interpreter.h"
 #include "stack_frame.h"

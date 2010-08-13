@@ -7,7 +7,7 @@
 #include <dlfcn.h>
 #include "native_proc.h"
 #include "library.h"
-#include "string.h"
+#include "sru_string.h"
 #include "interpreter.h"
 #include "stack_frame.h"
 #include "constants.h"

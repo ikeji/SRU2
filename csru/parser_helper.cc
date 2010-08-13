@@ -9,7 +9,7 @@
 #include <tr1/unordered_map>
 #endif
 #include "native_proc.h"
-#include "string.h"
+#include "sru_string.h"
 #include "numeric.h"
 #include "library.h"
 #include "logging.h"

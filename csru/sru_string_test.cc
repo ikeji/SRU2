@@ -4,7 +4,7 @@
 
 #include "testing.h"
 #include <cassert>
-#include "string.h"
+#include "sru_string.h"
 #include "library.h"
 #include "constants.h"
 #include "logging.h"

@@ -8,7 +8,7 @@
 #include "numeric.h"
 #include "library.h"
 #include "testing_sru.h"
-#include "string.h"
+#include "sru_string.h"
 #include "constants.h"
 #include "logging.h"
 #include "testing_ast.h"

@@ -7,7 +7,7 @@
 #include "ast.h"
 #include "object_container.h"
 #include "symbol.h"
-#include "string.h"
+#include "sru_string.h"
 
 namespace sru {
 class BasicObjectPtr;

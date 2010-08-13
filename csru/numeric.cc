@@ -10,7 +10,7 @@
 #include "class.h"
 #include "library.h"
 #include "native_proc.h"
-#include "string.h"
+#include "sru_string.h"
 #include "constants.h"
 #include "class.h"
 

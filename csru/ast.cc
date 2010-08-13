@@ -9,7 +9,7 @@
 #include <vector>
 #include "object_container.h"
 #include "library.h"
-#include "string.h"
+#include "sru_string.h"
 #include "utils.h"
 
 using namespace sru;

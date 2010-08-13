@@ -7,7 +7,7 @@
 #include <vector>
 #include "object_container.h"
 #include "basic_object.h"
-#include "string.h"
+#include "sru_string.h"
 #include "ast.h"
 #include "proc.h"
 #include "library.h"

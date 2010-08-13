@@ -4,7 +4,7 @@
 
 #include <string>
 #include "native_proc.h"
-#include "string.h"
+#include "sru_string.h"
 #include "numeric.h"
 #include "constants.h"
 #include "library.h"

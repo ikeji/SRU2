@@ -6,7 +6,7 @@
 #include "basic_object.h"
 #include "constants.h"
 #include "library.h"
-#include "string.h"
+#include "sru_string.h"
 #include "numeric.h"
 #include "testing_ast.h"
 

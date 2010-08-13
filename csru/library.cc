@@ -8,7 +8,7 @@
 #include "numeric.h"
 #include "parser.h"
 #include "object.h"
-#include "string.h"
+#include "sru_string.h"
 #include "constants.h"
 #include "binding.h"
 #include "boolean.h"

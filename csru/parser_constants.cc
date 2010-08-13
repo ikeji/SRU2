@@ -6,7 +6,7 @@
 #include "native_proc.h"
 #include "basic_object.h"
 #include "constants.h"
-#include "string.h"
+#include "sru_string.h"
 #include "numeric.h"
 #include "parser_util.h"
 

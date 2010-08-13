@@ -1,7 +1,7 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
 // 
-#include "string.h"
+#include "sru_string.h"
 
 #include <string>
 #include "basic_object.h"

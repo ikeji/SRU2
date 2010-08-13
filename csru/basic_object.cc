@@ -9,7 +9,7 @@
 #include <vector>
 #include "object_pool.h"
 #include "constants.h"
-#include "string.h"
+#include "sru_string.h"
 #include "symbol.h"
 
 using namespace sru;

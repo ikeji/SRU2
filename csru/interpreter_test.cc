@@ -11,7 +11,7 @@
 #include <string>
 #include "basic_object.h"
 #include "ast.h"
-#include "string.h"
+#include "sru_string.h"
 #include "library.h"
 #include "constants.h"
 #include "logging.h"

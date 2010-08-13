@@ -15,7 +15,7 @@
 #include "logging.h"
 #include "constants.h"
 #include "numeric.h"
-#include "string.h"
+#include "sru_string.h"
 #include "utils.h"
 #include "require.h"
 

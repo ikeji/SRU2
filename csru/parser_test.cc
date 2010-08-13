@@ -11,7 +11,7 @@
 #include "numeric.h"
 #include "library.h"
 #include "constants.h"
-#include "string.h"
+#include "sru_string.h"
 
 using namespace std;
 using namespace sru;

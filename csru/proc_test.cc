@@ -11,7 +11,7 @@
 #include "interpreter.h"
 #include "testing_ast.h"
 #include "library.h"
-#include "string.h"
+#include "sru_string.h"
 #include "logging.h"
 #include "numeric.h"
 #include "symbol.h"

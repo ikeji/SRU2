@@ -4,7 +4,7 @@
 #include "object.h"
 
 #include "basic_object.h"
-#include "string.h"
+#include "sru_string.h"
 #include "constants.h"
 #include "class.h"
 #include "library.h"

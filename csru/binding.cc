@@ -6,7 +6,7 @@
 
 #include <string>
 #include "basic_object.h"
-#include "string.h"
+#include "sru_string.h"
 #include "class.h"
 #include "library.h"
 #include "constants.h"

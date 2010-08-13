@@ -62,7 +62,7 @@ symbol_test.o \
 
 DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
-CXXFLAGS = -Wall -Werror -Weffc++ $(DFLAGS)
+CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)
 LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
 CPFLAGS  = -u
 ERB      = erb
@@ -80,7 +80,7 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-4 doesn't support mingw now. use g++-3
   CXX      = g++-3
   # g++-3 doesn't work with -Weffc++
-  CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC
+  CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC -DSRU_MAIN
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
 endif
 

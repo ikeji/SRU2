@@ -57,13 +57,10 @@ class Visitor{
 
 class LetExpression : public Expression{
  public:
-  static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const BasicObjectPtr& name,
-                            const BasicObjectPtr& rightvalue){
-    const BasicObjectPtr r = BasicObject::New(
-        new LetExpression(env,name,rightvalue));
-    return r;
-  }
+  static BasicObjectPtr New(
+      const BasicObjectPtr& env,
+      const BasicObjectPtr& name,
+      const BasicObjectPtr& rightvalue);
 
   LetExpression(const BasicObjectPtr& env,
                 const BasicObjectPtr& name,
@@ -91,14 +88,13 @@ class LetExpression : public Expression{
 
 class RefExpression : public Expression{
  public:
-  static BasicObjectPtr New(const BasicObjectPtr& env,
-                            const BasicObjectPtr& name){
-    const BasicObjectPtr r = BasicObject::New(
-        new RefExpression(env,name));
-    return r;
-  }
+  static BasicObjectPtr New(
+      const BasicObjectPtr& env,
+      const BasicObjectPtr& name);
 
-  RefExpression(const BasicObjectPtr& env, const BasicObjectPtr& name);
+  RefExpression(
+      const BasicObjectPtr& env,
+      const BasicObjectPtr& name);
   ~RefExpression();
 
   void Visit(Visitor* visitor,BasicObjectPtr obj){
@@ -121,15 +117,13 @@ class RefExpression : public Expression{
 
 class CallExpression : public Expression{
  public:
-  static BasicObjectPtr New(const BasicObjectPtr& proc,
-             const ptr_vector& arg){
-    const BasicObjectPtr r = BasicObject::New(
-        new CallExpression(proc,arg));
-    return r;
-  }
+  static BasicObjectPtr New(
+      const BasicObjectPtr& proc,
+      const ptr_vector& arg);
 
-  CallExpression(const BasicObjectPtr& proc,
-                 const ptr_vector& arg);
+  CallExpression(
+      const BasicObjectPtr& proc,
+      const ptr_vector& arg);
   ~CallExpression();
 
   void Visit(Visitor* visitor,BasicObjectPtr obj){
@@ -151,13 +145,10 @@ class CallExpression : public Expression{
 
 class ProcExpression : public Expression{
  public:
-  static BasicObjectPtr New(const std::vector<sru::symbol>& varg,
-                            const sru::symbol& retval,
-                            const ptr_vector& expressions){
-    const BasicObjectPtr r = BasicObject::New(
-        new ProcExpression(varg,retval,expressions));
-    return r;
-  }
+  static BasicObjectPtr New(
+      const std::vector<sru::symbol>& varg,
+      const sru::symbol& retval,
+      const ptr_vector& expressions);
 
   ProcExpression(const std::vector<sru::symbol>& varg,
                  const sru::symbol& retval,
@@ -187,11 +178,7 @@ class ProcExpression : public Expression{
 
 class StringExpression : public Expression{
  public:
-  static BasicObjectPtr New(const sru::symbol& str){
-    const BasicObjectPtr r = BasicObject::New(
-        new StringExpression(str));
-    return r;
-  }
+  static BasicObjectPtr New(const sru::symbol& str);
 
   StringExpression(const sru::symbol& str);
   ~StringExpression();
@@ -210,6 +197,51 @@ class StringExpression : public Expression{
   StringExpression(const StringExpression& obj);
   StringExpression* &operator=(const StringExpression& obj);
 };
+
+#ifdef SRU_MAIN
+inline BasicObjectPtr LetExpression::New(
+    const BasicObjectPtr& env,
+    const BasicObjectPtr& name,
+    const BasicObjectPtr& rightvalue){
+  const BasicObjectPtr r = BasicObject::New(
+      new LetExpression(env,name,rightvalue));
+  return r;
+}
+
+inline BasicObjectPtr RefExpression::New(
+    const BasicObjectPtr& env,
+    const BasicObjectPtr& name){
+  const BasicObjectPtr r = BasicObject::New(
+      new RefExpression(env,name));
+  return r;
+}
+  
+inline BasicObjectPtr CallExpression::New(
+    const BasicObjectPtr& proc,
+    const ptr_vector& arg){
+  const BasicObjectPtr r = BasicObject::New(
+      new CallExpression(proc,arg));
+  return r;
+}
+  
+inline BasicObjectPtr ProcExpression::New(
+    const std::vector<sru::symbol>& varg,
+    const sru::symbol& retval,
+    const ptr_vector& expressions){
+  const BasicObjectPtr r = BasicObject::New(
+      new ProcExpression(varg,retval,expressions));
+  return r;
+}
+  
+inline BasicObjectPtr StringExpression::New(
+    const sru::symbol& str){
+  const BasicObjectPtr r = BasicObject::New(
+      new StringExpression(str));
+  return r;
+}
+
+#endif
+
 
 } // namespace sru
 

@@ -98,6 +98,8 @@ string BasicObject::Inspect(int limit){
 }
 
 BasicObject::~BasicObject(){
-  delete data;
+  if (data) {
+    data->Dispose();
+  }
 }
 

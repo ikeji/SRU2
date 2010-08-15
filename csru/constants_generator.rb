@@ -99,9 +99,9 @@ compact
 compact!,compactEx
 concat
 delete,derete
-delete_if,derete_if
+deleteIf,dereteIf
 each
-each_index
+eachIndex
 empty?,emptyQ
 fetch
 fill
@@ -131,12 +131,12 @@ shuffle!,shuffleEx
 size
 slice!,sliceEx
 sort!,sortEx
-to_a
+toA
 transpose
 uniq
 uniq!,uniqEx
 unshift
-values_at
+valuesAt
 EOL
 
 100.times do |i|

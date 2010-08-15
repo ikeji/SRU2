@@ -5,7 +5,7 @@ CONSTANT_NAME
 valiableName
 _valiableNameUsedInClassSystem
 __valiableNameUsedInSRUSystem
-
+methodName
 
 
 

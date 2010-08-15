@@ -134,7 +134,7 @@ sort!,sortEx
 to_a
 transpose
 uniq
-uniqEx
+uniq!,uniqEx
 unshift
 values_at
 EOL

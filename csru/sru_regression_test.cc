@@ -148,6 +148,9 @@ TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");
 TEST_CODE(multi_closure,"{1;2;3}()", "<Numeric(3)>");
 TEST_CODE(require_native,"requireNative(\"./lib/hello.so\").ifTrue({1})","<Numeric(1)>");
 TEST_CODE(require_native_exec,"requireNative(\"./lib/hello.so\");hello2()","<String(\"Hello world\")>");
+TEST_CODE(array,"Array","<Array ... >");
+TEST_CODE(array_new,"Array.new()","<basic_object ... >");
+TEST_CODE(array_push,"Array.new() << 3","<basic_object ... >");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

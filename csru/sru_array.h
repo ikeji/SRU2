@@ -6,6 +6,7 @@
 #define SRU_ARRAY_H_
 
 #include "basic_object.h"
+#include "object_container.h"
 
 namespace sru {
 
@@ -14,15 +15,17 @@ class Array : public Value {
   static void InitializeClass(const BasicObjectPtr& array);
   static BasicObjectPtr New();
   static const char* name(){ return "Array"; }
+  object_vector* GetValue(){ return &value; }
+
+  void Dispose();
+  void Mark();
  private:
   Array();
   ~Array();
-  struct Impl;
-  Impl* pimpl;
+  object_vector value;
   
   Array(const Array& obj);
   Array &operator=(const Array& obj);
-  void Dispose();
 };
 
 } // namespace sru

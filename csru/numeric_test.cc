@@ -27,6 +27,18 @@ TEST(SRUNumeric_InitializeTest){
   assert(SRUNumeric::GetValue(obj) == 4);
 }
 
+TEST(SRUNumeric_TryGetValueTest){
+  BasicObjectPtr obj = SRUNumeric::New(3);
+  int i = 0;
+  assert(SRUNumeric::TryGetValue(obj, &i));
+  assert(i == 3);
+
+  obj = BasicObject::New();
+  i = -1;
+  assert(! SRUNumeric::TryGetValue(obj, &i));  // Fail get value.
+  assert(i == -1);  // Doesn't change value.
+}
+
 TEST(SRUNumeric_InspectTest){
   LOG_ERROR << SRUNumeric::New(123)->Inspect();
   assert(SRUNumeric::New(123)->Inspect() == "<Numeric(123)>");

@@ -130,9 +130,15 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
 
 int SRUNumeric::GetValue(const BasicObjectPtr& obj){
   SRUNumeric* n = obj->GetData<SRUNumeric>();
-  if(!n)
-    return 0;
+  if(!n) return 0;
   return n->pimpl->value;
+}
+  
+bool SRUNumeric::TryGetValue(const BasicObjectPtr& obj, int* val){
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
+  if(!n) return false;
+  *val = n->pimpl->value;
+  return true;
 }
 
 string SRUNumeric::Inspect(){

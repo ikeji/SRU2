@@ -17,6 +17,7 @@ class SRUNumeric : public Value{
   static void InitializeClassObject(const BasicObjectPtr& numeric);
   static BasicObjectPtr New(int i);
   static int GetValue(const BasicObjectPtr& obj);
+  static bool TryGetValue(const BasicObjectPtr& obj, int* val);
   std::string Inspect();
   static const char* name(){ return "SRUNumeric"; }
   void Dispose();

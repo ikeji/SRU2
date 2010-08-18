@@ -26,39 +26,46 @@ class Logging{
   sru_logging::Logging name(__FILE__,__LINE__);
 
 #define LOG_ALWAYS \
-  sru_logging::Logging(__FILE__,__LINE__).ostream()
+  if(true) sru_logging::Logging(__FILE__,__LINE__).ostream()
 
+#define LOG_NO \
+  if(false) sru_logging::Logging(__FILE__,__LINE__).ostream()
+
+#define DCHECK(assert) \
+  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__,assert).ostream()
+
+#define ARGLEN(n) \
+  DCHECK(args.size() >= n) << "Less arguments."
 
 #ifdef DEBUG
 
 #define CHECK(assert) \
-  if(!(assert)) sru_logging::Logging(__FILE__, __LINE__,assert).ostream()
+  DCHECK(assert)
 #define LOG_ERROR \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_ALWAYS
 
 #else
 
 // We don't check 'assert' without DEBUG option.
 // TODO: Evaluate 'assert'?
 #define CHECK(assert) \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  DCHECK(true)
 #define LOG_ERROR \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_NO
 
 #endif // DEBUG
-
 
 #ifdef DEBUG_INFO
 
 #define LOG \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_ALWAYS
 #define IF_DEBUG_INFO \
   if(true)
 
 #else
 
 #define LOG \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_NO
 #define IF_DEBUG_INFO \
   if(false)
 
@@ -68,14 +75,14 @@ class Logging{
 #ifdef DEBUG_TRACE
 
 #define LOG_TRACE \
-  if(true) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_ALWAYS
 #define IF_DEBUG_TRACE \
   if(true)
 
 #else
 
 #define LOG_TRACE \
-  if(false) sru_logging::Logging(__FILE__, __LINE__).ostream()
+  LOG_NO
 #define IF_DEBUG_TRACE \
   if(false)
 

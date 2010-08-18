@@ -218,7 +218,7 @@ DEFINE_SRU_PROC(ArraySortEx){
 }
 
 DEFINE_SRU_PROC(ArrayToArray){
-  assert(args.size() >= 1);
+  ARGLEN(1);
   return args[0];
 }
 

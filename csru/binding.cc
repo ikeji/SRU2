@@ -36,7 +36,7 @@ BasicObjectPtr Binding::New(const BasicObjectPtr& parent){
 }
 
 DEFINE_SRU_PROC_SMASH(FindSlot){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const BasicObjectPtr& env = args[0];
   LOG_TRACE << env->Inspect();
   const symbol& name = SRUString::GetValue(args[1]);

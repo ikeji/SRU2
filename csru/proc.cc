@@ -189,7 +189,7 @@ DEFINE_SRU_PROC_SMASH(_whileTrue_internal){
 // TODO: test this function.
 DEFINE_SRU_PROC_SMASH(whileTrue){
   static BasicObjectPtr whileTrue_internal;
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(sym::whileTrue_internal()))),
@@ -214,7 +214,7 @@ DEFINE_SRU_PROC_SMASH(_loop_internal){
 // TODO: test this function.
 DEFINE_SRU_PROC_SMASH(loop){
   static BasicObjectPtr loop_internal;
-  assert(args.size() > 0);
+  ARGLEN(1);
   const BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(sym::loop_internal()))),

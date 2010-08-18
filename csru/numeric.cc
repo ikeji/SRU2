@@ -29,13 +29,13 @@ BasicObjectPtr SRUNumeric::New(int value){
 }
 
 DEFINE_SRU_PROC(NumericParse){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   string narg = SRUString::GetValue(args[1]).to_str();
   return SRUNumeric::New(atoi(narg.c_str()));
 }
 
 DEFINE_SRU_PROC(Equal){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   if(left == right){
@@ -46,7 +46,7 @@ DEFINE_SRU_PROC(Equal){
 }
 
 DEFINE_SRU_PROC(NotEqual){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   if(left == right){
@@ -57,7 +57,7 @@ DEFINE_SRU_PROC(NotEqual){
 }
 
 DEFINE_SRU_PROC(GreaterThan){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   if(left > right){
@@ -68,7 +68,7 @@ DEFINE_SRU_PROC(GreaterThan){
 }
 
 DEFINE_SRU_PROC(LessThan){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   if(left < right){
@@ -80,35 +80,35 @@ DEFINE_SRU_PROC(LessThan){
 
 
 DEFINE_SRU_PROC(Plus){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   return SRUNumeric::New(left+right);
 }
 
 DEFINE_SRU_PROC(Minous){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   return SRUNumeric::New(left-right);
 }
 
 DEFINE_SRU_PROC(Asterisk){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   return SRUNumeric::New(left*right);
 }
 
 DEFINE_SRU_PROC(Slash){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
   return SRUNumeric::New(left/right);
 }
 
 DEFINE_SRU_PROC(Invert){
-  assert(args.size() >= 1);
+  ARGLEN(1);
   const int& v = SRUNumeric::GetValue(args[0]);
   return SRUNumeric::New(-v);
 }

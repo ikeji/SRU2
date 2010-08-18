@@ -72,7 +72,8 @@ DEFINE_SRU_PROC(closure_end){ // this, src, pos, closure_begin
 }
 
 DEFINE_SRU_PROC(closure_varg_begin){ // this, src, pos, 
-  assert(args.size() >= 3);
+  PARGCHK();
+  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "closure_varg_begin";
   return CreateTrue(args[2], P());
 }

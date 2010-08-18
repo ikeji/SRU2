@@ -44,7 +44,7 @@ void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
 }
 
 DEFINE_SRU_PROC_SMASH(findSlot){
-  assert(args.size() >= 2);
+  ARGLEN(2);
   const BasicObjectPtr& obj = args[0];
   const symbol& name = SRUString::GetValue(args[1]);
   if(obj->HasSlot(sym::klass())){
@@ -77,7 +77,7 @@ DEFINE_SRU_PROC_SMASH(findSlot){
 }
 
 DEFINE_SRU_PROC(subclass){
-  assert(args.size() >= 1);
+  ARGLEN(1);
   const BasicObjectPtr new_class = BasicObject::New();
   Class::SetAsSubclass(new_class, args[0]);
   if(args.size() == 2){
@@ -87,7 +87,7 @@ DEFINE_SRU_PROC(subclass){
 }
 
 DEFINE_SRU_PROC(object_new){
-  assert(args.size() >= 1);
+  ARGLEN(1);
   const BasicObjectPtr obj = BasicObject::New();
   Class::InitializeInstance(obj, args[0]);
   return obj;

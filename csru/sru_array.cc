@@ -52,17 +52,6 @@ DEFINE_SRU_PROC(ArrayPipe){
   return Library::Instance()->Nil();
 }
 
-// TODO: Test this.
-DEFINE_SRU_PROC(ArrayLtLt){
-  ARGLEN(2);
-  Array* array = args[0]->GetData<Array>();
-  CHECK(array) << "Array not found.";
-  for(size_t i=1;i<args.size();i++){
-    array->GetValue()->push_back(args[i].get());
-  }
-  return args[0];
-}
-
 // TODO: Need <->
 
 DEFINE_SRU_PROC(ArrayGet){ // Slice
@@ -218,9 +207,15 @@ DEFINE_SRU_PROC(ArrayProduct){
   return Library::Instance()->Nil();
 }
 
+// TODO: Test this.
 DEFINE_SRU_PROC(ArrayPush){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(2);
+  Array* array = args[0]->GetData<Array>();
+  CHECK(array) << "Array not found.";
+  for(size_t i=1;i<args.size();i++){
+    array->GetValue()->push_back(args[i].get());
+  }
+  return args[0];
 }
 
 DEFINE_SRU_PROC(ArrayRAssoc){
@@ -326,7 +321,7 @@ void Array::InitializeClass(const BasicObjectPtr& array){
   DEFMETHOD(plus, ArrayPlus);
   DEFMETHOD(minus, ArrayMinus);
   DEFMETHOD(pipe, ArrayPipe);
-  DEFMETHOD(ltlt, ArrayLtLt);
+  DEFMETHOD(ltlt, ArrayPush);
   DEFMETHOD(get, ArrayGet);
   DEFMETHOD(at, ArrayGet);
   DEFMETHOD(slice, ArrayGet);

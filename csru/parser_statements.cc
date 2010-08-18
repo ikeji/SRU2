@@ -20,12 +20,14 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(statements_begin){ // this, src, pos, 
+  PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "statements_begin";
   return CreateTrue(args[2], E(args[1],args[2], P()));
 }
 
 DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, statement
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "statements_statement";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -38,6 +40,7 @@ DEFINE_SRU_PROC(statements_statement){ // this, src, pos, statements_begin, stat
 }
 
 DEFINE_SRU_PROC(statements_end){ // this, src, pos, statements_begin
+  PARGCHK();
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "statements_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");

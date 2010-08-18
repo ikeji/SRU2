@@ -71,6 +71,7 @@ void CleanUpMemoize(){
 }  // namespace memoize
 
 DEFINE_SRU_PROC(memoize) { // this, func, src, pos, result
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[3], "Internal parser error.");
   return memoize::SetToMemoize(args[1], args[2], args[3], args[4]);
 }

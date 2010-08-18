@@ -21,6 +21,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -53,6 +54,7 @@ DEFINE_SRU_PROC(class_statement_begin){ // this, src, pos, ident, statement
 }
 
 DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
+  PARGCHK();
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_method_begin";
   const BasicObjectPtr ast = P();
@@ -65,6 +67,7 @@ DEFINE_SRU_PROC(class_statement_method_begin){ // this, src, pos, ident
 }
 
 DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement_method_begin, ident
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "class_statement_method_varg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -80,6 +83,7 @@ DEFINE_SRU_PROC(class_statement_method_varg){ // this, src, pos, class_statement
 }
 
 DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_begin, class_statement_method_begin, statements
+  PARGCHK();
   PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
   LOG << "class_statement_method_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -116,6 +120,7 @@ DEFINE_SRU_PROC(class_statement_method_end){ // this, src, pos, class_statement_
 }
 
 DEFINE_SRU_PROC(class_statement_end){ // this, src, pos, class_statement_begin
+  PARGCHK();
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "class_statement_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");

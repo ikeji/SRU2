@@ -128,6 +128,7 @@ DEFINE_SRU_PROC_SMASH(Parse){
       ret += <<-EOL
 DEFINE_SRU_PROC_SMASH(#{sym}){
 #{pri2(parser,sym)}
+  PARGCHK_SMASH();
   PARSER_CHECK_SMASH(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   
@@ -171,6 +172,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
       ret += <<-EOL
 DEFINE_SRU_PROC(term#{term.num}){
   const static string target = "#{term.string}";
+  PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   const string& src = SRUString::GetValue(args[1]).to_str();

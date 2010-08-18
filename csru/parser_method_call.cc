@@ -20,6 +20,7 @@ using namespace sru_test;
 namespace sru_parser {
 
 DEFINE_SRU_PROC(instance_method_begin){ // this, src, pos, 
+  PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_begin";
   // TODO: remove marker
@@ -29,6 +30,7 @@ DEFINE_SRU_PROC(instance_method_begin){ // this, src, pos,
 }
 
 DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_begin, method_call
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_self";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -38,6 +40,7 @@ DEFINE_SRU_PROC(instance_method_self){ // this, src, pos, instance_method_begin,
 }
 
 DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
+  PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_method_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -54,6 +57,7 @@ DEFINE_SRU_PROC(instance_method_method_begin){ // this, src, pos, ident
 }
 
 DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_method_begin, statement
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -67,6 +71,7 @@ DEFINE_SRU_PROC(instance_method_method_arg){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_method_begin, instance_method_begin
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_method_end";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -84,6 +89,7 @@ DEFINE_SRU_PROC(instance_method_method_end){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, ident
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_ref";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -100,6 +106,7 @@ DEFINE_SRU_PROC(instance_method_ref){ // this, src, pos, instance_method_begin, 
 }
 
 DEFINE_SRU_PROC(instance_method_call_begin){ // this, src, pos, instance_method_begin
+  PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   LOG << "instance_method_call_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -108,6 +115,7 @@ DEFINE_SRU_PROC(instance_method_call_begin){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_call_begin, statement
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -122,6 +130,7 @@ DEFINE_SRU_PROC(instance_method_call_arg){ // this, src, pos, instance_method_ca
 }
 
 DEFINE_SRU_PROC(instance_method_call_end){ // this, src, pos, instance_method_begin, instance_method_call_begin
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_end";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -131,6 +140,7 @@ DEFINE_SRU_PROC(instance_method_call_end){ // this, src, pos, instance_method_be
 }
 
 DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_begin, statement
+  PARGCHK();
   PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
   LOG << "instance_method_call_index";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -152,6 +162,7 @@ DEFINE_SRU_PROC(instance_method_call_index){ // this, src, pos, instance_method_
 }
 
 DEFINE_SRU_PROC(instance_method_end){ // this, src, pos, instance_method_begin, method_call
+  PARGCHK();
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "instance_method_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");

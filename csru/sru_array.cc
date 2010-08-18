@@ -4,6 +4,7 @@
 #include "sru_array.h"
 
 #include <sstream>
+#include <vector>
 #include "basic_object.h"
 #include "class.h"
 #include "native_proc.h"
@@ -12,6 +13,7 @@
 #include "library.h"
 #include "object_container.h"
 #include "logging.h"
+#include "numeric.h"
 
 using namespace sru;
 using namespace std;
@@ -58,7 +60,17 @@ DEFINE_SRU_PROC(ArrayGet){ // Slice
   ARGLEN(2);
   // TODO: impliment array[1,2]
   // TODO: impliment array[1..3]
-  CHECK(false) << "Not impliment";
+  Array* array = args[0]->GetData<Array>();
+  CHECK(array) << "Array not found.";
+  int index = 0;
+  CHECK(SRUNumeric::TryGetValue(args[1], &index));
+  LOG_ALWAYS << "index: " << index;
+  if ((int)array->GetValue()->size() > index){
+    if(index < 0) index += array->GetValue()->size();
+    if(index >= 0){
+      return array->GetValue()->at(index);
+    }
+  }
   return Library::Instance()->Nil();
 }
 

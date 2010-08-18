@@ -66,7 +66,7 @@ DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primar
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr ast =
     CreateAst(args[1], args[2],
-              args[3]->Get(sym::ast()), sym::invert(),
+              args[3]->Get(sym::ast()), sym::get(),
               args[4]->Get(sym::ast()));
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);

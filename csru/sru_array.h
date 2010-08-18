@@ -7,6 +7,7 @@
 
 #include "basic_object.h"
 #include "object_container.h"
+#include <string>
 
 namespace sru {
 
@@ -16,6 +17,7 @@ class Array : public Value {
   static BasicObjectPtr New();
   static const char* name(){ return "Array"; }
   object_vector* GetValue(){ return &value; }
+  virtual std::string Inspect();
 
   void Dispose();
   void Mark();

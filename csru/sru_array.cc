@@ -3,6 +3,7 @@
 
 #include "sru_array.h"
 
+#include <sstream>
 #include "basic_object.h"
 #include "class.h"
 #include "native_proc.h"
@@ -13,6 +14,7 @@
 #include "logging.h"
 
 using namespace sru;
+using namespace std;
 
 namespace sru {
 
@@ -403,6 +405,22 @@ void Array::Mark(){
       it++){
     (*it)->Mark();
   }
+}
+
+std::string Array::Inspect(){
+  ostringstream os;
+  os << "Array ";
+  os << "size=" << value.size() << " ";
+  os << "[";
+  for(object_vector::iterator it = value.begin();
+      it != value.end();
+      it++){
+    if(it != value.begin()) os << ", ";
+    os << (*it)->Inspect();
+  }
+  os << "]";
+  return os.str();
+
 }
 
 } // namespace sru

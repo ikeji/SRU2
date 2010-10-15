@@ -254,8 +254,14 @@ DEFINE_SRU_PROC(ArrayRejectEx){
 }
 
 DEFINE_SRU_PROC(ArrayReplace){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(2);
+  Array* self = args[0]->GetData<Array>();
+  CHECK(self) << "Array not found.";
+  Array* array = args[1]->GetData<Array>();
+  CHECK(array) << "Array not found.";
+  object_vector* that = array->GetValue();
+  self->GetValue()->assign(that->begin(), that->end());
+  return args[0];
 }
 
 DEFINE_SRU_PROC(ArrayReverse){

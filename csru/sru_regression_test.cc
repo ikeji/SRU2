@@ -153,6 +153,7 @@ TEST_CODE(array_new,"Array.new()","<Array size=0 []>");
 TEST_CODE(array_push,"Array.new() << 3","<Array size=1 [<Numeric(3)>]>");
 TEST_CODE(array_get,"a = Array.new() << 1 << 2 << 3; a[1]", "<Numeric(2)>");
 TEST_CODE(array_set,"a = Array.new() << 1 << 2 << 3; a[1]=5;a", "<Array size=3 [<Numeric(1)>, <Numeric(5)>, <Numeric(3)>]>");
+TEST_CODE(array_replace,"(Array.new() << 1 << 2 ).replace( Array.new() << 3 << 2 << 1)", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

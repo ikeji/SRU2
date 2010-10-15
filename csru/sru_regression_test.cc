@@ -157,6 +157,7 @@ TEST_CODE(array_replace,"(Array.new() << 1 << 2 ).replace( Array.new() << 3 << 2
 TEST_CODE(array_reverse,"(Array.new() << 1 << 2 << 3).reverse()", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
 TEST_CODE(array_reverse2,"(a = Array.new() << 1 << 2 << 3).reverse();a", "<Array size=3 [<Numeric(1)>, <Numeric(2)>, <Numeric(3)>]>");
 TEST_CODE(array_reverse_ex,"(a = Array.new() << 1 << 2 << 3).reverse!();a", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
+TEST_CODE(numeric_times,"a=Array.new();3.times({a<<1});a", "<Array size=3 [<Numeric(1)>, <Numeric(1)>, <Numeric(1)>]>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

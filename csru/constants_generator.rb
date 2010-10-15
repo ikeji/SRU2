@@ -57,6 +57,11 @@ minus
 asterisk
 slash
 invert
+times
+_i
+_j
+_block
+_times_internal
 # map
 get
 set

@@ -104,8 +104,11 @@ DEFINE_SRU_PROC(ArrayChoice){
 }
 
 DEFINE_SRU_PROC(ArrayClear){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(1);
+  Array* array = args[0]->GetData<Array>();
+  CHECK(array) << "Array not found.";
+  array->GetValue()->clear();
+  return args[0];
 }
 
 DEFINE_SRU_PROC(ArrayCollectEx){

@@ -5,6 +5,7 @@
 
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include "basic_object.h"
 #include "class.h"
 #include "native_proc.h"
@@ -265,13 +266,23 @@ DEFINE_SRU_PROC(ArrayReplace){
 }
 
 DEFINE_SRU_PROC(ArrayReverse){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(1);
+  Array* self = args[0]->GetData<Array>();
+  CHECK(self) << "Array not found.";
+  BasicObjectPtr ret = Array::New();
+  Array* array = ret->GetData<Array>();
+  object_vector* that = self->GetValue();
+  array->GetValue()->assign(that->rbegin(), that->rend());
+  return ret;
 }
 
 DEFINE_SRU_PROC(ArrayReverseEx){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(1);
+  Array* self = args[0]->GetData<Array>();
+  CHECK(self) << "Array not found.";
+  object_vector* that = self->GetValue();
+  reverse(that->begin(), that->end());
+  return args[0];
 }
 
 DEFINE_SRU_PROC(ArrayRIndex){

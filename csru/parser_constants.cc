@@ -28,6 +28,10 @@ DEFINE_SRU_PROC(ident){
   int epos = pos;
   while(true){
     if(epos > (int)str.size()) break;
+    // Look ahead for cut before "!=".
+    if(epos + 1 < (int)str.size() &&
+       str[epos] == '!' &&
+       str[epos + 1] == '=') break;
     if(
         (str[epos] < 'a' || 'z' < str[epos]) &&
         (str[epos] < 'A' || 'Z' < str[epos]) &&
@@ -35,6 +39,9 @@ DEFINE_SRU_PROC(ident){
           (str[epos] < '0' || '9' < str[epos])
         ) &&
         (str[epos] != '_') &&
+        (str[epos] != '!') &&
+        // TODO: Should I enable this?
+        //(str[epos] != '?') &&
         true
         ) break;
     epos++;

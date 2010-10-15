@@ -51,6 +51,9 @@ class symbol {
   bool operator==(const symbol& other) const {
     return getid() == other.getid();
   }
+  bool operator!=(const symbol& other) const {
+    return getid() != other.getid();
+  }
  private:
   std::string str;
   mutable int id;

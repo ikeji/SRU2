@@ -64,7 +64,7 @@ DEFINE_SRU_PROC(ArrayGet){ // Slice
   CHECK(array) << "Array not found.";
   int index = 0;
   CHECK(SRUNumeric::TryGetValue(args[1], &index));
-  LOG_ALWAYS << "index: " << index;
+  LOG_TRACE << "index: " << index;
   if ((int)array->GetValue()->size() > index){
     if(index < 0) index += array->GetValue()->size();
     if(index >= 0){
@@ -75,8 +75,21 @@ DEFINE_SRU_PROC(ArrayGet){ // Slice
 }
 
 DEFINE_SRU_PROC(ArraySet){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(3);
+  // TODO: impliment array[1,2]=3
+  // TODO: impliment array[1..3]=4
+  Array* array = args[0]->GetData<Array>();
+  CHECK(array) << "Array not found.";
+  int index = 0;
+  CHECK(SRUNumeric::TryGetValue(args[1], &index));
+  LOG_TRACE << "index: " << index;
+  LOG_TRACE << "size: " << array->GetValue()->size();
+  if(index < 0) index += array->GetValue()->size();
+  LOG_TRACE << "index: " << index;
+  CHECK(0 <= index) << "invalid index";
+  CHECK(index < (int)array->GetValue()->size()) << "invalid index";
+  array->GetValue()->at(index) = args[2].get();
+  return args[2];
 }
 
 DEFINE_SRU_PROC(ArrayAssoc){

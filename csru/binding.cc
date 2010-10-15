@@ -42,17 +42,13 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
   const symbol& name = SRUString::GetValue(args[1]);
   if(!env->HasSlot(sym::_parent())){
     LOG << "Parent not found.";
-    Interpreter::Instance()->
-      CurrentStackFrame()->
-      PushResult(Library::Instance()->Nil());
+    PushResult(Library::Instance()->Nil());
     return;
   }
   const BasicObjectPtr& parent = env->Get(sym::_parent());
   if(parent->HasSlot(name)){
     LOG << "find in parent: " << parent->Inspect() << " --> " << parent->Get(name)->Inspect();
-    Interpreter::Instance()->
-      CurrentStackFrame()->
-      PushResult(parent->Get(name));
+    PushResult(parent->Get(name));
     return;
   }
   if(parent->HasSlot(sym::__findSlot())){
@@ -63,7 +59,5 @@ DEFINE_SRU_PROC_SMASH(FindSlot){
     return;
   }
   LOG << "Not found.";
-  Interpreter::Instance()->
-    CurrentStackFrame()->
-    PushResult(Library::Instance()->Nil());
+  PushResult(Library::Instance()->Nil());
 }

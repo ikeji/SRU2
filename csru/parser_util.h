@@ -62,8 +62,7 @@ sru::BasicObjectPtr CreateAst(
   if (cond) {} else { \
     LOG_ERROR << "An internal error happened at " << \
         __FILE__ << ":" << __LINE__; \
-    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame(); \
-    current_frame->PushResult(CreateFalse(pos, message)); \
+    PushResult(CreateFalse(pos, message)); \
     return; \
   }
 
@@ -75,8 +74,7 @@ sru::BasicObjectPtr CreateAst(
 
 #define PARSER_CHECK_SMASH(cond, pos, message) \
   if (cond) {} else { \
-    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame(); \
-    current_frame->PushResult(CreateFalse(pos, message)); \
+    PushResult(CreateFalse(pos, message)); \
     return; \
   }
 

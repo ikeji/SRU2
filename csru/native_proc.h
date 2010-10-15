@@ -25,6 +25,7 @@ class NativeProc: public Proc{
                                      const BasicObjectPtr& proc,
                                      const ptr_vector& args) = 0;
   virtual std::string Inspect();
+  static void PushResult(const BasicObjectPtr& result);
 };
 
 // TODO: Change object hierarchy.

@@ -26,8 +26,7 @@ void NativeProc::Call(const BasicObjectPtr& context,
     }
   }
   const BasicObjectPtr ret = method_body(context, proc, arg);
-  StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
-  current_frame->PushResult(ret);
+  PushResult(ret);
 }
 void NativeProcWithStackSmash::Call(const BasicObjectPtr& context,
                                     const BasicObjectPtr& proc,
@@ -37,4 +36,9 @@ void NativeProcWithStackSmash::Call(const BasicObjectPtr& context,
 
 string NativeProc::Inspect(){
   return "Proc({ -- Native Code -- })";
+}
+  
+void NativeProc::PushResult(const BasicObjectPtr& result){
+  StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
+  current_frame->PushResult(result);
 }

@@ -134,8 +134,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
   
   const BasicObjectPtr& r = memoize::GetFromMemoize(proc, args[1], args[2]);
   if(r.get() != NULL) {
-    StackFrame* current_frame = Interpreter::Instance()->CurrentStackFrame();
-    current_frame->PushResult(r);
+    PushResult(r);
     return;
   }
 

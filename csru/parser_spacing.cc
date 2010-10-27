@@ -24,7 +24,7 @@ DEFINE_SRU_PROC(spc){
   LOG << "spc start: pos = " << epos;
   while(true){
     if(epos > (int)str.size()) break;
-    if(str[epos] != ' ') break;
+    if(str[epos] != ' ' && str[epos] != '\t') break;
     epos++;
   }
   LOG << "spc result: epos = " << epos;
@@ -40,7 +40,8 @@ DEFINE_SRU_PROC(spc_or_lf){
   LOG << "spc start: pos = " << epos;
   while(true){
     if(epos > (int)str.size()) break;
-    if(str[epos] != ' ' && str[epos] != '\r' && str[epos] != '\n') break;
+    if(str[epos] != ' ' && str[epos] != '\r'
+       && str[epos] != '\n' && str[epos] != '\t') break;
     epos++;
   }
   LOG << "spc result: epos = " << epos;

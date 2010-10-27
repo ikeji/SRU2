@@ -1,7 +1,7 @@
 // Programing Language SRU
 // Copyright(C) 2005-2009 IKeJI
 // 
-#include "math.h"
+#include "sru_math.h"
 
 #include <cmath>
 #include <cstdlib>

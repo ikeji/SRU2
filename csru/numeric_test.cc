@@ -18,34 +18,47 @@ using namespace sru;
 using namespace sru_test;
 
 TEST(SRUNumeric_InitializeTest){
-  BasicObjectPtr obj = SRUNumeric::New(3);
+  BasicObjectPtr obj = SRUNumeric::NewInt(3);
   assert(obj->Get(sym::klass()) == Library::Instance()->Numeric());
-  assert(SRUNumeric::GetValue(obj) == 3);
+  assert(SRUNumeric::GetIntValue(obj) == 3);
 
-  obj = SRUNumeric::New(4);
+  obj = SRUNumeric::NewInt(4);
   assert(obj->Get(sym::klass()) == Library::Instance()->Numeric());
-  assert(SRUNumeric::GetValue(obj) == 4);
+  assert(SRUNumeric::GetIntValue(obj) == 4);
+  assert(SRUNumeric::GetDoubleValue(obj) == 4.0);
+  
+  obj = SRUNumeric::NewDouble(1.2);
+  assert(obj->Get(sym::klass()) == Library::Instance()->Numeric());
+  assert(SRUNumeric::GetIntValue(obj) == 1.0);
+  assert(SRUNumeric::GetDoubleValue(obj) == 1.2);
 }
 
 TEST(SRUNumeric_TryGetValueTest){
-  BasicObjectPtr obj = SRUNumeric::New(3);
+  BasicObjectPtr obj = SRUNumeric::NewInt(3);
   int i = 0;
-  assert(SRUNumeric::TryGetValue(obj, &i));
+  assert(SRUNumeric::TryGetIntValue(obj, &i));
   assert(i == 3);
 
   obj = BasicObject::New();
   i = -1;
-  assert(! SRUNumeric::TryGetValue(obj, &i));  // Fail get value.
+  assert(! SRUNumeric::TryGetIntValue(obj, &i));  // Fail get value.
   assert(i == -1);  // Doesn't change value.
 }
 
 TEST(SRUNumeric_InspectTest){
-  LOG_ERROR << SRUNumeric::New(123)->Inspect();
-  assert(SRUNumeric::New(123)->Inspect() == "<Numeric(123)>");
-  LOG_ERROR << SRUNumeric::New(0)->Inspect();
-  assert(SRUNumeric::New(0)->Inspect() == "<Numeric(0)>");
-  LOG_ERROR << SRUNumeric::New(-123)->Inspect();
-  assert(SRUNumeric::New(-123)->Inspect() == "<Numeric(-123)>");
+  LOG_ERROR << SRUNumeric::NewInt(123)->Inspect();
+  assert(SRUNumeric::NewInt(123)->Inspect() == "<Numeric(123)>");
+  LOG_ERROR << SRUNumeric::NewInt(0)->Inspect();
+  assert(SRUNumeric::NewInt(0)->Inspect() == "<Numeric(0)>");
+  LOG_ERROR << SRUNumeric::NewInt(-123)->Inspect();
+  assert(SRUNumeric::NewInt(-123)->Inspect() == "<Numeric(-123)>");
+
+  LOG_ERROR << SRUNumeric::NewDouble(1.23)->Inspect();
+  assert(SRUNumeric::NewDouble(1.23)->Inspect() == "<Numeric(1.23)>");
+  LOG_ERROR << SRUNumeric::NewDouble(0)->Inspect();
+  assert(SRUNumeric::NewDouble(0)->Inspect() == "<Numeric(0)>");
+  LOG_ERROR << SRUNumeric::NewDouble(-123)->Inspect();
+  assert(SRUNumeric::NewDouble(-123)->Inspect() == "<Numeric(-123)>");
 }
 
 TEST(SRUNumeric_ParseTest){
@@ -53,7 +66,7 @@ TEST(SRUNumeric_ParseTest){
                                   SRUString::New(symbol("3")));
   assert(res.get());
   assert(res->Get(sym::klass()) == Library::Instance()->Numeric());
-  assert(SRUNumeric::GetValue(res) == 3);
+  assert(SRUNumeric::GetIntValue(res) == 3);
 }
 
 void check_has(const symbol& sym){
@@ -231,7 +244,7 @@ TEST(SRUNumeric_PlusTest1){
   BasicObjectPtr result = Interpreter::Instance()->Eval(proc);
   assert(result.get());
   assert(result != Library::Instance()->Nil());
-  assert(SRUNumeric::GetValue(result) == 123+456);
+  assert(SRUNumeric::GetIntValue(result) == 123+456);
 }
 
 TEST(SRUNumeric_MinusTest){
@@ -252,7 +265,7 @@ TEST(SRUNumeric_MinusTest1){
   BasicObjectPtr result = Interpreter::Instance()->Eval(proc);
   assert(result.get());
   assert(result != Library::Instance()->Nil());
-  assert(SRUNumeric::GetValue(result) == 123-456);
+  assert(SRUNumeric::GetIntValue(result) == 123-456);
 }
 
 TEST(SRUNumeric_AsteriskTest){
@@ -273,7 +286,7 @@ TEST(SRUNumeric_AsteriskTest1){
   BasicObjectPtr result = Interpreter::Instance()->Eval(proc);
   assert(result.get());
   assert(result != Library::Instance()->Nil());
-  assert(SRUNumeric::GetValue(result) == 123*456);
+  assert(SRUNumeric::GetIntValue(result) == 123*456);
 }
 
 TEST(SRUNumeric_SlashTest){
@@ -294,5 +307,5 @@ TEST(SRUNumeric_SlashTest1){
   BasicObjectPtr result = Interpreter::Instance()->Eval(proc);
   assert(result.get());
   assert(result != Library::Instance()->Nil());
-  assert(SRUNumeric::GetValue(result) == 456/123);
+  assert(SRUNumeric::GetIntValue(result) == 456/123);
 }

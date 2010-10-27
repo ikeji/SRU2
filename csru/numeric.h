@@ -15,14 +15,19 @@ namespace sru {
 class SRUNumeric : public Value{
  public:
   static void InitializeClassObject(const BasicObjectPtr& numeric);
-  static BasicObjectPtr New(int i);
-  static int GetValue(const BasicObjectPtr& obj);
-  static bool TryGetValue(const BasicObjectPtr& obj, int* val);
+  static BasicObjectPtr NewInt(int i);
+  static BasicObjectPtr NewDouble(double i);
+  static int GetIntValue(const BasicObjectPtr& obj);
+  static double GetDoubleValue(const BasicObjectPtr& obj);
+  static bool TryGetIntValue(const BasicObjectPtr& obj, int* val);
+  static bool TryGetDoubleValue(const BasicObjectPtr& obj, double* val);
+  static bool IsReal(const BasicObjectPtr& obj);
   std::string Inspect();
   static const char* name(){ return "SRUNumeric"; }
   void Dispose();
  private:
   SRUNumeric(int i);
+  SRUNumeric(double i);
   ~SRUNumeric();
 
   struct Impl;

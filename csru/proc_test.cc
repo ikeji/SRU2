@@ -236,5 +236,5 @@ TEST(Proc_LoopTest){
     "}()");
   BasicObjectPtr r = Interpreter::Instance()->Eval(loop_test);
   assert(r.get());
-  assert(SRUNumeric::GetValue(r) == 11);
+  assert(SRUNumeric::GetIntValue(r) == 11);
 }

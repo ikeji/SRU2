@@ -127,7 +127,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     if(!obj->HasSlot(sym::ast()) ||
        IsNil(obj->Get(sym::ast()))){
       if(obj->HasSlot(sym::pos())){
-        PrintErrorPosition(src, SRUNumeric::GetValue(obj->Get(sym::pos())));
+        PrintErrorPosition(src, SRUNumeric::GetIntValue(obj->Get(sym::pos())));
       }
       // TODO: Check more detail..
       LOG_ERROR << "Parse error: " <<
@@ -141,7 +141,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   
     result = Eval(ast);
 
-    size_t pos = SRUNumeric::GetValue(obj->Get(sym::pos()));
+    size_t pos = SRUNumeric::GetIntValue(obj->Get(sym::pos()));
     if(pos == src.size()) break;
     src = src.substr(pos);
   }

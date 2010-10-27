@@ -102,7 +102,7 @@ void InitializeParserObject(const BasicObjectPtr& parser){
 }
 
 DEFINE_SRU_PROC_SMASH(Parse){
-  PARSER_CHECK_SMASH(args.size() >= 2, SRUNumeric::New(0), "Internal parser error.");
+  PARSER_CHECK_SMASH(args.size() >= 2, SRUNumeric::NewInt(0), "Internal parser error.");
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
       A(
@@ -175,12 +175,12 @@ DEFINE_SRU_PROC(term#{term.num}){
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   const string& src = SRUString::GetValue(args[1]).to_str();
-  int pos = SRUNumeric::GetValue(args[2]);
+  int pos = SRUNumeric::GetIntValue(args[2]);
   // TODO: Define ParserResult type.
   const BasicObjectPtr ret = BasicObject::New();
   if(src.compare(pos, target.size(), target) == 0){
     ret->Set(sym::status(), Library::Instance()->True());
-    ret->Set(sym::pos(), SRUNumeric::New(pos + target.size()));
+    ret->Set(sym::pos(), SRUNumeric::NewInt(pos + target.size()));
   } else {
     ret->Set(sym::status(), Library::Instance()->False());
     ret->Set(sym::pos(), args[2]);

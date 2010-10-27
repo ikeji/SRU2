@@ -19,7 +19,7 @@ DEFINE_SRU_PROC(spc){
   PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
-  int pos = SRUNumeric::GetValue(args[2]);
+  int pos = SRUNumeric::GetIntValue(args[2]);
   int epos = pos;
   LOG << "spc start: pos = " << epos;
   while(true){
@@ -35,7 +35,7 @@ DEFINE_SRU_PROC(spc_or_lf){
   PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
-  int pos = SRUNumeric::GetValue(args[2]);
+  int pos = SRUNumeric::GetIntValue(args[2]);
   int epos = pos;
   LOG << "spc start: pos = " << epos;
   while(true){
@@ -51,7 +51,7 @@ DEFINE_SRU_PROC(lf){
   PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
-  int pos = SRUNumeric::GetValue(args[2]);
+  int pos = SRUNumeric::GetIntValue(args[2]);
   if(str[pos] == '\r' && str[pos+1] == '\n'){
     return CreateTrue(pos+2, Library::Instance()->Nil());
   }
@@ -65,7 +65,7 @@ DEFINE_SRU_PROC(eos){
   PARGCHK();
   PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   const string& str = SRUString::GetValue(args[1]).to_str();
-  int pos = SRUNumeric::GetValue(args[2]);
+  int pos = SRUNumeric::GetIntValue(args[2]);
   if(pos == (int)str.length()){
     return CreateTrue(pos, Library::Instance()->Nil());
   }

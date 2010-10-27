@@ -48,7 +48,7 @@ BasicObjectPtr GetFromMemoize(
   const BasicObjectPtr& func,
   const BasicObjectPtr& src,
   const BasicObjectPtr& pos) {
-  int p = SRUNumeric::GetValue(pos);
+  int p = SRUNumeric::GetIntValue(pos);
   result_map& rmap = memory[func.get()][src.get()];
   HashMap<int, BasicObjectPtr>::iterator it = rmap.find(p);
   if(it != rmap.end()) return it->second;
@@ -60,7 +60,7 @@ BasicObjectPtr SetToMemoize(
   const BasicObjectPtr& src,
   const BasicObjectPtr& pos,
   const BasicObjectPtr& result) {
-  int p = SRUNumeric::GetValue(pos);
+  int p = SRUNumeric::GetIntValue(pos);
   return memory[func.get()][src.get()][p] = result;
 }
 

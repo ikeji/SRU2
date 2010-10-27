@@ -64,7 +64,7 @@ DEFINE_SRU_PROC(ArrayGet){ // Slice
   Array* array = args[0]->GetData<Array>();
   CHECK(array) << "Array not found.";
   int index = 0;
-  CHECK(SRUNumeric::TryGetValue(args[1], &index));
+  CHECK(SRUNumeric::TryGetIntValue(args[1], &index));
   LOG_TRACE << "index: " << index;
   if ((int)array->GetValue()->size() > index){
     if(index < 0) index += array->GetValue()->size();
@@ -82,7 +82,7 @@ DEFINE_SRU_PROC(ArraySet){
   Array* array = args[0]->GetData<Array>();
   CHECK(array) << "Array not found.";
   int index = 0;
-  CHECK(SRUNumeric::TryGetValue(args[1], &index));
+  CHECK(SRUNumeric::TryGetIntValue(args[1], &index));
   LOG_TRACE << "index: " << index;
   LOG_TRACE << "size: " << array->GetValue()->size();
   if(index < 0) index += array->GetValue()->size();

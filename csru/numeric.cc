@@ -25,11 +25,19 @@ using namespace sru;
 using namespace std;
 
 struct SRUNumeric::Impl{
-  Impl(int value): value(value){}
-  int value;
+  Impl(): is_real(false), int_value(0), double_value(0.0){}
+  bool is_real;
+  int int_value;
+  double double_value;
 };
 
-BasicObjectPtr SRUNumeric::New(int value){
+BasicObjectPtr SRUNumeric::NewInt(int value){
+  const BasicObjectPtr ret = BasicObject::New(new SRUNumeric(value));
+  Class::InitializeInstance(ret, Library::Instance()->Numeric());
+  return ret;
+}
+
+BasicObjectPtr SRUNumeric::NewDouble(double value){
   const BasicObjectPtr ret = BasicObject::New(new SRUNumeric(value));
   Class::InitializeInstance(ret, Library::Instance()->Numeric());
   return ret;
@@ -38,13 +46,22 @@ BasicObjectPtr SRUNumeric::New(int value){
 DEFINE_SRU_PROC(NumericParse){
   ARGLEN(2);
   string narg = SRUString::GetValue(args[1]).to_str();
-  return SRUNumeric::New(atoi(narg.c_str()));
+  if(narg.find('.', 0) != string::npos){
+    return SRUNumeric::NewDouble(strtod(narg.c_str(), NULL));
+  } else {
+    return SRUNumeric::NewInt(atoi(narg.c_str()));
+  }
 }
 
 DEFINE_SRU_PROC(Equal){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
+  double left = 0;
+  if(!SRUNumeric::TryGetDoubleValue(args[0], &left))
+    return Library::Instance()->False();
+  double right = 0;
+  if(!SRUNumeric::TryGetDoubleValue(args[1], &right))
+    return Library::Instance()->False();
+
   if(left == right){
     return Library::Instance()->True();
   }else{
@@ -54,8 +71,13 @@ DEFINE_SRU_PROC(Equal){
 
 DEFINE_SRU_PROC(NotEqual){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
+  double left = 0;
+  if(!SRUNumeric::TryGetDoubleValue(args[0], &left))
+    return Library::Instance()->True();
+  double right = 0;
+  if(!SRUNumeric::TryGetDoubleValue(args[1], &right))
+    return Library::Instance()->True();
+
   if(left == right){
     return Library::Instance()->False();
   }else{
@@ -65,8 +87,12 @@ DEFINE_SRU_PROC(NotEqual){
 
 DEFINE_SRU_PROC(GreaterThan){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
+  double left = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+    "GreaterThan needs numeric";
+  double right = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+    "GreaterThan needs numeric";
   if(left > right){
     return Library::Instance()->True();
   }else{
@@ -76,8 +102,12 @@ DEFINE_SRU_PROC(GreaterThan){
 
 DEFINE_SRU_PROC(LessThan){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
+  double left = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+    "LessThan needs numeric";
+  double right = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+    "LessThan needs numeric";
   if(left < right){
     return Library::Instance()->True();
   }else{
@@ -88,30 +118,86 @@ DEFINE_SRU_PROC(LessThan){
 
 DEFINE_SRU_PROC(Plus){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
-  return SRUNumeric::New(left+right);
+  if (SRUNumeric::IsReal(args[0]) || SRUNumeric::IsReal(args[1])) {
+    double left = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+      "Plus needs numeric";
+    double right = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+      "Plus needs numeric";
+    return SRUNumeric::NewDouble(left+right);
+  } else {
+    int left = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+      "Plus needs numeric";
+    int right = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+      "Plus needs numeric";
+    return SRUNumeric::NewInt(left+right);
+  }
 }
 
 DEFINE_SRU_PROC(Minus){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
-  return SRUNumeric::New(left-right);
+  if (SRUNumeric::IsReal(args[0]) || SRUNumeric::IsReal(args[1])) {
+    double left = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+      "Minus needs numeric";
+    double right = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+      "Minus needs numeric";
+    return SRUNumeric::NewDouble(left-right);
+  } else {
+    int left = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+      "Minus needs numeric";
+    int right = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+      "Minus needs numeric";
+    return SRUNumeric::NewInt(left-right);
+  }
 }
 
 DEFINE_SRU_PROC(Asterisk){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
-  return SRUNumeric::New(left*right);
+  if (SRUNumeric::IsReal(args[0]) || SRUNumeric::IsReal(args[1])) {
+    double left = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+      "Asterisk needs numeric";
+    double right = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+      "Asterisk needs numeric";
+    return SRUNumeric::NewDouble(left*right);
+  } else {
+    int left = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+      "Asterisk needs numeric";
+    int right = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+      "Asterisk needs numeric";
+    return SRUNumeric::NewInt(left*right);
+  }
 }
 
 DEFINE_SRU_PROC(Slash){
   ARGLEN(2);
-  const int& left = SRUNumeric::GetValue(args[0]);
-  const int& right = SRUNumeric::GetValue(args[1]);
-  return SRUNumeric::New(left/right);
+  if (SRUNumeric::IsReal(args[0]) || SRUNumeric::IsReal(args[1])) {
+    double left = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+      "Slash needs numeric";
+    double right = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+      "Slash needs numeric";
+    return SRUNumeric::NewDouble(left/right);
+  } else {
+    int left = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+      "Slash needs numeric";
+    int right = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+      "Slash needs numeric";
+    return SRUNumeric::NewInt(left/right);
+  }
 }
 
 DEFINE_SRU_PROC_SMASH(_times_internal){
@@ -127,15 +213,15 @@ DEFINE_SRU_PROC_SMASH(_times_internal){
     PushResult(Library::Instance()->Nil());
     return;
   }
-  int i = SRUNumeric::GetValue(ip) + 1;
-  int j = SRUNumeric::GetValue(jp);
+  int i = SRUNumeric::GetIntValue(ip) + 1;
+  int j = SRUNumeric::GetIntValue(jp);
   LOG_TRACE << "i:" << i;
   LOG_TRACE << "j:" << j;
   if( j <= i ) {
     PushResult(Library::Instance()->Nil());
     return;
   }
-  binding->Set(sym::_i(), SRUNumeric::New(i));
+  binding->Set(sym::_i(), SRUNumeric::NewInt(i));
 
   Interpreter::Instance()->CurrentStackFrame()->Setup(
       A(
@@ -148,7 +234,7 @@ DEFINE_SRU_PROC_SMASH(Times){
   static BasicObjectPtr times_internal;
   ARGLEN(2);
   LOG_TRACE << args[0]->Inspect();
-  const int& self = SRUNumeric::GetValue(args[0]);
+  const int& self = SRUNumeric::GetIntValue(args[0]);
   CHECK(self >= 0) << "Invalid value for time.";
   if(self <= 0){
     PushResult(Library::Instance()->Nil());
@@ -159,7 +245,7 @@ DEFINE_SRU_PROC_SMASH(Times){
     times_internal = CREATE_SRU_PROC(_times_internal);
 
   const BasicObjectPtr binding = Binding::New();
-  binding->Set(sym::_i(), SRUNumeric::New(-1));
+  binding->Set(sym::_i(), SRUNumeric::NewInt(-1));
   binding->Set(sym::_j(), args[0]);
   binding->Set(sym::_times_internal(), times_internal);
   binding->Set(sym::_block(), args[1]);
@@ -170,8 +256,13 @@ DEFINE_SRU_PROC_SMASH(Times){
 
 DEFINE_SRU_PROC(Invert){
   ARGLEN(1);
-  const int& v = SRUNumeric::GetValue(args[0]);
-  return SRUNumeric::New(-v);
+  if (SRUNumeric::IsReal(args[0])) {
+    const double& v = SRUNumeric::GetDoubleValue(args[0]);
+    return SRUNumeric::NewDouble(-v);
+  } else {
+    const int& v = SRUNumeric::GetIntValue(args[0]);
+    return SRUNumeric::NewInt(-v);
+  }
 }
 
 void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
@@ -191,27 +282,72 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsInstanceMethod(numeric, sym::times(), CREATE_SRU_PROC(Times));
 }
 
-int SRUNumeric::GetValue(const BasicObjectPtr& obj){
+int SRUNumeric::GetIntValue(const BasicObjectPtr& obj){
   SRUNumeric* n = obj->GetData<SRUNumeric>();
   if(!n) return 0;
-  return n->pimpl->value;
+  if(n->pimpl->is_real){
+    return static_cast<int>(n->pimpl->double_value);
+  }
+  return n->pimpl->int_value;
 }
-  
-bool SRUNumeric::TryGetValue(const BasicObjectPtr& obj, int* val){
+
+double SRUNumeric::GetDoubleValue(const BasicObjectPtr& obj){
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
+  if(!n) return 0;
+  if(n->pimpl->is_real){
+    return n->pimpl->double_value;
+  }
+  return n->pimpl->int_value;
+}
+
+bool SRUNumeric::TryGetIntValue(const BasicObjectPtr& obj, int* val){
   SRUNumeric* n = obj->GetData<SRUNumeric>();
   if(!n) return false;
-  *val = n->pimpl->value;
+  if(n->pimpl->is_real){
+    *val = static_cast<int>(n->pimpl->double_value);
+  } else {
+    *val = n->pimpl->int_value;
+  }
   return true;
+}
+
+bool SRUNumeric::TryGetDoubleValue(const BasicObjectPtr& obj, double* val){
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
+  if(!n) return false;
+  if(n->pimpl->is_real){
+    *val = n->pimpl->double_value;
+  } else {
+    *val = n->pimpl->int_value;
+  }
+  return true;
+}
+
+bool SRUNumeric::IsReal(const BasicObjectPtr& obj){
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
+  if(!n) return false;
+  return n->pimpl->is_real;
 }
 
 string SRUNumeric::Inspect(){
   ostringstream o;
-  o << "Numeric(" << pimpl->value << ")";
+  if(pimpl->is_real){
+    o << "Numeric(" << pimpl->double_value << ")";
+  } else {
+    o << "Numeric(" << pimpl->int_value << ")";
+  }
   return o.str();
 }
 
 SRUNumeric::SRUNumeric(int n):
-  pimpl(new Impl(n)){
+  pimpl(new Impl()){
+  pimpl->is_real = false;
+  pimpl->int_value = n;
+}
+
+SRUNumeric::SRUNumeric(double n):
+  pimpl(new Impl()){
+  pimpl->is_real = true;
+  pimpl->double_value = n;
 }
 
 SRUNumeric::~SRUNumeric(){

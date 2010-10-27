@@ -30,7 +30,7 @@ BasicObjectPtr CreateFalse(const BasicObjectPtr& pos, const char* error_message)
 }
 
 BasicObjectPtr CreateFalse(int pos, const char* error_message){
-  return CreateFalse(SRUNumeric::New(pos),
+  return CreateFalse(SRUNumeric::NewInt(pos),
       SRUString::New(symbol(error_message)));
 }
 
@@ -43,7 +43,7 @@ BasicObjectPtr CreateTrue(const BasicObjectPtr& pos, const BasicObjectPtr& ast){
 }
 
 BasicObjectPtr CreateTrue(int pos, const BasicObjectPtr& ast){
-  return CreateTrue(SRUNumeric::New(pos), ast);
+  return CreateTrue(SRUNumeric::NewInt(pos), ast);
 }
 
 sru::BasicObjectPtr CreateAst(

@@ -57,7 +57,7 @@ void PrintErrorContext(const BasicObjectPtr& context){
   if (!(context->HasSlot(sym::src()) && 
         context->HasSlot(sym::pos()))) return;
   const string& src = SRUString::GetValue(context->Get(sym::src())).to_str();
-  const size_t pos = SRUNumeric::GetValue(context->Get(sym::pos()));
+  const size_t pos = SRUNumeric::GetIntValue(context->Get(sym::pos()));
   PrintErrorPosition(src, pos);
 }
 

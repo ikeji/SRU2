@@ -170,6 +170,7 @@ TEST_CODE(expression_factor,"!true", "<False ... >");
 TEST_CODE(expression_factor2,"!!true", "<True ... >");
 TEST_CODE(expression_factor3,"!!!true", "<False ... >");
 TEST_CODE(math_sin,"Math.sin(1)", "<Numeric(0.841471)>");
+TEST_CODE(comment_line,"Math.sin(#this is comment\n1)", "<Numeric(0.841471)>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

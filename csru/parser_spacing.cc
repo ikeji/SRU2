@@ -24,6 +24,17 @@ DEFINE_SRU_PROC(spc){
   LOG << "spc start: pos = " << epos;
   while(true){
     if(epos > (int)str.size()) break;
+    if(str[epos] == '#'){ // comment
+      while(true){
+        if(epos > (int)str.size()) break;
+        if(str[epos] == '\n'){
+          epos++;
+          break;
+        }
+        epos++;
+      }
+    }
+    if(epos > (int)str.size()) break;
     if(str[epos] != ' ' && str[epos] != '\t') break;
     epos++;
   }
@@ -39,6 +50,17 @@ DEFINE_SRU_PROC(spc_or_lf){
   int epos = pos;
   LOG << "spc start: pos = " << epos;
   while(true){
+    if(epos > (int)str.size()) break;
+    if(str[epos] == '#'){ // comment
+      while(true){
+        if(epos > (int)str.size()) break;
+        if(str[epos] == '\n'){
+          epos++;
+          break;
+        }
+        epos++;
+      }
+    }
     if(epos > (int)str.size()) break;
     if(str[epos] != ' ' && str[epos] != '\r'
        && str[epos] != '\n' && str[epos] != '\t') break;

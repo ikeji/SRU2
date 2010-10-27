@@ -384,10 +384,8 @@ DEFINE_SRU_PROC(factor_exclamation){ // this, src, pos, factor
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "factor_exclamation";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr ast = CreateAst(args[1], args[2],
-                                       args[3]->Get(sym::ast()), sym::exclamation(),
-                                       args[4]->Get(sym::ast()));
+                                       args[3]->Get(sym::ast()), sym::exclamation());
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);
 }
@@ -397,10 +395,8 @@ DEFINE_SRU_PROC(factor_tilde){ // this, src, pos, factor
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
   LOG << "factor_tilde";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
-  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr ast = CreateAst(args[1], args[2],
-                                       args[3]->Get(sym::ast()), sym::tilde(),
-                                       args[4]->Get(sym::ast()));
+                                       args[3]->Get(sym::ast()), sym::tilde());
   args[3]->Set(sym::ast(), ast);
   return CreateTrue(args[2], ast);
 }

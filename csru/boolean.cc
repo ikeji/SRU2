@@ -28,6 +28,8 @@ DECLARE_SRU_PROC(False_ifTrue);
 DECLARE_SRU_PROC(False_ifTrueFalse);
 DECLARE_SRU_PROC(ReturnSelf);
 DECLARE_SRU_PROC(ReturnOther);
+DECLARE_SRU_PROC(ReturnTrue);
+DECLARE_SRU_PROC(ReturnFalse);
 
 void InitializeTrueObject(const BasicObjectPtr& tlue){
   Class::InitializeInstance(tlue, Library::Instance()->Boolean());
@@ -37,6 +39,7 @@ void InitializeTrueObject(const BasicObjectPtr& tlue){
   tlue->Set(sym::ifTrueFalse(), CREATE_SRU_PROC(True_ifTrueFalse));
   tlue->Set(sym::ampamp(),      CREATE_SRU_PROC(ReturnOther));
   tlue->Set(sym::pipepipe(),    CREATE_SRU_PROC(ReturnSelf));
+  tlue->Set(sym::exclamation(), CREATE_SRU_PROC(ReturnFalse));
 }
 
 void InitializeFalseObject(const BasicObjectPtr& farse){
@@ -47,6 +50,7 @@ void InitializeFalseObject(const BasicObjectPtr& farse){
   farse->Set(sym::ifTrueFalse(), CREATE_SRU_PROC(False_ifTrueFalse));
   farse->Set(sym::ampamp(),      CREATE_SRU_PROC(ReturnSelf));
   farse->Set(sym::pipepipe(),    CREATE_SRU_PROC(ReturnOther));
+  farse->Set(sym::exclamation(), CREATE_SRU_PROC(ReturnTrue));
 }
 
 DEFINE_SRU_PROC_SMASH(True_ifTrue){
@@ -82,6 +86,16 @@ DEFINE_SRU_PROC(ReturnSelf){
 DEFINE_SRU_PROC(ReturnOther){
   ARGLEN(2);
   return args[1];
+}
+
+DEFINE_SRU_PROC(ReturnTrue){
+  ARGLEN(1);
+  return Library::Instance()->True();
+}
+
+DEFINE_SRU_PROC(ReturnFalse){
+  ARGLEN(1);
+  return Library::Instance()->False();
 }
 
 }  // namespace sru

@@ -93,7 +93,7 @@ DEFINE_SRU_PROC(Plus){
   return SRUNumeric::New(left+right);
 }
 
-DEFINE_SRU_PROC(Minous){
+DEFINE_SRU_PROC(Minus){
   ARGLEN(2);
   const int& left = SRUNumeric::GetValue(args[0]);
   const int& right = SRUNumeric::GetValue(args[1]);
@@ -183,7 +183,7 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsInstanceMethod(numeric, sym::greaterThan(), CREATE_SRU_PROC(GreaterThan));
   Class::SetAsInstanceMethod(numeric, sym::lessThan(), CREATE_SRU_PROC(LessThan));
   Class::SetAsInstanceMethod(numeric, sym::plus(), CREATE_SRU_PROC(Plus));
-  Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minous));
+  Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minus));
   Class::SetAsInstanceMethod(numeric, sym::asterisk(), CREATE_SRU_PROC(Asterisk));
   Class::SetAsInstanceMethod(numeric, sym::slash(), CREATE_SRU_PROC(Slash));
   Class::SetAsInstanceMethod(numeric, sym::invert(), CREATE_SRU_PROC(Invert));

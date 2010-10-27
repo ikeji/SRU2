@@ -234,11 +234,11 @@ TEST(SRUNumeric_PlusTest1){
   assert(SRUNumeric::GetValue(result) == 123+456);
 }
 
-TEST(SRUNumeric_MinousTest){
+TEST(SRUNumeric_MinusTest){
   check_has(sym::minus());
 }
 
-TEST(SRUNumeric_MinousTest1){
+TEST(SRUNumeric_MinusTest1){
   // {a = 123; a.minus(a,456);}()
   BasicObjectPtr proc = C(P(
         L("a", C(R(R("Numeric"),"parse"), R("Numeric"), S("123"))),

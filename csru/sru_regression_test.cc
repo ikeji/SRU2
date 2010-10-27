@@ -34,11 +34,11 @@ class CodeTestCase : public sru_test::TestCase {
                  result(result){}
   virtual void operator()(){
     clock_t start = clock();
-    LOG_ERROR << "Src: " << src;
+    LOG_ALWAYS << "Src: " << src;
     BasicObjectPtr r = Interpreter::Instance()->Eval(src);
     assert(r.get());
-    LOG_ERROR << "ExpectResult:" << result;
-    LOG_ERROR << "Result      :" << RemoveMemAddr(r->Inspect(0));
+    LOG_ALWAYS << "ExpectResult:" << result;
+    LOG_ALWAYS << "Result      :" << RemoveMemAddr(r->Inspect(0));
     assert(RemoveMemAddr(r->Inspect(0)) == result);
     LOG_ALWAYS << "time : " << ((static_cast<double>(clock() - start)) / CLOCKS_PER_SEC);
   }

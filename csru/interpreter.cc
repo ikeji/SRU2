@@ -130,7 +130,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
         PrintErrorPosition(src, SRUNumeric::GetIntValue(obj->Get(sym::pos())));
       }
       // TODO: Check more detail..
-      LOG_ERROR << "Parse error: " <<
+      LOG_ALWAYS << "Parse error: " <<
         SRUString::GetValue(
           obj->Get(sym::error())
         ).to_str();

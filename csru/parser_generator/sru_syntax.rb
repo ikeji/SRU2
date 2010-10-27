@@ -4,7 +4,7 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement,
        :expression, :if_main, :bool_term, :comp, :bit_sim, :bit_term,
        :bit_shift, :sim, :term, :factor, :instance_method, :method_call,
        :primary, :primitive, :reference, :literal, :closure_literal,
-       :closure_varg, :closure_retarg, :const_literal
+       :closure_varg, :closure_retarg, :const_literal, :array_literal
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
 
@@ -279,7 +279,7 @@ spc * (
 primitive <= reference | literal
 
 
-literal <= closure_literal | const_literal
+literal <= closure_literal | const_literal | array_literal
 
 
 reference <= ident
@@ -312,4 +312,16 @@ closure_retarg <= ":" * ident
 
 
 const_literal <= real | number | const_string
+
+
+manipulator :array_literal_begin, :array_literal_item, :array_literal_end
+array_literal <= "[" * array_literal_begin *
+o( statement * array_literal_item(:array_literal_begin, :statement) *
+  r(
+    spc_or_lf * "," *
+    statement * array_literal_item(:array_literal_begin, :statement)
+  ) *
+  o( "," )
+) * "]" * array_literal_end(:array_literal_begin)
+
 

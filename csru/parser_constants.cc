@@ -132,4 +132,47 @@ DEFINE_SRU_PROC(real){
       )));
 }
 
+DEFINE_SRU_PROC(array_literal_begin){ // this, src, pos,
+  PARGCHK();
+  LOG << "array_literal_begin";
+  const BasicObjectPtr ast = P(
+      L(sym::doldol(),
+        CreateAst(args[1],args[2],
+          R(sym::Array()),
+          sym::mew())));
+  return CreateTrue(args[2], ast);
+}
+
+DEFINE_SRU_PROC(array_literal_item){ // this, src, pos, array_literal_begin, expression
+  PARGCHK();
+  PARGNCHK(5);
+  LOG << "array_literal_item";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  ProcExpression* p = args[3]->Get(sym::ast())->GetData<ProcExpression>();
+  PARSER_CHECK(p, args[2],
+      "Array literal item need ProcExpression.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2],
+      "Array literal item need expression.");
+  BasicObjectPtr ast = args[4]->Get(sym::ast());
+  p->Expressions()->push_back(
+      C(R(R(sym::doldol()),sym::push()),
+        R(sym::doldol()),
+        ast).get());
+  return CreateTrue(args[2], args[3]);
+}
+
+DEFINE_SRU_PROC(array_literal_end){ // this, src, pos, array_literal_begin
+  PARGCHK();
+  PARGNCHK(4);
+  LOG << "array_literal_end";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  BasicObjectPtr ast = args[3]->Get(sym::ast());
+  ProcExpression* p = ast->GetData<ProcExpression>();
+  PARSER_CHECK(p, args[2],
+      "Array literal end need ProcExpression.");
+  p->Expressions()->push_back(R(sym::doldol()).get());
+  return CreateTrue(args[2], C(ast));
+}
+
+
 }  // namespace sru_parser

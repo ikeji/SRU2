@@ -107,6 +107,16 @@ BasicObjectPtr Interpreter::Eval(const BasicObjectPtr& ast){
   return CurrentStackFrame()->ReturnValue();
 }
 
+namespace {
+bool spcOnly(string s){
+  for(size_t i=0;i<s.size();i++){
+    if(s[i] != ' ' && s[i]!='\t' && s[i]!='\r' && s[i]!='\n')
+      return false;
+  }
+  return true;
+}
+}
+
 BasicObjectPtr Interpreter::Eval(const string& str){
   BasicObjectPtr result;
   string src = str;
@@ -144,6 +154,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     size_t pos = SRUNumeric::GetIntValue(obj->Get(sym::pos()));
     if(pos == src.size()) break;
     src = src.substr(pos);
+    if(spcOnly(src)) break;
   }
   return result;
 }

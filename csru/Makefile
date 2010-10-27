@@ -11,6 +11,7 @@ class.o \
 constants.o \
 interpreter.o \
 library.o \
+load.o \
 logging.o \
 native_proc.o \
 numeric.o \

@@ -18,6 +18,7 @@
 #include "sru_string.h"
 #include "utils.h"
 #include "require.h"
+#include "load.h"
 
 using namespace sru;
 using namespace std;
@@ -46,6 +47,7 @@ void Interpreter::InitializeInterpreter(){
   const BasicObjectPtr bind = stackframe->Binding();
   Library::BindPrimitiveObjects(bind);
   SetupRequireFunction(bind);
+  SetupLoadFunction(bind);
 }
 
 void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,

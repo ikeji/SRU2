@@ -26,7 +26,7 @@ constants.o: constants.cc constants.h symbol.h
 interpreter.o: interpreter.cc interpreter.h object_container.h ast.h \
   basic_object.h logging.h symbol.h stack_frame.h library.h binding.h \
   native_proc.h proc.h constants.h numeric.h sru_string.h utils.h \
-  require.h
+  require.h load.h
 interpreter_test.o: interpreter_test.cc interpreter.h object_container.h \
   testing.h testing_ast.h ast.h basic_object.h logging.h symbol.h \
   sru_string.h library.h constants.h
@@ -35,6 +35,9 @@ library.o: library.cc library.h basic_object.h logging.h symbol.h \
   boolean.h proc.h object_container.h class.h sru_array.h
 library_test.o: library_test.cc testing.h library.h basic_object.h \
   logging.h symbol.h
+load.o: load.cc load.h native_proc.h proc.h basic_object.h logging.h \
+  symbol.h object_container.h library.h sru_string.h interpreter.h \
+  constants.h
 logging.o: logging.cc logging.h
 main.o: main.cc interpreter.h object_container.h basic_object.h logging.h \
   symbol.h

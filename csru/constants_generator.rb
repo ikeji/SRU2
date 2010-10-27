@@ -93,6 +93,7 @@ return,leturn
 # for basic library
 require
 requireNative
+load
 # for Array
 at
 slice

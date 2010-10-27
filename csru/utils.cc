@@ -20,14 +20,15 @@ bool IsLf(char c){
 
 void ShowLastLine(const string& src, size_t pos){
   size_t cur = pos;
+  if(cur == 0) return;
   // If cursor is in end of line, move back.
   if(IsLf(src[cur])) cur--;
 
   // Move cursor to last line.
   while(true){
-    if(IsLf(src[cur])) break;
     // If this is first line, just return.
     if(cur == 0) return;
+    if(IsLf(src[cur])) break;
     cur--;
   }
   cur--;
@@ -39,7 +40,7 @@ void ShowLastLine(const string& src, size_t pos){
     if(cur == 0) break;
     cur--;
   }
-  cur++;
+  if(IsLf(src[cur])) cur++;
   size_t start_of_last_line = cur;
 
   LOG_ALWAYS << src.substr(start_of_last_line,

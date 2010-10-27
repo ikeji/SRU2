@@ -13,6 +13,8 @@
 extern "C" {
 #include <histedit.h>
 }
+#include <cctype>
+#include "symbol.h"
 
 #endif
 
@@ -22,6 +24,44 @@ using namespace sru;
 #ifdef USE_EDITLINE
 const char* prompt(EditLine *e){
   return ">> ";
+}
+
+bool isAlNumUndEx(char c){
+  return
+    ('a' <= c && c <= 'z') ||
+    ('A' <= c && c <= 'Z') ||
+    ('0' <= c && c <= '9') ||
+    ('_' == c) ||
+    ('!' == c) ||
+    false;
+}
+
+unsigned char complete(EditLine *e, int ch){
+  const char* ptr;
+  const LineInfo* lf = el_line(e);
+  int res = CC_ERROR;
+
+  for(ptr = lf->cursor - 1;
+      isAlNumUndEx(*ptr) && ptr >= lf->buffer;
+      ptr--)
+    ;
+  ptr++;
+  size_t len = lf->cursor - ptr;
+  string base(ptr, len);
+
+  for(symbol::symbol_hash::const_iterator it = symbol::begin();
+      it != symbol::end();
+      it++){
+    const string& key = it->first;
+    if(key.find(base) == 0){
+      if(el_insertstr(e, key.c_str()+len) == -1)
+        res = CC_ERROR;
+      else
+        res = CC_REFRESH;
+      break;
+    }
+  }
+  return res;
 }
 #endif
 
@@ -37,6 +77,11 @@ int main(int argc, char* argv[]){
   history(hist,&ev,H_SETSIZE,8000);
   history(hist,&ev,H_LOAD,"./.sru-history");
   el_set(el,EL_HIST,history,hist);
+  el_set(el, EL_ADDFN, "ed-complete", "Complete argument", complete);
+  el_set(el, EL_BIND, "^I", "ed-complete", NULL);
+
+  // For create table for complete.
+  Interpreter::Instance();
 #endif
   cout << endl;
   cout << "C-SRU" << endl;

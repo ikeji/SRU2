@@ -54,14 +54,20 @@ class symbol {
   bool operator!=(const symbol& other) const {
     return getid() != other.getid();
   }
- private:
-  std::string str;
-  mutable int id;
 #ifdef USEOLDGCC
   typedef __gnu_cxx::hash_map<std::string,int > symbol_hash;
 #else
   typedef std::tr1::unordered_map<std::string,int > symbol_hash;
 #endif
+  static symbol_hash::const_iterator begin() {
+    return symbol_table.begin();
+  }
+  static symbol_hash::const_iterator end() {
+    return symbol_table.end();
+  }
+ private:
+  std::string str;
+  mutable int id;
   static symbol_hash symbol_table;
   static int next;
 };

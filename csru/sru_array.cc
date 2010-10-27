@@ -62,9 +62,9 @@ DEFINE_SRU_PROC(ArrayGet){ // Slice
   // TODO: impliment array[1,2]
   // TODO: impliment array[1..3]
   Array* array = args[0]->GetData<Array>();
-  CHECK(array) << "Array not found.";
+  DCHECK(array) << "Array not found.";
   int index = 0;
-  CHECK(SRUNumeric::TryGetIntValue(args[1], &index));
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &index));
   LOG_TRACE << "index: " << index;
   if ((int)array->GetValue()->size() > index){
     if(index < 0) index += array->GetValue()->size();
@@ -80,15 +80,15 @@ DEFINE_SRU_PROC(ArraySet){
   // TODO: impliment array[1,2]=3
   // TODO: impliment array[1..3]=4
   Array* array = args[0]->GetData<Array>();
-  CHECK(array) << "Array not found.";
+  DCHECK(array) << "Array not found.";
   int index = 0;
-  CHECK(SRUNumeric::TryGetIntValue(args[1], &index));
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &index));
   LOG_TRACE << "index: " << index;
   LOG_TRACE << "size: " << array->GetValue()->size();
   if(index < 0) index += array->GetValue()->size();
   LOG_TRACE << "index: " << index;
-  CHECK(0 <= index) << "invalid index";
-  CHECK(index < (int)array->GetValue()->size()) << "invalid index";
+  DCHECK(0 <= index) << "invalid index";
+  DCHECK(index < (int)array->GetValue()->size()) << "invalid index";
   array->GetValue()->at(index) = args[2].get();
   return args[2];
 }
@@ -106,7 +106,7 @@ DEFINE_SRU_PROC(ArrayChoice){
 DEFINE_SRU_PROC(ArrayClear){
   ARGLEN(1);
   Array* array = args[0]->GetData<Array>();
-  CHECK(array) << "Array not found.";
+  DCHECK(array) << "Array not found.";
   array->GetValue()->clear();
   return args[0];
 }
@@ -240,7 +240,7 @@ DEFINE_SRU_PROC(ArrayProduct){
 DEFINE_SRU_PROC(ArrayPush){
   ARGLEN(2);
   Array* array = args[0]->GetData<Array>();
-  CHECK(array) << "Array not found.";
+  DCHECK(array) << "Array not found.";
   for(size_t i=1;i<args.size();i++){
     array->GetValue()->push_back(args[i].get());
   }
@@ -260,9 +260,9 @@ DEFINE_SRU_PROC(ArrayRejectEx){
 DEFINE_SRU_PROC(ArrayReplace){
   ARGLEN(2);
   Array* self = args[0]->GetData<Array>();
-  CHECK(self) << "Array not found.";
+  DCHECK(self) << "Array not found.";
   Array* array = args[1]->GetData<Array>();
-  CHECK(array) << "Array not found.";
+  DCHECK(array) << "Array not found.";
   object_vector* that = array->GetValue();
   self->GetValue()->assign(that->begin(), that->end());
   return args[0];
@@ -271,7 +271,7 @@ DEFINE_SRU_PROC(ArrayReplace){
 DEFINE_SRU_PROC(ArrayReverse){
   ARGLEN(1);
   Array* self = args[0]->GetData<Array>();
-  CHECK(self) << "Array not found.";
+  DCHECK(self) << "Array not found.";
   BasicObjectPtr ret = Array::New();
   Array* array = ret->GetData<Array>();
   object_vector* that = self->GetValue();
@@ -282,7 +282,7 @@ DEFINE_SRU_PROC(ArrayReverse){
 DEFINE_SRU_PROC(ArrayReverseEx){
   ARGLEN(1);
   Array* self = args[0]->GetData<Array>();
-  CHECK(self) << "Array not found.";
+  DCHECK(self) << "Array not found.";
   object_vector* that = self->GetValue();
   reverse(that->begin(), that->end());
   return args[0];

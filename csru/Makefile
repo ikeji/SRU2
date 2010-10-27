@@ -62,7 +62,7 @@ stack_frame_test.o \
 sru_string_test.o \
 symbol_test.o \
 
-DFLAGS   = -DDEBUG -g -O0
+DFLAGS   = -O2
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)
 LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
@@ -86,6 +86,11 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
   # g++-3 doesn't work with -Weffc++
   CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC -DSRU_MAIN
   LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
+endif
+
+ifdef USE_EDITLINE
+	LDFLAGS += -ledit -lcurses
+	CXXFLAGS += -DUSE_EDITLINE
 endif
 
 all: sru tags library

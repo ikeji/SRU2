@@ -62,7 +62,7 @@ stack_frame_test.o \
 sru_string_test.o \
 symbol_test.o \
 
-DFLAGS   = -O2
+DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)
 LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic

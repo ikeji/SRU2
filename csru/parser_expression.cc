@@ -370,6 +370,19 @@ DEFINE_SRU_PROC(term_slash){ // this, src, pos, term_begin, factor
   return CreateTrue(args[2], ast);
 }
 
+DEFINE_SRU_PROC(term_percent){ // this, src, pos, term_begin, factor
+  PARGCHK();
+  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  LOG << "term_percent";
+  PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  const BasicObjectPtr ast = CreateAst(args[1], args[2],
+                                       args[3]->Get(sym::ast()), sym::percent(),
+                                       args[4]->Get(sym::ast()));
+  args[3]->Set(sym::ast(), ast);
+  return CreateTrue(args[2], ast);
+}
+
 DEFINE_SRU_PROC(term_end){ // this, src, pos, term_begin
   PARGCHK();
   PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");

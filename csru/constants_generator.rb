@@ -57,6 +57,7 @@ plus
 minus
 asterisk
 slash
+percent
 invert
 times
 _i

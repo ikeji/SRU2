@@ -181,11 +181,12 @@ sim <= term * sim_begin(:term) * r(
 ) * sim_end(:sim_begin)
 
 
-manipulator :term_begin, :term_asterisk, :term_slash, :term_end
+manipulator :term_begin, :term_asterisk, :term_slash, :term_percent, :term_end
 term <= factor * term_begin(:factor) * r(
  spc * (
   "*" * spc_or_lf * factor * term_asterisk(:term_begin, :factor) |
-  "/" * spc_or_lf * factor * term_slash(:term_begin, :factor)
+  "/" * spc_or_lf * factor * term_slash(:term_begin, :factor) |
+  "%" * spc_or_lf * factor * term_percent(:term_begin, :factor)
  )
 ) * term_end(:term_begin)
 

@@ -200,6 +200,27 @@ DEFINE_SRU_PROC(Slash){
   }
 }
 
+DEFINE_SRU_PROC(Percent){
+  ARGLEN(2);
+  if (SRUNumeric::IsReal(args[0]) || SRUNumeric::IsReal(args[1])) {
+    double left = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+      "Percent needs numeric";
+    double right = 0;
+    DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+      "Percent needs numeric";
+    return SRUNumeric::NewDouble(fmod(left, right));
+  } else {
+    int left = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+      "Slash needs numeric";
+    int right = 0;
+    DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+      "Slash needs numeric";
+    return SRUNumeric::NewInt(left % right);
+  }
+}
+
 DEFINE_SRU_PROC_SMASH(_times_internal){
   const BasicObjectPtr& binding =
     Interpreter::Instance()->CurrentStackFrame()->Binding();
@@ -277,6 +298,7 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minus));
   Class::SetAsInstanceMethod(numeric, sym::asterisk(), CREATE_SRU_PROC(Asterisk));
   Class::SetAsInstanceMethod(numeric, sym::slash(), CREATE_SRU_PROC(Slash));
+  Class::SetAsInstanceMethod(numeric, sym::percent(), CREATE_SRU_PROC(Percent));
   Class::SetAsInstanceMethod(numeric, sym::invert(), CREATE_SRU_PROC(Invert));
 
   Class::SetAsInstanceMethod(numeric, sym::times(), CREATE_SRU_PROC(Times));

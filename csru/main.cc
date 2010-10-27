@@ -71,10 +71,11 @@ int main(int argc, char* argv[]){
   History *hist;
   HistEvent ev;
   el = el_init(argv[0], stdin, stdout, stderr);
+  el_source(el, NULL);
   el_set(el, EL_PROMPT, &prompt);
   hist = history_init();
   DCHECK(hist);
-  history(hist,&ev,H_SETSIZE,8000);
+  history(hist,&ev,H_SETSIZE,10000);
   history(hist,&ev,H_LOAD,"./.sru-history");
   el_set(el,EL_HIST,history,hist);
   el_set(el, EL_ADDFN, "ed-complete", "Complete argument", complete);

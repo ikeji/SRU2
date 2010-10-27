@@ -53,6 +53,18 @@ string Proc::Inspect(){
 }
 
 void PrintErrorContext(const BasicObjectPtr& context){
+  CallExpression* call = context->GetData<CallExpression>();
+  if(call && !IsNil(call->Proc())){
+    RefExpression* ref = call->Proc()->GetData<RefExpression>();
+    if(ref && !IsNil(ref->Name())) {
+      if(IsNil(ref->Env())){
+        LOG_ALWAYS << "At call " << ref->Name()->Inspect();
+      }else{
+        LOG_ALWAYS << "At call method " << ref->Name()->Inspect()
+          << " for " << ref->Env()->Inspect();
+      }
+    }
+  }
   // Abort if context not found.
   if (!(context->HasSlot(sym::src()) && 
         context->HasSlot(sym::pos()))) return;
@@ -69,7 +81,7 @@ void Proc::Invoke(const BasicObjectPtr& context,
   if (!p) {
     PrintErrorContext(context);
   }
-  CHECK(p) << "Can't invoke " << proc->Inspect() << " object";
+  DCHECK(p) << "Can't invoke " << proc->Inspect() << " object";
   p->Call(context, proc, args);
 }
 

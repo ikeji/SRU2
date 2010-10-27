@@ -13,12 +13,14 @@ program <= statement * ( lf | ";" | eos) * program_end(:statement)
 
 manipulator :statements_begin, :statements_statement, :statements_end
 statements <= statements_begin *
-spc_or_lf * ~"end" * ~"else" * ~"elsif" * 
-statement * statements_statement(:statements_begin, :statement) *
-r(
-  (lf | ";" | eos) *
-  spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement *
-  statements_statement(:statements_begin, :statement)
+o(
+  spc_or_lf * ~"end" * ~"else" * ~"elsif" * 
+  statement * statements_statement(:statements_begin, :statement) *
+  r(
+    (lf | ";" | eos) *
+    spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement *
+    statements_statement(:statements_begin, :statement)
+  )
 ) * statements_end(:statements_begin)
 
 
@@ -44,7 +46,7 @@ manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif,
 if_main <=
 spc_or_lf * "(" * spc_or_lf * statement *
 if_main_cond(:statement) * spc_or_lf * ")" *
-statements * if_main_then(:statements) * spc_or_lf *
+o(statements * if_main_then(:statements)) * spc_or_lf *
 (
   "elsif" * if_main *
       if_main_elsif(:if_main_cond, :if_main_then, :if_main) |
@@ -286,13 +288,10 @@ manipulator :closure_begin, :closure_merge_varg, :closure_statements,
             :closure_end
 closure_literal <=
 spc * "{" * closure_begin *
-o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) * ((
-  statements *
-  closure_statements(:closure_begin, :statements) *
-  spc_or_lf
-)|(
-  spc_or_lf 
-)) * "}" * closure_end(:closure_begin)
+o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) *
+statements *
+closure_statements(:closure_begin, :statements) *
+spc_or_lf * "}" * closure_end(:closure_begin)
 
 
 manipulator :closure_varg_begin, :closure_varg_idents,

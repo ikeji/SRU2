@@ -14,3 +14,4 @@ symbols
 parser_generator/symbols
 constants.h
 constants.cc
+.sru-history

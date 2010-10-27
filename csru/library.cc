@@ -15,6 +15,7 @@
 #include "proc.h"
 #include "class.h"
 #include "sru_array.h"
+#include "sru_math.h"
 
 using namespace sru;
 
@@ -32,7 +33,8 @@ struct Library::Impl {
       Boolean(),
       True(),
       False(),
-      Parser() {}
+      Parser(),
+      Math() {}
      
   BasicObjectPtr Nil;
   BasicObjectPtr Binding;
@@ -47,6 +49,7 @@ struct Library::Impl {
   BasicObjectPtr True;
   BasicObjectPtr False;
   BasicObjectPtr Parser;
+  BasicObjectPtr Math;
   
   void initialiseInteralClasses();
 };
@@ -68,6 +71,8 @@ BasicObjectPtr Library::True(){ return pimpl->True; }
 BasicObjectPtr Library::False(){ return pimpl->False; }
 
 BasicObjectPtr Library::Parser(){ return pimpl->Parser; }
+
+BasicObjectPtr Library::Math(){ return pimpl->Math; }
 
 Library* Library::Instance(){
   static Library inst;
@@ -101,6 +106,7 @@ void Library::Impl::initialiseInteralClasses(){
   True = BasicObject::New();
   False = BasicObject::New();
   Parser = BasicObject::New();
+  Math = BasicObject::New();
 
   // Define class path.
   Class->Set(sym::klass(), Class);
@@ -113,6 +119,7 @@ void Library::Impl::initialiseInteralClasses(){
   Boolean->Set(sym::klass(), Class);
   True->Set(sym::klass(), Boolean);
   False->Set(sym::klass(), Boolean);
+  Math->Set(sym::klass(), Class);
 
   // Define inheritance path.
   Class->Set(sym::superclass(), Object);
@@ -123,6 +130,7 @@ void Library::Impl::initialiseInteralClasses(){
   String->Set(sym::superclass(), Object);
   Numeric->Set(sym::superclass(), Object);
   Boolean->Set(sym::superclass(), Object);
+  Math->Set(sym::superclass(), Object);
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
@@ -138,6 +146,7 @@ void Library::Impl::initialiseInteralClasses(){
   Proc::InitializeClassObject(Proc);
   Class::InitializeClassClassLast(Class);
   Array::InitializeClass(Array);
+  InitializeMathClass(Math);
 
   // TODO: Move this to nill.cc
   Nil->Set(sym::__name(), SRUString::New(sym::nil()));
@@ -161,4 +170,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set(sym::tlue(),Instance()->True());
   frame->Set(sym::farse(),Instance()->False());
   frame->Set(sym::__parser(), Instance()->Parser());
+  frame->Set(sym::Math(), Instance()->Math());
 }

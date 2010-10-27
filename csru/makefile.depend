@@ -32,7 +32,7 @@ interpreter_test.o: interpreter_test.cc interpreter.h object_container.h \
   sru_string.h library.h constants.h
 library.o: library.cc library.h basic_object.h logging.h symbol.h \
   numeric.h parser.h object.h sru_string.h constants.h binding.h \
-  boolean.h proc.h object_container.h class.h sru_array.h
+  boolean.h proc.h object_container.h class.h sru_array.h sru_math.h
 library_test.o: library_test.cc testing.h library.h basic_object.h \
   logging.h symbol.h
 load.o: load.cc load.h native_proc.h proc.h basic_object.h logging.h \
@@ -131,6 +131,8 @@ require.o: require.cc require.h native_proc.h proc.h basic_object.h \
 sru_array.o: sru_array.cc sru_array.h basic_object.h logging.h symbol.h \
   object_container.h class.h native_proc.h proc.h constants.h \
   sru_string.h library.h numeric.h
+sru_math.o: sru_math.cc native_proc.h proc.h basic_object.h logging.h \
+  symbol.h object_container.h numeric.h constants.h sru_string.h
 sru_regression_test.o: sru_regression_test.cc testing.h logging.h \
   basic_object.h symbol.h interpreter.h object_container.h
 sru_string.o: sru_string.cc sru_string.h basic_object.h logging.h \

@@ -27,6 +27,7 @@ Boolean
 true,tlue
 false,farse
 __parser
+Math
 # for boolean
 ifTrue
 ifFalse
@@ -144,6 +145,8 @@ uniq
 uniq!,uniqEx
 unshift
 valuesAt
+# Math
+sin
 EOL
 
 100.times do |i|

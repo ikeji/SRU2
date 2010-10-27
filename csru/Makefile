@@ -37,6 +37,7 @@ parser_while.o \
 proc.o \
 require.o \
 sru_array.o \
+sru_math.o \
 sru_string.o \
 stack_frame.o \
 symbol.o \
@@ -62,6 +63,7 @@ stack_frame_test.o \
 sru_string_test.o \
 symbol_test.o \
 
+#DFLAGS   = -O2
 DFLAGS   = -DDEBUG -g -O0
 GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
 CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)

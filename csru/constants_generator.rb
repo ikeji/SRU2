@@ -83,6 +83,7 @@ ast
 pos
 status
 trueResult
+falseResult
 program
 error
 memoize

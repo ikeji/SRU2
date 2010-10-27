@@ -67,11 +67,13 @@ DECLARE_SRU_PROC(#{mani.name}); // this, src, pos, #{mani.varg_list.map{|m|m.to_
 
 DECLARE_SRU_PROC(Parse);
 DECLARE_SRU_PROC(TrueResult);
+DECLARE_SRU_PROC(FalseResult);
 
 void InitializeParserObject(const BasicObjectPtr& parser){
   parser->Set(sym::__name(), SRUString::New(symbol("sru_parser")));
   parser->Set(sym::parse(), CREATE_SRU_PROC(Parse));
   parser->Set(sym::trueResult(), CREATE_SRU_PROC(TrueResult));
+  parser->Set(sym::falseResult(), CREATE_SRU_PROC(FalseResult));
 
   parser->Set(sym::memoize(), CREATE_SRU_PROC(memoize));
   parser->Set(sym::clearMemoize(), CREATE_SRU_PROC(clearMemoize));
@@ -200,6 +202,14 @@ DEFINE_SRU_PROC(TrueResult){ // this, pos
   return ret;
 }
 
+DEFINE_SRU_PROC(FalseResult){ // this, pos
+  LOG << args[1]->Inspect();
+  const BasicObjectPtr ret = BasicObject::New();
+  ret->Set(sym::status(), Library::Instance()->False());
+  ret->Set(sym::pos(), args[1]);
+  return ret;
+}
+
 } // namespace sru_parser
     EOL
     return ret
@@ -226,6 +236,30 @@ DEFINE_SRU_PROC(TrueResult){ // this, pos
 # Each visitor output C++ code for parser.
 # each step output parse result as resultN.
 # And use other work valiables like hogehogeN ex status2.
+  def visit_And(peg, n)
+    <<-EOL
+// start: #{prii(peg)}
+// index: #{n}
+L(sym::pos#{n+1}(), R(sym::pos#{n}())),
+#{peg.left.accept(self, n+1)}
+,
+L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
+L(sym::result#{n}(),
+  C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
+    R(sym::status#{n}()),
+    P(
+      L(sym::pos#{n+1}(), R(R(sym::result#{n+1}()),sym::pos())),
+#{spc(6,peg.right.accept(self, n+1))}
+      ,
+      R(sym::result#{n+1}())
+    ),
+    P(R(sym::result#{n+1}()))
+  )
+)
+// end: #{prii(peg)}
+// index: #{n}
+    EOL
+  end
   def visit_Or(peg, n)
     <<-EOL
 // start: #{prii(peg)}
@@ -267,24 +301,21 @@ L(sym::result#{n}(),
 // index: #{n}
     EOL
   end
-  def visit_And(peg, n)
+  def visit_Not(peg, n)
     <<-EOL
 // start: #{prii(peg)}
 // index: #{n}
 L(sym::pos#{n+1}(), R(sym::pos#{n}())),
-#{peg.left.accept(self, n+1)}
+#{peg.cont.accept(self, n+1)}
 ,
 L(sym::status#{n}(), R(R(sym::result#{n+1}()),sym::status())),
 L(sym::result#{n}(),
   C(R(R(sym::status#{n}()), sym::ifTrueFalse()),
     R(sym::status#{n}()),
-    P(
-      L(sym::pos#{n+1}(), R(R(sym::result#{n+1}()),sym::pos())),
-#{spc(6,peg.right.accept(self, n+1))}
-      ,
-      R(sym::result#{n+1}())
-    ),
-    P(R(sym::result#{n+1}()))
+    P(C(R(R(sym::self()),sym::falseResult()),
+       R(sym::self()),R(sym::pos#{n}()))),
+    P(C(R(R(sym::self()),sym::trueResult()),
+       R(sym::self()),R(sym::pos#{n}())))
   )
 )
 // end: #{prii(peg)}

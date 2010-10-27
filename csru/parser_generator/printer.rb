@@ -8,15 +8,18 @@ class Printer
     end
     return ret
   end
-  def visit_Or(peg)
-    peg.left.accept(self) + " | " + peg.right.accept(self)
-  end
   def visit_And(peg)
     l = peg.left.accept(self)
     l = "( " + l + " )" if peg.left.is_a? Or
     r = peg.right.accept(self)
     r = "( " + r + " )" if peg.right.is_a? Or
     l + " " + r
+  end
+  def visit_Or(peg)
+    peg.left.accept(self) + " | " + peg.right.accept(self)
+  end
+  def visit_Not(peg)
+    "!(" + peg.cont.accept(self) + ")"
   end
   def visit_NonTerminalSymbol(peg)
     peg.symbol.to_s

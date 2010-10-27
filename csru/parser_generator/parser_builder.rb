@@ -27,13 +27,16 @@ class ParserBuilder
       @@term_num += 1
       @parser.terms.push peg
     end
+    def visit_And(peg)
+      peg.left.accept(self)
+      peg.right.accept(self)
+    end
     def visit_Or(peg)
       peg.left.accept(self)
       peg.right.accept(self)
     end
-    def visit_And(peg)
-      peg.left.accept(self)
-      peg.right.accept(self)
+    def visit_Not(peg)
+      peg.cont.accept(self)
     end
     def visit_NonTerminalSymbol(peg)
     end
@@ -61,13 +64,16 @@ class ParserBuilder
     def visit_NonTerminalSymbol(peg, sym)
       @parser.captures[sym] << peg.capture if peg.capture
     end
+    def visit_And(peg, sym)
+      peg.left.accept(self, sym)
+      peg.right.accept(self, sym)
+    end
     def visit_Or(peg, sym)
       peg.left.accept(self, sym)
       peg.right.accept(self, sym)
     end
-    def visit_And(peg, sym)
-      peg.left.accept(self, sym)
-      peg.right.accept(self, sym)
+    def visit_Not(peg, sym)
+      peg.cont.accept(self,sym)
     end
     def visit_TerminalSymbol(peg, sym)
     end
@@ -152,7 +158,7 @@ class String
     Or.new(TerminalSymbol.new(self),arg)
   end
   def ~@
-    Optional.new(self)
+    Not.new(self)
   end
 end
 
@@ -174,7 +180,7 @@ class PEG
     Or.new(self,PEG.convert(right))
   end
   def ~@
-    Optional.new(self)
+    Not.new(self)
   end
 end
 

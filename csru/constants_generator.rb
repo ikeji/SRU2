@@ -150,6 +150,8 @@ unshift
 valuesAt
 # Math
 sin
+srand
+rand
 EOL
 
 100.times do |i|

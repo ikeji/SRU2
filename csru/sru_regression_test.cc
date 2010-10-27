@@ -181,6 +181,14 @@ TEST_CODE(expression_factor,"!true", "<False ... >");
 TEST_CODE(expression_factor2,"!!true", "<True ... >");
 TEST_CODE(expression_factor3,"!!!true", "<False ... >");
 TEST_CODE(math_sin,"Math.sin(1)", "<Numeric(0.841471)>");
+
+// This test is flaky
+TEST_CODE(math_rand,"Math.srand(1);Math.rand() == Math.rand()", "<False ... >");
+
+TEST_CODE(math_srand,"Math.srand(1);"
+                     "a = Math.rand();"
+                     "Math.srand(1);"
+                     "a==Math.rand()", "<True ... >");
 TEST_CODE(comment_line,"Math.sin(#this is comment\n1)", "<Numeric(0.841471)>");
 TEST_CODE(array_const, "[1,2,3].size()", "<Numeric(3)>");
 TEST_CODE(array_const1, "[1,2,3][0]", "<Numeric(1)>");

@@ -7,7 +7,14 @@ class CppHelperBuilder
     parser.manipulators.each do|mani|
       ret += <<-EOL
 DEFINE_SRU_PROC(#{mani.name}){ // this, src, pos, #{mani.varg_list.map{|m|m.to_s}.join ", "}
-  assert(args.size() >= #{ 3 + mani.varg_list.size });
+  PARGCHK();
+      EOL
+      if(mani.varg_list.size != 0)
+        ret += <<-EOL
+  PARGNCHK(#{3 + mani.varg_list.size });
+        EOL
+      end
+      ret += <<-EOL
   LOG << "#{mani.name}";
 
 }

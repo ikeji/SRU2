@@ -21,14 +21,14 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(method_call_primary){ // this, src, pos, primary
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "method_call_primary";
   return args[3];
 }
 
 DEFINE_SRU_PROC(method_call_method_begin){ // this, src, pos, primary
   PARGCHK();
-  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "method_call_method_begin";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr pri = args[3]->Get(sym::ast());
@@ -37,7 +37,7 @@ DEFINE_SRU_PROC(method_call_method_begin){ // this, src, pos, primary
 
 DEFINE_SRU_PROC(method_call_method_arg){ // this, src, pos, method_call_method_begin, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "method_call_method_arg";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr c = args[3]->Get(sym::ast());
@@ -50,7 +50,7 @@ DEFINE_SRU_PROC(method_call_method_arg){ // this, src, pos, method_call_method_b
 
 DEFINE_SRU_PROC(method_call_method_end){ // this, src, pos, method_call_primary, method_call_method_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "method_call_method_end";
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   args[3]->Set(sym::ast(), args[4]->Get(sym::ast()));
@@ -60,7 +60,7 @@ DEFINE_SRU_PROC(method_call_method_end){ // this, src, pos, method_call_primary,
 
 DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primary, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "method_call_method_index";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -74,7 +74,7 @@ DEFINE_SRU_PROC(method_call_method_index){ // this, src, pos, method_call_primar
 
 DEFINE_SRU_PROC(method_call_end){ // this, src, pos, method_call_primary
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "method_call_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
@@ -82,7 +82,7 @@ DEFINE_SRU_PROC(method_call_end){ // this, src, pos, method_call_primary
 
 DEFINE_SRU_PROC(primary_minus){ // this, src, pos, primary
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "primary_minus";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2],
@@ -92,7 +92,7 @@ DEFINE_SRU_PROC(primary_minus){ // this, src, pos, primary
 
 DEFINE_SRU_PROC(parent){ // this, src, pos, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "parent";
   LOG << args[2]->Inspect();
   LOG << args[3]->Inspect();

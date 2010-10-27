@@ -21,7 +21,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "def_statement_begin";
   LOG << args[3]->Inspect();
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -38,7 +38,7 @@ DEFINE_SRU_PROC(def_statement_begin){ // this, src, pos, flow_statement
 
 DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ident
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "def_statement_varg";
   PARSER_CHECK(args[3]->HasSlot(sym::doldol()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();
@@ -52,7 +52,7 @@ DEFINE_SRU_PROC(def_statement_varg){ // this, src, pos, def_statement_begin, ide
 
 DEFINE_SRU_PROC(def_statement_end){ // this, src, pos, def_statement_begin, statements
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "def_statement_end";
   PARSER_CHECK(args[3]->HasSlot(sym::doldol()), args[2], "Internal parser error.");
   ProcExpression* p = args[3]->Get(sym::doldol())->GetData<ProcExpression>();

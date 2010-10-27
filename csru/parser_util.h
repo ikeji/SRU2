@@ -85,4 +85,9 @@ sru::BasicObjectPtr CreateAst(
 #define PARGCHK_SMASH() \
   PARSER_CHECK_SMASH(args.size() >= 3, SRUNumeric::NewInt(0), "Internal parser error.")
 
+#define PARGNCHK(n) \
+  PARSER_CHECK(args.size() >= (n), args[2], "Internal parser error.")
+#define PARGNCHK_SMASH(n) \
+  PARSER_CHECK_SMASH(args.size() >= (n), args[2], "Internal parser error.")
+
 }  // namespace sru_parser

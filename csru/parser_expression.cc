@@ -22,7 +22,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(expression_begin){ // this, src, pos, bool_term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "expression_begin";
 
   return args[3];
@@ -30,7 +30,7 @@ DEFINE_SRU_PROC(expression_begin){ // this, src, pos, bool_term
 
 DEFINE_SRU_PROC(expression_pipepipe){ // this, src, pos, expression_begin, bool_term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "expression_pipepipe";
   // TODO: Lazy evaluation second arg.
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -44,7 +44,7 @@ DEFINE_SRU_PROC(expression_pipepipe){ // this, src, pos, expression_begin, bool_
 
 DEFINE_SRU_PROC(expression_end){ // this, src, pos, expression_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "expression_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -53,7 +53,7 @@ DEFINE_SRU_PROC(expression_end){ // this, src, pos, expression_begin
 
 DEFINE_SRU_PROC(bool_term_begin){ // this, src, pos, comp
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bool_term_begin";
 
   return args[3];
@@ -61,7 +61,7 @@ DEFINE_SRU_PROC(bool_term_begin){ // this, src, pos, comp
 
 DEFINE_SRU_PROC(bool_term_ampamp){ // this, src, pos, bool_term_begin, comp
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "bool_term_ampamp";
   // TODO: Lazy evaluation second arg.
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -75,7 +75,7 @@ DEFINE_SRU_PROC(bool_term_ampamp){ // this, src, pos, bool_term_begin, comp
 
 DEFINE_SRU_PROC(bool_term_end){ // this, src, pos, bool_term_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bool_term_end";
   
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -84,7 +84,7 @@ DEFINE_SRU_PROC(bool_term_end){ // this, src, pos, bool_term_begin
 
 DEFINE_SRU_PROC(comp_begin){ // this, src, pos, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "comp_begin";
 
   return args[3];
@@ -92,7 +92,7 @@ DEFINE_SRU_PROC(comp_begin){ // this, src, pos, bit_sim
 
 DEFINE_SRU_PROC(comp_equal){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_equal";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -105,7 +105,7 @@ DEFINE_SRU_PROC(comp_equal){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_super_equal){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_super_equal";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -118,7 +118,7 @@ DEFINE_SRU_PROC(comp_super_equal){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_not_equal){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_not_equal";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -131,7 +131,7 @@ DEFINE_SRU_PROC(comp_not_equal){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_greater_than){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_greater_than";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -144,7 +144,7 @@ DEFINE_SRU_PROC(comp_greater_than){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_less_than){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_less_than";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -157,7 +157,7 @@ DEFINE_SRU_PROC(comp_less_than){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_greater_or_equal){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_greater_or_equal";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -170,7 +170,7 @@ DEFINE_SRU_PROC(comp_greater_or_equal){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_less_or_equal){ // this, src, pos, comp_begin, bit_sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "comp_less_or_equal";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -183,7 +183,7 @@ DEFINE_SRU_PROC(comp_less_or_equal){ // this, src, pos, comp_begin, bit_sim
 
 DEFINE_SRU_PROC(comp_end){ // this, src, pos, comp_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "comp_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -192,7 +192,7 @@ DEFINE_SRU_PROC(comp_end){ // this, src, pos, comp_begin
 
 DEFINE_SRU_PROC(bit_sim_begin){ // this, src, pos, bit_term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_sim_begin";
 
   return args[3];
@@ -200,7 +200,7 @@ DEFINE_SRU_PROC(bit_sim_begin){ // this, src, pos, bit_term
 
 DEFINE_SRU_PROC(bit_sim_pipe){ // this, src, pos, bit_sim_begin, bit_term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "bit_sim_pipe";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -213,7 +213,7 @@ DEFINE_SRU_PROC(bit_sim_pipe){ // this, src, pos, bit_sim_begin, bit_term
 
 DEFINE_SRU_PROC(bit_sim_end){ // this, src, pos, bit_sim_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_sim_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -222,7 +222,7 @@ DEFINE_SRU_PROC(bit_sim_end){ // this, src, pos, bit_sim_begin
 
 DEFINE_SRU_PROC(bit_term_begin){ // this, src, pos, bit_shift
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_term_begin";
 
   return args[3];
@@ -230,7 +230,7 @@ DEFINE_SRU_PROC(bit_term_begin){ // this, src, pos, bit_shift
 
 DEFINE_SRU_PROC(bit_term_amp){ // this, src, pos, bit_term_begin, bit_shift
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "bit_term_amp";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -243,7 +243,7 @@ DEFINE_SRU_PROC(bit_term_amp){ // this, src, pos, bit_term_begin, bit_shift
 
 DEFINE_SRU_PROC(bit_term_end){ // this, src, pos, bit_term_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_term_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -252,7 +252,7 @@ DEFINE_SRU_PROC(bit_term_end){ // this, src, pos, bit_term_begin
 
 DEFINE_SRU_PROC(bit_shift_begin){ // this, src, pos, sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_shift_begin";
 
   return args[3];
@@ -260,7 +260,7 @@ DEFINE_SRU_PROC(bit_shift_begin){ // this, src, pos, sim
 
 DEFINE_SRU_PROC(bit_shift_ltlt){ // this, src, pos, bit_shift_begin, sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "bit_shift_ltlt";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -273,7 +273,7 @@ DEFINE_SRU_PROC(bit_shift_ltlt){ // this, src, pos, bit_shift_begin, sim
 
 DEFINE_SRU_PROC(bit_shift_gtgt){ // this, src, pos, bit_shift_begin, sim
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "bit_shift_gtgt";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -286,7 +286,7 @@ DEFINE_SRU_PROC(bit_shift_gtgt){ // this, src, pos, bit_shift_begin, sim
 
 DEFINE_SRU_PROC(bit_shift_end){ // this, src, pos, bit_shift_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "bit_shift_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -295,7 +295,7 @@ DEFINE_SRU_PROC(bit_shift_end){ // this, src, pos, bit_shift_begin
 
 DEFINE_SRU_PROC(sim_begin){ // this, src, pos, term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "sim_begin";
 
   return args[3];
@@ -303,7 +303,7 @@ DEFINE_SRU_PROC(sim_begin){ // this, src, pos, term
 
 DEFINE_SRU_PROC(sim_plus){ // this, src, pos, sim_begin, term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "sim_plus";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -316,7 +316,7 @@ DEFINE_SRU_PROC(sim_plus){ // this, src, pos, sim_begin, term
 
 DEFINE_SRU_PROC(sim_minus){ // this, src, pos, sim_begin, term
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "sim_minus";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -329,7 +329,7 @@ DEFINE_SRU_PROC(sim_minus){ // this, src, pos, sim_begin, term
 
 DEFINE_SRU_PROC(sim_end){ // this, src, pos, sim_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "sim_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -338,7 +338,7 @@ DEFINE_SRU_PROC(sim_end){ // this, src, pos, sim_begin
 
 DEFINE_SRU_PROC(term_begin){ // this, src, pos, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "term_begin";
 
   return args[3];
@@ -346,7 +346,7 @@ DEFINE_SRU_PROC(term_begin){ // this, src, pos, factor
 
 DEFINE_SRU_PROC(term_asterisk){ // this, src, pos, term_begin, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "term_asterisk";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -359,7 +359,7 @@ DEFINE_SRU_PROC(term_asterisk){ // this, src, pos, term_begin, factor
 
 DEFINE_SRU_PROC(term_slash){ // this, src, pos, term_begin, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "term_slash";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -372,7 +372,7 @@ DEFINE_SRU_PROC(term_slash){ // this, src, pos, term_begin, factor
 
 DEFINE_SRU_PROC(term_percent){ // this, src, pos, term_begin, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "term_percent";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   PARSER_CHECK(args[4]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -385,7 +385,7 @@ DEFINE_SRU_PROC(term_percent){ // this, src, pos, term_begin, factor
 
 DEFINE_SRU_PROC(term_end){ // this, src, pos, term_begin
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "term_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -394,7 +394,7 @@ DEFINE_SRU_PROC(term_end){ // this, src, pos, term_begin
 
 DEFINE_SRU_PROC(factor_exclamation){ // this, src, pos, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "factor_exclamation";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr ast = CreateAst(args[1], args[2],
@@ -405,7 +405,7 @@ DEFINE_SRU_PROC(factor_exclamation){ // this, src, pos, factor
 
 DEFINE_SRU_PROC(factor_tilde){ // this, src, pos, factor
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "factor_tilde";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   const BasicObjectPtr ast = CreateAst(args[1], args[2],

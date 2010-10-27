@@ -78,7 +78,7 @@ bool TryGetGetProc(
 
 DEFINE_SRU_PROC(let_statement_end){ // this, src, pos, flow_statement, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "let_statement_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2],
       "Internal parser error.");

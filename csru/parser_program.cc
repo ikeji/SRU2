@@ -21,7 +21,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(program_end){ // this, src, pos, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "program_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
   return CreateTrue(args[2], E(args[1], args[2], args[3]->Get(sym::ast())));

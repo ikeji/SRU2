@@ -103,7 +103,7 @@ void InitializeParserObject(const BasicObjectPtr& parser){
     ret += <<-EOL
 }
 
-DEFINE_SRU_PROC_SMASH(Parse){
+DEFINE_SRU_PROC_SMASH(Parse){  // self, src
   PARSER_CHECK_SMASH(args.size() >= 2, SRUNumeric::NewInt(0), "Internal parser error.");
   // TODO: check args0
   Interpreter::Instance()->DigIntoNewFrame(
@@ -128,10 +128,9 @@ DEFINE_SRU_PROC_SMASH(Parse){
     EOL
     parser.syntaxes.keys.each do |sym|
       ret += <<-EOL
-DEFINE_SRU_PROC_SMASH(#{sym}){
+DEFINE_SRU_PROC_SMASH(#{sym}){  // self, src, pos
 #{pri2(parser,sym)}
   PARGCHK_SMASH();
-  PARSER_CHECK_SMASH(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   
   const BasicObjectPtr& r = memoize::GetFromMemoize(proc, args[1], args[2]);
@@ -174,7 +173,6 @@ DEFINE_SRU_PROC_SMASH(#{sym}){
 DEFINE_SRU_PROC(term#{term.num}){
   const static string target = "#{term.string}";
   PARGCHK();
-  PARSER_CHECK(args.size() >= 3, args[2], "Internal parser error.");
   // TODO: Check argument.
   const string& src = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetIntValue(args[2]);

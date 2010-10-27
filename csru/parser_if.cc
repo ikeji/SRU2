@@ -21,7 +21,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "if_main_cond";
   LOG << args[3]->Inspect();
   
@@ -30,7 +30,7 @@ DEFINE_SRU_PROC(if_main_cond){ // this, src, pos, statement
 
 DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
   PARGCHK();
-  PARSER_CHECK(args.size() >= 4, args[2], "Internal parser error.");
+  PARGNCHK(4);
   LOG << "if_main_then";
   LOG << args[3]->Inspect();
 
@@ -39,7 +39,7 @@ DEFINE_SRU_PROC(if_main_then){ // this, src, pos, statements
 
 DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, if_main
   PARGCHK();
-  PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
+  PARGNCHK(6);
   LOG << "if_main_else";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -57,7 +57,7 @@ DEFINE_SRU_PROC(if_main_elsif){ // this, src, pos, if_main_cond, if_main_then, i
 
 DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, statements
   PARGCHK();
-  PARSER_CHECK(args.size() >= 6, args[2], "Internal parser error.");
+  PARGNCHK(6);
   LOG << "if_main_else";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
@@ -75,7 +75,7 @@ DEFINE_SRU_PROC(if_main_else){ // this, src, pos, if_main_cond, if_main_then, st
 
 DEFINE_SRU_PROC(if_main_end){ // this, src, pos, if_main_cond, if_main_then
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "if_main_end";
 
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");

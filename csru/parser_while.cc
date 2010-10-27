@@ -22,7 +22,7 @@ namespace sru_parser {
 
 DEFINE_SRU_PROC(while_statement_end){ // this, src, pos, statement, statements
   PARGCHK();
-  PARSER_CHECK(args.size() >= 5, args[2], "Internal parser error.");
+  PARGNCHK(5);
   LOG << "while_statement_end";
   LOG_TRACE << args[3]->Inspect();
   LOG_TRACE << args[4]->Inspect();

@@ -88,7 +88,10 @@ DEFINE_SRU_PROC(ArraySet){
   if(index < 0) index += array->GetValue()->size();
   LOG_TRACE << "index: " << index;
   DCHECK(0 <= index) << "invalid index";
-  DCHECK(index < (int)array->GetValue()->size()) << "invalid index";
+  // TODO: Customizable default value.
+  while(index >= (int)array->GetValue()->size()){
+    array->GetValue()->push_back(Library::Instance()->Nil().get());
+  }
   array->GetValue()->at(index) = args[2].get();
   return args[2];
 }
@@ -309,8 +312,10 @@ DEFINE_SRU_PROC(ArrayShuffleEx){
 }
 
 DEFINE_SRU_PROC(ArraySize){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(1);
+  Array* self = args[0]->GetData<Array>();
+  DCHECK(self) << "Array not found.";
+  return SRUNumeric::NewInt(self->GetValue()->size());
 }
 
 DEFINE_SRU_PROC(ArraySliceEx){

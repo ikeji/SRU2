@@ -162,6 +162,8 @@ TEST_CODE(array_reverse2,"(a = Array.new() << 1 << 2 << 3).reverse();a", "<Array
 TEST_CODE(array_reverse_ex,"(a = Array.new() << 1 << 2 << 3).reverse!();a", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
 TEST_CODE(numeric_times,"a=Array.new();3.times({a<<1});a", "<Array size=3 [<Numeric(1)>, <Numeric(1)>, <Numeric(1)>]>");
 TEST_CODE(array_clear,"a=Array.new()<<1<<2;a.clear();a", "<Array size=0 []>");
+TEST_CODE(array_size,"a=Array.new()<<1<<2;a.size()", "<Numeric(2)>");
+TEST_CODE(array_stretch,"a=Array.new()<<1<<2;a[10]=3;a.size()", "<Numeric(11)>");
 TEST_CODE(boolean_ampamp,"true && true", "<True ... >");
 TEST_CODE(boolean_ampamp2,"true && false", "<False ... >");
 TEST_CODE(boolean_pipepipe,"true || false", "<True ... >");

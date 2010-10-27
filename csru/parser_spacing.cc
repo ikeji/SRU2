@@ -30,12 +30,38 @@ DEFINE_SRU_PROC(spc){
   return CreateTrue(epos, Library::Instance()->Nil());
 }
 
+DEFINE_SRU_PROC(spc_or_comment){
+  PARGCHK();
+  const string& str = SRUString::GetValue(args[1]).to_str();
+  int pos = SRUNumeric::GetIntValue(args[2]);
+  int epos = pos;
+  LOG << "spc_or_comment start: pos = " << epos;
+  while(true){
+    if(epos >= (int)str.size()) break;
+    while(str[epos] == '#'){ // comment
+      while(true){
+        if(epos >= (int)str.size()) break;
+        if(str[epos] == '\n'){
+          break;
+        }
+        epos++;
+      }
+      if(epos >= (int)str.size()) break;
+    }
+    if(epos >= (int)str.size()) break;
+    if(str[epos] != ' ' && str[epos] != '\t') break;
+    epos++;
+  }
+  LOG << "spc_or_comment result: epos = " << epos;
+  return CreateTrue(epos, Library::Instance()->Nil());
+}
+
 DEFINE_SRU_PROC(spc_or_lf){
   PARGCHK();
   const string& str = SRUString::GetValue(args[1]).to_str();
   int pos = SRUNumeric::GetIntValue(args[2]);
   int epos = pos;
-  LOG << "spc start: pos = " << epos;
+  LOG << "spc_or_lf start: pos = " << epos;
   while(true){
     if(epos >= (int)str.size()) break;
     while(str[epos] == '#'){ // comment
@@ -54,7 +80,7 @@ DEFINE_SRU_PROC(spc_or_lf){
        && str[epos] != '\n' && str[epos] != '\t') break;
     epos++;
   }
-  LOG << "spc result: epos = " << epos;
+  LOG << "spc_or_lf result: epos = " << epos;
   return CreateTrue(epos, Library::Instance()->Nil());
 }
 

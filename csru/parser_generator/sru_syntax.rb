@@ -6,10 +6,11 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement,
        :primary, :primitive, :reference, :literal, :closure_literal,
        :closure_varg, :closure_retarg, :const_literal, :array_literal
 # Implimented in C++
-symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos
+symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos,
+       :spc_or_comment
 
 manipulator :program_end
-program <= statement * ( lf | ";" | eos) * program_end(:statement)
+program <= statement * spc_or_comment * ( lf | ";" | eos) * program_end(:statement)
 
 manipulator :statements_begin, :statements_statement, :statements_end
 statements <= statements_begin *

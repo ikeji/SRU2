@@ -12,7 +12,6 @@
 namespace sru {
 
 DEFINE_SRU_PROC(Clock){
-  ARGLEN(2);
   return SRUNumeric::NewDouble(static_cast<double>(clock())/CLOCKS_PER_SEC);
 }
 

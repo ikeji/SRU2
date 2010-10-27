@@ -193,6 +193,7 @@ TEST_CODE(comment_line,"Math.sin(#this is comment\n1)", "<Numeric(0.841471)>");
 TEST_CODE(array_const, "[1,2,3].size()", "<Numeric(3)>");
 TEST_CODE(array_const1, "[1,2,3][0]", "<Numeric(1)>");
 TEST_CODE(array_const2, "[1,2,3][1]", "<Numeric(2)>");
+TEST_CODE(sys_clock, "a=Sys.clock();b=Sys.clock();a<b", "<True ... >");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

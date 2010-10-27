@@ -110,6 +110,12 @@ TEST_CODE(div, "5/2", "<Numeric(2)>");
 TEST_CODE(rem, "5%2", "<Numeric(1)>");
 TEST_CODE(rem2, "5.3%2", "<Numeric(1.3)>");
 TEST_CODE(rem3, "-3%2", "<Numeric(-1)>");
+TEST_CODE(ltlt, "2 << 4", "<Numeric(32)>");
+TEST_CODE(gtgt, "8 >> 2", "<Numeric(2)>");
+TEST_CODE(lt, "2 < 3", "<True ... >");
+TEST_CODE(lteq, "3 <= 3", "<True ... >");
+TEST_CODE(gt, "2 > 3", "<False ... >");
+TEST_CODE(gteq, "2 >= 3", "<False ... >");
 TEST_CODE(while, "a=1;while(a<1000) a = a + a end; a", "<Numeric(1024)>");
 TEST_CODE(while_break, "while(true) break(3) end", "<Numeric(3)>");
 TEST_CODE(while_next,

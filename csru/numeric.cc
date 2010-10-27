@@ -100,6 +100,21 @@ DEFINE_SRU_PROC(GreaterThan){
   }
 }
 
+DEFINE_SRU_PROC(GreaterOrEqual){
+  ARGLEN(2);
+  double left = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+    "GreaterThan needs numeric";
+  double right = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+    "GreaterThan needs numeric";
+  if(left >= right){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
+}
+
 DEFINE_SRU_PROC(LessThan){
   ARGLEN(2);
   double left = 0;
@@ -115,6 +130,46 @@ DEFINE_SRU_PROC(LessThan){
   }
 }
 
+DEFINE_SRU_PROC(LessOrEqual){
+  ARGLEN(2);
+  double left = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[0], &left)) <<
+    "LessThan needs numeric";
+  double right = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &right)) <<
+    "LessThan needs numeric";
+  if(left <= right){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
+}
+
+DEFINE_SRU_PROC(LtLt){
+  ARGLEN(2);
+  DCHECK(!SRUNumeric::IsReal(args[0]) && !SRUNumeric::IsReal(args[1]))
+    << "Couldn't shift real value";
+  int left = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+    "Plus needs numeric";
+  int right = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+    "Plus needs numeric";
+  return SRUNumeric::NewInt(left << right);
+}
+
+DEFINE_SRU_PROC(GtGt){
+  ARGLEN(2);
+  DCHECK(!SRUNumeric::IsReal(args[0]) && !SRUNumeric::IsReal(args[1]))
+    << "Couldn't shift real value";
+  int left = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[0], &left)) <<
+    "Plus needs numeric";
+  int right = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &right)) <<
+    "Plus needs numeric";
+  return SRUNumeric::NewInt(left >> right);
+}
 
 DEFINE_SRU_PROC(Plus){
   ARGLEN(2);
@@ -293,7 +348,11 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsInstanceMethod(numeric, sym::equal(), CREATE_SRU_PROC(Equal));
   Class::SetAsInstanceMethod(numeric, sym::notEqual(), CREATE_SRU_PROC(NotEqual));
   Class::SetAsInstanceMethod(numeric, sym::greaterThan(), CREATE_SRU_PROC(GreaterThan));
+  Class::SetAsInstanceMethod(numeric, sym::greaterOrEqual(), CREATE_SRU_PROC(GreaterOrEqual));
   Class::SetAsInstanceMethod(numeric, sym::lessThan(), CREATE_SRU_PROC(LessThan));
+  Class::SetAsInstanceMethod(numeric, sym::lessOrEqual(), CREATE_SRU_PROC(LessOrEqual));
+  Class::SetAsInstanceMethod(numeric, sym::ltlt(), CREATE_SRU_PROC(LtLt));
+  Class::SetAsInstanceMethod(numeric, sym::gtgt(), CREATE_SRU_PROC(GtGt));
   Class::SetAsInstanceMethod(numeric, sym::plus(), CREATE_SRU_PROC(Plus));
   Class::SetAsInstanceMethod(numeric, sym::minus(), CREATE_SRU_PROC(Minus));
   Class::SetAsInstanceMethod(numeric, sym::asterisk(), CREATE_SRU_PROC(Asterisk));

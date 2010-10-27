@@ -25,6 +25,7 @@ DEFINE_SRU_PROC(Load) {
   while(ifs && getline(ifs,buf)){
     prog += buf + "\n";
   }
+  // TODO: This code is invalid. Eval is not re-entrant.
   BasicObjectPtr r = Interpreter::Instance()->Eval(prog);
   if(r != NULL){
     return Library::Instance()->True();

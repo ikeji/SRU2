@@ -67,10 +67,12 @@ CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)
 LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
 CPFLAGS  = -u
 ERB      = erb
+CTAGS    = ctags
 
 ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
   # BSD cp doesn't support -u option.
   CPFLAGS = -p
+	CTAGS   = exctags
 endif
 
 ifeq ($(findstring Linux,$(shell uname)),Linux)
@@ -105,7 +107,7 @@ depend: parser $(GENFILES)
 	$(CXX) -MM *.cc > makefile.depend
 
 tags:
-	ctags *
+	$(CTAGS) -R --c++-kinds=+p --fields=+iaS --extra=+q .
 
 .SUFFIXES: .h .herb
 

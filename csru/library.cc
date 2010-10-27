@@ -16,6 +16,7 @@
 #include "class.h"
 #include "sru_array.h"
 #include "sru_math.h"
+#include "sru_sys.h"
 
 using namespace sru;
 
@@ -34,7 +35,8 @@ struct Library::Impl {
       True(),
       False(),
       Parser(),
-      Math() {}
+      Math(),
+      Sys() {}
      
   BasicObjectPtr Nil;
   BasicObjectPtr Binding;
@@ -50,6 +52,7 @@ struct Library::Impl {
   BasicObjectPtr False;
   BasicObjectPtr Parser;
   BasicObjectPtr Math;
+  BasicObjectPtr Sys;
   
   void initialiseInteralClasses();
 };
@@ -73,6 +76,7 @@ BasicObjectPtr Library::False(){ return pimpl->False; }
 BasicObjectPtr Library::Parser(){ return pimpl->Parser; }
 
 BasicObjectPtr Library::Math(){ return pimpl->Math; }
+BasicObjectPtr Library::Sys(){ return pimpl->Sys; }
 
 Library* Library::Instance(){
   static Library inst;
@@ -107,6 +111,7 @@ void Library::Impl::initialiseInteralClasses(){
   False = BasicObject::New();
   Parser = BasicObject::New();
   Math = BasicObject::New();
+  Sys = BasicObject::New();
 
   // Define class path.
   Class->Set(sym::klass(), Class);
@@ -120,6 +125,7 @@ void Library::Impl::initialiseInteralClasses(){
   True->Set(sym::klass(), Boolean);
   False->Set(sym::klass(), Boolean);
   Math->Set(sym::klass(), Class);
+  Sys->Set(sym::klass(), Class);
 
   // Define inheritance path.
   Class->Set(sym::superclass(), Object);
@@ -131,6 +137,7 @@ void Library::Impl::initialiseInteralClasses(){
   Numeric->Set(sym::superclass(), Object);
   Boolean->Set(sym::superclass(), Object);
   Math->Set(sym::superclass(), Object);
+  Sys->Set(sym::superclass(), Object);
 
   // Initialize each Objects
   // TODO: Impliment Object Initialize.
@@ -147,6 +154,7 @@ void Library::Impl::initialiseInteralClasses(){
   Class::InitializeClassClassLast(Class);
   Array::InitializeClass(Array);
   InitializeMathClass(Math);
+  InitializeSysClass(Sys);
 
   // TODO: Move this to nill.cc
   Nil->Set(sym::__name(), SRUString::New(sym::nil()));
@@ -171,4 +179,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set(sym::farse(),Instance()->False());
   frame->Set(sym::__parser(), Instance()->Parser());
   frame->Set(sym::Math(), Instance()->Math());
+  frame->Set(sym::Sys(), Instance()->Sys());
 }

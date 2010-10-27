@@ -152,6 +152,9 @@ valuesAt
 sin
 srand
 rand
+# Sys
+Sys
+clock
 EOL
 
 100.times do |i|

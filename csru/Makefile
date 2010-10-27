@@ -40,6 +40,7 @@ require.o \
 sru_array.o \
 sru_math.o \
 sru_string.o \
+sru_sys.o \
 stack_frame.o \
 symbol.o \
 utils.o \

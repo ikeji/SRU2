@@ -38,6 +38,7 @@ class Library {
   BasicObjectPtr False();
   BasicObjectPtr Parser();
   BasicObjectPtr Math();
+  BasicObjectPtr Sys();
 
   static void BindPrimitiveObjects(const BasicObjectPtr& obj);
  private:

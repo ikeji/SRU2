@@ -18,6 +18,7 @@ numeric.o \
 object.o \
 object_container.o \
 object_pool.o \
+p.o \
 parser.o \
 parser_call.o \
 parser_class.o \

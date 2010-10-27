@@ -95,6 +95,8 @@ return,leturn
 require
 requireNative
 load
+p
+puts
 # for Array
 at
 slice

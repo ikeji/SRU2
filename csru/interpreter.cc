@@ -19,6 +19,7 @@
 #include "utils.h"
 #include "require.h"
 #include "load.h"
+#include "p.h"
 
 using namespace sru;
 using namespace std;
@@ -48,6 +49,7 @@ void Interpreter::InitializeInterpreter(){
   Library::BindPrimitiveObjects(bind);
   SetupRequireFunction(bind);
   SetupLoadFunction(bind);
+  SetupPrintFunction(bind);
 }
 
 void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,

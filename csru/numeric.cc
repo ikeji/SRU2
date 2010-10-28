@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include <sstream>
+#include <cmath>
 #include "basic_object.h"
 #include "class.h"
 #include "library.h"

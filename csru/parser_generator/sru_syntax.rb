@@ -45,8 +45,8 @@ if_statement <= "if" * if_main
 manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif,
             :if_main_else
 if_main <=
-spc_or_lf * "(" * spc_or_lf * statement *
-if_main_cond(:statement) * spc_or_lf * ")" *
+spc_or_lf * statement *
+if_main_cond(:statement) * spc_or_lf *
 o(statements * if_main_then(:statements)) * spc_or_lf *
 (
   "elsif" * if_main *

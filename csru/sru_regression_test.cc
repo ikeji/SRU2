@@ -194,6 +194,8 @@ TEST_CODE(array_const, "[1,2,3].size()", "<Numeric(3)>");
 TEST_CODE(array_const1, "[1,2,3][0]", "<Numeric(1)>");
 TEST_CODE(array_const2, "[1,2,3][1]", "<Numeric(2)>");
 TEST_CODE(sys_clock, "a=Sys.clock();b=Sys.clock();a<b", "<True ... >");
+TEST_CODE(after_if, "a=1;a = 2 if true;a", "<Numeric(2)>");
+TEST_CODE(after_if2, "a=1;a = 2 if false;a", "<Numeric(1)>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

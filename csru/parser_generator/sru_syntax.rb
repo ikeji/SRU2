@@ -4,25 +4,37 @@ symbol :program, :statements, :statement, :let_statement, :flow_statement,
        :expression, :if_main, :bool_term, :comp, :bit_sim, :bit_term,
        :bit_shift, :sim, :term, :factor, :instance_method, :method_call,
        :primary, :primitive, :reference, :literal, :closure_literal,
-       :closure_varg, :closure_retarg, :const_literal, :array_literal
+       :closure_varg, :closure_retarg, :const_literal, :array_literal,
+       :after_if_statement
 # Implimented in C++
 symbol :spc_or_lf, :spc, :ident, :number, :real, :const_string, :lf, :eos,
        :spc_or_comment
 
 manipulator :program_end
-program <= statement * spc_or_comment * ( lf | ";" | eos) * program_end(:statement)
+program <= after_if_statement * spc_or_comment * ( lf | ";" | eos) *
+  program_end(:after_if_statement)
 
 manipulator :statements_begin, :statements_statement, :statements_end
 statements <= statements_begin *
 o(
   spc_or_lf * ~"end" * ~"else" * ~"elsif" * 
-  statement * statements_statement(:statements_begin, :statement) *
+  after_if_statement *
+  statements_statement(:statements_begin, :after_if_statement) *
   r(
     (lf | ";" | eos) *
-    spc_or_lf * ~"end" * ~"else" * ~"elsif" * statement *
-    statements_statement(:statements_begin, :statement)
+    spc_or_lf * ~"end" * ~"else" * ~"elsif" * after_if_statement *
+    statements_statement(:statements_begin, :after_if_statement)
   )
 ) * statements_end(:statements_begin)
+
+
+manipulator :statement_begin, :statement_main, :statement_if, :statement_end
+after_if_statement <= statement_begin *
+ statement * statement_main(:statement_begin, :statement) *
+ o(
+  spc * "if" * after_if_statement *
+  statement_if(:statement_begin, :after_if_statement)
+) * statement_end(:statement_begin)
 
 
 statement <= spc_or_lf * ( let_statement | flow_statement )
@@ -36,7 +48,7 @@ let_statement_end(:flow_statement, :statement)
 
 
 flow_statement <=
-if_statement | while_statement | class_statement | def_statement | expression
+  if_statement | while_statement | class_statement | def_statement | expression
 
 
 if_statement <= "if" * if_main
@@ -45,8 +57,8 @@ if_statement <= "if" * if_main
 manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif,
             :if_main_else
 if_main <=
-spc_or_lf * statement *
-if_main_cond(:statement) * spc_or_lf *
+spc_or_lf * after_if_statement *
+if_main_cond(:after_if_statement) * spc_or_lf *
 o(statements * if_main_then(:statements)) * spc_or_lf *
 (
   "elsif" * if_main *
@@ -59,9 +71,9 @@ o(statements * if_main_then(:statements)) * spc_or_lf *
 
 manipulator :while_statement_end
 while_statement <= "while" * spc_or_lf *
-"(" * spc_or_lf * statement * spc_or_lf * ")" *
+"(" * spc_or_lf * after_if_statement * spc_or_lf * ")" *
 spc_or_lf * statements * spc_or_lf *
-spc_or_lf * "end" * while_statement_end(:statement, :statements)
+spc_or_lf * "end" * while_statement_end(:after_if_statement, :statements)
 
 
 # NOTE: class statement is convert as follow.
@@ -86,8 +98,8 @@ manipulator :class_statement_begin, :class_statement_method_begin,
 class_statement <= "class" *
 spc_or_lf * ident *
 spc_or_lf *
-o( "<" * spc_or_lf * statement) *
-class_statement_begin(:ident, :statement) *
+o( "<" * spc_or_lf * after_if_statement) *
+class_statement_begin(:ident, :after_if_statement) *
 spc_or_lf *
 r(
   "def" * spc_or_lf * ident * spc_or_lf *
@@ -214,34 +226,39 @@ r( "." * ident * spc *
   ((
     "(" * instance_method_method_begin(:ident) *
     o( 
-      spc_or_lf * statement *
-      instance_method_method_arg(:instance_method_method_begin, :statement) *
+      spc_or_lf * after_if_statement *
+      instance_method_method_arg(:instance_method_method_begin,
+                                 :after_if_statement) *
       r(
-        spc_or_lf * "," * spc_or_lf * statement *
-        instance_method_method_arg(:instance_method_method_begin, :statement) *
+        spc_or_lf * "," * spc_or_lf * after_if_statement*
+        instance_method_method_arg(:instance_method_method_begin,
+                                   :after_if_statement) *
         spc_or_lf
       )
     ) *
     spc_or_lf * ")" *
-    instance_method_method_end(:instance_method_method_begin, :instance_method_begin)
+    instance_method_method_end(:instance_method_method_begin,
+                               :instance_method_begin)
   )|(
     instance_method_ref(:instance_method_begin, :ident)
   )) *
   r((
     "(" * instance_method_call_begin(:instance_method_begin) *
     o(
-      spc_or_lf * statement *
-      instance_method_call_arg(:instance_method_call_begin, :statement) *
+      spc_or_lf * after_if_statement *
+      instance_method_call_arg(:instance_method_call_begin,
+                               :after_if_statement) *
       r(
-        spc_or_lf * "," * spc_or_lf * statement *
-        instance_method_call_arg(:instance_method_call_begin, :statement)
+        spc_or_lf * "," * spc_or_lf * after_if_statement *
+        instance_method_call_arg(:instance_method_call_begin,
+                                 :after_if_statement)
       )
     ) * spc_or_lf * ")" *
     instance_method_call_end(:instance_method_begin,
         :instance_method_call_begin)
   )|(
-    "[" * statement * spc_or_lf * "]" *
-    instance_method_call_index(:instance_method_begin, :statement)
+    "[" * after_if_statement * spc_or_lf * "]" *
+    instance_method_call_index(:instance_method_begin, :after_if_statement)
   ))
 ) * instance_method_end(:instance_method_begin, :method_call)
 
@@ -254,17 +271,18 @@ primary * method_call_primary(:primary) *
 spc * r((
   "(" * method_call_method_begin(:primary) *
   o(
-    statement * method_call_method_arg(:method_call_method_begin, :statement) *
+    after_if_statement * method_call_method_arg(:method_call_method_begin,
+                                                :after_if_statement) *
     r(
-      spc_or_lf * "," * statement *
-      method_call_method_arg(:method_call_method_begin, :statement)
+      spc_or_lf * "," * after_if_statement *
+      method_call_method_arg(:method_call_method_begin, :after_if_statement)
     )
   ) *
   spc_or_lf * ")" *
   method_call_method_end(:method_call_primary, :method_call_method_begin)
 )|(
-  "[" * statement * spc_or_lf * "]" *
-   method_call_method_index(:method_call_primary, :statement)
+  "[" * after_if_statement * spc_or_lf * "]" *
+   method_call_method_index(:method_call_primary, :after_if_statement)
 )) * method_call_end(:method_call_primary)
 
 
@@ -273,7 +291,8 @@ primary <=
 primitive |
 spc * (
 "-" * primary * primary_minus(:primary) |
-"(" * spc_or_lf * statement * spc_or_lf * ")" * parent(:statement)
+"(" * spc_or_lf * after_if_statement * spc_or_lf * ")" *
+parent(:after_if_statement)
 )
 
 
@@ -317,10 +336,12 @@ const_literal <= real | number | const_string
 
 manipulator :array_literal_begin, :array_literal_item, :array_literal_end
 array_literal <= "[" * array_literal_begin *
-o( statement * array_literal_item(:array_literal_begin, :statement) *
+o( after_if_statement * array_literal_item(:array_literal_begin,
+                                           :after_if_statement) *
   r(
     spc_or_lf * "," *
-    statement * array_literal_item(:array_literal_begin, :statement)
+    after_if_statement * array_literal_item(:array_literal_begin,
+                                            :after_if_statement)
   ) *
   o( "," )
 ) * "]" * array_literal_end(:array_literal_begin)

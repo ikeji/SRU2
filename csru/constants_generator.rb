@@ -157,7 +157,7 @@ Sys
 clock
 EOL
 
-100.times do |i|
+200.times do |i|
   constants_data += <<EOL
 term#{i}
 pos#{i}

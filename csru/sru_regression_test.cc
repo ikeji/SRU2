@@ -94,15 +94,30 @@ TEST_CODE(true_false, "(true.ifTrueFalse)(true,{1},{2})", "<Numeric(1)>");
 TEST_CODE(true_false2, "(false.ifTrueFalse)(true,{1},{2})", "<Numeric(2)>");
 TEST_CODE(true_false3, "true.ifTrueFalse({1},{2})", "<Numeric(1)>");
 TEST_CODE(true_false4, "false.ifTrueFalse({1},{2})", "<Numeric(2)>");
-TEST_CODE(if_statement , "if ( 1 == 1 ) 3 end", "<Numeric(3)>");
-TEST_CODE(if_statement2, "if ( 1 == 2 ) 3 end", "<nil>");
-TEST_CODE(if_statement3, "if ( 1 == 1 ) 3 else 4 end", "<Numeric(3)>");
-TEST_CODE(if_statement4, "if ( 1 == 2 ) 3 else 4 end", "<Numeric(4)>");
-TEST_CODE(if_statement5, "if ( 1 == 2 ) 3 elsif ( 1 == 1 ) 4 end", "<Numeric(4)>");
-TEST_CODE(if_statement6, "if ( 1 == 2 ) 3 elsif ( 1 == 1 ) 4 else 5 end", "<Numeric(4)>");
-TEST_CODE(if_statement7, "if ( 1 == 2 ) 3 elsif ( 1 == 6 ) 4 else 5 end", "<Numeric(5)>");
-TEST_CODE(if_statement8, "if ( 1 == 2 ) 3 elsif ( 1 == 6 ) 4 elsif ( 1 == 7 )  5 end", "<nil>");
-TEST_CODE(if_statement9, "if ( 1 == 2 ) 3 elsif ( 1 == 6 ) 4 elsif ( 1 == 7 )  5 else 6 end", "<Numeric(6)>");
+TEST_CODE(if_statement , "if ( 1 == 1 ) then 3 end", "<Numeric(3)>");
+TEST_CODE(if_statement2, "if ( 1 == 2 ) then 3 end", "<nil>");
+TEST_CODE(if_statement3, "if ( 1 == 1 ) then 3 else 4 end", "<Numeric(3)>");
+TEST_CODE(if_statement4, "if ( 1 == 2 ) then 3 else 4 end", "<Numeric(4)>");
+TEST_CODE(if_statement5, "if ( 1 == 2 ) then 3 elsif ( 1 == 1 ) then 4 end",
+    "<Numeric(4)>");
+TEST_CODE(if_statement6,
+    "if ( 1 == 2 ) then 3 "
+    "elsif ( 1 == 1 ) then 4 else 5 end",
+    "<Numeric(4)>");
+TEST_CODE(if_statement7,
+    "if ( 1 == 2 ) then 3 "
+    "elsif ( 1 == 6 ) then 4 else 5 end",
+    "<Numeric(5)>");
+TEST_CODE(if_statement8,
+    "if ( 1 == 2 ) then 3 "
+    "elsif ( 1 == 6 ) then 4 "
+    "elsif ( 1 == 7 ) then 5 end",
+    "<nil>");
+TEST_CODE(if_statement9,
+    "if ( 1 == 2 ) then 3 "
+    "elsif ( 1 == 6 ) then 4 "
+    "elsif ( 1 == 7 ) then 5 else 6 end",
+    "<Numeric(6)>");
 TEST_CODE(add, "1+4", "<Numeric(5)>");
 TEST_CODE(sub, "1-4", "<Numeric(-3)>");
 TEST_CODE(mul, "1*4", "<Numeric(4)>");
@@ -121,7 +136,7 @@ TEST_CODE(while_break, "while(true) break(3) end", "<Numeric(3)>");
 TEST_CODE(while_next,
     "a = 0\n"
     "while(true)\n"
-    "  if(a==1) break(a) end\n"  // TODO: Use post if
+    "  if(a==1) then break(a) end\n"  // TODO: Use post if
     "  a = 1\n"
     "  next()\n"
     "  break(3)\n"
@@ -151,8 +166,9 @@ TEST_CODE(klass10, "class MyClass def hoge() fuga() end end; MyClass.new().hoge"
     "<Proc({|self:return|fuga();})>");
 // TODO: add test for || && == === !+ > < >= <= | & << >> ! ~
 TEST_CODE(multi,"a=1; 2;\n 3; a", "<Numeric(1)>");
-TEST_CODE(multi_if,"if(true) 3;2 end", "<Numeric(2)>");
-TEST_CODE(multi_if2,"if(true) 3\n2 end", "<Numeric(2)>");
+TEST_CODE(multi_if,"if(true) then 3;2 end", "<Numeric(2)>");
+TEST_CODE(multi_if2,"if(true) then 3\n2 end", "<Numeric(2)>");
+TEST_CODE(multi_if3,"if(true) \n 3\n2 end", "<Numeric(2)>");
 TEST_CODE(multi_def,"def x() 1;2 end; x()", "<Numeric(2)>");
 TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b",
     "<Numeric(5050)>");

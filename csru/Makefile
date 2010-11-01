@@ -77,7 +77,7 @@ CTAGS    = ctags
 ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
   # BSD cp doesn't support -u option.
   CPFLAGS = -p
-	CTAGS   = exctags
+  CTAGS   = exctags
 endif
 
 ifeq ($(findstring Linux,$(shell uname)),Linux)
@@ -93,11 +93,16 @@ ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
 endif
 
 ifdef USE_EDITLINE
-	LDFLAGS += -ledit -lcurses
-	CXXFLAGS += -DUSE_EDITLINE
+  LDFLAGS += -ledit -lcurses
+  CXXFLAGS += -DUSE_EDITLINE
 endif
 
-all: sru tags library
+ifdef USE_REQUIRE
+  LIBRARY_TARGET = library
+  CXXFLAGS += -DUSE_REQUIRE
+endif
+
+all: sru tags $(LIBRARY_TARGET)
 
 test: all sru_test
 	./sru_test

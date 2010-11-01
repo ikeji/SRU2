@@ -4,7 +4,6 @@
 
 #include "require.h"
 
-#include <dlfcn.h>
 #include "native_proc.h"
 #include "library.h"
 #include "sru_string.h"
@@ -16,6 +15,41 @@ using namespace sru;
 using namespace std;
 
 typedef bool require_proc(const BasicObjectPtr& env);
+
+#if defined(WIN32)
+
+#include <windows.h>
+
+void* dlopen(const char* fname, int flag){
+  return LoadLibrary(fname);
+}
+#define RTLD_NOW 1
+
+require_proc* dlsym(void* handle, LPCSTR name){
+  return reinterpret_cast<require_proc*>(GetProcAddress(
+        reinterpret_cast<HINSTANCE>(handle), name));
+};
+
+string dlerror(){
+  LPVOID lpMsgBuf;
+  FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER|
+      FORMAT_MESSAGE_FROM_SYSTEM|
+      FORMAT_MESSAGE_IGNORE_INSERTS,
+      NULL,
+      GetLastError(),
+      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+      (LPTSTR)&lpMsgBuf,
+      0,
+      NULL);
+  string s((LPTSTR)lpMsgBuf);
+  return s;
+}
+
+#else
+
+#include <dlfcn.h>
+
+#endif // WIN32
 
 DEFINE_SRU_PROC(requireNative) {
   if(args.size() < 1)

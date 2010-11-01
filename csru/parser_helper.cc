@@ -5,6 +5,21 @@
 #include <string>
 #ifdef USEOLDGCC
 #include <ext/hash_map>
+
+namespace sru {
+class BasicObject;
+} // namespace sru
+
+namespace __gnu_cxx {
+typedef sru::BasicObject* BasicObjectPointer;
+template <>
+struct hash<BasicObjectPointer>{
+  size_t operator()(const BasicObjectPointer& ptr) const {
+    return hash<long>()(reinterpret_cast<long>(ptr));
+  }
+};
+}  // namespace __gnu_cxx;
+
 #else
 #include <tr1/unordered_map>
 #endif

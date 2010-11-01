@@ -21,7 +21,7 @@ o(
   after_if_statement *
   statements_statement(:statements_begin, :after_if_statement) *
   r(
-    (lf | ";" | eos) *
+    spc_or_comment * (lf | ";" | eos) *
     spc_or_lf * ~"end" * ~"else" * ~"elsif" * after_if_statement *
     statements_statement(:statements_begin, :after_if_statement)
   )

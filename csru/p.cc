@@ -26,11 +26,18 @@ DEFINE_SRU_PROC(puts) {
   return args[0];
 }
 
+DEFINE_SRU_PROC(print) {
+  ARGLEN(1);
+  cout << SRUString::GetValue(args[0]).to_str();
+  return args[0];
+}
+
 namespace sru {
 
 void SetupPrintFunction(const BasicObjectPtr& env){
   env->Set(sym::p(), CREATE_SRU_PROC(p));
   env->Set(sym::puts(), CREATE_SRU_PROC(puts));
+  env->Set(sym::print(), CREATE_SRU_PROC(print));
 }
 
 } // namespace sru

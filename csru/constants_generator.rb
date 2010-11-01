@@ -98,6 +98,7 @@ requireNative
 load
 p
 puts
+print
 # for Array
 at
 slice

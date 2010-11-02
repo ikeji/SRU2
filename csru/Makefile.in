@@ -1,0 +1,36 @@
+# Programing Language SRU
+# Copyright(C) 2005-2008 IKeJI
+#
+
+#DFLAGS   = -O2
+DFLAGS   = -DDEBUG -g -O0
+CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN -fPIC $(DFLAGS)
+LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
+CPFLAGS  = -u
+ERB      = erb
+CTAGS    = ctags
+LIBEXT   = so
+
+ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
+  # BSD cp doesn't support -u option.
+  CPFLAGS = -p
+  CTAGS   = exctags
+endif
+
+ifeq ($(findstring Linux,$(shell uname)),Linux)
+  LDFLAGS  += -ldl
+endif
+
+ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
+  # g++-4 doesn't support mingw now. use g++-3
+  CXX      = ccache g++-3
+  # g++-3 doesn't work with -Weffc++
+  CXXFLAGS = -Wall $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC -DSRU_MAIN
+  LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
+  LIBEXT   = dll
+endif
+
+ifdef USE_EDITLINE
+  LDFLAGS += -ledit -lcurses
+  CXXFLAGS += -DUSE_EDITLINE
+endif

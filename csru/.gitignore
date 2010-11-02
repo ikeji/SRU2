@@ -7,6 +7,8 @@ tags
 testing_ast.h
 testing_sru.h
 sru
+libsru.so
+libsru.dll
 sru_test
 parser.cc
 parser_generator/parser.cc

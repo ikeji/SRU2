@@ -1,8 +1,13 @@
-CXXFLAGS=-Wall -Werror -Weffc++ -I../.. -fPIC
-LDFLAGS=-shared
+# Programing Language SRU
+# Copyright(C) 2005-2010 IKeJI
+#
+
+include ../Makefile.in
+
+CXXFLAGS += -I../..
 
 hello.so: hellolib.cc
-	$(CXX) $(CXXFLAGS) hellolib.cc -o hello.so -shared
+	$(CXX) $(LDFLAGS) $(CXXFLAGS) hellolib.cc -o hello.so -shared ../libsru.$(LIBEXT)
 
 clean:
-	rm hello.so
+	rm -f *.o *.so *~

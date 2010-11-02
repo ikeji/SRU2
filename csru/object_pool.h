@@ -17,10 +17,7 @@ namespace allocator {
 
 class ObjectPool{
  public:
-  static ObjectPool* Instance(){
-    static ObjectPool pool;
-    return &pool; 
-  }
+  static ObjectPool* Instance();
   void Register(BasicObject * obj);
   void GarbageCollect();
   void Mark(BasicObject * obj, bool force = false);

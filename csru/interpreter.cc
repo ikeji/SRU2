@@ -39,6 +39,11 @@ Interpreter::~Interpreter(){
   delete pimpl;
 }
 
+Interpreter* Interpreter::Instance(){
+  static Interpreter inst;
+  return &inst;
+}
+
 void Interpreter::InitializeInterpreter(){
   const BasicObjectPtr st = StackFrame::New(Binding::New());
   pimpl->current_frame = st;

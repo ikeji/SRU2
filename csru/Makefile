@@ -65,57 +65,26 @@ stack_frame_test.o \
 sru_string_test.o \
 symbol_test.o \
 
-#DFLAGS   = -O2
-DFLAGS   = -DDEBUG -g -O0
-GENFILES = testing_ast.h testing_sru.h parser.cc constants.cc constants.h
-CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN $(DFLAGS)
-LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
-CPFLAGS  = -u
-ERB      = erb
-CTAGS    = ctags
+include Makefile.in
 
-ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
-  # BSD cp doesn't support -u option.
-  CPFLAGS = -p
-  CTAGS   = exctags
-endif
-
-ifeq ($(findstring Linux,$(shell uname)),Linux)
-  LDFLAGS  += -ldl
-endif
-
-ifeq ($(findstring CYGWIN_NT,$(shell uname)),CYGWIN_NT)
-  # g++-4 doesn't support mingw now. use g++-3
-  CXX      = g++-3
-  # g++-3 doesn't work with -Weffc++
-  CXXFLAGS = -Wall -Werror $(DFLAGS) -mno-cygwin -I/usr/include/mingw -DUSEOLDGCC -DSRU_MAIN
-  LDFLAGS  = $(DFLAGS) -mno-cygwin -L/usr/lib/mingw
-endif
-
-ifdef USE_EDITLINE
-  LDFLAGS += -ledit -lcurses
-  CXXFLAGS += -DUSE_EDITLINE
-endif
-
-ifdef USE_REQUIRE
-  LIBRARY_TARGET = library
-  CXXFLAGS += -DUSE_REQUIRE
-endif
-
-all: sru tags $(LIBRARY_TARGET)
+all: sru tags library
 
 test: all sru_test
 	./sru_test
 
-sru: $(OBJS) main.o
-	$(CXX) $(LDFLAGS) -g -o sru $(OBJS) main.o
+libsru.$(LIBEXT): $(OBJS)
+	$(CXX) $(LDFLAGS) -shared -o libsru.$(LIBEXT) $(OBJS)
 
-sru_test: testing.o $(TESTS) $(OBJS)
-	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o $(OBJS)
+sru: libsru.$(LIBEXT) main.o
+	$(CXX) $(LDFLAGS) -g -o sru main.o libsru.$(LIBEXT)
+
+sru_test: libsru.$(LIBEXT) testing.o $(TESTS)
+	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o libsru.$(LIBEXT)
 
 clean:
 	$(MAKE) -C parser_generator clean
-	rm -f *.o *.so sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
+	$(MAKE) -C lib clean
+	rm -f *.o *.so *.dll sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
 
 depend: parser $(GENFILES)
 	$(MAKE) -C parser_generator depend
@@ -151,7 +120,7 @@ constants.cc: constants_generator.rb symbols
 parser:
 	$(MAKE) -C parser_generator
 
-library:
+library: libsru.$(LIBEXT)
 	$(MAKE) -C lib
 
 include makefile.depend

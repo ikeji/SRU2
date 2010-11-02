@@ -174,10 +174,8 @@ TEST_CODE(multi_while,"a=1;b=0;while(a<101)  b=b+a;a=a+1 end;b",
     "<Numeric(5050)>");
 TEST_CODE(multi_while2,"while(true) 2;break(3) end", "<Numeric(3)>");
 TEST_CODE(multi_closure,"{1;2;3}()", "<Numeric(3)>");
-#ifdef USE_REQUIRE
 TEST_CODE(require_native,"requireNative(\"./lib/hello.so\").ifTrue({1})","<Numeric(1)>");
 TEST_CODE(require_native_exec,"requireNative(\"./lib/hello.so\");hello2()","<String(\"Hello world\")>");
-#endif
 TEST_CODE(array,"Array","<Array ... >");
 TEST_CODE(array_new,"Array.new()","<Array size=0 []>");
 TEST_CODE(array_push,"Array.new() << 3","<Array size=1 [<Numeric(3)>]>");

@@ -28,6 +28,11 @@ ObjectPool::~ObjectPool(){
   delete pimpl;
 }
 
+ObjectPool* ObjectPool::Instance(){
+  static ObjectPool pool;
+  return &pool; 
+}
+
 void ObjectPool::Register(BasicObject * obj){
   pimpl->allocated.push_back(obj);
   // TODO: Define more good strategy.

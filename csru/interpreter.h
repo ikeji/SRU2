@@ -20,10 +20,7 @@ class Interpreter{
  public:
   BasicObjectPtr Eval(const BasicObjectPtr& obj);
   BasicObjectPtr Eval(const std::string& str);
-  static Interpreter* Instance(){
-    static Interpreter inst;
-    return &inst;
-  }
+  static Interpreter* Instance();
   // TODO: find more good name.
   void DigIntoNewFrame(const ptr_vector& expressions,
                        const BasicObjectPtr& binding);

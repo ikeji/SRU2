@@ -87,7 +87,8 @@ sru_test: libsru.$(LIBEXT) testing.o $(TESTS)
 clean:
 	$(MAKE) -C parser_generator clean
 	$(MAKE) -C lib clean
-	rm -f *.o *.so *.dll sru sru_test *~ .gitignore~ Makefile.bak tags symbols $(GENFILES)
+	rm -f *.o *.so *.dll *.core sru sru_test *~ .gitignore~ \
+		Makefile.bak tags symbols $(GENFILES)
 
 depend: parser $(GENFILES)
 	$(MAKE) -C parser_generator depend

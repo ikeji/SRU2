@@ -114,7 +114,7 @@ int main(int argc, char* argv[]){
     const char* line = el_gets(el,&count);
     if(line == NULL) break;
     string source(line);
-    history(hist,&ev,H_ENTER,line);
+    //history(hist,&ev,H_ENTER,line);
 #else
     cout << ">> ";
     string source;
@@ -126,7 +126,10 @@ int main(int argc, char* argv[]){
     BasicObjectPtr r = Interpreter::Instance()->Eval(source);
     if (r != NULL) cout << r->Inspect() << endl;
 #ifdef USE_EDITLINE
-    if (r != NULL) history(hist,&ev,H_ENTER,line);
+    if (r != NULL){
+      history(hist,&ev,H_ENTER,line);
+      history(hist,&ev,H_SAVE,"./.sru-history");
+    }
 #endif
     cout << endl;
   }

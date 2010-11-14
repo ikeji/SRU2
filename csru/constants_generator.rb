@@ -78,6 +78,9 @@ loop_internal
 result
 break,bleak
 next
+apply
+ylppa
+proc
 # Object
 new,mew
 # for __parser

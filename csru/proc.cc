@@ -22,6 +22,7 @@
 #include "logging.h"
 #include "symbol.h"
 #include "utils.h"
+#include "sru_array.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -40,12 +41,16 @@ void Proc::Initialize(const BasicObjectPtr& obj){
 
 DECLARE_SRU_PROC(whileTrue);
 DECLARE_SRU_PROC(loop);
+DECLARE_SRU_PROC(Apply);
+DECLARE_SRU_PROC(Ylppa);
 
 void Proc::InitializeClassObject(const BasicObjectPtr& proc){
   Class::SetAsSubclass(proc, NULL);
   proc->Set(sym::__name(), SRUString::New(sym::Proc()));
   Class::SetAsInstanceMethod(proc, sym::whileTrue(), CREATE_SRU_PROC(whileTrue));
   Class::SetAsInstanceMethod(proc, sym::loop(), CREATE_SRU_PROC(loop));
+  Class::SetAsInstanceMethod(proc, sym::apply(), CREATE_SRU_PROC(Apply));
+  Class::SetAsInstanceMethod(proc, sym::ylppa(), CREATE_SRU_PROC(Ylppa));
 }
 
 string Proc::Inspect(){
@@ -225,6 +230,38 @@ DEFINE_SRU_PROC_SMASH(loop){
 
   new_binding->Set(sym::loop_internal(),loop_internal);
   new_binding->Set(sym::block(), args[0]);
+}
+
+DEFINE_SRU_PROC_SMASH(Apply){
+  ARGLEN(2);
+  Array* array = args[1]->GetData<Array>();
+  DCHECK(array) << "Apply requires array.";
+  Proc::Invoke(context, args[0], Conv(*(array->GetValue())));
+}
+
+DEFINE_SRU_PROC_SMASH(Ylppa_internal){
+  BasicObjectPtr a = Array::New();
+  Array* array = a->GetData<Array>();
+  for(ptr_vector::const_iterator it = args.begin();
+      it != args.end();
+      it++){
+    array->GetValue()->push_back((*it).get());
+  }
+
+  DCHECK(proc->HasSlot(sym::proc()));
+  BasicObjectPtr main = proc->Get(sym::proc());
+
+  ptr_vector arg;
+  arg.push_back(a);
+
+  Proc::Invoke(context,main,arg);
+}
+
+DEFINE_SRU_PROC(Ylppa){
+  ARGLEN(1);
+  const BasicObjectPtr ret = CREATE_SRU_PROC(Ylppa_internal);
+  ret->Set(sym::proc(), args[0]);
+  return ret;
 }
 
 }  // namespace sru

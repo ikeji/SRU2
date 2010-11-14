@@ -228,6 +228,10 @@ TEST_CODE(sys_clock, "a=Sys.clock();b=Sys.clock();a<b", "<True ... >");
 TEST_CODE(after_if, "a=1;a = 2 if true;a", "<Numeric(2)>");
 TEST_CODE(after_if2, "a=1;a = 2 if false;a", "<Numeric(1)>");
 TEST_CODE(spc, "def a()\n1 \n2\n1\nend;a()", "<Numeric(1)>");
+TEST_CODE(proc_apply, "a={|a|a}; a.apply([1])", "<Numeric(1)>");
+TEST_CODE(proc_apply2, "a={|a,b|b}; a.apply([1,2])", "<Numeric(2)>");
+TEST_CODE(proc_ylppa, "a={|a|a}; a.ylppa()(1,2)",
+    "<Array size=2 [<Numeric(1)>, <Numeric(2)>]>");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

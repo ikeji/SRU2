@@ -73,6 +73,7 @@ TEST_CODE(call2, "{|x|x}(3)", "<Numeric(3)>");
 TEST_CODE(nulllambda,"{}", "<Proc({})>");
 TEST_CODE(nulllambdacall,"{}()", "<nil>");
 TEST_CODE(inst_call, "3.plus(2)", "<Numeric(5)>");
+TEST_CODE(inst_call2, "3.plus 2", "<Numeric(5)>");
 TEST_CODE(inst_call_call, "3.invert().invert()", "<Numeric(3)>");
 TEST_CODE(let,"x = 3", "<Numeric(3)>");
 TEST_CODE(let_result, "x = 3; x", "<Numeric(3)>");
@@ -83,12 +84,18 @@ TEST_CODE(call4, "x = 3; (x.plus)(x,3)", "<Numeric(6)>");
 TEST_CODE(let_func, "t={|x|(x.plus)(x,3)}",
     "<Proc({|x|(x).plus(x, (Numeric).parse(Numeric, \"3\"));})>");
 TEST_CODE(call_func, "t={|x|(x.plus)(x,3)}; t(5)", "<Numeric(8)>");
+TEST_CODE(call_func2, "t={|x|(x.plus)(x,3)}; t 5", "<Numeric(8)>");
 TEST_CODE(let_func2, "plus={|x,y|x+y}",
     "<Proc({|x,y|{|$$|($$).plus($$, y);}(x);})>");
 TEST_CODE(use_func2, "plus={|x,y|x+y}; plus(4,3)", "<Numeric(7)>");
-TEST_CODE(use_func3, "plus={|x,y|x+y}; plus(plus(4,3),plus(1,2))",
+TEST_CODE(use_func3, "plus={|x,y|x+y}; plus 4,3", "<Numeric(7)>");
+TEST_CODE(use_func4, "plus={|x,y|x+y}; plus(plus(4,3),plus(1,2))",
     "<Numeric(10)>");
-TEST_CODE(use_func4, "plus={|x,y|x+y}; plus(4,3).plus(plus(1,2))",
+TEST_CODE(use_func5, "plus={|x,y|x+y}; plus plus(4,3),plus(1,2)",
+    "<Numeric(10)>");
+TEST_CODE(use_func6, "plus={|x,y|x+y}; plus(4,3).plus(plus(1,2))",
+    "<Numeric(10)>");
+TEST_CODE(use_func7, "plus={|x,y|x+y}; plus(4,3).plus plus(1,2)",
     "<Numeric(10)>");
 TEST_CODE(true_false, "(true.ifTrueFalse)(true,{1},{2})", "<Numeric(1)>");
 TEST_CODE(true_false2, "(false.ifTrueFalse)(true,{1},{2})", "<Numeric(2)>");

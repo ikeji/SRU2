@@ -240,6 +240,22 @@ r( "." * ident * spc *
     instance_method_method_end(:instance_method_method_begin,
                                :instance_method_begin)
   )|(
+    ~"[" * ~"." * spc * ~"if" * ~"end" * ~"elsif" * ~"then" * ~"else" * ~lf *
+    ~"|" * ~"&" * ~"=" * ~"!" * ~">" * ~"<" * ~"+" * ~"-" * ~"*" * ~"/" * ~"%" *
+    ~"~" *
+    instance_method_method_begin(:ident) *
+    spc_or_lf * statement *
+    instance_method_method_arg(:instance_method_method_begin,
+                               :statement) *
+    r(
+      spc_or_lf * "," * spc_or_lf * statement*
+      instance_method_method_arg(:instance_method_method_begin,
+                                 :if_statement) *
+      spc_or_lf
+    ) *
+    instance_method_method_end(:instance_method_method_begin,
+                               :instance_method_begin)
+  )|(
     instance_method_ref(:instance_method_begin, :ident)
   )) *
   r((

@@ -49,19 +49,41 @@ unsigned char complete(EditLine *e, int ch){
   size_t len = lf->cursor - ptr;
   string base(ptr, len);
 
+  vector<string> candiate;
   for(symbol::symbol_hash::const_iterator it = symbol::begin();
       it != symbol::end();
       it++){
     const string& key = it->first;
     if(key.find(base) == 0){
-      if(el_insertstr(e, key.c_str()+len) == -1)
-        res = CC_ERROR;
-      else
-        res = CC_REFRESH;
-      break;
+      candiate.push_back(string(key.c_str()+len));
     }
   }
-  return res;
+
+  if(candiate.empty()){ // not found
+    return res;
+  } else if(candiate.size() == 1){ // only one candidate.
+    if(el_insertstr(e, candiate[0].c_str()) == -1){
+      return CC_ERROR;
+    }
+    return CC_REFRESH;
+  } else {
+    // find prefix.
+    string s = candiate[0];
+    for(vector<string>::const_iterator it = candiate.begin();
+        it != candiate.end();
+        it++){
+      while(true){
+        if(s.empty()) break;
+        if(it->find(s) == 0) break;
+        s = s.substr(0,s.size()-1);
+      }
+    }
+    if(s.empty()) return CC_ERROR;
+    if(el_insertstr(e, s.c_str()) == -1){
+      return CC_ERROR;
+    }
+    return CC_REFRESH;
+  }
 }
 #endif
 

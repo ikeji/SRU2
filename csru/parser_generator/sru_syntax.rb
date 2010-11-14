@@ -58,7 +58,7 @@ manipulator :if_main_cond, :if_main_then, :if_main_end, :if_main_elsif,
             :if_main_else
 if_main <=
 spc_or_lf * after_if_statement *
-if_main_cond(:after_if_statement) * spc_or_lf * o("then") * o(";") *
+if_main_cond(:after_if_statement) * spc_or_comment * (lf | "then" | ";") *
 o(statements * if_main_then(:statements)) * spc_or_lf *
 (
   "elsif" * if_main *
@@ -242,7 +242,7 @@ r( "." * ident * spc *
   )|(
     ~"[" * ~"." * spc * ~"if" * ~"end" * ~"elsif" * ~"then" * ~"else" * ~lf *
     ~"|" * ~"&" * ~"=" * ~"!" * ~">" * ~"<" * ~"+" * ~"-" * ~"*" * ~"/" * ~"%" *
-    ~"~" *
+    ~"~" * ~"#" *
     instance_method_method_begin(:ident) *
     spc_or_lf * statement *
     instance_method_method_arg(:instance_method_method_begin,
@@ -299,7 +299,7 @@ r((
 )|(
   ~"[" * ~"." * spc * ~"if" * ~"end" * ~"elsif" * ~"then" * ~"else" * ~lf *
   ~"|" * ~"&" * ~"=" * ~"!" * ~">" * ~"<" * ~"+" * ~"-" * ~"*" * ~"/" * ~"%" *
-  ~"~" *
+  ~"~" * ~"#" *
   method_call_method_begin(:primary) *
   statement * method_call_method_arg(:method_call_method_begin, :statement) *
   r(

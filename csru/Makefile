@@ -70,7 +70,7 @@ include Makefile.in
 all: sru tags library
 
 test: all sru_test
-	./sru_test
+	LD_LIBRARY_PATH=. ./sru_test
 
 libsru.$(LIBEXT): $(OBJS)
 	$(CXX) $(LDFLAGS) -shared -o libsru.$(LIBEXT) $(OBJS)

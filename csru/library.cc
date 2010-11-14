@@ -17,6 +17,7 @@
 #include "sru_array.h"
 #include "sru_math.h"
 #include "sru_sys.h"
+#include "nil.h"
 
 using namespace sru;
 
@@ -156,8 +157,7 @@ void Library::Impl::initialiseInteralClasses(){
   InitializeMathClass(Math);
   InitializeSysClass(Sys);
 
-  // TODO: Move this to nill.cc
-  Nil->Set(sym::__name(), SRUString::New(sym::nil()));
+  SetupNilObject(Nil);
   // TODO: Move this to hash.cc
   Hash->Set(sym::__name(), SRUString::New(sym::Hash()));
   // TODO: Move this to string.cc

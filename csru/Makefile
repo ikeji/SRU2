@@ -14,6 +14,7 @@ library.o \
 load.o \
 logging.o \
 native_proc.o \
+nil.o \
 numeric.o \
 object.o \
 object_container.o \

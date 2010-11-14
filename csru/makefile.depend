@@ -33,7 +33,7 @@ interpreter_test.o: interpreter_test.cc interpreter.h object_container.h \
 library.o: library.cc library.h basic_object.h logging.h symbol.h \
   numeric.h parser.h object.h sru_string.h constants.h binding.h \
   boolean.h proc.h object_container.h class.h sru_array.h sru_math.h \
-  sru_sys.h
+  sru_sys.h nil.h
 library_test.o: library_test.cc testing.h library.h basic_object.h \
   logging.h symbol.h
 load.o: load.cc load.h native_proc.h proc.h basic_object.h logging.h \
@@ -47,6 +47,8 @@ native_proc.o: native_proc.cc native_proc.h proc.h basic_object.h \
 native_proc_test.o: native_proc_test.cc testing.h native_proc.h proc.h \
   basic_object.h logging.h symbol.h object_container.h library.h \
   stack_frame.h interpreter.h
+nil.o: nil.cc nil.h basic_object.h logging.h symbol.h constants.h \
+  sru_string.h class.h library.h
 numeric.o: numeric.cc numeric.h basic_object.h logging.h symbol.h class.h \
   library.h native_proc.h proc.h object_container.h sru_string.h \
   constants.h utils.h interpreter.h stack_frame.h binding.h testing_ast.h \
@@ -56,7 +58,8 @@ numeric_test.o: numeric_test.cc testing.h numeric.h basic_object.h \
   interpreter.h stack_frame.h sru_string.h constants.h testing_ast.h \
   ast.h
 object.o: object.cc object.h basic_object.h logging.h symbol.h \
-  sru_string.h constants.h class.h library.h
+  sru_string.h constants.h class.h library.h native_proc.h proc.h \
+  object_container.h utils.h
 object_container.o: object_container.cc object_container.h basic_object.h \
   logging.h symbol.h
 object_container_test.o: object_container_test.cc testing.h \
@@ -99,7 +102,7 @@ parser_if.o: parser_if.cc native_proc.h proc.h basic_object.h logging.h \
   parser_util.h testing_ast.h ast.h sru_string.h
 parser_let.o: parser_let.cc native_proc.h proc.h basic_object.h logging.h \
   symbol.h object_container.h constants.h numeric.h parser_util.h utils.h \
-  testing_ast.h ast.h sru_string.h
+  library.h testing_ast.h ast.h sru_string.h
 parser_method_call.o: parser_method_call.cc native_proc.h proc.h \
   basic_object.h logging.h symbol.h object_container.h constants.h \
   library.h numeric.h parser_util.h testing_ast.h ast.h sru_string.h
@@ -124,7 +127,7 @@ parser_while.o: parser_while.cc native_proc.h proc.h basic_object.h \
 proc.o: proc.cc proc.h basic_object.h logging.h symbol.h \
   object_container.h ast.h binding.h interpreter.h library.h \
   stack_frame.h constants.h class.h native_proc.h sru_string.h numeric.h \
-  utils.h testing_ast.h testing_sru.h
+  utils.h sru_array.h testing_ast.h testing_sru.h
 proc_test.o: proc_test.cc testing.h proc.h basic_object.h logging.h \
   symbol.h object_container.h ast.h interpreter.h testing_ast.h \
   sru_string.h library.h numeric.h constants.h
@@ -154,4 +157,4 @@ stack_frame_test.o: stack_frame_test.cc testing.h stack_frame.h \
 symbol.o: symbol.cc symbol.h logging.h
 symbol_test.o: symbol_test.cc symbol.h testing.h
 testing.o: testing.cc testing.h logging.h
-utils.o: utils.cc utils.h logging.h library.h basic_object.h symbol.h
+utils.o: utils.cc utils.h library.h basic_object.h logging.h symbol.h

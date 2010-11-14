@@ -66,12 +66,12 @@ TEST_CODE(lambda3,"{|a,b|x}", "<Proc({|a,b|x;})>");
 TEST_CODE(lambda4,"{||x}", "<Proc({x;})>");
 TEST_CODE(lambda5,"{a|x}", "<Proc({|a|x;})>");
 TEST_CODE(lambda6,"{a,b|x}", "<Proc({|a,b|x;})>");
-TEST_CODE(nil, "nil", "<nil>");
+TEST_CODE(nil, "nil", "<nil ... >");
 TEST_CODE(klass_v, "Class", "<Class ... >");
 TEST_CODE(call, "{3}()", "<Numeric(3)>");
 TEST_CODE(call2, "{|x|x}(3)", "<Numeric(3)>");
 TEST_CODE(nulllambda,"{}", "<Proc({})>");
-TEST_CODE(nulllambdacall,"{}()", "<nil>");
+TEST_CODE(nulllambdacall,"{}()", "<nil ... >");
 TEST_CODE(inst_call, "3.plus(2)", "<Numeric(5)>");
 TEST_CODE(inst_call2, "3.plus 2", "<Numeric(5)>");
 TEST_CODE(inst_call_call, "3.invert().invert()", "<Numeric(3)>");
@@ -110,7 +110,7 @@ TEST_CODE(false_equal2, "false == true", "<False ... >");
 TEST_CODE(false_notequal, "false != true", "<True ... >");
 TEST_CODE(false_notequal2, "false != false", "<False ... >");
 TEST_CODE(if_statement , "if ( 1 == 1 ) then 3 end", "<Numeric(3)>");
-TEST_CODE(if_statement2, "if ( 1 == 2 ) then 3 end", "<nil>");
+TEST_CODE(if_statement2, "if ( 1 == 2 ) then 3 end", "<nil ... >");
 TEST_CODE(if_statement3, "if ( 1 == 1 ) then 3 else 4 end", "<Numeric(3)>");
 TEST_CODE(if_statement4, "if ( 1 == 2 ) then 3 else 4 end", "<Numeric(4)>");
 TEST_CODE(if_statement5, "if ( 1 == 2 ) then 3 elsif ( 1 == 1 ) then 4 end",
@@ -127,7 +127,7 @@ TEST_CODE(if_statement8,
     "if ( 1 == 2 ) then 3 "
     "elsif ( 1 == 6 ) then 4 "
     "elsif ( 1 == 7 ) then 5 end",
-    "<nil>");
+    "<nil ... >");
 TEST_CODE(if_statement9,
     "if ( 1 == 2 ) then 3 "
     "elsif ( 1 == 6 ) then 4 "
@@ -236,6 +236,8 @@ TEST_CODE(object_equal, "a=Object.new();b=Object.new();a==b", "<False ... >");
 TEST_CODE(object_equal2, "a=Object.new();a==a", "<True ... >");
 TEST_CODE(object_not_equal, "a=Object.new();b=Object.new();a!=b", "<True ... >");
 TEST_CODE(object_not_equal2, "a=Object.new();a!=a", "<False ... >");
+TEST_CODE(nil_equal, "nil==nil", "<True ... >");
+TEST_CODE(nil_not_equal, "nil!=nil", "<False ... >");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

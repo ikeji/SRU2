@@ -74,7 +74,7 @@ DEFINE_SRU_PROC(subclass){
   ARGLEN(1);
   const BasicObjectPtr new_class = BasicObject::New();
   Class::SetAsSubclass(new_class, args[0]);
-  if(args.size() == 2){
+  if(args.size() >= 2){
     new_class->Set(sym::__name(), args[1]);
   }
   return new_class;

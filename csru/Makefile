@@ -65,6 +65,8 @@ stack_frame_test.o \
 sru_string_test.o \
 symbol_test.o \
 
+GENFILES=testing_ast.h testing_sru.h parser.cc constants.cc constants.h
+
 include Makefile.in
 
 all: sru tags library

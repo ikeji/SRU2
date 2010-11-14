@@ -6,6 +6,7 @@
 #define UTILS_H_
 
 #include <string>
+#include "library.h"
 
 namespace sru {
 class BasicObject;
@@ -15,6 +16,11 @@ void PrintErrorPosition(const std::string& src, size_t pos);
 
 bool IsNil(const BasicObjectPtr& ptr);
 bool IsNil(const BasicObject* ptr);
+
+inline BasicObjectPtr BooleanToObject(bool b){
+  return b ? Library::Instance()->True():
+             Library::Instance()->False();
+}
 
 }  // namespace sru
 

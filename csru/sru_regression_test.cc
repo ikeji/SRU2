@@ -232,6 +232,10 @@ TEST_CODE(proc_apply, "a={|a|a}; a.apply([1])", "<Numeric(1)>");
 TEST_CODE(proc_apply2, "a={|a,b|b}; a.apply([1,2])", "<Numeric(2)>");
 TEST_CODE(proc_ylppa, "a={|a|a}; a.ylppa()(1,2)",
     "<Array size=2 [<Numeric(1)>, <Numeric(2)>]>");
+TEST_CODE(object_equal, "a=Object.new();b=Object.new();a==b", "<False ... >");
+TEST_CODE(object_equal2, "a=Object.new();a==a", "<True ... >");
+TEST_CODE(object_not_equal, "a=Object.new();b=Object.new();a!=b", "<True ... >");
+TEST_CODE(object_not_equal2, "a=Object.new();a!=a", "<False ... >");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

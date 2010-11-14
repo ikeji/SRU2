@@ -67,6 +67,11 @@ DEFINE_SRU_PROC(closure_end){ // this, src, pos, closure_begin
   PARGNCHK(4);
   LOG << "closure_end";
   PARSER_CHECK(args[3]->HasSlot(sym::ast()), args[2], "Internal parser error.");
+  BasicObjectPtr r = args[3]->Get(sym::ast());
+  ProcExpression* p = r->GetData<ProcExpression>();
+  if(p && p->Varg()->empty()){
+    p->Varg()->push_back(sym::_());
+  }
   return CreateTrue(args[2], args[3]->Get(sym::ast()));
 }
 

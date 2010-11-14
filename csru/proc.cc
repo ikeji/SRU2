@@ -131,29 +131,17 @@ BasicObjectPtr Proc::New(const std::vector<symbol>& vargs,
 
 string SRUProc::Inspect(){
   string ret = "";
-  for(vector<symbol>::iterator it = vargs.begin();
+  for(vector<symbol>::const_iterator it = vargs.begin();
       it != vargs.end();
       it++){
     if(it != vargs.begin())
       ret += ",";
     ret += it->to_str();
   }
+  if(ret == "_") ret = "";  // skip default argument.
   if(!retval.to_str().empty()) ret += ":" + retval.to_str();
   if(!ret.empty()) ret = "|" + ret + "|";
-  ret = "Proc({";
-  if(vargs.size() > 0 || !retval.to_str().empty()){
-    ret += "|";
-    for(vector<symbol>::const_iterator it = vargs.begin();
-        it != vargs.end();
-        it++){
-      if(it != vargs.begin()) ret += ",";
-      ret += (*it).to_str();
-    }
-    if(!retval.to_str().empty()){
-      ret += ":" + retval.to_str();
-    }
-    ret += "|";
-  }
+  ret = string("Proc({") + ret;
   for(object_vector::const_iterator it = expressions.begin();
       it != expressions.end();
       it++){

@@ -227,6 +227,7 @@ string ProcExpression::InspectAST(){
     if(i == pimpl->varg.end()) break;
     argv+= ",";
   }
+  if(argv == "_") argv = "";  // skip default argument.
   if(!pimpl->retval.to_str().empty())
     argv+= ":" + pimpl->retval.to_str();
   if(!argv.empty())

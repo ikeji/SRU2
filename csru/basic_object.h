@@ -44,10 +44,10 @@ class BasicObjectPtr {
 
   BasicObjectPtr(const BasicObjectPtr& obj);
   BasicObjectPtr &operator=(const BasicObjectPtr& obj);
-  bool operator==(const BasicObjectPtr& obj){
+  bool operator==(const BasicObjectPtr& obj) const {
     return (ptr == obj.ptr);
   }
-  bool operator!=(const BasicObjectPtr& obj){
+  bool operator!=(const BasicObjectPtr& obj) const {
     return (ptr != obj.ptr);
   }
  private:

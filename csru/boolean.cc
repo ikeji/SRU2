@@ -30,6 +30,10 @@ DECLARE_SRU_PROC(ReturnSelf);
 DECLARE_SRU_PROC(ReturnOther);
 DECLARE_SRU_PROC(ReturnTrue);
 DECLARE_SRU_PROC(ReturnFalse);
+DECLARE_SRU_PROC(True_Equal);
+DECLARE_SRU_PROC(True_NotEqual);
+DECLARE_SRU_PROC(False_Equal);
+DECLARE_SRU_PROC(False_NotEqual);
 
 void InitializeTrueObject(const BasicObjectPtr& tlue){
   Class::InitializeInstance(tlue, Library::Instance()->Boolean());
@@ -40,6 +44,8 @@ void InitializeTrueObject(const BasicObjectPtr& tlue){
   tlue->Set(sym::ampamp(),      CREATE_SRU_PROC(ReturnOther));
   tlue->Set(sym::pipepipe(),    CREATE_SRU_PROC(ReturnSelf));
   tlue->Set(sym::exclamation(), CREATE_SRU_PROC(ReturnFalse));
+  tlue->Set(sym::equal(),       CREATE_SRU_PROC(True_Equal));
+  tlue->Set(sym::notEqual(),    CREATE_SRU_PROC(True_NotEqual));
 }
 
 void InitializeFalseObject(const BasicObjectPtr& farse){
@@ -51,6 +57,8 @@ void InitializeFalseObject(const BasicObjectPtr& farse){
   farse->Set(sym::ampamp(),      CREATE_SRU_PROC(ReturnSelf));
   farse->Set(sym::pipepipe(),    CREATE_SRU_PROC(ReturnOther));
   farse->Set(sym::exclamation(), CREATE_SRU_PROC(ReturnTrue));
+  farse->Set(sym::equal(),       CREATE_SRU_PROC(False_Equal));
+  farse->Set(sym::notEqual(),    CREATE_SRU_PROC(False_NotEqual));
 }
 
 DEFINE_SRU_PROC_SMASH(True_ifTrue){
@@ -96,6 +104,42 @@ DEFINE_SRU_PROC(ReturnTrue){
 DEFINE_SRU_PROC(ReturnFalse){
   ARGLEN(1);
   return Library::Instance()->False();
+}
+
+DEFINE_SRU_PROC(True_Equal){
+  ARGLEN(2);
+  if(args[1] == Library::Instance()->True()){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
+}
+
+DEFINE_SRU_PROC(True_NotEqual){
+  ARGLEN(2);
+  if(args[1] != Library::Instance()->True()){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
+}
+
+DEFINE_SRU_PROC(False_Equal){
+  ARGLEN(2);
+  if(args[1] == Library::Instance()->False()){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
+}
+
+DEFINE_SRU_PROC(False_NotEqual){
+  ARGLEN(2);
+  if(args[1] != Library::Instance()->False()){
+    return Library::Instance()->True();
+  }else{
+    return Library::Instance()->False();
+  }
 }
 
 }  // namespace sru

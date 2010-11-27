@@ -107,7 +107,6 @@ DEFINE_SRU_PROC(real){
     if(str[epos] == '.'){
       if(period){
         // This is second period.
-        epos--;
         break;
       }
       period = true;

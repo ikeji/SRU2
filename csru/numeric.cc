@@ -342,6 +342,21 @@ DEFINE_SRU_PROC(Invert){
   }
 }
 
+DEFINE_SRU_PROC(ToS){
+  ARGLEN(1);
+  DCHECK(SRUNumeric::IsNumeric(args[0])) << 
+    "ToS needs numeric";
+  ostringstream s;
+  if (SRUNumeric::IsReal(args[0])) {
+    const double& v = SRUNumeric::GetDoubleValue(args[0]);
+    s << v;
+  } else {
+    const int& v = SRUNumeric::GetIntValue(args[0]);
+    s << v;
+  }
+  return SRUString::New(symbol(s.str()));
+}
+
 void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsSubclass(numeric, NULL);
   numeric->Set(sym::parse(),CREATE_SRU_PROC(NumericParse));
@@ -362,6 +377,7 @@ void SRUNumeric::InitializeClassObject(const BasicObjectPtr& numeric){
   Class::SetAsInstanceMethod(numeric, sym::invert(), CREATE_SRU_PROC(Invert));
 
   Class::SetAsInstanceMethod(numeric, sym::times(), CREATE_SRU_PROC(Times));
+  Class::SetAsInstanceMethod(numeric, sym::toS(), CREATE_SRU_PROC(ToS));
 }
 
 int SRUNumeric::GetIntValue(const BasicObjectPtr& obj){
@@ -402,6 +418,11 @@ bool SRUNumeric::TryGetDoubleValue(const BasicObjectPtr& obj, double* val){
     *val = n->pimpl->int_value;
   }
   return true;
+}
+
+bool SRUNumeric::IsNumeric(const BasicObjectPtr& obj){
+  SRUNumeric* n = obj->GetData<SRUNumeric>();
+  return !!n;
 }
 
 bool SRUNumeric::IsReal(const BasicObjectPtr& obj){

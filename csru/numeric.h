@@ -21,6 +21,7 @@ class SRUNumeric : public Value{
   static double GetDoubleValue(const BasicObjectPtr& obj);
   static bool TryGetIntValue(const BasicObjectPtr& obj, int* val);
   static bool TryGetDoubleValue(const BasicObjectPtr& obj, double* val);
+  static bool IsNumeric(const BasicObjectPtr& obj);
   static bool IsReal(const BasicObjectPtr& obj);
   std::string Inspect();
   static const char* name(){ return "SRUNumeric"; }

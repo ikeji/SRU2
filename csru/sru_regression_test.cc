@@ -55,9 +55,11 @@ class CodeTestCase : public sru_test::TestCase {
 
 TEST_CODE(number,"1", "<Numeric(1)>");
 TEST_CODE(number2,"123", "<Numeric(123)>");
+TEST_CODE(number_tos,"123.toS()", "<String(\"123\")>");
 TEST_CODE(real,"1.23", "<Numeric(1.23)>");
 TEST_CODE(real2,"0.23", "<Numeric(0.23)>");
 TEST_CODE(real3,"0.0", "<Numeric(0)>");
+TEST_CODE(real_tos,"1.23.toS()", "<String(\"1.23\")>");
 TEST_CODE(string,"\"a\"", "<String(\"a\")>");
 TEST_CODE(string2,"\"abc\"", "<String(\"abc\")>");
 TEST_CODE(string_tos,"\"abc\".toS()", "<String(\"abc\")>");

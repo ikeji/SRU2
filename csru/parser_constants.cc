@@ -50,7 +50,7 @@ DEFINE_SRU_PROC(ident){
   }
   string substr = str.substr(pos, epos-pos);
   LOG << "Match to id: " << substr;
-  return CreateTrue(epos, E(args[1],args[2],R(symbol(substr.c_str()))));
+  return CreateTrue(epos, E(args[1],args[2],R(symbol(substr))));
 }
 
 DEFINE_SRU_PROC(const_string){
@@ -72,7 +72,7 @@ DEFINE_SRU_PROC(const_string){
   }
   string substr = str.substr(pos+1, epos-pos-1); // cut " s
   LOG << "Match to string: " << substr;
-  return CreateTrue(epos + 1, E(args[1],args[2],S(symbol(substr.c_str()))));
+  return CreateTrue(epos + 1, E(args[1],args[2],S(symbol(substr))));
 }
 
 DEFINE_SRU_PROC(number){
@@ -92,7 +92,7 @@ DEFINE_SRU_PROC(number){
   return CreateTrue(epos,E(args[1],args[2],
       C(R(R(sym::Numeric()),sym::parse()),
         R(sym::Numeric()),
-        S(symbol(substr.c_str()))
+        S(symbol(substr))
       )));
 }
 
@@ -128,7 +128,7 @@ DEFINE_SRU_PROC(real){
   return CreateTrue(epos,E(args[1],args[2],
       C(R(R(sym::Numeric()),sym::parse()),
         R(sym::Numeric()),
-        S(symbol(substr.c_str()))
+        S(symbol(substr))
       )));
 }
 

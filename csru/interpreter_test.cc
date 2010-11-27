@@ -23,7 +23,7 @@ using namespace std;
 
 TEST(Interpreter_StringExpressionTest){
   string str = "Hello";
-  StringExpression* se = new StringExpression(symbol(str.c_str()));
+  StringExpression* se = new StringExpression(symbol(str));
   BasicObjectPtr p = BasicObject::New(se);
   LOG << se->InspectAST();
   assert(se->InspectAST() == "\"Hello\"");
@@ -43,7 +43,7 @@ TEST(Interpreter_ComplexExpressionTest){
   ptr_vector  args;
   vector<symbol> vargs;
   ptr_vector expressions;
-  expressions.push_back(StringExpression::New(symbol(str.c_str())));
+  expressions.push_back(StringExpression::New(symbol(str)));
   BasicObjectPtr p = 
   CallExpression::New(
     ProcExpression::New(

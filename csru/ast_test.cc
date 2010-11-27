@@ -15,7 +15,7 @@ using namespace std;
 
 TEST(AST_StringExpressionTest){
   string test = "hogehoge";
-  StringExpression* obj = new StringExpression(symbol(test.c_str()));
+  StringExpression* obj = new StringExpression(symbol(test));
   test = "foobar";
   LOG << obj->InspectAST();
   assert(obj->InspectAST() == "\"hogehoge\"");

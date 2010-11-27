@@ -15,7 +15,7 @@ symbol symbol::from_id(int id){
       it != symbol_table.end();
       it++){
     if(it->second == id)
-      return symbol(it->first.c_str());
+      return symbol(it->first);
   }
   CHECK(false) << "Couldn't found symbol";
   return symbol("");

@@ -100,8 +100,8 @@ spc_or_lf * ident *
 spc_or_lf *
 o( "<" * spc_or_lf * after_if_statement) *
 class_statement_begin(:ident, :after_if_statement) *
-spc_or_lf *
 r(
+  spc_or_lf *
   "def" * spc_or_lf * ident * spc_or_lf *
   class_statement_method_begin(:ident) *
   "(" * spc_or_lf * o(

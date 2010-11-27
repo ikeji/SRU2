@@ -9,6 +9,8 @@
 #include "class.h"
 #include "symbol.h"
 #include "constants.h"
+#include "native_proc.h"
+#include "logging.h"
 
 using namespace sru;
 using namespace std;
@@ -39,8 +41,18 @@ SRUString::SRUString(const symbol& val):
 void SRUString::Dispose(){
   delete this;
 }
+
+namespace {
+
+DEFINE_SRU_PROC(ToS){
+  ARGLEN(1);
+  return args[0];
+}
+
+}  // anonymous namespace
   
 void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   Class::SetAsSubclass(str, Library::Instance()->Object());
   str->Set(sym::__name(), SRUString::New(sym::String()));
+  Class::SetAsInstanceMethod(str, sym::toS(), CREATE_SRU_PROC(ToS));
 }

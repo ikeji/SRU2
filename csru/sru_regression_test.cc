@@ -60,6 +60,7 @@ TEST_CODE(real2,"0.23", "<Numeric(0.23)>");
 TEST_CODE(real3,"0.0", "<Numeric(0)>");
 TEST_CODE(string,"\"a\"", "<String(\"a\")>");
 TEST_CODE(string2,"\"abc\"", "<String(\"abc\")>");
+TEST_CODE(string_tos,"\"abc\".toS()", "<String(\"abc\")>");
 TEST_CODE(lambda,"{x}", "<Proc({x;})>");
 TEST_CODE(lambda2,"{|a|x}", "<Proc({|a|x;})>");
 TEST_CODE(lambda3,"{|a,b|x}", "<Proc({|a,b|x;})>");

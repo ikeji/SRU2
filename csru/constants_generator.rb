@@ -11,6 +11,7 @@ __findSlot
 currentStackFrame
 findSlotMethod
 subclass
+toS
 #
 $$,doldol
 _

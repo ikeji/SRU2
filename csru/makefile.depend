@@ -143,7 +143,8 @@ sru_math.o: sru_math.cc sru_math.h native_proc.h proc.h basic_object.h \
 sru_regression_test.o: sru_regression_test.cc testing.h logging.h \
   basic_object.h symbol.h interpreter.h object_container.h
 sru_string.o: sru_string.cc sru_string.h basic_object.h logging.h \
-  symbol.h library.h class.h
+  symbol.h library.h class.h constants.h native_proc.h proc.h \
+  object_container.h
 sru_string_test.o: sru_string_test.cc testing.h sru_string.h \
   basic_object.h logging.h symbol.h library.h constants.h
 sru_sys.o: sru_sys.cc sru_sys.h native_proc.h proc.h basic_object.h \

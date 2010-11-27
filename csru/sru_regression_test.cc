@@ -212,6 +212,7 @@ TEST_CODE(expression_factor,"!true", "<False ... >");
 TEST_CODE(expression_factor2,"!!true", "<True ... >");
 TEST_CODE(expression_factor3,"!!!true", "<False ... >");
 TEST_CODE(math_sin,"Math.sin(1)", "<Numeric(0.841471)>");
+TEST_CODE(math_cos,"Math.cos(1)", "<Numeric(0.540302)>");
 
 // This test is flaky
 TEST_CODE(math_rand,"Math.srand(1);Math.rand() == Math.rand()", "<False ... >");

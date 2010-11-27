@@ -155,6 +155,7 @@ unshift
 valuesAt
 # Math
 sin
+cos
 srand
 rand
 # Sys

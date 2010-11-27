@@ -22,6 +22,14 @@ DEFINE_SRU_PROC(Sin){
   return SRUNumeric::NewDouble(sin(arg));
 }
 
+DEFINE_SRU_PROC(Cos){
+  ARGLEN(2);
+  double arg = 0;
+  DCHECK(SRUNumeric::TryGetDoubleValue(args[1], &arg)) <<
+    "Cos requires numeric.";
+  return SRUNumeric::NewDouble(cos(arg));
+}
+
 bool IsSrandEd = false;
 
 // NOTE: Thread unsafe.
@@ -56,6 +64,7 @@ DEFINE_SRU_PROC(Rand){
 void InitializeMathClass(const BasicObjectPtr& math){
   math->Set(sym::__name(), SRUString::New(sym::Math()));
   math->Set(sym::sin(), CREATE_SRU_PROC(Sin));
+  math->Set(sym::cos(), CREATE_SRU_PROC(Cos));
   math->Set(sym::srand(), CREATE_SRU_PROC(Srand));
   math->Set(sym::rand(), CREATE_SRU_PROC(Rand));
 }

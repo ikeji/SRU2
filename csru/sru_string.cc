@@ -8,6 +8,7 @@
 #include "library.h"
 #include "class.h"
 #include "symbol.h"
+#include "constants.h"
 
 using namespace sru;
 using namespace std;
@@ -37,4 +38,9 @@ SRUString::SRUString(const symbol& val):
 
 void SRUString::Dispose(){
   delete this;
+}
+  
+void SRUString::InitializeStringClass(const BasicObjectPtr& str){
+  Class::SetAsSubclass(str, Library::Instance()->Object());
+  str->Set(sym::__name(), SRUString::New(sym::String()));
 }

@@ -19,6 +19,7 @@ class SRUString : public Value{
   static const symbol& GetValue(const BasicObjectPtr& obj);
   std::string Inspect();
   static const char* name(){ return "SRUString"; }
+  static void InitializeStringClass(const BasicObjectPtr& str);
  private:
   SRUString(const symbol& val);
   ~SRUString() {};

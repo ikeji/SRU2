@@ -156,12 +156,11 @@ void Library::Impl::initialiseInteralClasses(){
   Array::InitializeClass(Array);
   InitializeMathClass(Math);
   InitializeSysClass(Sys);
-
+  SRUString::InitializeStringClass(String);
   SetupNilObject(Nil);
+
   // TODO: Move this to hash.cc
   Hash->Set(sym::__name(), SRUString::New(sym::Hash()));
-  // TODO: Move this to string.cc
-  String->Set(sym::__name(), SRUString::New(sym::String()));
 }
 
 void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){

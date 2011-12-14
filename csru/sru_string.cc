@@ -104,6 +104,23 @@ DEFINE_SRU_PROC(StringGet){
   return SRUString::New(symbol(str.substr(index, 1)));
 }
 
+DEFINE_SRU_PROC(StringSubstr){
+  ARGLEN(2);
+  string str = SRUString::GetValue(args[0]).to_str();
+  int index = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &index))
+      << "String.substr requires numeric, but it was "
+      << args[1]->Inspect();
+  int len = -1;
+  if(args.size() > 2){
+    DCHECK(SRUNumeric::TryGetIntValue(args[2], &len))
+        << "String.substr requires numeric as second argument, but it was "
+        << args[2]->Inspect();
+  }
+  if((size_t)index >= str.size()) return SRUString::New(symbol(""));
+  return SRUString::New(symbol(str.substr(index, len == -1 ? string::npos : len)));
+}
+
 }  // anonymous namespace
 
 void SRUString::InitializeStringClass(const BasicObjectPtr& str){
@@ -119,4 +136,5 @@ void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   DEFMETHOD(lessThan, StringLessThan);
   DEFMETHOD(greaterThan, StringGreaterThan);
   DEFMETHOD(get, StringGet);
+  DEFMETHOD(substr, StringSubstr);
 }

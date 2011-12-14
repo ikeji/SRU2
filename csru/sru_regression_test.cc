@@ -256,6 +256,11 @@ SRUTEST(string_lessthan,"\"a\" < \"b\"");
 SRUTEST(string_lessthan2,"(\"b\" < \"a\") == false");
 SRUTEST(string_greatherthan,"(\"a\" > \"b\") == false");
 SRUTEST(string_greatherthan2,"\"b\" > \"a\"");
+SRUTEST(string_substr,"\"abcd\".substr(1,2) == \"bc\"");
+SRUTEST(string_substr2,"\"abcd\".substr(1) == \"bcd\"");
+SRUTEST(string_substr3,"\"abcd\".substr(1,20) == \"bcd\"");
+SRUTEST(string_substr4,"\"abcd\".substr(20) == \"\"");
+SRUTEST(string_substr5,"\"abcd\".substr(20,10) == \"\"");
 
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");

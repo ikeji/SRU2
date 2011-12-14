@@ -162,6 +162,8 @@ rand
 # Sys
 Sys
 clock
+# String
+substr
 EOL
 
 200.times do |i|

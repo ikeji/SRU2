@@ -252,6 +252,10 @@ TEST_CODE(string_not_equal2, "\"abcdef\" != \"abcdefg\"", "<True ... >");
 
 SRUTEST(string_get,"a = \"abcd\";a[1] == \"b\"");
 SRUTEST(string_get2,"a = \"abcd\";a[10] == \"\"");
+SRUTEST(string_lessthan,"\"a\" < \"b\"");
+SRUTEST(string_lessthan2,"(\"b\" < \"a\") == false");
+SRUTEST(string_greatherthan,"(\"a\" > \"b\") == false");
+SRUTEST(string_greatherthan2,"\"b\" > \"a\"");
 
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");

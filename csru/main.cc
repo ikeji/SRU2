@@ -1,8 +1,9 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "interpreter.h"
 #include "basic_object.h"
@@ -87,7 +88,7 @@ unsigned char complete(EditLine *e, int ch){
 }
 #endif
 
-int main(int argc, char* argv[]){
+void repl(){
 #ifdef USE_EDITLINE
   EditLine *el;
   History *hist;
@@ -138,4 +139,19 @@ int main(int argc, char* argv[]){
   history_end(hist);
   el_end(el);
 #endif
+}
+
+int main(int argc, char* argv[]){
+  if(argc==1){
+    repl();
+  }else if(argc==2){
+    ifstream ifs(argv[1]);
+    string prog = "";
+    string buf;
+    while(ifs && getline(ifs,buf)){
+      prog += buf + "\n";
+    }
+    BasicObjectPtr r = Interpreter::Instance()->Eval(prog);
+    if (r != NULL) LOG << r->Inspect();
+  }
 }

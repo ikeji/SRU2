@@ -11,6 +11,12 @@ ERB      = erb
 CTAGS    = ctags
 LIBEXT   = so
 
+ifeq ($(findstring Darwin,$(shell uname)),Darwin)
+  # BSD cp doesn't support -u option.
+  CPFLAGS = -p
+  LDFLAGS  = $(DFLAGS)
+endif
+
 ifeq ($(findstring FreeBSD,$(shell uname)),FreeBSD)
   # BSD cp doesn't support -u option.
   CPFLAGS = -p

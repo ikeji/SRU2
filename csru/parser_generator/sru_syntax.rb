@@ -350,7 +350,7 @@ r(
   spc_or_lf * "," * spc_or_lf * ident *
   closure_varg_idents(:closure_varg_begin, :ident)
 ) ) *
-o( ":" * ident * 
+o( spc_or_lf * ":" * ident * 
   closure_varg_retarg(:closure_varg_begin, :ident)
 ) * spc_or_lf * "|" * closure_varg_end(:closure_varg_begin)
 

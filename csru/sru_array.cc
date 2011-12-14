@@ -434,6 +434,14 @@ BasicObjectPtr Array::New(){
   return ret;
 }
 
+BasicObjectPtr Array::New(const ptr_vector& array){
+  Array* a = new Array();
+  a->value = Conv(array);
+  const BasicObjectPtr ret = BasicObject::New(a);
+  Class::InitializeInstance(ret, Library::Instance()->Array());
+  return ret;
+}
+
 Array::Array():value() {
 }
 
@@ -465,7 +473,6 @@ std::string Array::Inspect(){
   }
   os << "]";
   return os.str();
-
 }
 
 } // namespace sru

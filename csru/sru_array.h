@@ -15,6 +15,7 @@ class Array : public Value {
  public:
   static void InitializeClass(const BasicObjectPtr& array);
   static BasicObjectPtr New();
+  static BasicObjectPtr New(const ptr_vector& array);
   static const char* name(){ return "Array"; }
   object_vector* GetValue(){ return &value; }
   virtual std::string Inspect();
@@ -32,4 +33,4 @@ class Array : public Value {
 
 } // namespace sru
 
-#endif  // SRU_ARRAY_H_ 
+#endif  // SRU_ARRAY_H_

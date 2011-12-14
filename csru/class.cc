@@ -14,6 +14,7 @@
 #include "stack_frame.h"
 #include "logging.h"
 #include "symbol.h"
+#include "sru_array.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -54,21 +55,33 @@ DEFINE_SRU_PROC_SMASH(findInstanceMethod){
   ARGLEN(2);
   const BasicObjectPtr& klass = args[0];
   const symbol& name = SRUString::GetValue(args[1]);
-  if(! klass->HasSlot(sym::instanceMethods())){
-    LOG << "Instance methods not found";
-    // TODO: Impliment inheritance.
-    PushResult(Library::Instance()->Nil());
+  if(klass->HasSlot(sym::instanceMethods())){
+    const BasicObjectPtr& instance_slots = klass->Get(sym::instanceMethods());
+    LOG << "Find in instance slot." << instance_slots->Inspect();
+    if(instance_slots->HasSlot(name)){
+      // Slot found.
+      LOG << "Slot found: " << instance_slots->Get(name)->Inspect();
+      PushResult(instance_slots->Get(name));
+      return;
+    }
+  }
+  if(klass->HasSlot(sym::superclass())){
+    const BasicObjectPtr& superclass = klass->Get(sym::superclass());
+    if(! superclass->HasSlot(sym::findInstanceMethod())){
+      LOG << "Couldn't found findInstanceMethod method." << superclass->Inspect();
+      PushResult(Library::Instance()->Nil());
+      return;
+    }
+    const BasicObjectPtr new_binding = Binding::New();
+    Interpreter::Instance()->DigIntoNewFrame(
+        A(C(R(R(sym::self()),sym::findInstanceMethod()),
+            R(sym::self()),
+            R(sym::__name()))),
+        new_binding);
+    new_binding->Set(sym::self(), superclass);
+    new_binding->Set(sym::__name(), args[1]);
     return;
   }
-  const BasicObjectPtr& instance_slots = klass->Get(sym::instanceMethods());
-  LOG << "Find in instance slot." << instance_slots->Inspect();
-  if(instance_slots->HasSlot(name)){
-    // Slot found.
-    LOG << "Slot found: " << instance_slots->Get(name)->Inspect();
-    PushResult(instance_slots->Get(name));
-    return;
-  }
-  // TODO: Find in super class.
   PushResult(Library::Instance()->Nil());
   return;
 }
@@ -87,6 +100,11 @@ DEFINE_SRU_PROC_SMASH(findSlot){
   }
   const BasicObjectPtr& klass = obj->Get(sym::klass());
   LOG << "Find in class." << klass->Inspect();
+  if(! klass->HasSlot(sym::findInstanceMethod())){
+    LOG << "Couldn't found findInstanceMethod method." << klass->Inspect();
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
   const BasicObjectPtr new_binding = Binding::New();
   Interpreter::Instance()->DigIntoNewFrame(
       A(C(R(R(sym::self()),sym::findInstanceMethod()),
@@ -107,11 +125,34 @@ DEFINE_SRU_PROC(subclass){
   return new_class;
 }
 
-DEFINE_SRU_PROC(object_new){
+DEFINE_SRU_PROC_SMASH(object_new){
   ARGLEN(1);
   const BasicObjectPtr obj = BasicObject::New();
   Class::InitializeInstance(obj, args[0]);
-  return obj;
+  
+  const BasicObjectPtr new_binding = Binding::New();
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(C( // {|$$3| (nil != $$3).ifTrue({$$3.apply($$2)})}(self.initialize)
+          P(sym::doldol3(),
+            M(
+              M(sym::nil(), sym::notEqual(), R(sym::doldol3())),
+              sym::ifTrue(),
+              P(
+                M(sym::doldol3(),
+                  sym::apply(),
+                  R(sym::doldol2()))
+              )
+            )
+          ),
+          R(R(sym::self()),sym::initialize())
+        ),
+        R(sym::self()) // self
+      ),
+      new_binding);
+  ptr_vector a = args;
+  a[0] = obj;
+  new_binding->Set(sym::self(), obj);
+  new_binding->Set(sym::doldol2(), Array::New(a));
 }
 
 void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){

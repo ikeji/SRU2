@@ -7,6 +7,7 @@
 #include "ast.h"
 #include "object_container.h"
 #include "symbol.h"
+#include "constants.h"
 #include "sru_string.h"
 
 namespace sru {
@@ -163,5 +164,36 @@ inline sru::BasicObjectPtr E(const sru::BasicObjectPtr& src,
   obj->Set(sym::pos(), pos);
   return obj;
 }
+
+<% 5.times do |a| %>
+inline sru::BasicObjectPtr M(const sru::BasicObjectPtr& self,
+                             const sru::symbol& method<% a.times do |i| %>,
+                             const sru::BasicObjectPtr& arg<%= i %><% end %>){
+  return C(
+           P(sym::doldol(),
+             C(R(R(sym::doldol()), method),
+               R(sym::doldol())<% a.times do |i| %>,
+               arg<%= i %><% end %>
+             )
+           ),
+           self
+         );
+}
+<% if a != 0 %>
+inline sru::BasicObjectPtr M(const sru::symbol& self,
+                             const sru::symbol& method<% a.times do |i| %>,
+                             const sru::BasicObjectPtr& arg<%= i %><% end %>){
+  return C(
+           P(sym::doldol(),
+             C(R(R(sym::doldol()), method),
+               R(sym::doldol())<% a.times do |i| %>,
+               arg<%= i %><% end %>
+             )
+           ),
+           R(self)
+         );
+}
+<% end %>
+<% end %>
 
 }  // namespace sru_test

@@ -8,6 +8,7 @@ superclass
 instanceMethods
 findInstanceMethod
 __findSlot
+initialize
 #
 currentStackFrame
 findSlotMethod
@@ -15,6 +16,8 @@ subclass
 toS
 #
 $$,doldol
+$$2,doldol2
+$$3,doldol3
 _
 # Classes
 nil

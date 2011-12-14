@@ -169,6 +169,14 @@ Sys
 clock
 # String
 substr
+# AST
+ast
+AST
+LetExpression
+RefExpression
+CallExpression
+ProcExpression
+StringExpression
 EOL
 
 200.times do |i|

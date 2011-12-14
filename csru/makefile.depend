@@ -1,5 +1,7 @@
 ast.o: ast.cc ast.h basic_object.h logging.h symbol.h object_container.h \
   library.h sru_string.h utils.h
+ast_class.o: ast_class.cc ast_class.h basic_object.h logging.h symbol.h \
+  constants.h class.h library.h
 ast_test.o: ast_test.cc testing.h ast.h basic_object.h logging.h symbol.h \
   object_container.h
 basic_object.o: basic_object.cc basic_object.h logging.h symbol.h \
@@ -19,7 +21,7 @@ boolean_test.o: boolean_test.cc testing.h library.h basic_object.h \
   logging.h symbol.h constants.h
 class.o: class.cc class.h binding.h basic_object.h logging.h symbol.h \
   constants.h library.h sru_string.h native_proc.h proc.h \
-  object_container.h interpreter.h stack_frame.h sru_array.h \
+  object_container.h interpreter.h stack_frame.h sru_array.h utils.h \
   testing_ast.h ast.h testing_sru.h
 class_test.o: class_test.cc testing.h class.h basic_object.h logging.h \
   symbol.h constants.h library.h
@@ -34,7 +36,7 @@ interpreter_test.o: interpreter_test.cc interpreter.h object_container.h \
 library.o: library.cc library.h basic_object.h logging.h symbol.h \
   numeric.h parser.h object.h sru_string.h constants.h binding.h \
   boolean.h proc.h object_container.h class.h sru_array.h sru_math.h \
-  sru_sys.h nil.h
+  sru_sys.h nil.h ast_class.h
 library_test.o: library_test.cc testing.h library.h basic_object.h \
   logging.h symbol.h
 load.o: load.cc load.h native_proc.h proc.h basic_object.h logging.h \

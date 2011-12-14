@@ -4,6 +4,7 @@
 
 OBJS     = \
 ast.o \
+ast_class.o \
 basic_object.o \
 binding.o \
 boolean.o \

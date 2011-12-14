@@ -18,6 +18,7 @@
 #include "sru_math.h"
 #include "sru_sys.h"
 #include "nil.h"
+#include "ast_class.h"
 
 using namespace sru;
 
@@ -37,7 +38,8 @@ struct Library::Impl {
       False(),
       Parser(),
       Math(),
-      Sys() {}
+      Sys(),
+      Ast() {}
      
   BasicObjectPtr Nil;
   BasicObjectPtr Binding;
@@ -54,30 +56,36 @@ struct Library::Impl {
   BasicObjectPtr Parser;
   BasicObjectPtr Math;
   BasicObjectPtr Sys;
+  ASTClass* Ast;
   
   void initialiseInteralClasses();
+ private:
+  Impl(const Impl& obj);
+  Impl &operator=(const Impl& obj);
 };
 
-BasicObjectPtr Library::Nil(){ return pimpl->Nil; }
+BasicObjectPtr Library::Nil() const { return pimpl->Nil; }
 
-BasicObjectPtr Library::Binding(){ return pimpl->Binding; }
+BasicObjectPtr Library::Binding() const { return pimpl->Binding; }
 
-BasicObjectPtr Library::Class(){ return pimpl->Class; }
-BasicObjectPtr Library::Object(){ return pimpl->Object; }
-BasicObjectPtr Library::Proc(){ return pimpl->Proc; }
+BasicObjectPtr Library::Class() const { return pimpl->Class; }
+BasicObjectPtr Library::Object() const { return pimpl->Object; }
+BasicObjectPtr Library::Proc() const { return pimpl->Proc; }
 
-BasicObjectPtr Library::Array(){ return pimpl->Array; }
-BasicObjectPtr Library::Hash(){ return pimpl->Hash; }
-BasicObjectPtr Library::String(){ return pimpl->String; }
-BasicObjectPtr Library::Numeric(){ return pimpl->Numeric; }
-BasicObjectPtr Library::Boolean(){ return pimpl->Boolean; }
-BasicObjectPtr Library::True(){ return pimpl->True; }
-BasicObjectPtr Library::False(){ return pimpl->False; }
+BasicObjectPtr Library::Array() const { return pimpl->Array; }
+BasicObjectPtr Library::Hash() const { return pimpl->Hash; }
+BasicObjectPtr Library::String() const { return pimpl->String; }
+BasicObjectPtr Library::Numeric() const { return pimpl->Numeric; }
+BasicObjectPtr Library::Boolean() const { return pimpl->Boolean; }
+BasicObjectPtr Library::True() const { return pimpl->True; }
+BasicObjectPtr Library::False() const { return pimpl->False; }
 
-BasicObjectPtr Library::Parser(){ return pimpl->Parser; }
+BasicObjectPtr Library::Parser() const { return pimpl->Parser; }
 
-BasicObjectPtr Library::Math(){ return pimpl->Math; }
-BasicObjectPtr Library::Sys(){ return pimpl->Sys; }
+BasicObjectPtr Library::Math() const { return pimpl->Math; }
+BasicObjectPtr Library::Sys() const { return pimpl->Sys; }
+
+ASTClass* Library::Ast() const { return pimpl->Ast; }
 
 Library* Library::Instance(){
   static Library inst;
@@ -85,12 +93,14 @@ Library* Library::Instance(){
   if(!initialized){
     initialized = true;
     inst.pimpl->initialiseInteralClasses();
+    inst.pimpl->Ast = new ASTClass(inst);
   }
   return &inst;
 }
 
 Library::Library():pimpl(new Impl()){
 }
+
 Library::~Library(){
   delete pimpl;
 }
@@ -179,4 +189,5 @@ void Library::BindPrimitiveObjects(const BasicObjectPtr& frame){
   frame->Set(sym::__parser(), Instance()->Parser());
   frame->Set(sym::Math(), Instance()->Math());
   frame->Set(sym::Sys(), Instance()->Sys());
+  frame->Set(sym::AST(), Instance()->Ast()->GetASTNamespace());
 }

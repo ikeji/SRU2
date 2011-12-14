@@ -24,6 +24,7 @@ class Class {
                                   const BasicObjectPtr& method);
   static void InitializeClassClassFirst(const BasicObjectPtr& klass);
   static void InitializeClassClassLast(const BasicObjectPtr& klass);
+  static BasicObjectPtr New(const BasicObjectPtr& base_klass);
 };
 
 } // namespace sru

@@ -4,6 +4,7 @@
 
 #DFLAGS   = -O2
 DFLAGS   = -DDEBUG -g -O0
+#DFLAGS   = -DDEBUG -g -O0 -DDEBUG_INFO
 CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN -fPIC $(DFLAGS)
 LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
 CPFLAGS  = -u

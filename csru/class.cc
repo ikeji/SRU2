@@ -15,6 +15,7 @@
 #include "logging.h"
 #include "symbol.h"
 #include "sru_array.h"
+#include "utils.h"
 
 // TODO: remove this dependency
 #include "testing_ast.h"
@@ -174,5 +175,11 @@ void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
 
   SetAsInstanceMethod(klass, sym::subclass(), CREATE_SRU_PROC(subclass)); 
   SetAsInstanceMethod(klass, sym::mew(), CREATE_SRU_PROC(object_new));
+}
+
+BasicObjectPtr Class::New(const BasicObjectPtr& base_klass){
+  BasicObjectPtr klass = BasicObject::New();
+  SetAsSubclass(klass, base_klass);
+  return klass;
 }
 

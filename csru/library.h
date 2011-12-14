@@ -13,32 +13,36 @@
 
 namespace sru {
 
+class ASTClass;
+
 class Library {
  public:
   static Library* Instance();
 
   // Nil is zen
-  BasicObjectPtr Nil();
+  BasicObjectPtr Nil() const;
 
   // Class of Binding system
-  BasicObjectPtr Binding();
+  BasicObjectPtr Binding() const;
 
   // Default Class System
-  BasicObjectPtr Class();
-  BasicObjectPtr Object();
-  BasicObjectPtr Proc();
+  BasicObjectPtr Class() const;
+  BasicObjectPtr Object() const;
+  BasicObjectPtr Proc() const;
 
   // Default Classes
-  BasicObjectPtr Array();
-  BasicObjectPtr Hash();
-  BasicObjectPtr String();
-  BasicObjectPtr Numeric();
-  BasicObjectPtr Boolean();
-  BasicObjectPtr True();
-  BasicObjectPtr False();
-  BasicObjectPtr Parser();
-  BasicObjectPtr Math();
-  BasicObjectPtr Sys();
+  BasicObjectPtr Array() const;
+  BasicObjectPtr Hash() const;
+  BasicObjectPtr String() const;
+  BasicObjectPtr Numeric() const;
+  BasicObjectPtr Boolean() const;
+  BasicObjectPtr True() const;
+  BasicObjectPtr False() const;
+  BasicObjectPtr Parser() const;
+  BasicObjectPtr Math() const;
+  BasicObjectPtr Sys() const;
+
+  ASTClass *Ast() const;
 
   static void BindPrimitiveObjects(const BasicObjectPtr& obj);
  private:

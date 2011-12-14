@@ -7,6 +7,7 @@
 #include "basic_object.h"
 #include "library.h"
 #include "class.h"
+#include "numeric.h"
 #include "symbol.h"
 #include "constants.h"
 #include "native_proc.h"
@@ -72,12 +73,30 @@ DEFINE_SRU_PROC(StringNotEqual){
                          SRUString::GetValue(right).to_str());
 }
 
+DEFINE_SRU_PROC(StringGet){
+  ARGLEN(2);
+  // TODO: impliment str[1,2]
+  // TODO: impliment str[1..3]
+  string str = SRUString::GetValue(args[0]).to_str();
+  int index = 0;
+  DCHECK(SRUNumeric::TryGetIntValue(args[1], &index))
+      << "String.get requires numeric but it was "
+      << args[1]->Inspect();
+  if((size_t)index >= str.size()) return SRUString::New(symbol(""));
+  return SRUString::New(symbol(str.substr(index, 1)));
+}
+
 }  // anonymous namespace
 
 void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   Class::SetAsSubclass(str, Library::Instance()->Object());
   str->Set(sym::__name(), SRUString::New(sym::String()));
-  Class::SetAsInstanceMethod(str, sym::toS(), CREATE_SRU_PROC(ToS));
-  Class::SetAsInstanceMethod(str, sym::equal(), CREATE_SRU_PROC(StringEqual));
-  Class::SetAsInstanceMethod(str, sym::notEqual(), CREATE_SRU_PROC(StringNotEqual));
+
+#define DEFMETHOD(name, proc) \
+  Class::SetAsInstanceMethod(str, sym::name(), CREATE_SRU_PROC(proc))
+
+  DEFMETHOD(toS, ToS);
+  DEFMETHOD(equal, StringEqual);
+  DEFMETHOD(notEqual, StringNotEqual);
+  DEFMETHOD(get, StringGet);
 }

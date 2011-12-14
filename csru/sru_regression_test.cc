@@ -246,6 +246,13 @@ TEST_CODE(string_equal     , "\"abcdef\" == \"abcdef\"" , "<True ... >");
 TEST_CODE(string_equal2    , "\"abcdef\" == \"abcdefg\"", "<False ... >");
 TEST_CODE(string_not_equal , "\"abcdef\" != \"abcdef\"" , "<False ... >");
 TEST_CODE(string_not_equal2, "\"abcdef\" != \"abcdefg\"", "<True ... >");
+
+#define SRUTEST(name, src) \
+    TEST_CODE(name, src, "<True ... >")
+
+SRUTEST(string_get,"a = \"abcd\";a[1] == \"b\"");
+SRUTEST(string_get2,"a = \"abcd\";a[10] == \"\"");
+
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

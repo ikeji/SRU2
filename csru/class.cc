@@ -4,6 +4,7 @@
 #include "class.h"
 
 #include <string>
+#include "binding.h"
 #include "basic_object.h"
 #include "constants.h"
 #include "library.h"
@@ -14,6 +15,11 @@
 #include "logging.h"
 #include "symbol.h"
 
+// TODO: remove this dependency
+#include "testing_ast.h"
+#include "testing_sru.h"
+using namespace sru_test;
+
 using namespace sru;
 using namespace std;
 
@@ -23,6 +29,7 @@ void Class::InitializeInstance(const BasicObjectPtr& obj,
   // TODO: InsertClassSystem
   LOG_TRACE << "Use findSlotMethod";
   obj->Set(sym::__findSlot(), klass->Get(sym::klass())->Get(sym::findSlotMethod()));
+  obj->Set(sym::findInstanceMethod(), klass->Get(sym::klass())->Get(sym::findInstanceMethod()));
 }
 
 void Class::SetAsSubclass(const BasicObjectPtr& obj,
@@ -43,31 +50,51 @@ void Class::SetAsInstanceMethod(const BasicObjectPtr& klass,
   klass->Get(sym::instanceMethods())->Set(name, method);
 }
 
-DEFINE_SRU_PROC_SMASH(findSlot){
+DEFINE_SRU_PROC_SMASH(findInstanceMethod){
   ARGLEN(2);
-  const BasicObjectPtr& obj = args[0];
+  const BasicObjectPtr& klass = args[0];
   const symbol& name = SRUString::GetValue(args[1]);
-  if(obj->HasSlot(sym::klass())){
-    const BasicObjectPtr& klass = obj->Get(sym::klass());
-    LOG << "Find in class." << klass->Inspect();
-    if(klass->HasSlot(sym::instanceMethods())){
-      const BasicObjectPtr& instance_slots = klass->Get(sym::instanceMethods());
-      LOG << "Find in instance slot." << instance_slots->Inspect();
-      if(instance_slots->HasSlot(name)){
-        // Slot found.
-        LOG << "Slot found: " << instance_slots->Get(name)->Inspect();
-        PushResult(instance_slots->Get(name));
-        return;
-      }
-    }
-    LOG << "Not found";
+  if(! klass->HasSlot(sym::instanceMethods())){
+    LOG << "Instance methods not found";
     // TODO: Impliment inheritance.
     PushResult(Library::Instance()->Nil());
     return;
   }
-  LOG << "Class instance not found";
-  // This is not instance.
+  const BasicObjectPtr& instance_slots = klass->Get(sym::instanceMethods());
+  LOG << "Find in instance slot." << instance_slots->Inspect();
+  if(instance_slots->HasSlot(name)){
+    // Slot found.
+    LOG << "Slot found: " << instance_slots->Get(name)->Inspect();
+    PushResult(instance_slots->Get(name));
+    return;
+  }
+  // TODO: Find in super class.
   PushResult(Library::Instance()->Nil());
+  return;
+}
+
+DEFINE_SRU_PROC_SMASH(findSlot){
+  ARGLEN(2);
+  const BasicObjectPtr& obj = args[0];
+  const symbol& name = SRUString::GetValue(args[1]);
+  LOG << "Find Slot named " << name.to_str() <<
+    " in " << obj->Inspect();
+  if(! obj->HasSlot(sym::klass())){
+    LOG << "Class instance not found";
+    // This is not instance.
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
+  const BasicObjectPtr& klass = obj->Get(sym::klass());
+  LOG << "Find in class." << klass->Inspect();
+  const BasicObjectPtr new_binding = Binding::New();
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(C(R(R(sym::self()),sym::findInstanceMethod()),
+          R(sym::self()),
+          R(sym::__name()))),
+      new_binding);
+  new_binding->Set(sym::self(), klass);
+  new_binding->Set(sym::__name(), args[1]);
 }
 
 DEFINE_SRU_PROC(subclass){
@@ -90,12 +117,16 @@ DEFINE_SRU_PROC(object_new){
 void Class::InitializeClassClassFirst(const BasicObjectPtr& klass){
   klass->Set(sym::klass(), klass);
   const BasicObjectPtr find_slot_method = BasicObject::New(new METHOD_findSlot());
+  const BasicObjectPtr find_instance_method =
+    BasicObject::New(new METHOD_findInstanceMethod());
   klass->Set(sym::findSlotMethod(), find_slot_method);
+  klass->Set(sym::findInstanceMethod(), find_instance_method);
   LOG << "Setup findSlotMethod";
 }
 
 void Class::InitializeClassClassLast(const BasicObjectPtr& klass){
   Proc::Initialize(klass->Get(sym::findSlotMethod()));
+  Proc::Initialize(klass->Get(sym::findInstanceMethod()));
 
   klass->Set(sym::__name(), SRUString::New(sym::Class()));
   SetAsSubclass(klass,NULL);

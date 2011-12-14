@@ -6,6 +6,7 @@ _parent
 __name
 superclass
 instanceMethods
+findInstanceMethod
 __findSlot
 #
 currentStackFrame

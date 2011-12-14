@@ -69,6 +69,7 @@ string BasicObject::Inspect(int limit){
     if(!r.empty() && s == sym::klass()) continue;
     if(s == sym::superclass() ||
         s == sym::instanceMethods() ||
+        s == sym::findInstanceMethod() ||
         s.to_str()[0] == '_')
       continue;
     sum += (int)s.to_str().size() + 5;

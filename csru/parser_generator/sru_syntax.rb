@@ -17,7 +17,7 @@ program <= after_if_statement * spc_or_comment * ( lf | ";" | eos) *
 manipulator :statements_begin, :statements_statement, :statements_end
 statements <= statements_begin *
 o(
-  spc_or_lf * ~"end" * ~"else" * ~"elsif" * 
+  spc_or_lf * ~"end" * ~"else" * ~"elsif" *
   after_if_statement *
   statements_statement(:statements_begin, :after_if_statement) *
   r(
@@ -37,11 +37,13 @@ after_if_statement <= statement_begin *
 ) * statement_end(:statement_begin)
 
 
-statement <= spc_or_lf * ( let_statement | flow_statement )
+statement <= spc_or_lf * (
+  let_statement |
+  flow_statement * spc * ~"=" * statements_end(:flow_statement))
 
 
 manipulator :let_statement_end
-let_statement <= 
+let_statement <=
 flow_statement * # only returns ref
 spc * "=" * spc_or_lf * statement *
 let_statement_end(:flow_statement, :statement)

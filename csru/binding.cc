@@ -29,6 +29,7 @@ void Binding::InitializeClassObject(const BasicObjectPtr& binding){
 BasicObjectPtr Binding::New(const BasicObjectPtr& parent){
   const BasicObjectPtr r = BasicObject::New();
   Class::InitializeInstance(r,Library::Instance()->Binding());
+  r->Set(sym::local(), r);
   if(parent.get() != NULL)
     r->Set(sym::_parent(), parent);
   r->Set(sym::__findSlot(), Library::Instance()->Binding()->Get(sym::findSlotMethod()));

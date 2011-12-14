@@ -2,6 +2,7 @@ constants_data = <<EOL
 # Default fields
 self
 class,klass
+local
 _parent
 __name
 superclass

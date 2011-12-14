@@ -1,6 +1,6 @@
 // Programing Language SRU
 // Copyright(C) 2005-2008 IKeJI
-// 
+//
 // SRUString class is all class of all string in SRU.
 //
 
@@ -17,6 +17,7 @@ class SRUString : public Value{
  public:
   static BasicObjectPtr New(const symbol& val);
   static const symbol& GetValue(const BasicObjectPtr& obj);
+  static const symbol& GetValue(const SRUString* obj);
   std::string Inspect();
   static const char* name(){ return "SRUString"; }
   static void InitializeStringClass(const BasicObjectPtr& str);
@@ -35,5 +36,3 @@ class SRUString : public Value{
 } // namespace sru
 
 #endif  // SRU_STRING_H_
-
-

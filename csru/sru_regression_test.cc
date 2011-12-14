@@ -242,6 +242,10 @@ TEST_CODE(object_not_equal, "a=Object.new();b=Object.new();a!=b", "<True ... >")
 TEST_CODE(object_not_equal2, "a=Object.new();a!=a", "<False ... >");
 TEST_CODE(nil_equal, "nil==nil", "<True ... >");
 TEST_CODE(nil_not_equal, "nil!=nil", "<False ... >");
+TEST_CODE(string_equal     , "\"abcdef\" == \"abcdef\"" , "<True ... >");
+TEST_CODE(string_equal2    , "\"abcdef\" == \"abcdefg\"", "<False ... >");
+TEST_CODE(string_not_equal , "\"abcdef\" != \"abcdef\"" , "<False ... >");
+TEST_CODE(string_not_equal2, "\"abcdef\" != \"abcdefg\"", "<True ... >");
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");
 TEST_CODE(let_proc_result, "s = {|x|x;}; s",

@@ -88,7 +88,7 @@ unsigned char complete(EditLine *e, int ch){
 }
 #endif
 
-void repl(){
+void repl(int argc, char* argv[]){
 #ifdef USE_EDITLINE
   EditLine *el;
   History *hist;
@@ -143,7 +143,7 @@ void repl(){
 
 int main(int argc, char* argv[]){
   if(argc==1){
-    repl();
+    repl(argc, argv);
   }else if(argc==2){
     ifstream ifs(argv[1]);
     string prog = "";

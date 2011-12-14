@@ -1,5 +1,8 @@
 
 class CppCodeBuilder
+  def initialize
+    @p = Printer.new false
+  end
   def self.to_s(parser)
     self.new.print(parser)
   end
@@ -216,12 +219,12 @@ DEFINE_SRU_PROC(FalseResult){ // this, pos
     s.split("\n").map{|l| " "*n + l}.join("\n")
   end
   def pri(parser, sym)
-    return "  // #{parser.syntaxes[sym].accept(Printer.new)}" if(parser.syntaxes[sym])
+    return "  // #{parser.syntaxes[sym].accept(@p)}" if(parser.syntaxes[sym])
     ""
   end
   def pri2(parser, sym)
     return "" if(! parser.syntaxes[sym])
-    r = parser.syntaxes[sym].accept(Printer.new)
+    r = parser.syntaxes[sym].accept(@p)
     return <<-EOL
   // #{r}
   LOG << "Enter parser: #{sym} <= #{r.gsub(/"/,'\"')}";
@@ -229,7 +232,7 @@ DEFINE_SRU_PROC(FalseResult){ // this, pos
     ""
   end
   def prii(p)
-    p.accept(Printer.new)
+    p.accept(@p)
   end
 # Each visitor output C++ code for parser.
 # each step output parse result as resultN.

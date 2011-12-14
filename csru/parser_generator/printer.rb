@@ -1,12 +1,16 @@
 class Printer
-  def self.to_s(parser)
-    p = self.new
+  def self.to_s(parser, pritty = true)
+    p = self.new(pritty)
     ret = ""
-    ret += "symbol: " + parser.symbols.inspect + "\n"
-    parser.syntaxes.keys.each do |syn|
+    ret += "symbol: " + parser.symbols.inspect + "\n\n"
+    parser.syntax_list.each do |syn|
       ret += "#{syn} := #{parser.syntaxes[syn].accept(p)}\n"
+      ret += "\n" if pritty
     end
     return ret
+  end
+  def initialize(pritty)
+    @pritty = pritty
   end
   def visit_And(peg)
     l = peg.left.accept(self)
@@ -37,7 +41,11 @@ class Printer
     "[" + peg.cont.accept(self) + "]"
   end
   def visit_Manipulator(peg)
-    " {{ " + peg.name.to_s + " }} "
+    if(@pritty)
+      ""
+    else
+      " {{ " + peg.name.to_s + " }} "
+    end
   end
 end
 

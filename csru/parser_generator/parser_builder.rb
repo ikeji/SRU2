@@ -1,10 +1,11 @@
 
 class ParserBuilder
-  attr_accessor :syntaxes, :symbols, :terms, :captures, :manipulators
+  attr_accessor :syntaxes, :syntax_list, :symbols, :terms, :captures, :manipulators
   def initialize
     @symbols = []
     @terms = []
     @syntaxes = {}
+    @syntax_list = []
     @captures = Hash.new{|h,k| h[k] = []}
     @manipulators = []
   end
@@ -233,6 +234,7 @@ class NonTerminalSymbol < PEG
   def <=(right)
     raise Exception.new if @parser == nil
     @parser.syntaxes[@symbol] = PEG.convert(right)
+    @parser.syntax_list << @symbol
   end
   def initialize(symbol)
     @symbol = symbol

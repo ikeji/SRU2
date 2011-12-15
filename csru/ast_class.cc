@@ -7,6 +7,10 @@
 #include "constants.h"
 #include "class.h"
 #include "library.h"
+#include "ast.h"
+#include "symbol.h"
+#include "native_proc.h"
+#include "sru_string.h"
 
 using namespace sru;
 using namespace std;
@@ -27,6 +31,13 @@ struct ASTClass::Impl {
   BasicObjectPtr StringClass;
 };
 
+DEFINE_SRU_PROC(StringExpressionNew){
+  ARGLEN(2);
+  symbol s = SRUString::GetValue(args[1]);
+  BasicObjectPtr se = StringExpression::New(s);
+  return se;
+}
+
 ASTClass::ASTClass(const Library& lib) : pimpl(new Impl){
   pimpl->AstClass = Class::New(lib.Object());
   pimpl->LetClass = Class::New(pimpl->AstClass);
@@ -34,6 +45,7 @@ ASTClass::ASTClass(const Library& lib) : pimpl(new Impl){
   pimpl->CallClass = Class::New(pimpl->AstClass);
   pimpl->ProcClass = Class::New(pimpl->AstClass);
   pimpl->StringClass = Class::New(pimpl->AstClass);
+  pimpl->StringClass->Set(sym::mew(), CREATE_SRU_PROC(StringExpressionNew));
 }
 
 ASTClass::~ASTClass(){

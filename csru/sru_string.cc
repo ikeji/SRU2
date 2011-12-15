@@ -82,12 +82,30 @@ DEFINE_SRU_PROC(StringGreaterThan){
                          SRUString::GetValue(right).to_str());
 }
 
+DEFINE_SRU_PROC(StringGreaterOrEqual){
+  ARGLEN(2);
+  SRUString* left = args[0]->GetData<SRUString>();
+  SRUString* right = args[1]->GetData<SRUString>();
+  DCHECK(left && right) << "LessThan needs two string";
+  return BooleanToObject(SRUString::GetValue(left).to_str() >=
+                         SRUString::GetValue(right).to_str());
+}
+
 DEFINE_SRU_PROC(StringLessThan){
   ARGLEN(2);
   SRUString* left = args[0]->GetData<SRUString>();
   SRUString* right = args[1]->GetData<SRUString>();
   DCHECK(left && right) << "LessThan needs two string";
   return BooleanToObject(SRUString::GetValue(left).to_str() <
+                         SRUString::GetValue(right).to_str());
+}
+
+DEFINE_SRU_PROC(StringLessOrEqual){
+  ARGLEN(2);
+  SRUString* left = args[0]->GetData<SRUString>();
+  SRUString* right = args[1]->GetData<SRUString>();
+  DCHECK(left && right) << "LessThan needs two string";
+  return BooleanToObject(SRUString::GetValue(left).to_str() <=
                          SRUString::GetValue(right).to_str());
 }
 
@@ -134,7 +152,9 @@ void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   DEFMETHOD(equal, StringEqual);
   DEFMETHOD(notEqual, StringNotEqual);
   DEFMETHOD(lessThan, StringLessThan);
+  DEFMETHOD(lessOrEqual, StringLessOrEqual);
   DEFMETHOD(greaterThan, StringGreaterThan);
+  DEFMETHOD(greaterOrEqual, StringGreaterOrEqual);
   DEFMETHOD(get, StringGet);
   DEFMETHOD(substr, StringSubstr);
 }

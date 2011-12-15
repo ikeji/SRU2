@@ -317,7 +317,7 @@ DEFINE_SRU_PROC_SMASH(Times){
     PushResult(Library::Instance()->Nil());
     return;
   }
-  
+
   if(times_internal == NULL)
     times_internal = CREATE_SRU_PROC(_times_internal);
 
@@ -344,7 +344,7 @@ DEFINE_SRU_PROC(Invert){
 
 DEFINE_SRU_PROC(ToS){
   ARGLEN(1);
-  DCHECK(SRUNumeric::IsNumeric(args[0])) << 
+  DCHECK(SRUNumeric::IsNumeric(args[0])) <<
     "ToS needs numeric";
   ostringstream s;
   if (SRUNumeric::IsReal(args[0])) {

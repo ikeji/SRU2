@@ -352,7 +352,7 @@ r(
   spc_or_lf * "," * spc_or_lf * ident *
   closure_varg_idents(:closure_varg_begin, :ident)
 ) ) *
-o( spc_or_lf * ":" * ident * 
+o( spc_or_lf * ":" * ident *
   closure_varg_retarg(:closure_varg_begin, :ident)
 ) * spc_or_lf * "|" * closure_varg_end(:closure_varg_begin)
 
@@ -364,7 +364,7 @@ const_literal <= real | number | const_string
 
 
 manipulator :array_literal_begin, :array_literal_item, :array_literal_end
-array_literal <= "[" * array_literal_begin *
+array_literal <= "[" * array_literal_begin * spc_or_lf *
 o( after_if_statement * array_literal_item(:array_literal_begin,
                                            :after_if_statement) *
   r(
@@ -373,6 +373,6 @@ o( after_if_statement * array_literal_item(:array_literal_begin,
                                             :after_if_statement)
   ) *
   o( "," )
-) * "]" * array_literal_end(:array_literal_begin)
+) * spc_or_lf * "]" * array_literal_end(:array_literal_begin)
 
 

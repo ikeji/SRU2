@@ -53,6 +53,9 @@ class CodeTestCase : public sru_test::TestCase {
 #define TEST_CODE(name, src, result) \
   CodeTestCase TEST_##name("Regression_" #name, src, result)
 
+#define SRUTEST(name, src) \
+    TEST_CODE(name, src, "<True ... >")
+
 TEST_CODE(number,"1", "<Numeric(1)>");
 TEST_CODE(number2,"123", "<Numeric(123)>");
 TEST_CODE(number_tos,"123.toS()", "<String(\"123\")>");
@@ -206,6 +209,7 @@ TEST_CODE(array_replace,"(Array.new() << 1 << 2 ).replace( Array.new() << 3 << 2
 TEST_CODE(array_reverse,"(Array.new() << 1 << 2 << 3).reverse()", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
 TEST_CODE(array_reverse2,"(a = Array.new() << 1 << 2 << 3).reverse();a", "<Array size=3 [<Numeric(1)>, <Numeric(2)>, <Numeric(3)>]>");
 TEST_CODE(array_reverse_ex,"(a = Array.new() << 1 << 2 << 3).reverse!();a", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");
+SRUTEST(array_concat, "a=[1,2];a.concat([3,4]);a.size() == 4");
 TEST_CODE(numeric_times,"a=Array.new();3.times({a<<1});a", "<Array size=3 [<Numeric(1)>, <Numeric(1)>, <Numeric(1)>]>");
 TEST_CODE(array_clear,"a=Array.new()<<1<<2;a.clear();a", "<Array size=0 []>");
 TEST_CODE(array_size,"a=Array.new()<<1<<2;a.size()", "<Numeric(2)>");
@@ -251,10 +255,6 @@ TEST_CODE(string_equal     , "\"abcdef\" == \"abcdef\"" , "<True ... >");
 TEST_CODE(string_equal2    , "\"abcdef\" == \"abcdefg\"", "<False ... >");
 TEST_CODE(string_not_equal , "\"abcdef\" != \"abcdef\"" , "<False ... >");
 TEST_CODE(string_not_equal2, "\"abcdef\" != \"abcdefg\"", "<True ... >");
-
-#define SRUTEST(name, src) \
-    TEST_CODE(name, src, "<True ... >")
-
 SRUTEST(string_get,"a = \"abcd\";a[1] == \"b\"");
 SRUTEST(string_get2,"a = \"abcd\";a[10] == \"\"");
 SRUTEST(string_lessthan,"\"a\" < \"b\"");

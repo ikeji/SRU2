@@ -135,8 +135,24 @@ DEFINE_SRU_PROC(ArrayCompactEx){
 }
 
 DEFINE_SRU_PROC(ArrayConcat){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+  ARGLEN(1);
+  Array* array = args[0]->GetData<Array>();
+  DCHECK(array) << "Array not found.";
+  object_vector* a = array->GetValue();
+  for(ptr_vector::const_iterator it = args.begin();
+      it != args.end();
+      it++){
+    if(it == args.begin()) continue;
+    Array* array2 = (*it)->GetData<Array>();
+    DCHECK(array2) << "Array not found for argument.";
+    object_vector* a2 = array2->GetValue();
+    for(object_vector::const_iterator i = a2->begin();
+        i != a2->end();
+        i++){
+      a->push_back(*i);
+    }
+  }
+  return args[0];
 }
 
 DEFINE_SRU_PROC(ArrayDelete){

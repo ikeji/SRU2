@@ -3,11 +3,15 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include <fstream>
 #include <string>
 #include "interpreter.h"
 #include "basic_object.h"
 #include "logging.h"
+#include "stack_frame.h"
+#include "constants.h"
+#include "symbol.h"
 
 #ifdef USE_EDITLINE
 
@@ -109,6 +113,7 @@ void repl(int argc, char* argv[]){
 #endif
   cout << endl;
   cout << "C-SRU" << endl;
+  int i = 1;
   while(true){
 #ifdef USE_EDITLINE
     int count;
@@ -125,7 +130,15 @@ void repl(int argc, char* argv[]){
       source = source.substr(0,source.size()-1); //chomp
     if(source.empty()) break;
     BasicObjectPtr r = Interpreter::Instance()->Eval(source);
-    if (r != NULL) cout << r->Inspect() << endl;
+    if (r != NULL) {
+      cout << "_" << i << " = " << r->Inspect() << endl;
+      BasicObjectPtr g = Interpreter::Instance()->RootStackFrame()->Binding();
+      g->Set(sym::_(), r);
+      ostringstream s;
+      s << "_" << i;
+      g->Set(symbol(s.str()), r);
+      i++;
+    }
 #ifdef USE_EDITLINE
     if (r != NULL){
       history(hist,&ev,H_ENTER,line);

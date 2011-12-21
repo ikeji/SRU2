@@ -32,10 +32,10 @@ class Interpreter{
   Interpreter();
   ~Interpreter();
   void InitializeInterpreter();
-  
+
   struct Impl;
   Impl *pimpl;
-  
+
   Interpreter(const Interpreter& obj);
   Interpreter* &operator=(const Interpreter& obj);
 };

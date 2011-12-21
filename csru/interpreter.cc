@@ -67,7 +67,7 @@ void Interpreter::DigIntoNewFrame(const ptr_vector& expressions,
   LOG << "Step in: " << new_frame_object->Inspect();
   new_frame->SetUpperStack(old_frame_object);
   pimpl->current_frame = new_frame_object;
-  
+
   new_frame->Setup(expressions);
 }
 
@@ -112,12 +112,13 @@ BasicObjectPtr Interpreter::Eval(const BasicObjectPtr& ast){
     LOG << "Step start";
     assert(CurrentStackFrame()->EvalNode());
     LOG << "Step end";
-  } 
+  }
   return CurrentStackFrame()->ReturnValue();
 }
 
 namespace {
 bool spcOnly(string s){
+  // TODO: support comment.
   for(size_t i=0;i<s.size();i++){
     if(s[i] != ' ' && s[i]!='\t' && s[i]!='\r' && s[i]!='\n')
       return false;
@@ -141,7 +142,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
         RefExpression::New(
           RefExpression::New(NULL,SRUString::New(sym::__parser())),
           SRUString::New(sym::parse())), args);
-  
+
     const BasicObjectPtr obj = Eval(call_parser);
     if(!obj->HasSlot(sym::ast()) ||
        IsNil(obj->Get(sym::ast()))){
@@ -157,7 +158,7 @@ BasicObjectPtr Interpreter::Eval(const string& str){
     }
     const BasicObjectPtr ast = obj->Get(sym::ast());
     LOG_ERROR << "Parse OK : " << ast->Inspect();
-  
+
     result = Eval(ast);
 
     size_t pos = SRUNumeric::GetIntValue(obj->Get(sym::pos()));
@@ -167,4 +168,3 @@ BasicObjectPtr Interpreter::Eval(const string& str){
   }
   return result;
 }
-

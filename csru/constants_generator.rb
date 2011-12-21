@@ -180,6 +180,9 @@ RefExpression
 CallExpression
 ProcExpression
 StringExpression
+# binding
+getLocalMethod
+setLocalMethod
 EOL
 
 200.times do |i|

@@ -25,69 +25,82 @@ inline std::string InspectAST(const sru::BasicObjectPtr& obj){
   return dynamic_cast<sru::Expression*>(obj->Data())->InspectAST();
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
                              const sru::BasicObjectPtr& name,
                              const sru::BasicObjectPtr& rv){
   return sru::LetExpression::New(env,name,rv);
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
                              const sru::symbol& name,
                              const sru::BasicObjectPtr& rv){
   return L(env, sru::SRUString::New(name),rv);
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& env,
                              const char* name,
                              const sru::BasicObjectPtr& rv){
   return L(env, sru::symbol(name),rv);
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const sru::BasicObjectPtr& name,
                              const sru::BasicObjectPtr& rv){
   return sru::LetExpression::New(NULL,name,rv);
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const sru::symbol& name,
                              const sru::BasicObjectPtr& rv){
   return L(sru::SRUString::New(name), rv);
 }
 
+// Create LetExpression
 inline sru::BasicObjectPtr L(const char* name,
                              const sru::BasicObjectPtr& rv){
   return L(sru::symbol(name),rv);
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,
                              const sru::BasicObjectPtr& name){
   return sru::RefExpression::New(env,name);
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,
                              const sru::symbol& name){
   return R(env,sru::SRUString::New(name));
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& env,
                              const char* name){
   return R(env,sru::symbol(name));
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const sru::BasicObjectPtr& name){
   return sru::RefExpression::New(NULL,name);
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const sru::symbol& name){
   return R(sru::SRUString::New(name));
 }
 
+// Create RefExpression
 inline sru::BasicObjectPtr R(const char* name){
   return R(sru::symbol(name));
 }
 
 <% 20.times do |n| %>
+// Create CallExpression
 inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>,
-                      const sru::BasicObjectPtr& arg<%= i %><% end %>){
+                             const sru::BasicObjectPtr& arg<%= i %><% end %>){
   sru::ptr_vector arg;
 <% n.times do |i| %>  arg.push_back(arg<%= i %>);
 <% end %>
@@ -96,6 +109,7 @@ inline sru::BasicObjectPtr C(const sru::BasicObjectPtr& proc<% n.times do |i| %>
 <% end %>
 
 <% 90.times do |e| %><% 5.times do |s| %>
+// Create ProcExpression
 inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
                       <% end %>const sru::symbol& varg<%= i %><% end %><% e.times do |j| %><% if s!=0 || j !=0 %>,
                       <% end %>const sru::BasicObjectPtr& expression<%= j %><% end %>){
@@ -123,6 +137,7 @@ inline sru::BasicObjectPtr P(<% s.times do |i| %><% if i != 0 %>,
 <% end %><% end %>
 
 <% 20.times do |e| %><% 5.times do |s| %>
+// Create ProcExpression(with contination)
 inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
                       <% end %>const sru::symbol& varg<%= i %><% end; if s !=0 %>,
                       <% end %>const sru::symbol& retval<% e.times do |j| %>,
@@ -135,6 +150,7 @@ inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
 <% end %>
   return sru::ProcExpression::New(varg,retval,expressions);
 }
+// Create ProcExpression(with contination)
 inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
                       <% end %>const char* varg<%= i %><% end; if s !=0 %>,
                       <% end %>const char* retval<% e.times do |j| %>,
@@ -150,13 +166,16 @@ inline sru::BasicObjectPtr B(<% s.times do |i| if i != 0 %>,
 <% end %><% end %>
 
 
+// Create StringExpression
 inline sru::BasicObjectPtr S(const sru::symbol& str){
   return sru::StringExpression::New(str);
 }
+// Create StringExpression
 inline sru::BasicObjectPtr S(const char* str){
   return S(sru::symbol(str));
 }
 
+// Add src/pos fields to expression
 inline sru::BasicObjectPtr E(const sru::BasicObjectPtr& src,
                              const sru::BasicObjectPtr& pos,
                              const sru::BasicObjectPtr obj){
@@ -166,6 +185,7 @@ inline sru::BasicObjectPtr E(const sru::BasicObjectPtr& src,
 }
 
 <% 5.times do |a| %>
+// Create expression to method invocation.
 inline sru::BasicObjectPtr M(const sru::BasicObjectPtr& self,
                              const sru::symbol& method<% a.times do |i| %>,
                              const sru::BasicObjectPtr& arg<%= i %><% end %>){
@@ -180,6 +200,7 @@ inline sru::BasicObjectPtr M(const sru::BasicObjectPtr& self,
          );
 }
 <% if a != 0 %>
+// Create expression to method invocation.
 inline sru::BasicObjectPtr M(const sru::symbol& self,
                              const sru::symbol& method<% a.times do |i| %>,
                              const sru::BasicObjectPtr& arg<%= i %><% end %>){

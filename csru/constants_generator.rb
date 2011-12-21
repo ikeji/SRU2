@@ -159,6 +159,8 @@ uniq
 uniq!,uniqEx
 unshift
 valuesAt
+_a
+_each_internal
 # Math
 sin
 cos

@@ -286,7 +286,7 @@ DEFINE_SRU_PROC_SMASH(_times_internal){
     return;
   }
   const BasicObjectPtr& jp = binding->Get(sym::_j());
-  if(IsNil(ip)){
+  if(IsNil(jp)){
     PushResult(Library::Instance()->Nil());
     return;
   }
@@ -318,6 +318,7 @@ DEFINE_SRU_PROC_SMASH(Times){
     return;
   }
 
+  // TODO: thread safe.
   if(times_internal == NULL)
     times_internal = CREATE_SRU_PROC(_times_internal);
 

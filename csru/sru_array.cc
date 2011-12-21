@@ -15,9 +15,19 @@
 #include "object_container.h"
 #include "logging.h"
 #include "numeric.h"
+#include "interpreter.h"
+#include "stack_frame.h"
+#include "utils.h"
+#include "testing_ast.h"
+#include "binding.h"
+
+#include "testing_sru.h"
 
 using namespace sru;
 using namespace std;
+
+// TODO: remove this.
+using namespace sru_test;
 
 namespace sru {
 
@@ -165,14 +175,65 @@ DEFINE_SRU_PROC(ArrayDeleteIf){
   return Library::Instance()->Nil();
 }
 
-DEFINE_SRU_PROC(ArrayEach){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+DEFINE_SRU_PROC_SMASH(_array_each_internal){
+  const BasicObjectPtr& binding =
+    Interpreter::Instance()->CurrentStackFrame()->Binding();
+  const BasicObjectPtr& ip = binding->Get(sym::_i());
+  if(IsNil(ip)){
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
+  const BasicObjectPtr& jp = binding->Get(sym::_j());
+  if(IsNil(jp)){
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
+  int i = SRUNumeric::GetIntValue(ip) + 1;
+  int j = SRUNumeric::GetIntValue(jp);
+  LOG_TRACE << "i:" << i;
+  LOG_TRACE << "j:" << j;
+  if( j <= i ) {
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
+  binding->Set(sym::_i(), SRUNumeric::NewInt(i));
+
+  Interpreter::Instance()->CurrentStackFrame()->Setup(
+      A(
+        C(R(sym::_block()),
+          C(R(R(sym::_a()),sym::get()),
+            R(sym::_a()),
+            R(sym::_i())),
+          R(sym::_i())),
+        C(R(sym::_each_internal()))
+      ));
 }
 
-DEFINE_SRU_PROC(ArrayEachIndex){
-  CHECK(false) << "Not impliment";
-  return Library::Instance()->Nil();
+DEFINE_SRU_PROC_SMASH(ArrayEach){
+  static BasicObjectPtr array_each_internal;
+  ARGLEN(2);
+  LOG_TRACE << args[0]->Inspect();
+  Array* array = args[0]->GetData<Array>();
+  DCHECK(array) << "Invalid value for each.";
+  int size = (int)array->GetValue()->size();
+  if(size == 0){
+    PushResult(Library::Instance()->Nil());
+    return;
+  }
+
+  // TODO: thread safe.
+  if(array_each_internal == NULL)
+    array_each_internal = CREATE_SRU_PROC(_array_each_internal);
+
+  const BasicObjectPtr binding = Binding::New();
+  binding->Set(sym::_a(), args[0]);
+  binding->Set(sym::_i(), SRUNumeric::NewInt(-1));
+  binding->Set(sym::_j(), SRUNumeric::NewInt(size));
+  binding->Set(sym::_each_internal(), array_each_internal);
+  binding->Set(sym::_block(), args[1]);
+  Interpreter::Instance()->DigIntoNewFrame(
+      A(C(R(sym::_each_internal()))),
+      binding);
 }
 
 DEFINE_SRU_PROC(ArrayEmptyQ){
@@ -404,7 +465,7 @@ void Array::InitializeClass(const BasicObjectPtr& array){
   DEFMETHOD(derete, ArrayDelete);
   DEFMETHOD(dereteIf, ArrayDeleteIf);
   DEFMETHOD(each, ArrayEach);
-  DEFMETHOD(eachIndex, ArrayEachIndex);
+  DEFMETHOD(eachIndex, ArrayEach);
   DEFMETHOD(emptyQ, ArrayEmptyQ);
   DEFMETHOD(fetch, ArrayFetch);
   DEFMETHOD(fill, ArrayFill);

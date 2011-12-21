@@ -17,6 +17,8 @@
 
 namespace sru_test {
 
+// Calling instance method from C
+// NOTE: this function for testing only. It brakes contination.
 inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
                                 const sru::symbol& method,
                                 const sru::ptr_vector& v){
@@ -49,11 +51,13 @@ inline sru::BasicObjectPtr Call(const sru::BasicObjectPtr& obj,
 }
 <% end %>
 
+// Create empty ptr_vector.
 inline sru::ptr_vector A(){
   return sru::ptr_vector();
 }
 
 <% 60.times do |n| %>
+// Create ptr_vector object from arguments.
 inline sru::ptr_vector A(const sru::BasicObjectPtr& obj<% n.times do |i| %>,
     const sru::BasicObjectPtr& obj<%= i %><% end %>){
   sru::ptr_vector ret;

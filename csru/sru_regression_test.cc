@@ -272,6 +272,7 @@ SRUTEST(string_substr2,"\"abcd\".substr(1) == \"bcd\"");
 SRUTEST(string_substr3,"\"abcd\".substr(1,20) == \"bcd\"");
 SRUTEST(string_substr4,"\"abcd\".substr(20) == \"\"");
 SRUTEST(string_substr5,"\"abcd\".substr(20,10) == \"\"");
+SRUTEST(eval,"eval(__parser.parse(\"a = 3\").ast); a == 3");
 
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");

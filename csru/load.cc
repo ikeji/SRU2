@@ -10,6 +10,7 @@
 #include "library.h"
 #include "sru_string.h"
 #include "interpreter.h"
+#include "stack_frame.h"
 #include "constants.h"
 
 using namespace sru;
@@ -34,10 +35,19 @@ DEFINE_SRU_PROC(Load) {
   }
 }
 
+DEFINE_SRU_PROC_SMASH(Eval) {
+  ARGLEN(1);
+  ptr_vector pv;
+  pv.push_back(args[0]);
+  Interpreter::Instance()->DigIntoNewFrame(
+      pv,Interpreter::Instance()->CurrentStackFrame()->Binding());
+}
+
 namespace sru {
 
 void SetupLoadFunction(const BasicObjectPtr& env){
   env->Set(sym::load(), CREATE_SRU_PROC(Load));
+  env->Set(sym::eval(), CREATE_SRU_PROC(Eval));
 }
 
 } // namespace sru

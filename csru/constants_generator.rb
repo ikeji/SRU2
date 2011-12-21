@@ -106,6 +106,7 @@ return,leturn
 require
 requireNative
 load
+eval
 p
 puts
 print

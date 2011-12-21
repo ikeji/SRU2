@@ -227,7 +227,7 @@ o(
 r( "." * ident * spc *
   ((
     "(" * instance_method_method_begin(:ident) *
-    o( 
+    o(
       spc_or_lf * after_if_statement *
       instance_method_method_arg(:instance_method_method_begin,
                                  :after_if_statement) *
@@ -338,7 +338,7 @@ manipulator :closure_begin, :closure_merge_varg, :closure_statements,
             :closure_end
 closure_literal <=
 spc * "{" * closure_begin *
-o( closure_varg * closure_merge_varg(:closure_begin, :closure_varg)) *
+( closure_varg * closure_merge_varg(:closure_begin, :closure_varg) | ~"|") *
 statements *
 closure_statements(:closure_begin, :statements) *
 spc_or_lf * "}" * closure_end(:closure_begin)

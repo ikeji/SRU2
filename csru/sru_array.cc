@@ -37,31 +37,31 @@ DEFINE_SRU_PROC(ArrayNew){
 
 DEFINE_SRU_PROC(ArrayAmp){
   ARGLEN(2);
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment amp";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayAsterisk){
   ARGLEN(2);
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment asterisk";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayPlus){
   ARGLEN(2);
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment plus";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayMinus){
   ARGLEN(2);
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment minus";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayPipe){
   ARGLEN(2);
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment pipe";
   return Library::Instance()->Nil();
 }
 
@@ -107,12 +107,12 @@ DEFINE_SRU_PROC(ArraySet){
 }
 
 DEFINE_SRU_PROC(ArrayAssoc){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment assoc";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayChoice){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment choice";
   return Library::Instance()->Nil();
 }
 
@@ -125,22 +125,22 @@ DEFINE_SRU_PROC(ArrayClear){
 }
 
 DEFINE_SRU_PROC(ArrayCollectEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment collectex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayCombination){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment combination";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayCompact){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment compact";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayCompactEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment compactex";
   return Library::Instance()->Nil();
 }
 
@@ -166,12 +166,12 @@ DEFINE_SRU_PROC(ArrayConcat){
 }
 
 DEFINE_SRU_PROC(ArrayDelete){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment delete";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayDeleteIf){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment deleteif";
   return Library::Instance()->Nil();
 }
 
@@ -237,82 +237,82 @@ DEFINE_SRU_PROC_SMASH(ArrayEach){
 }
 
 DEFINE_SRU_PROC(ArrayEmptyQ){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment empty";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayFetch){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment fetch";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayFill){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment fill";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayFlatten){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment flatten";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayFlattenEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment flattenex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayIndex){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment index";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayInsert){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not implimenti insert";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayJoin){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment join";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayLast){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment last";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayLength){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment length";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayMapEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment mapex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayNItems){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment nitems";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayPack){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment pack";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayPermutation){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment permutation";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayPop){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment pop";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayProduct){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment product";
   return Library::Instance()->Nil();
 }
 
@@ -328,12 +328,12 @@ DEFINE_SRU_PROC(ArrayPush){
 }
 
 DEFINE_SRU_PROC(ArrayRAssoc){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment rassoc";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayRejectEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment rejectex";
   return Library::Instance()->Nil();
 }
 
@@ -369,22 +369,22 @@ DEFINE_SRU_PROC(ArrayReverseEx){
 }
 
 DEFINE_SRU_PROC(ArrayRIndex){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment rindex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayShift){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment shift";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayShuffle){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment shuffle";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayShuffleEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment suffleex";
   return Library::Instance()->Nil();
 }
 
@@ -396,12 +396,12 @@ DEFINE_SRU_PROC(ArraySize){
 }
 
 DEFINE_SRU_PROC(ArraySliceEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment sliceex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArraySortEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment sortex";
   return Library::Instance()->Nil();
 }
 
@@ -411,27 +411,27 @@ DEFINE_SRU_PROC(ArrayToArray){
 }
 
 DEFINE_SRU_PROC(ArrayTranspose){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment transpose";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayUniq){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment uniq";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayUniqEx){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment uniqex";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayUnShift){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment unshift";
   return Library::Instance()->Nil();
 }
 
 DEFINE_SRU_PROC(ArrayValuesAt){
-  CHECK(false) << "Not impliment";
+  CHECK(false) << "Not impliment valuesat";
   return Library::Instance()->Nil();
 }
 

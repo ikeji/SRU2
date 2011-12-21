@@ -168,7 +168,7 @@ comp <= bit_sim * comp_begin(:bit_sim) * r(
 
 manipulator :bit_sim_begin, :bit_sim_pipe, :bit_sim_end
 bit_sim <= bit_term * bit_sim_begin(:bit_term) * r(
- spc * "|" * bit_term * bit_sim_pipe(:bit_sim_begin, :bit_term)
+ spc * "|" * spc_or_lf * bit_term * bit_sim_pipe(:bit_sim_begin, :bit_term)
 ) * bit_sim_end(:bit_sim_begin)
 
 

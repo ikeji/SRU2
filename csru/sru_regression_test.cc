@@ -275,6 +275,7 @@ SRUTEST(string_substr5,"\"abcd\".substr(20,10) == \"\"");
 SRUTEST(eval,"eval(__parser.parse(\"a = 3\").ast); a == 3");
 SRUTEST(scope_set,"global = local; { global[\"x\"] = 3 }(); x == 3");
 SRUTEST(scope_get,"a = 3; { local[\"a\"] == nil }()");
+SRUTEST(exit_call, "exit(0)"); // this will exit testing framework.
 
 /*
 TEST_CODE(let_proc, "s = {|x|x;}", "<Proc({|x|x;})>");

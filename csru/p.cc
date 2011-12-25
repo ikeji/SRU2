@@ -10,6 +10,8 @@
 #include "logging.h"
 #include "constants.h"
 #include "sru_string.h"
+#include "library.h"
+#include "numeric.h"
 
 using namespace sru;
 using namespace std;
@@ -32,12 +34,20 @@ DEFINE_SRU_PROC(print) {
   return args[0];
 }
 
+DEFINE_SRU_PROC(exit) {
+  ARGLEN(1);
+  int c = SRUNumeric::GetIntValue(args[0]);
+  exit(c);
+  return Library::Instance()->Nil();
+}
+
 namespace sru {
 
 void SetupPrintFunction(const BasicObjectPtr& env){
   env->Set(sym::p(), CREATE_SRU_PROC(p));
   env->Set(sym::puts(), CREATE_SRU_PROC(puts));
   env->Set(sym::print(), CREATE_SRU_PROC(print));
+  env->Set(sym::exit(), CREATE_SRU_PROC(exit));
 }
 
 } // namespace sru

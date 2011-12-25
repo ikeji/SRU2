@@ -110,6 +110,7 @@ eval
 p
 puts
 print
+exit
 # for Array
 at
 slice

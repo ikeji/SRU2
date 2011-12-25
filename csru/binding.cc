@@ -26,8 +26,8 @@ void Binding::InitializeClassObject(const BasicObjectPtr& binding){
   Class::InitializeInstance(binding, Library::Instance()->Class());
   binding->Set(sym::__name(), SRUString::New(sym::Binding()));
   binding->Set(sym::findSlotMethod(), CREATE_SRU_PROC(FindSlot));
-  binding->Set(sym::getLocalMethod(), CREATE_SRU_PROC(FindSlot));
-  binding->Set(sym::setLocalMethod(), CREATE_SRU_PROC(FindSlot));
+  binding->Set(sym::getLocalMethod(), CREATE_SRU_PROC(BindingGet));
+  binding->Set(sym::setLocalMethod(), CREATE_SRU_PROC(BindingSet));
 }
 
 BasicObjectPtr Binding::New(const BasicObjectPtr& parent){
@@ -85,6 +85,6 @@ DEFINE_SRU_PROC(BindingSet){
   const BasicObjectPtr& env = args[0];
   LOG_TRACE << env->Inspect();
   const symbol& name = SRUString::GetValue(args[1]);
-  env->Set(name, args[3]);
+  env->Set(name, args[2]);
   return args[2];
 }

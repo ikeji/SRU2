@@ -144,6 +144,7 @@ DEFINE_SRU_PROC_SMASH(#{sym}){  // self, src, pos
 
   const static ptr_vector exps =
       A(
+        L(sym::_parent(), R(sym::nil())),
       EOL
       parser.captures[sym].each do |cap|
         ret += <<-EOL

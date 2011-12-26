@@ -57,7 +57,7 @@ string Proc::Inspect(){
   return "Proc";
 }
 
-void PrintErrorContext(const BasicObjectPtr& context){
+void PrintErrorContext(const BasicObjectPtr& context, const ptr_vector args){
   CallExpression* call = context->GetData<CallExpression>();
   if(call && !IsNil(call->Proc())){
     RefExpression* ref = call->Proc()->GetData<RefExpression>();
@@ -68,6 +68,11 @@ void PrintErrorContext(const BasicObjectPtr& context){
         LOG_ALWAYS << "At call method " << ref->Name()->Inspect()
           << " for " << ref->Env()->Inspect();
       }
+    }
+    if(args.size() > 1){
+      LOG_ALWAYS << "With " << args[0]->Inspect() << ", ... ";
+    } else {
+      LOG_ALWAYS << "With " << args[0]->Inspect();
     }
   }
   // Abort if context not found.
@@ -84,7 +89,7 @@ void Proc::Invoke(const BasicObjectPtr& context,
   // TODO: Show more meaningful error.
   Proc* p = proc->GetData<Proc>();
   if (!p) {
-    PrintErrorContext(context);
+    PrintErrorContext(context, args);
   }
   DCHECK(p) << "Can't invoke " << proc->Inspect() << " object";
   p->Call(context, proc, args);

@@ -203,6 +203,7 @@ TEST_CODE(require_native_exec,"requireNative(\"./lib/hello.so\");hello2()","<Str
 TEST_CODE(array,"Array","<Array ... >");
 TEST_CODE(array_new,"Array.new()","<Array size=0 []>");
 TEST_CODE(array_push,"Array.new() << 3","<Array size=1 [<Numeric(3)>]>");
+SRUTEST(array_push2, "p a = [];p a.push(3);p a.push(4); a.size() == 2");
 TEST_CODE(array_get,"a = Array.new() << 1 << 2 << 3; a[1]", "<Numeric(2)>");
 TEST_CODE(array_set,"a = Array.new() << 1 << 2 << 3; a[1]=5;a", "<Array size=3 [<Numeric(1)>, <Numeric(5)>, <Numeric(3)>]>");
 TEST_CODE(array_replace,"(Array.new() << 1 << 2 ).replace( Array.new() << 3 << 2 << 1)", "<Array size=3 [<Numeric(3)>, <Numeric(2)>, <Numeric(1)>]>");

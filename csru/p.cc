@@ -5,6 +5,7 @@
 #include "p.h"
 
 #include <iostream>
+#include <cstdlib>
 #include "native_proc.h"
 #include "basic_object.h"
 #include "logging.h"

@@ -145,6 +145,13 @@ DEFINE_SRU_PROC(StringSize){
   return SRUNumeric::NewInt(str.size());
 }
 
+DEFINE_SRU_PROC(StringPlus){
+  ARGLEN(2);
+  const string& left= SRUString::GetValue(args[0]).to_str();
+  const string& right = SRUString::GetValue(args[1]).to_str();
+  return SRUString::New(symbol(left+right));
+}
+
 }  // anonymous namespace
 
 void SRUString::InitializeStringClass(const BasicObjectPtr& str){
@@ -164,6 +171,7 @@ void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   DEFMETHOD(get, StringGet);
   DEFMETHOD(substr, StringSubstr);
   DEFMETHOD(size, StringSize);
+  DEFMETHOD(plus, StringPlus);
 }
 
 /* static */

@@ -1,0 +1,22 @@
+* default functions
+
+Inspect
+p 1234
+
+print 1234
+puts 1234
+
+* if
+
+if [cond] then [statements] end
+
+if [cond]
+  [statements]
+end
+
+
+* scope
+
+* __findSlot
+
+

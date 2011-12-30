@@ -64,6 +64,7 @@ DEFINE_SRU_PROC(const_string){
   int epos = pos + 1;
   while(true){
     if(epos > (int)str.size()) break;
+    // No border check required becausse the '"' is exists at least.
     if(str[epos] == '"' && str[epos-1] != '\\') break;
     epos++;
   }

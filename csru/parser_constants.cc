@@ -64,15 +64,16 @@ DEFINE_SRU_PROC(const_string){
   int epos = pos + 1;
   while(true){
     if(epos > (int)str.size()) break;
-    if(str[epos] == '"') break;
+    if(str[epos] == '"' && str[epos-1] != '\\') break;
     epos++;
   }
   if(str[epos] != '"'){ // This isn't complete string literal
     return CreateFalse(epos, "Doesn't close string.");
   }
   string substr = str.substr(pos+1, epos-pos-1); // cut " s
+  string out = SRUString::UnEscapeString(substr);
   LOG << "Match to string: " << substr;
-  return CreateTrue(epos + 1, E(args[1],args[2],S(symbol(substr))));
+  return CreateTrue(epos + 1, E(args[1],args[2],S(symbol(out))));
 }
 
 DEFINE_SRU_PROC(number){

@@ -262,5 +262,5 @@ const symbol& StringExpression::String(){
 }
 
 string StringExpression::InspectAST(){
-  return string("\"") + pimpl->str.to_str() + "\"";
+  return string("\"") + SRUString::EscapeString(pimpl->str.to_str()) + "\"";
 }

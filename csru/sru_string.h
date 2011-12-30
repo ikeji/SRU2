@@ -21,6 +21,9 @@ class SRUString : public Value{
   std::string Inspect();
   static const char* name(){ return "SRUString"; }
   static void InitializeStringClass(const BasicObjectPtr& str);
+
+  static std::string EscapeString(const std::string& str);
+  static std::string UnEscapeString(const std::string& str);
  private:
   SRUString(const symbol& val);
   ~SRUString() {};

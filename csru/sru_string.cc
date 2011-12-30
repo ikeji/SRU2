@@ -37,7 +37,7 @@ const symbol& SRUString::GetValue(const SRUString* s){
 }
 
 string SRUString::Inspect(){
-  return string("String(\"") + value.to_str() + "\")";
+  return string("String(\"") + EscapeString(value.to_str()) + "\")";
 }
 
 SRUString::SRUString(const symbol& val):
@@ -124,7 +124,7 @@ DEFINE_SRU_PROC(StringGet){
 
 DEFINE_SRU_PROC(StringSubstr){
   ARGLEN(2);
-  string str = SRUString::GetValue(args[0]).to_str();
+  const string& str = SRUString::GetValue(args[0]).to_str();
   int index = 0;
   DCHECK(SRUNumeric::TryGetIntValue(args[1], &index))
       << "String.substr requires numeric, but it was "
@@ -137,6 +137,12 @@ DEFINE_SRU_PROC(StringSubstr){
   }
   if((size_t)index >= str.size()) return SRUString::New(symbol(""));
   return SRUString::New(symbol(str.substr(index, len == -1 ? string::npos : len)));
+}
+
+DEFINE_SRU_PROC(StringSize){
+  ARGLEN(1);
+  const string& str = SRUString::GetValue(args[0]).to_str();
+  return SRUNumeric::NewInt(str.size());
 }
 
 }  // anonymous namespace
@@ -157,4 +163,54 @@ void SRUString::InitializeStringClass(const BasicObjectPtr& str){
   DEFMETHOD(greaterOrEqual, StringGreaterOrEqual);
   DEFMETHOD(get, StringGet);
   DEFMETHOD(substr, StringSubstr);
+  DEFMETHOD(size, StringSize);
+}
+
+/* static */
+string SRUString::EscapeString(const string& str){
+  string out;
+  for(size_t i=0;i<str.size();i++){
+    char c = str[i];
+    switch(c){
+      case '\n':
+        out.push_back('\\');
+        out.push_back('n');
+        break;
+      case '\r':
+        out.push_back('\\');
+        out.push_back('r');
+        break;
+      case '\"':
+      case '\'':
+        out.push_back('\\');
+      default:
+        out.push_back(c);
+    }
+  }
+  return out;
+}
+
+/* static */
+string SRUString::UnEscapeString(const string& str){
+  string out;
+  for(size_t i=0;i<str.size();i++){
+    char c = str[i];
+    if(c == '\\' && i+1<str.size()){
+      i++;
+      char c2 = str[i];
+      switch(c2){
+        case 'n':
+          out.push_back('\n');
+          break;
+        case 'r':
+          out.push_back('\r');
+          break;
+        default:
+          out.push_back(c2);
+      }
+    } else {
+      out.push_back(c);
+    }
+  }
+  return out;
 }

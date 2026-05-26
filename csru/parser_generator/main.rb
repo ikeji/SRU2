@@ -1,5 +1,5 @@
 require "optparse"
-require "yapp"
+require "./yapp.rb"
 
 $output = Printer
 

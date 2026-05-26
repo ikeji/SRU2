@@ -2,11 +2,14 @@
 # Copyright(C) 2005-2008 IKeJI
 #
 
-#DFLAGS   = -O2
-DFLAGS   = -DDEBUG -g -O0
-#DFLAGS   = -DDEBUG -g -O0 -DDEBUG_INFO
+ifdef DEBUG
+  DFLAGS   = -DDEBUG -g -O0
+  #DFLAGS   = -DDEBUG -g -O0 -DDEBUG_INFO
+else
+  DFLAGS   = -O2
+endif
 CXXFLAGS = -Wall -Werror -Weffc++ -DSRU_MAIN -fPIC $(DFLAGS)
-LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic
+LDFLAGS  = $(DFLAGS) -Wl,-export-dynamic,--no-as-needed,-rpath=`pwd`
 CPFLAGS  = -u
 ERB      = erb
 CTAGS    = ctags

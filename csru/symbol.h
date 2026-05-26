@@ -66,6 +66,10 @@ class symbol {
   static symbol_hash::const_iterator end() {
     return symbol_table.end();
   }
+  // For debug.
+  static int symbol_size() {
+    return symbol_table.size();
+  }
  private:
   std::string str;
   mutable int id;

@@ -93,6 +93,7 @@ spc_or_lf * "end" * while_statement_end(:after_if_statement, :statements)
 #   $$ = B.subclass
 #   $$.instanceMethods.x = {|self:return| hoge() }
 #   $$.instanceMethods.y = {|self,i:return| fuga(i) }
+#   $$
 # }
 manipulator :class_statement_begin, :class_statement_method_begin,
             :class_statement_method_varg, :class_statement_method_end,

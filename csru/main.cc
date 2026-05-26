@@ -12,6 +12,7 @@
 #include "stack_frame.h"
 #include "constants.h"
 #include "symbol.h"
+#include "unistd.h"
 
 #ifdef USE_EDITLINE
 
@@ -19,6 +20,7 @@ extern "C" {
 #include <histedit.h>
 }
 #include <cctype>
+#include <cstdlib>
 #include "symbol.h"
 
 #endif
@@ -90,6 +92,12 @@ unsigned char complete(EditLine *e, int ch){
     return CC_REFRESH;
   }
 }
+
+string histfilename() {
+  const char* home = getenv("HOME");
+  if (home == NULL) home = ".";
+  return string(home) + "/.sru-history";
+}
 #endif
 
 void repl(int argc, char* argv[]){
@@ -97,13 +105,14 @@ void repl(int argc, char* argv[]){
   EditLine *el;
   History *hist;
   HistEvent ev;
+  string histfile = histfilename();
   el = el_init(argv[0], stdin, stdout, stderr);
   el_source(el, NULL);
   el_set(el, EL_PROMPT, &prompt);
   hist = history_init();
   DCHECK(hist);
   history(hist,&ev,H_SETSIZE,10000);
-  history(hist,&ev,H_LOAD,"./.sru-history");
+  history(hist,&ev,H_LOAD, histfile.c_str());
   el_set(el,EL_HIST,history,hist);
   el_set(el, EL_ADDFN, "ed-complete", "Complete argument", complete);
   el_set(el, EL_BIND, "^I", "ed-complete", NULL);
@@ -142,29 +151,39 @@ void repl(int argc, char* argv[]){
 #ifdef USE_EDITLINE
     if (r != NULL){
       history(hist,&ev,H_ENTER,line);
-      history(hist,&ev,H_SAVE,"./.sru-history");
+      history(hist,&ev,H_SAVE,histfile.c_str());
     }
 #endif
     cout << endl;
   }
 #ifdef USE_EDITLINE
-  history(hist,&ev,H_SAVE,"./.sru-history");
+  history(hist,&ev,H_SAVE,histfile.c_str());
   history_end(hist);
   el_end(el);
 #endif
 }
 
+BasicObjectPtr evalStream(istream& is) {
+  string prog = "";
+  string buf;
+  while(is && getline(is,buf)){
+    prog += buf + "\n";
+  }
+  BasicObjectPtr r = Interpreter::Instance()->Eval(prog);
+  return r;
+}
+
 int main(int argc, char* argv[]){
   if(argc==1){
-    repl(argc, argv);
-  }else if(argc==2){
-    ifstream ifs(argv[1]);
-    string prog = "";
-    string buf;
-    while(ifs && getline(ifs,buf)){
-      prog += buf + "\n";
+    if (isatty(STDIN_FILENO)) {
+      repl(argc, argv);
+    } else {
+      BasicObjectPtr r = evalStream(cin);
+      if (r != NULL) LOG << r->Inspect();
     }
-    BasicObjectPtr r = Interpreter::Instance()->Eval(prog);
+  }else{
+    ifstream ifs(argv[1]);
+    BasicObjectPtr r = evalStream(ifs);
     if (r != NULL) LOG << r->Inspect();
   }
 }

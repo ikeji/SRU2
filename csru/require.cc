@@ -11,6 +11,8 @@
 #include "stack_frame.h"
 #include "constants.h"
 
+#include "symbol.h"
+
 using namespace sru;
 using namespace std;
 
@@ -57,7 +59,7 @@ DEFINE_SRU_PROC(requireNative) {
   string name = SRUString::GetValue(args[0]).to_str();
   void* handle = dlopen(name.c_str(), RTLD_NOW);
   if(!handle){
-    LOG_ERROR << "ERROR: " << dlerror();
+    LOG_ALWAYS << "ERROR: " << dlerror();
     return Library::Instance()->False();
   }
   // TODO: Use C++ style cast.

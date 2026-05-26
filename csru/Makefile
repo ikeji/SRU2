@@ -80,10 +80,10 @@ libsru.$(LIBEXT): $(OBJS)
 	$(CXX) $(LDFLAGS) -shared -o libsru.$(LIBEXT) $(OBJS)
 
 sru: libsru.$(LIBEXT) main.o
-	$(CXX) $(LDFLAGS) -g -o sru main.o libsru.$(LIBEXT)
+	$(CXX) $(LDFLAGS) -g -o sru main.o -L. -lsru
 
 sru_test: libsru.$(LIBEXT) testing.o $(TESTS)
-	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o libsru.$(LIBEXT)
+	$(CXX) $(LDFLAGS) -g -o sru_test $(TESTS) testing.o -L. -lsru
 
 clean:
 	$(MAKE) -C parser_generator clean
@@ -96,7 +96,7 @@ depend: parser $(GENFILES)
 	$(CXX) -MM *.cc > makefile.depend
 
 tags:
-	$(CTAGS) -R --c++-kinds=+p --fields=+iaS --extra=+q .
+	$(CTAGS) -R .
 
 .SUFFIXES: .h .herb
 

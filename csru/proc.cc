@@ -69,10 +69,12 @@ void PrintErrorContext(const BasicObjectPtr& context, const ptr_vector args){
           << " for " << ref->Env()->Inspect();
       }
     }
-    if(args.size() > 1){
-      LOG_ALWAYS << "With " << args[0]->Inspect() << ", ... ";
-    } else {
-      LOG_ALWAYS << "With " << args[0]->Inspect();
+    if(args.size() > 0){
+      if(args.size() > 1){
+        LOG_ALWAYS << "With " << args[0]->Inspect() << ", ... ";
+      } else {
+        LOG_ALWAYS << "With " << args[0]->Inspect();
+      }
     }
   }
   // Abort if context not found.

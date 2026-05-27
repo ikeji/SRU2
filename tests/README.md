@@ -28,7 +28,7 @@ $ tests/run.sh path/to/rsru             # 別のインタプリタで実行
 | `recursion.sru` | `def` 内自己参照、相互再帰 |
 | `continuation_return.sru` | `def` ボディの `return` を早期脱出として使う |
 | `continuation_save.sru` | `return(return)` で継続を取り出して再侵入する |
-| `parser_extension/hex_literal.sru` | rsru が新リテラル種をアドホックに足せるかのコントラクト（csru では未対応） |
+| `parser_extension/hex_literal.sru` | `__parser.real` を SRU 側で差し替えて 16 進リテラル `0x10` を後付け（csru でも動く） |
 
 ## SRU の現実的な書き味メモ
 

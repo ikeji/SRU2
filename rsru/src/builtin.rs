@@ -9,6 +9,7 @@ mod boolean;
 mod io;
 mod numeric;
 mod object_cls;
+mod parser_obj;
 mod proc;
 mod string;
 
@@ -153,6 +154,9 @@ pub fn bootstrap(vm: &mut Vm) {
 
     // Install globals: p, puts, print, exit, etc.
     io::install(vm, root_bind);
+
+    // Expose `__parser` for parser-extension hooks.
+    parser_obj::install(vm);
 }
 
 fn install_class_methods(vm: &mut Vm) {

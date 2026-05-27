@@ -27,6 +27,8 @@ pub struct BuiltinRefs {
     pub binding_cls: ObjId,
     pub math_cls: ObjId,
     pub sys_cls: ObjId,
+    /// The `__parser` object exposed in the root binding.
+    pub parser_id: ObjId,
 }
 
 impl Vm {

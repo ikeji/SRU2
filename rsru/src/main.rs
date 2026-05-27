@@ -2,9 +2,9 @@ use std::env;
 use std::fs;
 use std::io::{self, Read};
 
-use rsru::Vm;
-use rsru::parser;
 use rsru::eval;
+use rsru::parser;
+use rsru::Vm;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -16,14 +16,22 @@ fn main() {
         s
     };
 
-    let exprs = match parser::parse(&src) {
-        Ok(e) => e,
-        Err(e) => {
-            eprintln!("Parse error at byte {}: {}", e.pos, e.msg);
-            std::process::exit(1);
-        }
-    };
-
     let mut vm = Vm::new();
-    let _ = eval::eval_program(&mut vm, exprs);
+    let mut pos = 0;
+    loop {
+        let (new_pos, expr) = match parser::parse_one_statement(Some(&mut vm), &src, pos) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("Parse error at byte {}: {}", e.pos, e.msg);
+                std::process::exit(1);
+            }
+        };
+        match expr {
+            Some(e) => {
+                let _ = eval::eval_program(&mut vm, vec![e]);
+                pos = new_pos;
+            }
+            None => break,
+        }
+    }
 }

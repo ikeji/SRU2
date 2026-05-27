@@ -14,6 +14,33 @@ pub fn parse(src: &str) -> Result<Vec<Expression>, ParseError> {
     p.parse_program()
 }
 
+/// Parse a single top-level statement starting at `pos` of `src`. Returns
+/// `(new_pos, Some(expr))` if a statement was parsed, or `(new_pos, None)`
+/// if the rest of the source is whitespace/comments only. `vm`, when
+/// provided, enables parser extension hooks (`__parser.<rule>`).
+pub fn parse_one_statement(
+    vm: Option<&mut crate::vm::Vm>,
+    src: &str,
+    start_pos: usize,
+) -> Result<(usize, Option<Expression>), ParseError> {
+    let mut p = Parser::new(src);
+    p.pos = start_pos;
+    p.vm = vm.map(|v| v as *mut _);
+    p.spc_or_lf();
+    if p.eos() {
+        return Ok((p.pos, None));
+    }
+    let e = p.parse_statement()?;
+    p.spc_or_comment();
+    if !p.try_lf() && !p.try_eat(";") && !p.eos() {
+        return Err(ParseError {
+            msg: "expected statement terminator".into(),
+            pos: p.pos,
+        });
+    }
+    Ok((p.pos, Some(e)))
+}
+
 const RESERVED: &[&str] = &[
     "if", "elsif", "else", "then", "end", "while", "def", "class",
 ];
@@ -21,6 +48,9 @@ const RESERVED: &[&str] = &[
 struct Parser<'a> {
     src: &'a [u8],
     pos: usize,
+    /// Raw pointer to the Vm so we can consult `__parser.<rule>` hooks
+    /// during parsing. Single-threaded; the pointer outlives the parser.
+    vm: Option<*mut crate::vm::Vm>,
 }
 
 impl<'a> Parser<'a> {
@@ -28,7 +58,12 @@ impl<'a> Parser<'a> {
         Self {
             src: src.as_bytes(),
             pos: 0,
+            vm: None,
         }
+    }
+
+    fn vm_mut(&self) -> Option<&mut crate::vm::Vm> {
+        self.vm.map(|p| unsafe { &mut *p })
     }
 
     fn err<T>(&self, msg: &str) -> Result<T, ParseError> {
@@ -847,6 +882,16 @@ impl<'a> Parser<'a> {
 
     fn parse_primary(&mut self) -> Result<Expression, ParseError> {
         self.spc();
+        // Consult __parser.const_literal hook if available.
+        if let Some(c) = self.peek() {
+            let could_be_literal = c.is_ascii_digit() || c == b'"';
+            if could_be_literal || self.vm.is_some() {
+                if let Some((new_pos, expr)) = self.try_const_literal_hook() {
+                    self.pos = new_pos;
+                    return Ok(expr);
+                }
+            }
+        }
         match self.peek() {
             Some(b'(') => {
                 self.pos += 1;
@@ -861,9 +906,15 @@ impl<'a> Parser<'a> {
             Some(b'[') => self.parse_array_literal(),
             Some(b'{') => self.parse_closure_literal(),
             Some(b'"') => self.parse_string_literal(),
+            Some(b'-') => {
+                // Unary minus: `-primary` → `primary.invert()`.
+                self.pos += 1;
+                self.spc_or_lf();
+                let inner = self.parse_primary()?;
+                Ok(make_call_method(inner, "invert", vec![]))
+            }
             Some(c) if c.is_ascii_digit() => self.parse_number_literal(),
             _ => {
-                // Identifier.
                 match self.try_ident() {
                     Some(name) => Ok(Expression::Ref {
                         var: symbol::intern(&name),
@@ -1017,6 +1068,49 @@ impl<'a> Parser<'a> {
             msg: msg.to_string(),
             pos: self.pos,
         }
+    }
+
+    /// Look up `__parser.const_literal`, call it, and if it produces a
+    /// true-result with a usable AST, return the new position and Expression.
+    fn try_const_literal_hook(&mut self) -> Option<(usize, Expression)> {
+        let vm = self.vm_mut()?;
+        let parser_obj = vm.builtin.parser_id;
+        if parser_obj == vm.builtin.nil_id {
+            return None;
+        }
+        let hook = vm
+            .heap
+            .get_slot(parser_obj, symbol::intern("const_literal"))?;
+        let src_str = std::str::from_utf8(self.src).ok()?.to_string();
+        let src_obj = crate::builtin::make_str(vm, src_str);
+        let pos_obj = crate::builtin::make_num_int(vm, self.pos as i64);
+        // csru calling convention: `self.const_literal(self, src, pos)`. We
+        // pass `parser_obj` explicitly as the first arg so the proc's first
+        // varg (`zelf`) gets bound to it. recv is unused (nil).
+        let nil_id = vm.builtin.nil_id;
+        let result = crate::builtin::invoke_inline(
+            vm,
+            hook,
+            nil_id,
+            vec![parser_obj, src_obj, pos_obj],
+            false,
+        );
+        let status = vm.heap.get_slot(result, symbol::intern("status"))?;
+        if status != vm.builtin.true_id {
+            return None;
+        }
+        let new_pos_obj = vm.heap.get_slot(result, symbol::intern("pos"))?;
+        let new_pos = match &vm.heap.get(new_pos_obj).data {
+            Some(crate::object::ObjData::Num(crate::object::NumVal::Int(i))) => *i as usize,
+            Some(crate::object::ObjData::Num(crate::object::NumVal::Real(f))) => *f as usize,
+            _ => return None,
+        };
+        let ast_obj = vm.heap.get_slot(result, symbol::intern("ast"))?;
+        let expr = match &vm.heap.get(ast_obj).data {
+            Some(crate::object::ObjData::Expr(e)) => e.clone(),
+            _ => return None,
+        };
+        Some((new_pos, expr))
     }
 }
 

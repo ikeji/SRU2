@@ -19,6 +19,7 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, n, "greaterThan", greater);
     install_method(vm, n, "greaterOrEqual", ge);
     install_method(vm, n, "toS", to_s);
+    install_method(vm, n, "invert", invert);
     // Numeric.parse as a class-level method.
     let parse_proc = vm
         .heap
@@ -107,6 +108,13 @@ fn to_s(vm: &mut Vm, args: &[ObjId]) -> ObjId {
         NumVal::Real(f) => format_real(f),
     };
     make_str(vm, s)
+}
+
+fn invert(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_int(vm, -i),
+        NumVal::Real(f) => make_num_real(vm, -f),
+    }
 }
 
 fn format_real(f: f64) -> String {

@@ -62,6 +62,7 @@ pub fn inspect(vm: &Vm, id: ObjId) -> String {
         }
         Some(ObjData::Proc(_)) => "<Proc(...)>".to_string(),
         Some(ObjData::Frame(_)) => "<Frame>".to_string(),
+        Some(ObjData::Expr(_)) => "<Expression>".to_string(),
         None => "<Object>".to_string(),
     }
 }

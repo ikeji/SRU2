@@ -42,6 +42,9 @@ pub enum ObjData {
     Array(Vec<ObjId>),
     Proc(ProcKind),
     Frame(StackFrame),
+    /// Boxed AST node — used when SRU code holds an Expression as data (e.g.,
+    /// `__parser.parse(src).ast`).
+    Expr(Expression),
 }
 
 #[derive(Debug)]

@@ -7,7 +7,7 @@ use crate::vm::Vm;
 mod array;
 mod boolean;
 mod io;
-mod numeric;
+pub mod numeric;
 mod object_cls;
 mod parser_obj;
 mod proc;

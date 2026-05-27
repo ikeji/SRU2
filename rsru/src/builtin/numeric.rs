@@ -117,13 +117,38 @@ fn invert(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     }
 }
 
-fn format_real(f: f64) -> String {
-    // Match csru's behavior: integers as "N.0"? csru's SRUNumeric::Inspect uses
-    // stringstream which prints "0.5" for 0.5. Use Rust's default which gives
-    // similar (e.g., "0.5" — but for 1.0 it gives "1"). We need "0.5" for the
-    // arithmetic test.
-    let s = format!("{}", f);
-    s
+/// Format a real to match csru's `SRUNumeric::Inspect` (C++ `ostringstream`
+/// default precision = 6 significant digits, `%g`-style).
+pub fn format_real(f: f64) -> String {
+    if f == 0.0 {
+        return "0".to_string();
+    }
+    if !f.is_finite() {
+        return format!("{}", f);
+    }
+    let abs = f.abs();
+    let exp = abs.log10().floor() as i32;
+    // C++ `%g` switches to scientific if exponent < -4 or >= precision (6).
+    if exp >= -4 && exp < 6 {
+        let decimals = (5 - exp).max(0) as usize;
+        let s = format!("{:.*}", decimals, f);
+        trim_trailing_zeros(&s)
+    } else {
+        // Scientific: "1.23456e+10" with 5 digits after the decimal.
+        format!("{:.5e}", f)
+    }
+}
+
+fn trim_trailing_zeros(s: &str) -> String {
+    if !s.contains('.') {
+        return s.to_string();
+    }
+    let trimmed = s.trim_end_matches('0').trim_end_matches('.');
+    if trimmed.is_empty() || trimmed == "-" {
+        "0".to_string()
+    } else {
+        trimmed.to_string()
+    }
 }
 
 /// Numeric.parse(receiver, str) — csru's calling convention.

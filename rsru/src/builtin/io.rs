@@ -42,6 +42,22 @@ fn exit(_vm: &mut Vm, args: &[ObjId]) -> ObjId {
     std::process::exit(0)
 }
 
+/// Match csru's `SRUString::EscapeString` exactly — only \n, \r, ", and ' are
+/// backslash-escaped. A literal backslash is left alone.
+fn escape_string(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '"' => out.push_str("\\\""),
+            '\'' => out.push_str("\\'"),
+            c => out.push(c),
+        }
+    }
+    out
+}
+
 pub fn inspect(vm: &Vm, id: ObjId) -> String {
     if id == vm.builtin.nil_id {
         return "<nil class:<Object class:...>>".to_string();
@@ -54,8 +70,10 @@ pub fn inspect(vm: &Vm, id: ObjId) -> String {
     }
     match &vm.heap.get(id).data {
         Some(ObjData::Num(NumVal::Int(i))) => format!("<Numeric({})>", i),
-        Some(ObjData::Num(NumVal::Real(f))) => format!("<Numeric({})>", f),
-        Some(ObjData::Str(s)) => format!("<String({:?})>", s),
+        Some(ObjData::Num(NumVal::Real(f))) => {
+            format!("<Numeric({})>", crate::builtin::numeric::format_real(*f))
+        }
+        Some(ObjData::Str(s)) => format!("<String(\"{}\")>", escape_string(s)),
         Some(ObjData::Array(v)) => {
             let inner: Vec<String> = v.iter().map(|x| inspect(vm, *x)).collect();
             format!("<Array size={} [{}]>", v.len(), inner.join(", "))

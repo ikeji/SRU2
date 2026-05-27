@@ -28,7 +28,10 @@ $ tests/run.sh path/to/rsru             # 別のインタプリタで実行
 | `recursion.sru` | `def` 内自己参照、相互再帰 |
 | `continuation_return.sru` | `def` ボディの `return` を早期脱出として使う |
 | `continuation_save.sru` | `return(return)` で継続を取り出して再侵入する |
-| `parser_extension/hex_literal.sru` | `__parser.real` を SRU 側で差し替えて 16 進リテラル `0x10` を後付け（csru でも動く） |
+| `bst.sru` | 二分探索木（自己参照ノード、再帰メソッド、メソッドチェイン） |
+| `polymorphism.sru` | 親クラスのメソッドが self 経由で子のオーバーライドを呼ぶ |
+| `church.sru` | Church 符号化したブール値で高階クロージャ |
+| `parser_extension/hex_literal.sru` | `__parser.const_literal` を SRU 側で差し替えて 16 進リテラル `0x10` を後付け（csru でも動く） |
 
 ## SRU の現実的な書き味メモ
 

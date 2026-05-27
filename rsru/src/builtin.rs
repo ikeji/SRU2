@@ -7,11 +7,13 @@ use crate::vm::Vm;
 mod array;
 mod boolean;
 mod io;
+mod math;
 pub mod numeric;
 mod object_cls;
 mod parser_obj;
 mod proc;
 mod string;
+mod sys;
 
 fn install_method(vm: &mut Vm, cls: ObjId, name: &str, f: crate::object::NativeFn) {
     let proc_obj = vm.heap.alloc_with_data(ObjData::Proc(ProcKind::Native(f)));
@@ -151,6 +153,8 @@ pub fn bootstrap(vm: &mut Vm) {
     array::install(vm);
     object_cls::install(vm);
     proc::install(vm);
+    math::install(vm);
+    sys::install(vm);
 
     // Install globals: p, puts, print, exit, etc.
     io::install(vm, root_bind);

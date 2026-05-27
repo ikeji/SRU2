@@ -15,17 +15,28 @@ rsru でも同等の差し替え可能性を保ち、このスクリプトが同
 
 ## 2. csru での実装の勘どころ
 
-- **差し替えるのは `__parser.real`**。const_literal は `real | number |
-  const_string` の順に試し、元の `real` の `[0-9.]+` が整数も貪欲に
-  マッチするので、`number` を hook しても `real` が先に取ってしまう。
+- **`__parser.const_literal` を差し替える**。文法は
+  `const_literal <= real | number | const_string` で、ここが「リテラル」
+  の選択肢を集めるレイヤ。新しい選択肢を足したい場合は、この規則を
+  先頭に差し込むのが自然。
+  - 試行錯誤メモ: `__parser.number` を差し替えても効かない。元の `real`
+    が `[0-9.]+` を greedy にマッチするので、整数リテラルでも `real` で
+    吸収されてしまうため。`real` を hook する手もあるが、内部順序に依存
+    していて気持ちよくない。`const_literal` レイヤで足すのが本来の筋。
 - **戻り値は素の Object**。`Object.new()` で `status` / `pos` / `ast`
   を持つオブジェクトを作って返せば、parser_util.cc の `CreateTrue` と
   同じ shape になる。
-- **AST は借りる**。SRU からは `StringExpression.new` 以外の AST 構築
-  API が無いので、`__parser.parse("<decimal>").ast` を流用する。
-- **再帰の心配なし**。差し替え後の `real` の中で `__parser.parse` を呼ぶ
-  と内側でもこの新 real が走るが、内側のソースは `<decimal>` で `0x`
-  プレフィクスを含まないので無限再帰にはならない。
+- **AST は借りる**。csru の AST クラスは `AST.LetExpression` 等として
+  ユーザ空間に名前は見えているが、`.new()` を実装しているのは
+  `StringExpression` だけ（`ast_class.cc:48`）。残りはクラスオブジェクト
+  だけが置いてあって、`new()` を呼ぶと内部の `Value` サブクラスインスタンス
+  を持たない空の BasicObject が返り、評価器で落ちる。
+  なので CallExpression を SRU から組み立てる手段は実質ない。代わりに
+  `__parser.parse("<decimal>").ast` を流用して、`123` リテラルが普段
+  作っているのと同じ AST を借りる。
+- **再帰の心配なし**。差し替え後の `const_literal` の中で `__parser.parse`
+  を呼ぶと内側でもこの新 const_literal が走るが、内側のソースは
+  `<decimal>` で `0x` プレフィクスを含まないので無限再帰にはならない。
 
 ## 3. rsru への要請
 
@@ -39,8 +50,12 @@ rsru でも同等の差し替え可能性を保ち、このスクリプトが同
 3. `__parser.parse(src)` が AST を返し、それを別の規則の戻り値として
    利用できること。
 
-これらは「リテラルを 1 つ足す」という最小単位の拡張で必要十分。新規
-AST バリアントもランタイム API も増やさずに済む。
+これらは「リテラルを 1 つ足す」という最小単位の拡張で必要十分。
+**ついでに改善する余地**: rsru では `AST.CallExpression.new(recv,
+method, args)` のような完全な AST コンストラクタを公開しておくと、
+パーサー拡張側で `__parser.parse` の借用が不要になり、もう少しまとも
+な書き味になる（csru の `ast_class.cc` の制約は、移植のついでに直して
+よい点）。
 
 ## 4. ファイル
 

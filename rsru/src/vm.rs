@@ -31,13 +31,17 @@ pub struct BuiltinRefs {
     pub parser_id: ObjId,
 }
 
+const PRELUDE: &str = include_str!("prelude.sru");
+
+fn load_prelude(vm: &mut Vm) {
+    vm.eval_source(PRELUDE);
+}
+
 impl Vm {
     pub fn new() -> Self {
         let mut heap = Heap::new();
-        // Sentinel for "uninitialized" ObjId — slot 0 is the eventual `nil`.
-        // We'll allocate nil first below.
         let placeholder = heap.alloc_empty();
-        let root_binding = placeholder; // will replace
+        let root_binding = placeholder;
         let mut vm = Self {
             heap,
             current_frame: StackFrame::new(root_binding, Vec::new()),
@@ -45,6 +49,7 @@ impl Vm {
             builtin: BuiltinRefs::default(),
         };
         crate::builtin::bootstrap(&mut vm);
+        load_prelude(&mut vm);
         vm
     }
 
@@ -56,6 +61,21 @@ impl Vm {
     #[inline]
     pub fn frame_mut(&mut self) -> &mut StackFrame {
         &mut self.current_frame
+    }
+
+    /// Run a string of SRU source in the root binding. Used for prelude load.
+    pub fn eval_source(&mut self, src: &str) {
+        let mut pos = 0;
+        loop {
+            match crate::parser::parse_one_statement(Some(self), src, pos) {
+                Ok((new_pos, Some(expr))) => {
+                    let _ = crate::eval::eval_program(self, vec![expr]);
+                    pos = new_pos;
+                }
+                Ok((_, None)) => break,
+                Err(e) => panic!("prelude parse error at {}: {}", e.pos, e.msg),
+            }
+        }
     }
 
     /// Create a Binding object parented at `parent`.

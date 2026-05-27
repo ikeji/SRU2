@@ -16,9 +16,11 @@ root=$(cd "$here/.." && pwd)
 
 interp="${1:-}"
 include_ext=0
+include_rsru=0
 for arg in "$@"; do
   case "$arg" in
     --include-extensions) include_ext=1 ;;
+    --include-rsru-only) include_rsru=1 ;;
   esac
 done
 
@@ -58,6 +60,23 @@ if [ "$include_ext" = "1" ]; then
       pass=$((pass + 1))
     else
       echo "FAIL parser_extension/$name"
+      diff <(echo "$got") "$expected" | sed 's/^/  /'
+      fail=$((fail + 1))
+    fi
+  done
+fi
+
+if [ "$include_rsru" = "1" ]; then
+  for src in "$here"/rsru_only/*.sru; do
+    name=$(basename "$src" .sru)
+    expected="$here/rsru_only/$name.expected"
+    [ -f "$expected" ] || continue
+    got=$("$interp" "$src" 2>/dev/null || true)
+    if [ "$got" = "$(cat "$expected")" ]; then
+      echo "PASS rsru_only/$name"
+      pass=$((pass + 1))
+    else
+      echo "FAIL rsru_only/$name"
       diff <(echo "$got") "$expected" | sed 's/^/  /'
       fail=$((fail + 1))
     fi

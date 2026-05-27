@@ -61,3 +61,8 @@ fn core_tests() {
 fn parser_extension_tests() {
     run_dir(&tests_root().join("parser_extension"));
 }
+
+#[test]
+fn rsru_only_tests() {
+    run_dir(&tests_root().join("rsru_only"));
+}

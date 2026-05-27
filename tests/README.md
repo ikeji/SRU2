@@ -8,6 +8,7 @@
 ```
 $ tests/run.sh                          # csru で全テスト
 $ tests/run.sh --include-extensions     # parser_extension も含めて実行
+$ tests/run.sh --include-rsru-only      # rsru_only も含める (csru では失敗)
 $ tests/run.sh path/to/rsru             # 別のインタプリタで実行
 ```
 
@@ -32,6 +33,7 @@ $ tests/run.sh path/to/rsru             # 別のインタプリタで実行
 | `polymorphism.sru` | 親クラスのメソッドが self 経由で子のオーバーライドを呼ぶ |
 | `church.sru` | Church 符号化したブール値で高階クロージャ |
 | `parser_extension/hex_literal.sru` | `__parser.const_literal` を SRU 側で差し替えて 16 進リテラル `0x10` を後付け（csru でも動く） |
+| `rsru_only/prelude_methods.sru` | rsru の SRU プレリュード由来のメソッド (Array#each/map/select/inject/join, Numeric#abs/negate/times) を使う |
 
 ## SRU の現実的な書き味メモ
 

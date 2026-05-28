@@ -10,6 +10,10 @@ path = "src/lib.rs"
 name = "rsru"
 path = "src/main.rs"
 
+[[bin]]
+name = "rsruc"
+path = "src/bin/rsruc.rs"
+
 [profile.release]
 opt-level = 3
 

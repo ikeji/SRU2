@@ -66,3 +66,53 @@ fn parser_extension_tests() {
 fn rsru_only_tests() {
     run_dir(&tests_root().join("rsru_only"));
 }
+
+/// Compile every `tests/*.sru` to bytecode with `rsruc`, then execute the
+/// `.bc` and check stdout against the matching `.expected`. Confirms that
+/// the bytecode round-trip (compile → encode → decode → eval) preserves
+/// semantics for every core test.
+#[test]
+fn bytecode_roundtrip() {
+    let rsruc = PathBuf::from(env!("CARGO_BIN_EXE_rsruc"));
+    let dir = tests_root();
+    let mut tested = 0;
+    for entry in std::fs::read_dir(&dir).expect("read dir") {
+        let path = entry.expect("entry").path();
+        if path.extension().and_then(|s| s.to_str()) != Some("sru") {
+            continue;
+        }
+        let expected = path.with_extension("expected");
+        if !expected.exists() {
+            continue;
+        }
+        let bc = tempfile_path(&path);
+        let status = Command::new(&rsruc)
+            .arg(&path)
+            .arg("-o")
+            .arg(&bc)
+            .status()
+            .expect("rsruc spawn");
+        assert!(status.success(), "rsruc failed on {}", path.display());
+
+        let out = Command::new(rsru_binary())
+            .arg(&bc)
+            .output()
+            .expect("rsru bytecode spawn");
+        let stdout = String::from_utf8_lossy(&out.stdout).to_string();
+        let want = std::fs::read_to_string(&expected).expect("read expected");
+        assert_eq!(
+            stdout, want,
+            "{} bytecode output diverged",
+            path.display()
+        );
+        tested += 1;
+    }
+    assert!(tested > 0);
+}
+
+fn tempfile_path(src: &Path) -> PathBuf {
+    let name = src.file_stem().and_then(|s| s.to_str()).unwrap_or("out");
+    let mut tmp = std::env::temp_dir();
+    tmp.push(format!("rsru-bc-test-{}.bc", name));
+    tmp
+}

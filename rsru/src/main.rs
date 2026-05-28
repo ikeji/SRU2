@@ -10,8 +10,15 @@ use rsru::Vm;
 fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() > 1 {
-        let src = fs::read_to_string(&args[1]).expect("failed to read file");
-        run_source(&src);
+        let path = &args[1];
+        let bytes = fs::read(path).expect("failed to read file");
+        // Detect bytecode by magic; otherwise treat as SRU source.
+        if bytes.len() >= 4 && &bytes[0..4] == b"RSBC" {
+            run_bytecode(&bytes);
+        } else {
+            let src = String::from_utf8(bytes).expect("file not utf8");
+            run_source(&src);
+        }
     } else if io::stdin().is_terminal() {
         run_repl();
     } else {
@@ -19,6 +26,19 @@ fn main() {
         io::stdin().read_to_string(&mut s).expect("read stdin");
         run_source(&s);
     }
+}
+
+fn run_bytecode(bytes: &[u8]) {
+    let module = match rsru::bytecode::encode::decode(bytes) {
+        Ok(m) => m,
+        Err(e) => {
+            eprintln!("Bytecode load error: {}", e);
+            std::process::exit(1);
+        }
+    };
+    let exprs = rsru::bytecode::decode::to_program(&module);
+    let mut vm = Vm::new();
+    let _ = eval::eval_program(&mut vm, exprs);
 }
 
 fn run_source(src: &str) {

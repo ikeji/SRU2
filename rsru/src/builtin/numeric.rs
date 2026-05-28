@@ -20,6 +20,11 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, n, "greaterOrEqual", ge);
     install_method(vm, n, "toS", to_s);
     install_method(vm, n, "invert", invert);
+    install_method(vm, n, "floor", floor);
+    install_method(vm, n, "ceil", ceil);
+    install_method(vm, n, "round", round);
+    install_method(vm, n, "toInt", to_int);
+    install_method(vm, n, "toReal", to_real);
     // Numeric.parse as a class-level method.
     let parse_proc = vm
         .heap
@@ -114,6 +119,41 @@ fn invert(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     match as_num(vm, args[0]).unwrap() {
         NumVal::Int(i) => make_num_int(vm, -i),
         NumVal::Real(f) => make_num_real(vm, -f),
+    }
+}
+
+fn floor(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_int(vm, i),
+        NumVal::Real(f) => make_num_int(vm, f.floor() as i64),
+    }
+}
+
+fn ceil(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_int(vm, i),
+        NumVal::Real(f) => make_num_int(vm, f.ceil() as i64),
+    }
+}
+
+fn round(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_int(vm, i),
+        NumVal::Real(f) => make_num_int(vm, f.round() as i64),
+    }
+}
+
+fn to_int(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_int(vm, i),
+        NumVal::Real(f) => make_num_int(vm, f as i64),
+    }
+}
+
+fn to_real(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    match as_num(vm, args[0]).unwrap() {
+        NumVal::Int(i) => make_num_real(vm, i as f64),
+        NumVal::Real(f) => make_num_real(vm, f),
     }
 }
 

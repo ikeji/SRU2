@@ -15,6 +15,9 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, s, "toS", to_s);
     install_method(vm, s, "indexOf", index_of);
     install_method(vm, s, "split", split);
+    install_method(vm, s, "upcase", upcase);
+    install_method(vm, s, "downcase", downcase);
+    install_method(vm, s, "trim", trim);
 }
 
 fn plus(vm: &mut Vm, args: &[ObjId]) -> ObjId {
@@ -82,6 +85,21 @@ fn index_of(vm: &mut Vm, args: &[ObjId]) -> ObjId {
         .map(|n| n as i64)
         .unwrap_or(-1);
     make_num_int(vm, idx)
+}
+
+fn upcase(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let s = as_str(vm, args[0]).unwrap_or_default();
+    make_str(vm, s.to_uppercase())
+}
+
+fn downcase(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let s = as_str(vm, args[0]).unwrap_or_default();
+    make_str(vm, s.to_lowercase())
+}
+
+fn trim(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let s = as_str(vm, args[0]).unwrap_or_default();
+    make_str(vm, s.trim().to_string())
 }
 
 /// `s.split(sep)` — split on `sep` and return an Array of Strings. Empty

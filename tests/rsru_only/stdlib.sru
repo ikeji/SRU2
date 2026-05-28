@@ -51,3 +51,15 @@ hb = Hash.new()
 hb.set("b", 2)
 ha.merge(hb)
 puts(ha.size().toS())
+
+# String case + trim
+puts("hello".upcase())
+puts("WORLD".downcase())
+puts("  spaces  ".trim())
+
+# Numeric floor/ceil/round + conversions
+puts((3.7).floor().toS())
+puts((3.2).ceil().toS())
+puts((3.5).round().toS())
+puts((3.49).round().toS())
+puts((42).toReal().toS())

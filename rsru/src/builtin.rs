@@ -6,7 +6,7 @@ use crate::vm::Vm;
 
 mod array;
 mod boolean;
-mod io;
+pub mod io;
 mod math;
 pub mod numeric;
 mod object_cls;

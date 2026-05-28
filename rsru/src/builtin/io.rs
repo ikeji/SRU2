@@ -8,6 +8,7 @@ pub fn install(vm: &mut Vm, root_binding: ObjId) {
     bind_global(vm, root_binding, "puts", puts);
     bind_global(vm, root_binding, "print", print);
     bind_global(vm, root_binding, "exit", exit);
+    bind_global(vm, root_binding, "load", load);
 }
 
 fn bind_global(vm: &mut Vm, bind: ObjId, name: &str, f: crate::object::NativeFn) {
@@ -40,6 +41,22 @@ fn print(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 fn exit(_vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let _ = args;
     std::process::exit(0)
+}
+
+/// `load(filename)` — read the file as SRU source and eval it in the root
+/// binding. Returns true on success, false on error (matching csru).
+fn load(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let path = args.get(1).copied().unwrap_or(vm.builtin.nil_id);
+    let path = match &vm.heap.get(path).data {
+        Some(ObjData::Str(s)) => s.clone(),
+        _ => return vm.builtin.false_id,
+    };
+    let src = match std::fs::read_to_string(&path) {
+        Ok(s) => s,
+        Err(_) => return vm.builtin.false_id,
+    };
+    vm.eval_source(&src);
+    vm.builtin.true_id
 }
 
 /// Match csru's `SRUString::EscapeString` exactly — only \n, \r, ", and ' are

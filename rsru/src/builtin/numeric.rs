@@ -38,8 +38,8 @@ where
     F1: FnOnce(i64, i64) -> i64,
     F2: FnOnce(f64, f64) -> f64,
 {
-    let a = as_num(vm, args[0]).unwrap();
-    let b = as_num(vm, args[1]).unwrap();
+    let a = crate::builtin::expect_num(vm, args[0], "Numeric op self");
+    let b = crate::builtin::expect_num(vm, args[1], "Numeric op arg");
     match (a, b) {
         (NumVal::Int(x), NumVal::Int(y)) => make_num_int(vm, i_op(x, y)),
         (x, y) => make_num_real(vm, f_op(as_f64(&x), as_f64(&y))),
@@ -63,16 +63,16 @@ fn mul(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     binop_num(vm, args, |a, b| a * b, |a, b| a * b)
 }
 fn div(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    let a = as_num(vm, args[0]).unwrap();
-    let b = as_num(vm, args[1]).unwrap();
+    let a = crate::builtin::expect_num(vm, args[0], "Numeric op self");
+    let b = crate::builtin::expect_num(vm, args[1], "Numeric op arg");
     match (a, b) {
         (NumVal::Int(x), NumVal::Int(y)) => make_num_int(vm, x / y),
         (x, y) => make_num_real(vm, as_f64(&x) / as_f64(&y)),
     }
 }
 fn modulo(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    let a = as_num(vm, args[0]).unwrap();
-    let b = as_num(vm, args[1]).unwrap();
+    let a = crate::builtin::expect_num(vm, args[0], "Numeric op self");
+    let b = crate::builtin::expect_num(vm, args[1], "Numeric op arg");
     match (a, b) {
         (NumVal::Int(x), NumVal::Int(y)) => make_num_int(vm, x % y),
         (x, y) => make_num_real(vm, as_f64(&x) % as_f64(&y)),
@@ -80,8 +80,8 @@ fn modulo(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 }
 
 fn cmp(vm: &Vm, args: &[ObjId]) -> std::cmp::Ordering {
-    let a = as_num(vm, args[0]).unwrap();
-    let b = as_num(vm, args[1]).unwrap();
+    let a = crate::builtin::expect_num(vm, args[0], "Numeric op self");
+    let b = crate::builtin::expect_num(vm, args[1], "Numeric op arg");
     match (a, b) {
         (NumVal::Int(x), NumVal::Int(y)) => x.cmp(&y),
         (x, y) => as_f64(&x).partial_cmp(&as_f64(&y)).unwrap_or(std::cmp::Ordering::Equal),
@@ -108,7 +108,7 @@ fn ge(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 }
 
 fn to_s(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    let s = match as_num(vm, args[0]).unwrap() {
+    let s = match crate::builtin::expect_num(vm, args[0], "Numeric#toS") {
         NumVal::Int(i) => i.to_string(),
         NumVal::Real(f) => format_real(f),
     };
@@ -116,42 +116,42 @@ fn to_s(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 }
 
 fn invert(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_int(vm, -i),
         NumVal::Real(f) => make_num_real(vm, -f),
     }
 }
 
 fn floor(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_int(vm, i),
         NumVal::Real(f) => make_num_int(vm, f.floor() as i64),
     }
 }
 
 fn ceil(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_int(vm, i),
         NumVal::Real(f) => make_num_int(vm, f.ceil() as i64),
     }
 }
 
 fn round(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_int(vm, i),
         NumVal::Real(f) => make_num_int(vm, f.round() as i64),
     }
 }
 
 fn to_int(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_int(vm, i),
         NumVal::Real(f) => make_num_int(vm, f as i64),
     }
 }
 
 fn to_real(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    match as_num(vm, args[0]).unwrap() {
+    match crate::builtin::expect_num(vm, args[0], "Numeric self") {
         NumVal::Int(i) => make_num_real(vm, i as f64),
         NumVal::Real(f) => make_num_real(vm, f),
     }

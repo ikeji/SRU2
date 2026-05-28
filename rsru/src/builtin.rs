@@ -418,3 +418,33 @@ pub(crate) fn as_str(vm: &Vm, id: ObjId) -> Option<String> {
         None
     }
 }
+
+/// Like `as_num` but aborts with a typed error if the value isn't a Numeric.
+/// Use in Native methods that demand a Numeric arg (e.g., `Numeric#plus`).
+pub(crate) fn expect_num(vm: &Vm, id: ObjId, ctx: &str) -> NumVal {
+    match as_num(vm, id) {
+        Some(n) => n,
+        None => crate::eval::runtime_error(
+            vm,
+            format!(
+                "{} expected Numeric, got {}",
+                ctx,
+                crate::builtin::io::inspect(vm, id)
+            ),
+        ),
+    }
+}
+
+pub(crate) fn expect_str(vm: &Vm, id: ObjId, ctx: &str) -> String {
+    match as_str(vm, id) {
+        Some(s) => s,
+        None => crate::eval::runtime_error(
+            vm,
+            format!(
+                "{} expected String, got {}",
+                ctx,
+                crate::builtin::io::inspect(vm, id)
+            ),
+        ),
+    }
+}

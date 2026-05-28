@@ -40,7 +40,7 @@ fn size(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn get(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let s = as_str(vm, args[0]).unwrap_or_default();
-    let i = match as_num(vm, args[1]).unwrap() {
+    let i = match crate::builtin::expect_num(vm, args[1], "String index") {
         NumVal::Int(i) => i as usize,
         NumVal::Real(f) => f as usize,
     };
@@ -53,7 +53,7 @@ fn get(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn substr(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let s = as_str(vm, args[0]).unwrap_or_default();
-    let start = match as_num(vm, args[1]).unwrap() {
+    let start = match crate::builtin::expect_num(vm, args[1], "String#substr start") {
         NumVal::Int(i) => i as usize,
         NumVal::Real(f) => f as usize,
     };
@@ -61,7 +61,7 @@ fn substr(vm: &mut Vm, args: &[ObjId]) -> ObjId {
         return make_str(vm, String::new());
     }
     let end = if args.len() > 2 {
-        let n = match as_num(vm, args[2]).unwrap() {
+        let n = match crate::builtin::expect_num(vm, args[2], "String#substr len") {
             NumVal::Int(i) => i as usize,
             NumVal::Real(f) => f as usize,
         };

@@ -13,6 +13,9 @@ pub struct StackFrame {
     pub local_stack: Vec<ObjId>,
     pub binding: ObjId,
     pub upper: Option<Box<StackFrame>>,
+    /// Name of the method or function this frame is executing, for
+    /// stack-trace display. `None` for the top-level frame.
+    pub name: Option<SymbolId>,
 }
 
 impl Drop for StackFrame {
@@ -37,6 +40,7 @@ impl StackFrame {
             local_stack: Vec::new(),
             binding,
             upper: None,
+            name: None,
         }
     }
 }
@@ -296,7 +300,7 @@ fn do_call(vm: &mut Vm, method: SymbolId, argc: usize, has_recv: bool) -> StepRe
         report_call_error(vm, method, recv, has_recv);
     }
 
-    invoke(vm, proc_id, recv, args, has_recv)
+    invoke_named(vm, proc_id, recv, args, has_recv, Some(method))
 }
 
 fn report_call_error(vm: &Vm, method: SymbolId, recv: ObjId, has_recv: bool) -> ! {
@@ -310,7 +314,32 @@ fn report_call_error(vm: &Vm, method: SymbolId, recv: ObjId, has_recv: bool) -> 
     } else {
         eprintln!("Error: undefined function `{}`", mname);
     }
+    print_stack_trace(vm);
     std::process::exit(1)
+}
+
+/// Abort with a runtime error message and a stack trace.
+pub fn runtime_error(vm: &Vm, msg: impl AsRef<str>) -> ! {
+    eprintln!("Error: {}", msg.as_ref());
+    print_stack_trace(vm);
+    std::process::exit(1)
+}
+
+/// Walk the active frame's `upper` chain and print each frame's name to
+/// stderr. The topmost frame (the one that hit the error) is shown first.
+pub fn print_stack_trace(vm: &Vm) {
+    eprintln!("Stack trace (most recent call first):");
+    let mut cur = Some(vm.frame());
+    let mut depth = 0;
+    while let Some(f) = cur {
+        let label = match f.name {
+            Some(s) => format!("`{}`", symbol::name(s)),
+            None => "<top-level>".to_string(),
+        };
+        eprintln!("  #{} {}", depth, label);
+        depth += 1;
+        cur = f.upper.as_deref();
+    }
 }
 
 fn lookup_method(vm: &mut Vm, recv: ObjId, method: SymbolId) -> ObjId {
@@ -335,6 +364,17 @@ fn lookup_method(vm: &mut Vm, recv: ObjId, method: SymbolId) -> ObjId {
 }
 
 pub fn invoke(vm: &mut Vm, proc_id: ObjId, recv: ObjId, args: Vec<ObjId>, has_recv: bool) -> StepResult {
+    invoke_named(vm, proc_id, recv, args, has_recv, None)
+}
+
+pub fn invoke_named(
+    vm: &mut Vm,
+    proc_id: ObjId,
+    recv: ObjId,
+    args: Vec<ObjId>,
+    has_recv: bool,
+    name: Option<SymbolId>,
+) -> StepResult {
     // For instance-method calls (has_recv=true), the SRU proc's first formal
     // arg is `self`, so prepend the receiver to args before binding.
     let mut bind_args = args;
@@ -412,7 +452,8 @@ pub fn invoke(vm: &mut Vm, proc_id: ObjId, recv: ObjId, args: Vec<ObjId>, has_re
                 let cont = make_continuation(vm);
                 vm.heap.set_slot(new_bind, rname, cont);
             }
-            let new_frame = StackFrame::new(new_bind, body);
+            let mut new_frame = StackFrame::new(new_bind, body);
+            new_frame.name = name;
             StepResult::PushFrame(new_frame)
         }
         Some(3) => {

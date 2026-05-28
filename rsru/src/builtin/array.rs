@@ -38,7 +38,7 @@ fn push(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn at(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let i = match as_num(vm, args[1]).unwrap() {
+    let i = match crate::builtin::expect_num(vm, args[1], "Array index") {
         NumVal::Int(i) => i as usize,
         NumVal::Real(f) => f as usize,
     };
@@ -51,7 +51,7 @@ fn at(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn set(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let i = match as_num(vm, args[1]).unwrap() {
+    let i = match crate::builtin::expect_num(vm, args[1], "Array index") {
         NumVal::Int(i) => i as usize,
         NumVal::Real(f) => f as usize,
     };

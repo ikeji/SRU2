@@ -38,6 +38,7 @@ fn run_bytecode(bytes: &[u8]) {
     };
     let exprs = rsru::bytecode::decode::to_program(&module);
     let mut vm = Vm::new();
+    vm.source = module.source;
     let _ = eval::eval_program(&mut vm, exprs);
 }
 

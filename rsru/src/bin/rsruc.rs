@@ -57,7 +57,7 @@ fn main() -> ExitCode {
         }
     };
 
-    let module = bytecode::compile::compile(&exprs);
+    let module = bytecode::compile::compile_with_source(&exprs, &src);
     let bytes = bytecode::encode::encode(&module);
     if let Err(e) = fs::write(&output, &bytes) {
         eprintln!("rsruc: write {}: {}", output.display(), e);

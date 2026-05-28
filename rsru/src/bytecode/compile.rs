@@ -6,10 +6,16 @@ use std::collections::HashMap;
 use crate::ast::Expression;
 use crate::symbol;
 
-use super::{Insn, Module, ProcDef};
+use super::{pack_pos, Insn, InsnKind, Module, ProcDef};
 
 pub fn compile(stmts: &[Expression]) -> Module {
-    let mut b = Builder::new();
+    compile_with_source(stmts, "")
+}
+
+/// Compile a program and embed the original source text into the module so
+/// runtime error rendering can show line:col + snippet later.
+pub fn compile_with_source(stmts: &[Expression], source: &str) -> Module {
+    let mut b = Builder::new(source.to_string());
     b.emit_program(stmts);
     b.finish()
 }
@@ -21,10 +27,11 @@ struct Builder {
     symbol_idx: HashMap<String, u32>,
     procs: Vec<ProcDef>,
     top: Vec<Insn>,
+    source: String,
 }
 
 impl Builder {
-    fn new() -> Self {
+    fn new(source: String) -> Self {
         Self {
             strings: Vec::new(),
             string_idx: HashMap::new(),
@@ -32,6 +39,7 @@ impl Builder {
             symbol_idx: HashMap::new(),
             procs: Vec::new(),
             top: Vec::new(),
+            source,
         }
     }
 
@@ -62,6 +70,7 @@ impl Builder {
             symbols: self.symbols,
             procs: self.procs,
             top: self.top,
+            source: self.source,
         }
     }
 
@@ -72,16 +81,17 @@ impl Builder {
             self.emit(e, &mut buf);
             self.top.extend(buf);
             if i != last {
-                self.top.push(Insn::Pop);
+                self.top.push(Insn::new(InsnKind::Pop, super::WIRE_POS_UNKNOWN));
             }
         }
     }
 
     fn emit(&mut self, e: &Expression, out: &mut Vec<Insn>) {
+        let pos = pack_pos(e.pos());
         match e {
             Expression::StrLit { value, .. } => {
                 let k = self.intern_str(value);
-                out.push(Insn::Lds(k));
+                out.push(Insn::new(InsnKind::Lds(k), pos));
             }
             Expression::Ref { var, env, .. } => {
                 let has_env = env.is_some();
@@ -89,7 +99,7 @@ impl Builder {
                     self.emit(e, out);
                 }
                 let v = self.intern_sym(*var);
-                out.push(Insn::Ref { var: v, has_env });
+                out.push(Insn::new(InsnKind::Ref { var: v, has_env }, pos));
             }
             Expression::Let { var, env, value, .. } => {
                 if let Some(e) = env {
@@ -97,10 +107,13 @@ impl Builder {
                 }
                 self.emit(value, out);
                 let v = self.intern_sym(*var);
-                out.push(Insn::Let {
-                    var: v,
-                    has_env: env.is_some(),
-                });
+                out.push(Insn::new(
+                    InsnKind::Let {
+                        var: v,
+                        has_env: env.is_some(),
+                    },
+                    pos,
+                ));
             }
             Expression::Call { receiver, method, args, .. } => {
                 if let Some(r) = receiver {
@@ -110,14 +123,16 @@ impl Builder {
                     self.emit(a, out);
                 }
                 let m = self.intern_sym(*method);
-                out.push(Insn::Call {
-                    method: m,
-                    argc: args.len() as u32,
-                    has_recv: receiver.is_some(),
-                });
+                out.push(Insn::new(
+                    InsnKind::Call {
+                        method: m,
+                        argc: args.len() as u32,
+                        has_recv: receiver.is_some(),
+                    },
+                    pos,
+                ));
             }
             Expression::Proc { vargs, retval, body, .. } => {
-                // Compile body into its own instruction list, recursively.
                 let body_last = body.len().saturating_sub(1);
                 let mut body_buf = Vec::new();
                 for (i, s) in body.iter().enumerate() {
@@ -125,7 +140,7 @@ impl Builder {
                     self.emit(s, &mut tmp);
                     body_buf.extend(tmp);
                     if i != body_last {
-                        body_buf.push(Insn::Pop);
+                        body_buf.push(Insn::new(InsnKind::Pop, super::WIRE_POS_UNKNOWN));
                     }
                 }
                 let vargs_idx: Vec<u32> = vargs.iter().map(|s| self.intern_sym(*s)).collect();
@@ -136,7 +151,7 @@ impl Builder {
                     retval: retval_idx,
                     body: body_buf,
                 });
-                out.push(Insn::Proc(proc_idx));
+                out.push(Insn::new(InsnKind::Proc(proc_idx), pos));
             }
         }
     }

@@ -1,30 +1,32 @@
-//! Tiny binary serialiser for `Module`. Format is little-endian, no
-//! versioning beyond a 4-byte magic header — the on-disk format is meant
-//! for in-tree use by `rsruc` and `build.rs`, not for long-term storage.
+//! Tiny binary serialiser for `Module`. Format is little-endian.
 //!
-//! Layout:
+//! Layout (version 2):
 //!   4   magic     b"RSBC"
-//!   4   version   u32 LE (currently 1)
-//!   strings: u32 count, then for each: u32 byte_len + raw utf8 bytes
-//!   symbols: u32 count, then strings as above
-//!   procs:   u32 count, then for each ProcDef:
-//!              u32 vargs_len + N×u32 indices
-//!              u8 has_retval + u32 retval (if present)
-//!              u32 body_len + N×Insn
-//!   top:     u32 body_len + N×Insn
+//!   4   version   u32 LE
+//!   strings: u32 count + N×(u32 len + utf8 bytes)
+//!   symbols: u32 count + N×(u32 len + utf8 bytes)
+//!   procs:   u32 count + N×ProcDef
+//!             u32 vargs_len + N×u32 indices
+//!             u8 has_retval + (u32 retval if present)
+//!             insn list
+//!   top:     insn list
+//!   source:  u32 len + utf8 bytes  (NEW in v2)
 //!
-//! `Insn` encoding (1-byte tag + variable payload):
-//!   0x01 Lds(u32)
+//! `Insn` encoding: u32 pos, then 1-byte tag + payload.
+//!   0x01 Lds u32
 //!   0x02 Ref u32 + u8(has_env)
 //!   0x03 Let u32 + u8(has_env)
 //!   0x04 Call u32 method + u32 argc + u8(has_recv)
 //!   0x05 Proc u32
 //!   0x06 Pop
+//!
+//! Version 1 (no per-insn pos, no source) is still readable; missing fields
+//! default to `WIRE_POS_UNKNOWN` / empty source.
 
-use super::{Insn, Module, ProcDef};
+use super::{Insn, InsnKind, Module, ProcDef, WIRE_POS_UNKNOWN};
 
 const MAGIC: &[u8; 4] = b"RSBC";
-const VERSION: u32 = 1;
+const VERSION: u32 = 2;
 
 pub fn encode(m: &Module) -> Vec<u8> {
     let mut out = Vec::with_capacity(1024);
@@ -37,6 +39,10 @@ pub fn encode(m: &Module) -> Vec<u8> {
         write_proc(&mut out, p);
     }
     write_insns(&mut out, &m.top);
+    // v2 trailer: source text.
+    let src_bytes = m.source.as_bytes();
+    write_u32(&mut out, src_bytes.len() as u32);
+    out.extend_from_slice(src_bytes);
     out
 }
 
@@ -47,18 +53,29 @@ pub fn decode(bytes: &[u8]) -> Result<Module, String> {
         return Err("bad magic".into());
     }
     let v = r.read_u32()?;
-    if v != VERSION {
-        return Err(format!("unsupported version {}", v));
-    }
+    let has_pos_and_source = match v {
+        1 => false,
+        2 => true,
+        other => return Err(format!("unsupported version {}", other)),
+    };
     let strings = r.read_strings()?;
     let symbols = r.read_strings()?;
     let proc_count = r.read_u32()? as usize;
     let mut procs = Vec::with_capacity(proc_count);
     for _ in 0..proc_count {
-        procs.push(r.read_proc()?);
+        procs.push(r.read_proc(has_pos_and_source)?);
     }
-    let top = r.read_insns()?;
-    Ok(Module { strings, symbols, procs, top })
+    let top = r.read_insns(has_pos_and_source)?;
+    let source = if has_pos_and_source {
+        let len = r.read_u32()? as usize;
+        let bytes = r.read_bytes(len)?;
+        std::str::from_utf8(bytes)
+            .map_err(|e| format!("bad utf8 source: {}", e))?
+            .to_string()
+    } else {
+        String::new()
+    };
+    Ok(Module { strings, symbols, procs, top, source })
 }
 
 fn write_u32(out: &mut Vec<u8>, v: u32) {
@@ -92,22 +109,23 @@ fn write_proc(out: &mut Vec<u8>, p: &ProcDef) {
 fn write_insns(out: &mut Vec<u8>, insns: &[Insn]) {
     write_u32(out, insns.len() as u32);
     for i in insns {
-        match i {
-            Insn::Lds(k) => {
+        write_u32(out, i.pos);
+        match &i.kind {
+            InsnKind::Lds(k) => {
                 out.push(0x01);
                 write_u32(out, *k);
             }
-            Insn::Ref { var, has_env } => {
+            InsnKind::Ref { var, has_env } => {
                 out.push(0x02);
                 write_u32(out, *var);
                 out.push(if *has_env { 1 } else { 0 });
             }
-            Insn::Let { var, has_env } => {
+            InsnKind::Let { var, has_env } => {
                 out.push(0x03);
                 write_u32(out, *var);
                 out.push(if *has_env { 1 } else { 0 });
             }
-            Insn::Call {
+            InsnKind::Call {
                 method,
                 argc,
                 has_recv,
@@ -117,11 +135,11 @@ fn write_insns(out: &mut Vec<u8>, insns: &[Insn]) {
                 write_u32(out, *argc);
                 out.push(if *has_recv { 1 } else { 0 });
             }
-            Insn::Proc(k) => {
+            InsnKind::Proc(k) => {
                 out.push(0x05);
                 write_u32(out, *k);
             }
-            Insn::Pop => out.push(0x06),
+            InsnKind::Pop => out.push(0x06),
         }
     }
 }
@@ -162,7 +180,7 @@ impl<'a> Reader<'a> {
         }
         Ok(out)
     }
-    fn read_proc(&mut self) -> Result<ProcDef, String> {
+    fn read_proc(&mut self, with_pos: bool) -> Result<ProcDef, String> {
         let vn = self.read_u32()? as usize;
         let mut vargs = Vec::with_capacity(vn);
         for _ in 0..vn {
@@ -174,34 +192,35 @@ impl<'a> Reader<'a> {
         } else {
             None
         };
-        let body = self.read_insns()?;
+        let body = self.read_insns(with_pos)?;
         Ok(ProcDef { vargs, retval, body })
     }
-    fn read_insns(&mut self) -> Result<Vec<Insn>, String> {
+    fn read_insns(&mut self, with_pos: bool) -> Result<Vec<Insn>, String> {
         let n = self.read_u32()? as usize;
         let mut out = Vec::with_capacity(n);
         for _ in 0..n {
+            let pos = if with_pos { self.read_u32()? } else { WIRE_POS_UNKNOWN };
             let tag = self.read_u8()?;
-            let insn = match tag {
-                0x01 => Insn::Lds(self.read_u32()?),
-                0x02 => Insn::Ref {
+            let kind = match tag {
+                0x01 => InsnKind::Lds(self.read_u32()?),
+                0x02 => InsnKind::Ref {
                     var: self.read_u32()?,
                     has_env: self.read_u8()? != 0,
                 },
-                0x03 => Insn::Let {
+                0x03 => InsnKind::Let {
                     var: self.read_u32()?,
                     has_env: self.read_u8()? != 0,
                 },
-                0x04 => Insn::Call {
+                0x04 => InsnKind::Call {
                     method: self.read_u32()?,
                     argc: self.read_u32()?,
                     has_recv: self.read_u8()? != 0,
                 },
-                0x05 => Insn::Proc(self.read_u32()?),
-                0x06 => Insn::Pop,
+                0x05 => InsnKind::Proc(self.read_u32()?),
+                0x06 => InsnKind::Pop,
                 _ => return Err(format!("bad insn tag {:#x}", tag)),
             };
-            out.push(insn);
+            out.push(Insn { kind, pos });
         }
         Ok(out)
     }

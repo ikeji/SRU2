@@ -1,6 +1,7 @@
 pub mod ast;
 pub mod builtin;
 pub mod eval;
+pub mod gc;
 pub mod heap;
 pub mod object;
 pub mod parser;

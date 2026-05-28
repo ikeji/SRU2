@@ -108,6 +108,13 @@ pub enum StepResult {
 
 /// Evaluate one step. The active StackFrame lives in vm.current_frame.
 pub fn step(vm: &mut Vm) -> StepResult {
+    // Safe point for GC: between ops, all live ObjIds are reachable from
+    // the current frame's upper chain, bindings, and builtin refs. No
+    // Native function has Rust-local ObjIds at this point.
+    if vm.heap.should_gc() {
+        crate::gc::collect(vm);
+    }
+
     // Are there ops to run in the current operations list?
     let needs_next_stmt = {
         let f = vm.frame();

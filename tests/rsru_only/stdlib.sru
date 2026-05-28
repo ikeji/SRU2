@@ -32,3 +32,22 @@ puts((3).max(5).toS())
 puts(true.toS())
 puts(false.toS())
 puts((1 == 1).toS())
+
+# Array mutation + sort
+m = [3, 1, 4, 1, 5, 9, 2, 6]
+puts(m.sort().join(","))
+puts(m.pop().toS())
+puts(m.shift().toS())
+puts(m.size().toS())
+
+m2 = [1, 2]
+m2.concat([3, 4])
+puts(m2.join(","))
+
+# Hash merge
+ha = Hash.new()
+ha.set("a", 1)
+hb = Hash.new()
+hb.set("b", 2)
+ha.merge(hb)
+puts(ha.size().toS())

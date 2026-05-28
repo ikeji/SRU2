@@ -19,6 +19,8 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, h, "length", size);
     install_method(vm, h, "keys", keys);
     install_method(vm, h, "values", values);
+    install_method(vm, h, "merge", merge);
+    install_method(vm, h, "clear", clear);
 
     // Hash.new returns an empty hash. Class-level method, attached to the
     // class object directly.
@@ -127,6 +129,31 @@ fn keys(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     vm.heap
         .set_slot(arr, symbol::intern("klass"), vm.builtin.array_cls);
     arr
+}
+
+fn merge(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let recv = args[0];
+    let other = args[1];
+    let entries: Vec<(HashKey, ObjId)> =
+        if let Some(ObjData::Hash(m)) = &vm.heap.get(other).data {
+            m.iter().map(|(k, v)| (k.clone(), *v)).collect()
+        } else {
+            return recv;
+        };
+    if let Some(ObjData::Hash(m)) = &mut vm.heap.get_mut(recv).data {
+        for (k, v) in entries {
+            m.insert(k, v);
+        }
+    }
+    recv
+}
+
+fn clear(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let recv = args[0];
+    if let Some(ObjData::Hash(m)) = &mut vm.heap.get_mut(recv).data {
+        m.clear();
+    }
+    recv
 }
 
 fn values(vm: &mut Vm, args: &[ObjId]) -> ObjId {

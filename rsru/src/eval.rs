@@ -15,6 +15,18 @@ pub struct StackFrame {
     pub upper: Option<Box<StackFrame>>,
 }
 
+impl Drop for StackFrame {
+    fn drop(&mut self) {
+        // Iteratively drop the `upper` chain. Otherwise a deep chain (e.g.,
+        // a tight while-loop's recursive desugaring) overflows the Rust
+        // stack when the outermost frame drops.
+        let mut cur = self.upper.take();
+        while let Some(mut boxed) = cur {
+            cur = boxed.upper.take();
+        }
+    }
+}
+
 impl StackFrame {
     pub fn new(binding: ObjId, expressions: Vec<Expression>) -> Self {
         Self {
@@ -440,12 +452,28 @@ fn run_until_depth(vm: &mut Vm, floor: usize) -> ObjId {
         match step(vm) {
             StepResult::Continue => {}
             StepResult::PushFrame(mut new_frame) => {
-                let prev = std::mem::replace(
-                    vm.frame_mut(),
-                    StackFrame::new(new_frame.binding, vec![]),
-                );
-                new_frame.upper = Some(Box::new(prev));
-                *vm.frame_mut() = new_frame;
+                let is_tail = {
+                    let f = vm.frame();
+                    f.it >= f.operations.len() && f.tree_it >= f.expressions.len()
+                };
+                if is_tail {
+                    // Tail call: replace the current frame in place. Keep its
+                    // upper chain intact so the eventual EndOfFrame still pops
+                    // back to the right caller. This is what stops a tight
+                    // while-loop from accumulating an O(N) Box<StackFrame>
+                    // chain.
+                    let prev_upper = vm.frame_mut().upper.take();
+                    new_frame.upper = prev_upper;
+                    let old = std::mem::replace(vm.frame_mut(), new_frame);
+                    drop(old);
+                } else {
+                    let prev = std::mem::replace(
+                        vm.frame_mut(),
+                        StackFrame::new(new_frame.binding, vec![]),
+                    );
+                    new_frame.upper = Some(Box::new(prev));
+                    *vm.frame_mut() = new_frame;
+                }
             }
             StepResult::EndOfFrame => {
                 let nil_id = vm.builtin.nil_id;
@@ -456,8 +484,6 @@ fn run_until_depth(vm: &mut Vm, floor: usize) -> ObjId {
                         *vm.frame_mut() = *up;
                         vm.frame_mut().local_stack.push(ret);
                         if frame_depth(vm.frame()) < floor {
-                            // We popped below the floor — return the value on the
-                            // local stack (which is the result of the inner call).
                             let r = vm.frame_mut().local_stack.pop().unwrap_or(nil_id);
                             return r;
                         }

@@ -78,6 +78,68 @@ impl Vm {
         }
     }
 
+    /// Push a new SRU frame to invoke `proc_id` with `args`. The new frame
+    /// runs as the current frame; when it ends, EndOfFrame pops back and
+    /// pushes the proc's return value onto the previous frame's local_stack.
+    /// This is the iterative alternative to `invoke_inline` for control-flow
+    /// builtins (if / while) that would otherwise grow the Rust stack.
+    pub fn push_sru_frame(&mut self, proc_id: ObjId, args: Vec<ObjId>, recv: ObjId, recv_as_self: bool) -> bool {
+        let (vargs, retval, body, def_bind) = match &self.heap.get(proc_id).data {
+            Some(crate::object::ObjData::Proc(crate::object::ProcKind::Sru(p))) => (
+                p.vargs.clone(),
+                p.retval,
+                p.body.clone(),
+                p.def_binding,
+            ),
+            _ => return false,
+        };
+        let mut bind_args = args;
+        if recv_as_self {
+            bind_args.insert(0, recv);
+        }
+        let new_bind = self.make_binding(def_bind);
+        for (i, name) in vargs.iter().enumerate() {
+            let val = bind_args.get(i).copied().unwrap_or(self.builtin.nil_id);
+            self.heap.set_slot(new_bind, *name, val);
+        }
+        if let Some(rname) = retval {
+            // Make a continuation snapshot of the *current* frame so `return`
+            // jumps to the caller of this push.
+            let frame_clone = self.current_frame.clone();
+            let frame_obj = self
+                .heap
+                .alloc_with_data(crate::object::ObjData::Frame(frame_clone));
+            let cont = self.heap.alloc_with_data(crate::object::ObjData::Proc(
+                crate::object::ProcKind::Continuation(frame_obj),
+            ));
+            self.heap.set_slot(new_bind, rname, cont);
+        }
+        let mut new_frame = crate::eval::StackFrame::new(new_bind, body);
+        // Tail-call optimisation: if the current frame has no more work to
+        // do (and we aren't preserving it for a continuation), replace it
+        // in place so the upper chain stays bounded. Skip TCO when we
+        // captured a continuation, since that continuation expects the
+        // current frame to still exist.
+        let made_cont = retval.is_some();
+        let is_tail = !made_cont
+            && self.current_frame.it >= self.current_frame.operations.len()
+            && self.current_frame.tree_it >= self.current_frame.expressions.len();
+        if is_tail {
+            let prev_upper = self.current_frame.upper.take();
+            new_frame.upper = prev_upper;
+            let old = std::mem::replace(&mut self.current_frame, new_frame);
+            drop(old);
+        } else {
+            let prev = std::mem::replace(
+                &mut self.current_frame,
+                crate::eval::StackFrame::new(new_bind, Vec::new()),
+            );
+            new_frame.upper = Some(Box::new(prev));
+            self.current_frame = new_frame;
+        }
+        true
+    }
+
     /// Create a Binding object parented at `parent`.
     pub fn make_binding(&mut self, parent: ObjId) -> ObjId {
         let id = self.heap.alloc_empty();

@@ -435,6 +435,7 @@ pub(crate) fn expect_num(vm: &Vm, id: ObjId, ctx: &str) -> NumVal {
     }
 }
 
+#[allow(dead_code)]
 pub(crate) fn expect_str(vm: &Vm, id: ObjId, ctx: &str) -> String {
     match as_str(vm, id) {
         Some(s) => s,

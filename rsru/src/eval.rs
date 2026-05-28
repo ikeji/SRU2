@@ -327,17 +327,28 @@ pub fn runtime_error(vm: &Vm, msg: impl AsRef<str>) -> ! {
 
 /// Walk the active frame's `upper` chain and print each frame's name to
 /// stderr. The topmost frame (the one that hit the error) is shown first.
+/// Adjacent unnamed `<top-level>` frames are collapsed into one entry so
+/// the bootstrap / eval_program plumbing doesn't show up as duplicates.
 pub fn print_stack_trace(vm: &Vm) {
     eprintln!("Stack trace (most recent call first):");
     let mut cur = Some(vm.frame());
     let mut depth = 0;
+    let mut last_was_anon = false;
     while let Some(f) = cur {
-        let label = match f.name {
-            Some(s) => format!("`{}`", symbol::name(s)),
-            None => "<top-level>".to_string(),
-        };
-        eprintln!("  #{} {}", depth, label);
-        depth += 1;
+        match f.name {
+            Some(s) => {
+                eprintln!("  #{} `{}`", depth, symbol::name(s));
+                depth += 1;
+                last_was_anon = false;
+            }
+            None => {
+                if !last_was_anon {
+                    eprintln!("  #{} <top-level>", depth);
+                    depth += 1;
+                    last_was_anon = true;
+                }
+            }
+        }
         cur = f.upper.as_deref();
     }
 }

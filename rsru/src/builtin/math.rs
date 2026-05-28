@@ -37,22 +37,24 @@ fn register(vm: &mut Vm, recv: ObjId, name: &str, f: crate::object::NativeFn) {
     vm.heap.set_slot(recv, symbol::intern(name), p);
 }
 
-fn to_f(vm: &Vm, id: ObjId) -> f64 {
-    match &vm.heap.get(id).data {
-        Some(ObjData::Num(NumVal::Int(i))) => *i as f64,
-        Some(ObjData::Num(NumVal::Real(f))) => *f,
-        _ => 0.0,
+fn to_f(vm: &Vm, id: ObjId, ctx: &str) -> f64 {
+    match crate::builtin::expect_num(vm, id, ctx) {
+        NumVal::Int(i) => i as f64,
+        NumVal::Real(f) => f,
     }
 }
 
 fn sin(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    make_num_real(vm, to_f(vm, args[1]).sin())
+    let v = to_f(vm, args[1], "Math.sin");
+    make_num_real(vm, v.sin())
 }
 fn cos(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    make_num_real(vm, to_f(vm, args[1]).cos())
+    let v = to_f(vm, args[1], "Math.cos");
+    make_num_real(vm, v.cos())
 }
 fn sqrt(vm: &mut Vm, args: &[ObjId]) -> ObjId {
-    make_num_real(vm, to_f(vm, args[1]).sqrt())
+    let v = to_f(vm, args[1], "Math.sqrt");
+    make_num_real(vm, v.sqrt())
 }
 fn srand(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let seed = match &vm.heap.get(args[1]).data {

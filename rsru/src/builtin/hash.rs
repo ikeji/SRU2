@@ -37,23 +37,27 @@ pub fn new(vm: &mut Vm, _args: &[ObjId]) -> ObjId {
     id
 }
 
-fn key_of(vm: &Vm, id: ObjId) -> Option<HashKey> {
+fn key_of(vm: &Vm, id: ObjId, ctx: &str) -> HashKey {
     match &vm.heap.get(id).data {
-        Some(ObjData::Num(NumVal::Int(i))) => Some(HashKey::Int(*i)),
+        Some(ObjData::Num(NumVal::Int(i))) => HashKey::Int(*i),
         Some(ObjData::Num(NumVal::Real(f))) if f.fract() == 0.0 && f.is_finite() => {
-            Some(HashKey::Int(*f as i64))
+            HashKey::Int(*f as i64)
         }
-        Some(ObjData::Str(s)) => Some(HashKey::Str(s.clone())),
-        _ => None,
+        Some(ObjData::Str(s)) => HashKey::Str(s.clone()),
+        _ => crate::eval::runtime_error(
+            vm,
+            format!(
+                "{} requires an Int or String key, got {}",
+                ctx,
+                crate::builtin::io::inspect(vm, id)
+            ),
+        ),
     }
 }
 
 fn set(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let key = match key_of(vm, args[1]) {
-        Some(k) => k,
-        None => return vm.builtin.nil_id,
-    };
+    let key = key_of(vm, args[1], "Hash#set");
     let val = args[2];
     if let Some(ObjData::Hash(m)) = &mut vm.heap.get_mut(recv).data {
         m.insert(key, val);
@@ -63,10 +67,7 @@ fn set(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn get(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let key = match key_of(vm, args[1]) {
-        Some(k) => k,
-        None => return vm.builtin.nil_id,
-    };
+    let key = key_of(vm, args[1], "Hash#get");
     if let Some(ObjData::Hash(m)) = &vm.heap.get(recv).data {
         return m.get(&key).copied().unwrap_or(vm.builtin.nil_id);
     }
@@ -75,10 +76,7 @@ fn get(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn has_key(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let key = match key_of(vm, args[1]) {
-        Some(k) => k,
-        None => return vm.builtin.false_id,
-    };
+    let key = key_of(vm, args[1], "Hash#hasKey");
     let found = if let Some(ObjData::Hash(m)) = &vm.heap.get(recv).data {
         m.contains_key(&key)
     } else {
@@ -89,10 +87,7 @@ fn has_key(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn delete(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let recv = args[0];
-    let key = match key_of(vm, args[1]) {
-        Some(k) => k,
-        None => return vm.builtin.nil_id,
-    };
+    let key = key_of(vm, args[1], "Hash#delete");
     if let Some(ObjData::Hash(m)) = &mut vm.heap.get_mut(recv).data {
         return m.remove(&key).unwrap_or(vm.builtin.nil_id);
     }

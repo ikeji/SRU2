@@ -1,4 +1,4 @@
-use crate::builtin::{as_num, as_str, install_method, make_num_int, make_str, truth};
+use crate::builtin::{as_str, install_method, make_num_int, make_str, truth};
 use crate::object::{NumVal, ObjId};
 use crate::vm::Vm;
 

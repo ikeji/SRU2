@@ -48,7 +48,7 @@ fn run_source(src: &str) {
         let (new_pos, expr) = match parser::parse_one_statement(Some(&mut vm), src, pos) {
             Ok(r) => r,
             Err(e) => {
-                eprintln!("Parse error at byte {}: {}", e.pos, e.msg);
+                eprintln!("{}", e.render(src));
                 std::process::exit(1);
             }
         };
@@ -129,7 +129,7 @@ fn run_repl() {
                     if e.pos >= trimmed.len() {
                         break;
                     }
-                    eprintln!("Parse error at byte {}: {}", e.pos, e.msg);
+                    eprintln!("{}", e.render(&input));
                     input.clear();
                     break;
                 }

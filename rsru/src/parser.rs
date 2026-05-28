@@ -9,6 +9,50 @@ pub struct ParseError {
     pub pos: usize,
 }
 
+impl ParseError {
+    /// Format with line/col + the offending source line and a caret marker.
+    /// Source bytes are not stored in `ParseError`, so the caller passes them.
+    pub fn render(&self, src: &str) -> String {
+        let (line, col, line_text) = locate(src, self.pos);
+        let mut out = format!(
+            "Parse error at line {} col {}: {}",
+            line, col, self.msg
+        );
+        out.push('\n');
+        // Strip trailing newline from the line content for display.
+        let line_text = line_text.trim_end_matches('\n');
+        out.push_str(&format!("  {} | {}\n", line, line_text));
+        let pad = format!("  {} | ", line).chars().count();
+        let caret_pos = pad + col.saturating_sub(1);
+        out.push_str(&" ".repeat(caret_pos));
+        out.push('^');
+        out
+    }
+}
+
+/// Resolve a byte position to (1-based line, 1-based col, full line text).
+/// `col` counts UTF-8 *codepoints* from the start of the line, not bytes —
+/// this matches how editors render the caret.
+fn locate(src: &str, pos: usize) -> (usize, usize, String) {
+    let pos = pos.min(src.len());
+    let mut line = 1usize;
+    let mut line_start = 0usize;
+    for (i, c) in src.char_indices() {
+        if i >= pos { break; }
+        if c == '\n' {
+            line += 1;
+            line_start = i + 1;
+        }
+    }
+    let line_end = src[line_start..]
+        .find('\n')
+        .map(|n| line_start + n)
+        .unwrap_or(src.len());
+    let line_text = src[line_start..line_end].to_string();
+    let col = src[line_start..pos].chars().count() + 1;
+    (line, col, line_text)
+}
+
 pub fn parse(src: &str) -> Result<Vec<Expression>, ParseError> {
     let mut p = Parser::new(src);
     p.parse_program()

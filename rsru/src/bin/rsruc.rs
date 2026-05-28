@@ -52,7 +52,7 @@ fn main() -> ExitCode {
     let exprs = match parser::parse(&src) {
         Ok(e) => e,
         Err(e) => {
-            eprintln!("rsruc: parse error at byte {}: {}", e.pos, e.msg);
+            eprintln!("rsruc: {}", e.render(&src));
             return ExitCode::from(1);
         }
     };

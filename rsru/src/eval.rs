@@ -291,7 +291,26 @@ fn do_call(vm: &mut Vm, method: SymbolId, argc: usize, has_recv: bool) -> StepRe
         lookup(vm, recv, method)
     };
 
+    // Not-found: print a useful error and abort.
+    if proc_id == vm.builtin.nil_id {
+        report_call_error(vm, method, recv, has_recv);
+    }
+
     invoke(vm, proc_id, recv, args, has_recv)
+}
+
+fn report_call_error(vm: &Vm, method: SymbolId, recv: ObjId, has_recv: bool) -> ! {
+    let mname = symbol::name(method);
+    if has_recv {
+        eprintln!(
+            "Error: undefined method `{}` for {}",
+            mname,
+            crate::builtin::io::inspect(vm, recv)
+        );
+    } else {
+        eprintln!("Error: undefined function `{}`", mname);
+    }
+    std::process::exit(1)
 }
 
 fn lookup_method(vm: &mut Vm, recv: ObjId, method: SymbolId) -> ObjId {

@@ -12,3 +12,11 @@ path = "src/main.rs"
 
 [profile.release]
 opt-level = 3
+
+[profile.min-size]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

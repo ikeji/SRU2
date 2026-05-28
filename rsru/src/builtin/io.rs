@@ -95,6 +95,20 @@ pub fn inspect(vm: &Vm, id: ObjId) -> String {
             let inner: Vec<String> = v.iter().map(|x| inspect(vm, *x)).collect();
             format!("<Array size={} [{}]>", v.len(), inner.join(", "))
         }
+        Some(ObjData::Hash(m)) => {
+            let mut entries: Vec<String> = m
+                .iter()
+                .map(|(k, v)| {
+                    let ks = match k {
+                        crate::object::HashKey::Int(i) => format!("<Numeric({})>", i),
+                        crate::object::HashKey::Str(s) => format!("<String(\"{}\")>", s),
+                    };
+                    format!("{} => {}", ks, inspect(vm, *v))
+                })
+                .collect();
+            entries.sort();
+            format!("<Hash size={} {{{}}}>", m.len(), entries.join(", "))
+        }
         Some(ObjData::Proc(_)) => "<Proc(...)>".to_string(),
         Some(ObjData::Frame(_)) => "<Frame>".to_string(),
         Some(ObjData::Expr(_)) => "<Expression>".to_string(),

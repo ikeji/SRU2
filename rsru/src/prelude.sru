@@ -82,3 +82,36 @@ Numeric.instanceMethods.times = { |self, block|
   end
   self
 }
+
+# ---- Hash ----
+
+Hash.instanceMethods.each = { |self, block|
+  ks = self.keys()
+  i = 0
+  while (i < ks.size())
+    k = ks.at(i)
+    block(k, self.get(k))
+    i = i + 1
+  end
+  self
+}
+
+Hash.instanceMethods.eachKey = { |self, block|
+  ks = self.keys()
+  i = 0
+  while (i < ks.size())
+    block(ks.at(i))
+    i = i + 1
+  end
+  self
+}
+
+Hash.instanceMethods.eachValue = { |self, block|
+  vs = self.values()
+  i = 0
+  while (i < vs.size())
+    block(vs.at(i))
+    i = i + 1
+  end
+  self
+}

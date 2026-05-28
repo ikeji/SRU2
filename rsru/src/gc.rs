@@ -73,6 +73,11 @@ fn mark_children(vm: &Vm, id: ObjId, out: &mut Vec<ObjId>) {
                     out.push(*v);
                 }
             }
+            ObjData::Hash(m) => {
+                for v in m.values() {
+                    out.push(*v);
+                }
+            }
             ObjData::Frame(f) => push_frame_roots(f, out),
             ObjData::Proc(p) => match p {
                 ProcKind::Sru(sp) => out.push(sp.def_binding),

@@ -6,6 +6,7 @@ use crate::vm::Vm;
 
 mod array;
 mod boolean;
+mod hash;
 pub mod io;
 mod math;
 pub mod numeric;
@@ -81,6 +82,7 @@ pub fn bootstrap(vm: &mut Vm) {
     let binding_cls = make_class(vm, "Binding", object_cls);
     let math_cls = make_class(vm, "Math", object_cls);
     let sys_cls = make_class(vm, "Sys", object_cls);
+    let hash_cls = make_class(vm, "Hash", object_cls);
 
     vm.builtin.nil_cls = nil_cls;
     vm.builtin.boolean_cls = boolean_cls;
@@ -91,6 +93,7 @@ pub fn bootstrap(vm: &mut Vm) {
     vm.builtin.binding_cls = binding_cls;
     vm.builtin.math_cls = math_cls;
     vm.builtin.sys_cls = sys_cls;
+    vm.builtin.hash_cls = hash_cls;
 
     // Now set klass on nil itself.
     vm.heap.set_slot(nil_id, symbol::intern("klass"), nil_cls);
@@ -101,7 +104,7 @@ pub fn bootstrap(vm: &mut Vm) {
     vm.heap.set_slot(object_name, str_klass, string_cls);
     for cls in [
         nil_cls, boolean_cls, numeric_cls, string_cls, array_cls, proc_cls, binding_cls, math_cls,
-        sys_cls,
+        sys_cls, hash_cls,
     ] {
         if let Some(n) = vm.heap.get_slot(cls, symbol::intern("__name")) {
             vm.heap.set_slot(n, str_klass, string_cls);
@@ -138,6 +141,7 @@ pub fn bootstrap(vm: &mut Vm) {
         ("Binding", binding_cls),
         ("Math", math_cls),
         ("Sys", sys_cls),
+        ("Hash", hash_cls),
     ];
     for (name, id) in bindings {
         vm.heap.set_slot(root_bind, symbol::intern(name), *id);
@@ -155,6 +159,7 @@ pub fn bootstrap(vm: &mut Vm) {
     proc::install(vm);
     math::install(vm);
     sys::install(vm);
+    hash::install(vm);
 
     // Install globals: p, puts, print, exit, etc.
     io::install(vm, root_bind);

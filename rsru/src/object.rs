@@ -40,11 +40,20 @@ pub enum ObjData {
     Num(NumVal),
     Str(String),
     Array(Vec<ObjId>),
+    Hash(std::collections::HashMap<HashKey, ObjId>),
     Proc(ProcKind),
     Frame(StackFrame),
     /// Boxed AST node — used when SRU code holds an Expression as data (e.g.,
     /// `__parser.parse(src).ast`).
     Expr(Expression),
+}
+
+/// Keys that Hash supports. `Int` and `Str` are the natural cases; we
+/// canonicalise reals to ints when they're whole, otherwise reject them.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+pub enum HashKey {
+    Int(i64),
+    Str(String),
 }
 
 #[derive(Debug)]

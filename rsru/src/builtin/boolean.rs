@@ -16,6 +16,7 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, b, "exclamation", excl);
     install_method(vm, b, "equal", equal);
     install_method(vm, b, "notEqual", not_equal);
+    install_method(vm, b, "toS", to_s);
 }
 
 fn install_smash(vm: &mut Vm, cls: ObjId, name: &str, f: crate::object::NativeSmashFn) {
@@ -94,4 +95,9 @@ fn equal(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn not_equal(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     truth(vm, args[0] != args[1])
+}
+
+fn to_s(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let s = if is_true(vm, args[0]) { "true" } else { "false" };
+    crate::builtin::make_str(vm, s.to_string())
 }

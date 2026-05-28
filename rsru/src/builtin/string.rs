@@ -13,6 +13,8 @@ pub fn install(vm: &mut Vm) {
     install_method(vm, s, "at", get);
     install_method(vm, s, "substr", substr);
     install_method(vm, s, "toS", to_s);
+    install_method(vm, s, "indexOf", index_of);
+    install_method(vm, s, "split", split);
 }
 
 fn plus(vm: &mut Vm, args: &[ObjId]) -> ObjId {
@@ -69,4 +71,38 @@ fn substr(vm: &mut Vm, args: &[ObjId]) -> ObjId {
 
 fn to_s(_vm: &mut Vm, args: &[ObjId]) -> ObjId {
     args[0]
+}
+
+/// `s.indexOf(needle)` — first byte index of `needle` in `s`, or -1.
+fn index_of(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let hay = as_str(vm, args[0]).unwrap_or_default();
+    let needle = as_str(vm, args[1]).unwrap_or_default();
+    let idx = hay
+        .find(needle.as_str())
+        .map(|n| n as i64)
+        .unwrap_or(-1);
+    make_num_int(vm, idx)
+}
+
+/// `s.split(sep)` — split on `sep` and return an Array of Strings. Empty
+/// separator returns the original wrapped in a 1-element array.
+fn split(vm: &mut Vm, args: &[ObjId]) -> ObjId {
+    let hay = as_str(vm, args[0]).unwrap_or_default();
+    let sep = as_str(vm, args[1]).unwrap_or_default();
+    let parts: Vec<String> = if sep.is_empty() {
+        vec![hay]
+    } else {
+        hay.split(sep.as_str()).map(str::to_string).collect()
+    };
+    let mut ids = Vec::with_capacity(parts.len());
+    for p in parts {
+        ids.push(make_str(vm, p));
+    }
+    let arr = vm.heap.alloc_with_data(crate::object::ObjData::Array(ids));
+    vm.heap.set_slot(
+        arr,
+        crate::symbol::intern("klass"),
+        vm.builtin.array_cls,
+    );
+    arr
 }

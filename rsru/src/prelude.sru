@@ -60,6 +60,68 @@ Array.instanceMethods.join = { |self, sep|
   out
 }
 
+Array.instanceMethods.first = { |self|
+  if self.size() == 0
+    nil
+  else
+    self.at(0)
+  end
+}
+
+Array.instanceMethods.last = { |self|
+  n = self.size()
+  if n == 0
+    nil
+  else
+    self.at(n - 1)
+  end
+}
+
+Array.instanceMethods.reverse = { |self|
+  out = Array.new()
+  i = self.size() - 1
+  while (i >= 0)
+    out.push(self.at(i))
+    i = i - 1
+  end
+  out
+}
+
+# Returns the index of the first element equal to value, or -1.
+Array.instanceMethods.indexOf = { |self, value|
+  i = 0
+  n = self.size()
+  found = -1
+  while (i < n)
+    if self.at(i) == value
+      found = i
+      i = n
+    end
+    i = i + 1
+  end
+  found
+}
+
+Array.instanceMethods.contains = { |self, value|
+  self.indexOf(value) >= 0
+}
+
+# Returns the first element where block(x) is true, or nil.
+Array.instanceMethods.find = { |self, block|
+  i = 0
+  n = self.size()
+  result = nil
+  while (i < n)
+    v = self.at(i)
+    if block(v)
+      result = v
+      i = n
+    end
+    i = i + 1
+  end
+  result
+}
+
 # ---- Numeric ----
 
 Numeric.instanceMethods.abs = { |self|
@@ -81,6 +143,47 @@ Numeric.instanceMethods.times = { |self, block|
     i = i + 1
   end
   self
+}
+
+Numeric.instanceMethods.min = { |self, other|
+  if self < other
+    self
+  else
+    other
+  end
+}
+
+Numeric.instanceMethods.max = { |self, other|
+  if self > other
+    self
+  else
+    other
+  end
+}
+
+# ---- String ----
+
+String.instanceMethods.contains = { |self, needle|
+  self.indexOf(needle) >= 0
+}
+
+String.instanceMethods.startsWith = { |self, prefix|
+  pn = prefix.size()
+  if self.size() < pn
+    false
+  else
+    self.substr(0, pn) == prefix
+  end
+}
+
+String.instanceMethods.endsWith = { |self, suffix|
+  sn = suffix.size()
+  n = self.size()
+  if n < sn
+    false
+  else
+    self.substr(n - sn, sn) == suffix
+  end
 }
 
 # ---- Hash ----

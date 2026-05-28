@@ -335,23 +335,27 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_if(&mut self) -> Result<Expression, ParseError> {
+        // Caller has already eaten the `if` (or `elsif`) keyword; record the
+        // start of the condition as our anchor for the desugared ifTrue/
+        // ifTrueFalse call. Runtime errors from a missing dispatch (cond
+        // returning nil or a custom-truthy class with no ifTrue method)
+        // point here.
+        let start = self.pos;
         self.spc_or_lf();
         let cond = self.parse_expression()?;
-        // optional `then`, `;`, or `\n`
         self.spc_or_comment();
         let _ = self.try_keyword("then") || self.try_eat(";") || self.try_lf();
         let then_body = self.parse_statements(&["elsif", "else", "end"])?;
         let then_proc = make_proc(vec![], None, then_body);
-        // Handle elsif / else / end.
         self.spc_or_lf();
         if self.try_keyword("elsif") {
             let else_branch = self.parse_if()?;
-            // cond.ifTrueFalse({then}, {else})
             let else_proc = make_proc(vec![], None, vec![else_branch]);
-            return Ok(make_call_method(
+            return Ok(make_call_method_at(
                 cond,
                 "ifTrueFalse",
                 vec![then_proc, else_proc],
+                start,
             ));
         }
         if self.try_keyword("else") {
@@ -359,14 +363,15 @@ impl<'a> Parser<'a> {
             self.spc_or_lf();
             self.try_keyword("end");
             let else_proc = make_proc(vec![], None, else_body);
-            return Ok(make_call_method(
+            return Ok(make_call_method_at(
                 cond,
                 "ifTrueFalse",
                 vec![then_proc, else_proc],
+                start,
             ));
         }
         self.try_keyword("end");
-        Ok(make_call_method(cond, "ifTrue", vec![then_proc]))
+        Ok(make_call_method_at(cond, "ifTrue", vec![then_proc], start))
     }
 
     fn parse_while(&mut self) -> Result<Expression, ParseError> {
@@ -391,6 +396,9 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_class(&mut self) -> Result<Expression, ParseError> {
+        // `class` keyword has been consumed; record the position of the
+        // class-name identifier as the anchor for the desugared statements.
+        let start = self.pos;
         self.spc_or_lf();
         let name = self
             .try_ident()
@@ -461,7 +469,7 @@ impl<'a> Parser<'a> {
         // the caller's binding.
         let parent_expr = parent.unwrap_or_else(|| ref_expr("Object"));
         let cls_sym = symbol::intern("__cls");
-        let p = crate::ast::POS_UNKNOWN;
+        let p = start;
         let mut stmts: Vec<Expression> = Vec::new();
         stmts.push(Expression::Let {
             var: cls_sym,
@@ -516,6 +524,9 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_def(&mut self) -> Result<Expression, ParseError> {
+        // `def` keyword has already been consumed by parse_statement; record
+        // the position right after it as the anchor for the function.
+        let start = self.pos;
         self.spc_or_lf();
         let name = self
             .try_ident()
@@ -551,18 +562,17 @@ impl<'a> Parser<'a> {
             return self.err("`end` expected for def");
         }
         let vargs_ids: Vec<SymbolId> = vargs.iter().map(|s| symbol::intern(s)).collect();
-        let p = crate::ast::POS_UNKNOWN;
         let proc = Expression::Proc {
             vargs: vargs_ids,
             retval: Some(symbol::intern("return")),
             body,
-            pos: p,
+            pos: start,
         };
         Ok(Expression::Let {
             var: symbol::intern(&name),
             env: None,
             value: Box::new(proc),
-            pos: p,
+            pos: start,
         })
     }
 
@@ -1045,12 +1055,12 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_array_literal(&mut self) -> Result<Expression, ParseError> {
+        let start = self.pos;
         self.pos += 1; // [
         let mut items: Vec<Expression> = Vec::new();
         self.spc_or_lf();
         if self.try_eat("]") {
-            // Empty array.
-            return Ok(make_array_call(items));
+            return Ok(make_array_call_at(items, start));
         }
         loop {
             self.spc_or_lf();
@@ -1062,13 +1072,14 @@ impl<'a> Parser<'a> {
             }
             self.spc_or_lf();
             if self.try_eat("]") {
-                return Ok(make_array_call(items));
+                return Ok(make_array_call_at(items, start));
             }
             return self.err("expected `,` or `]`");
         }
     }
 
     fn parse_closure_literal(&mut self) -> Result<Expression, ParseError> {
+        let start = self.pos;
         self.pos += 1; // {
         // Optional varg list: | a, b [: ret] |
         let mut vargs: Vec<String> = Vec::new();
@@ -1116,7 +1127,7 @@ impl<'a> Parser<'a> {
             vargs: vargs_ids,
             retval: retval.map(|s| symbol::intern(&s)),
             body,
-            pos: crate::ast::POS_UNKNOWN,
+            pos: start,
         })
     }
 
@@ -1218,12 +1229,12 @@ fn make_proc(vargs: Vec<SymbolId>, retval: Option<SymbolId>, body: Vec<Expressio
     }
 }
 
-fn make_array_call(items: Vec<Expression>) -> Expression {
+fn make_array_call_at(items: Vec<Expression>, pos: crate::ast::Pos) -> Expression {
     let new_call = Expression::Call {
-        receiver: Some(Box::new(ref_expr("Array"))),
+        receiver: Some(Box::new(ref_expr_at("Array", pos))),
         method: symbol::intern("new"),
         args: vec![],
-        pos: crate::ast::POS_UNKNOWN,
+        pos,
     };
     if items.is_empty() {
         return new_call;
@@ -1232,7 +1243,7 @@ fn make_array_call(items: Vec<Expression>) -> Expression {
         receiver: Some(Box::new(new_call)),
         method: symbol::intern("push"),
         args: items,
-        pos: crate::ast::POS_UNKNOWN,
+        pos,
     }
 }
 
@@ -1266,19 +1277,20 @@ fn make_while_desugar(cond: Expression, body: Vec<Expression>, pos: crate::ast::
         receiver: Some(Box::new(Expression::Ref {
             var: loop_sym,
             env: None,
-            pos: crate::ast::POS_UNKNOWN,
+            pos,
         })),
         method: symbol::intern("call"),
         args: vec![],
-        pos: crate::ast::POS_UNKNOWN,
+        pos,
     };
     let mut body_with_recurse = body;
     body_with_recurse.push(recurse);
 
-    let if_expr = make_call_method(
+    let if_expr = make_call_method_at(
         cond,
         "ifTrue",
         vec![make_proc(vec![], None, body_with_recurse)],
+        pos,
     );
 
     let loop_proc = make_proc(vec![], None, vec![if_expr]);
@@ -1286,14 +1298,14 @@ fn make_while_desugar(cond: Expression, body: Vec<Expression>, pos: crate::ast::
         var: loop_sym,
         env: None,
         value: Box::new(loop_proc),
-        pos: crate::ast::POS_UNKNOWN,
+        pos,
     };
 
     let call_loop = Expression::Call {
         receiver: Some(Box::new(Expression::Ref {
             var: loop_sym,
             env: None,
-            pos: crate::ast::POS_UNKNOWN,
+            pos,
         })),
         method: symbol::intern("call"),
         args: vec![],

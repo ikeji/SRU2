@@ -48,8 +48,9 @@ LD_LIBRARY_PATH=csru csru/sru tests/fizzbuzz.sru
 - `if cond then ... end` — `then` / `;` / `\n` separator required.
 - Identifiers cannot start with `then` or `else` (the lexer eats the
   keyword greedily).
-- `puts (x).toS()` parses as `puts(x).toS()`. Use an intermediate
-  variable.
+- `puts (x).toS()` (with the space) parses as `puts(x).toS()` — calls
+  `puts(x)` then `.toS()` on its `nil` result. Drop the space and wrap
+  the full argument: `puts(x.toS())`.
 - `Array.new` returns the proc, `Array.new()` makes the array.
 - `puts` is String-only; pass `x.toS()` for numerics, or use `p`.
 - Boolean constants are `true` / `false`. csru's internal C++ uses the

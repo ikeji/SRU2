@@ -1,14 +1,14 @@
-# Basic arithmetic. Use intermediate variables because `puts x.toS()` parses
-# as `puts(x).toS()` when x is parenthesized.
-a = (1 + 2).toS();           puts a
-b = (10 - 4).toS();          puts b
-c = (3 * 7).toS();           puts c
-d = (20 / 4).toS();          puts d
-e = (10 % 3).toS();          puts e
+# Basic arithmetic. Pass the full expression to puts in one parenthesised
+# group — `puts (e).toS()` (with the space) would call `puts(e).toS()`.
+puts((1 + 2).toS())
+puts((10 - 4).toS())
+puts((3 * 7).toS())
+puts((20 / 4).toS())
+puts((10 % 3).toS())
 
 # Precedence
-f = (1 + 2 * 3).toS();       puts f
-g = ((1 + 2) * 3).toS();     puts g
+puts((1 + 2 * 3).toS())
+puts(((1 + 2) * 3).toS())
 
 # Comparison returns Boolean and dispatches if
 if 5 > 3
@@ -24,5 +24,5 @@ end
 puts "foo" + "bar"
 
 # Integer vs real division
-h = (1 / 2).toS();           puts h
-i = (1.0 / 2.0).toS();       puts i
+puts((1 / 2).toS())
+puts((1.0 / 2.0).toS())

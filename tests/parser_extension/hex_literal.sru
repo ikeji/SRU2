@@ -118,9 +118,8 @@ __parser.const_literal = { |zelf, src, pos:return|
   return(out)
 }
 
-# `puts (x).toS()` は `puts(x).toS()` と解釈されるので中間変数を使う。
-a = 0x10.toS();          puts a
-b = 0xff.toS();          puts b
-c = (0x10 + 0x01).toS(); puts c
-d = (0xff - 0x0f).toS(); puts d
-e = 0x100.toS();         puts e
+puts(0x10.toS())
+puts(0xff.toS())
+puts((0x10 + 0x01).toS())
+puts((0xff - 0x0f).toS())
+puts(0x100.toS())

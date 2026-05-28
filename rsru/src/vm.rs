@@ -8,6 +8,12 @@ pub struct Vm {
     pub current_frame: StackFrame,
     pub root_binding: ObjId,
     pub builtin: BuiltinRefs,
+    /// Source text currently being executed (set by `run_source` / `eval_source`).
+    /// Used to translate byte positions on errors into line/col + line text.
+    pub source: String,
+    /// Byte offset of the most recently dispatched TraceOp. `POS_UNKNOWN` if
+    /// no real source position is known (e.g., synthesised ops).
+    pub current_pos: crate::ast::Pos,
 }
 
 /// Well-known object ids set up at boot.
@@ -48,6 +54,8 @@ impl Vm {
             current_frame: StackFrame::new(root_binding, Vec::new()),
             root_binding,
             builtin: BuiltinRefs::default(),
+            source: String::new(),
+            current_pos: crate::ast::POS_UNKNOWN,
         };
         crate::builtin::bootstrap(&mut vm);
         load_prelude(&mut vm);

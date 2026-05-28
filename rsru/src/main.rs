@@ -43,6 +43,7 @@ fn run_bytecode(bytes: &[u8]) {
 
 fn run_source(src: &str) {
     let mut vm = Vm::new();
+    vm.source = src.to_string();
     let mut pos = 0;
     loop {
         let (new_pos, expr) = match parser::parse_one_statement(Some(&mut vm), src, pos) {

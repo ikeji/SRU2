@@ -132,7 +132,12 @@ fn scan_string(bytes: &[u8], start: usize) -> Option<(usize, Expression)> {
     let mut buf = String::new();
     while pos < bytes.len() {
         match bytes[pos] {
-            b'"' => return Some((pos + 1, Expression::StrLit(buf))),
+            b'"' => {
+                return Some((
+                    pos + 1,
+                    Expression::StrLit { value: buf, pos: start },
+                ))
+            }
             b'\\' => {
                 pos += 1;
                 if pos >= bytes.len() {
@@ -182,9 +187,11 @@ fn scan_number(bytes: &[u8], start: usize) -> Option<(usize, Expression)> {
         receiver: Some(Box::new(Expression::Ref {
             var: symbol::intern("Numeric"),
             env: None,
+            pos: start,
         })),
         method: symbol::intern("parse"),
-        args: vec![Expression::StrLit(s)],
+        args: vec![Expression::StrLit { value: s, pos: start }],
+        pos: start,
     };
     Some((pos, call))
 }

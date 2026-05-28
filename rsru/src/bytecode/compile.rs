@@ -79,11 +79,11 @@ impl Builder {
 
     fn emit(&mut self, e: &Expression, out: &mut Vec<Insn>) {
         match e {
-            Expression::StrLit(s) => {
-                let k = self.intern_str(s);
+            Expression::StrLit { value, .. } => {
+                let k = self.intern_str(value);
                 out.push(Insn::Lds(k));
             }
-            Expression::Ref { var, env } => {
+            Expression::Ref { var, env, .. } => {
                 let has_env = env.is_some();
                 if let Some(e) = env {
                     self.emit(e, out);
@@ -91,7 +91,7 @@ impl Builder {
                 let v = self.intern_sym(*var);
                 out.push(Insn::Ref { var: v, has_env });
             }
-            Expression::Let { var, env, value } => {
+            Expression::Let { var, env, value, .. } => {
                 if let Some(e) = env {
                     self.emit(e, out);
                 }
@@ -102,7 +102,7 @@ impl Builder {
                     has_env: env.is_some(),
                 });
             }
-            Expression::Call { receiver, method, args } => {
+            Expression::Call { receiver, method, args, .. } => {
                 if let Some(r) = receiver {
                     self.emit(r, out);
                 }
@@ -116,7 +116,7 @@ impl Builder {
                     has_recv: receiver.is_some(),
                 });
             }
-            Expression::Proc { vargs, retval, body } => {
+            Expression::Proc { vargs, retval, body, .. } => {
                 // Compile body into its own instruction list, recursively.
                 let body_last = body.len().saturating_sub(1);
                 let mut body_buf = Vec::new();

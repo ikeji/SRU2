@@ -46,7 +46,13 @@ impl StackFrame {
 }
 
 #[derive(Debug, Clone)]
-pub enum TraceOp {
+pub struct TraceOp {
+    pub kind: TraceKind,
+    pub pos: crate::ast::Pos,
+}
+
+#[derive(Debug, Clone)]
+pub enum TraceKind {
     PushStr(String),
     LookupRef { var: SymbolId, has_env: bool },
     Assign { var: SymbolId, has_env: bool },
@@ -59,47 +65,71 @@ pub enum TraceOp {
     Pop,
 }
 
+impl TraceOp {
+    pub fn new(kind: TraceKind, pos: crate::ast::Pos) -> Self {
+        Self { kind, pos }
+    }
+}
+
 /// Flatten an AST node into TraceOps, post-order: children, then the node.
 pub fn trace(expr: &Expression, out: &mut Vec<TraceOp>) {
+    let pos = expr.pos();
     match expr {
-        Expression::StrLit(s) => out.push(TraceOp::PushStr(s.clone())),
-        Expression::Ref { var, env } => {
+        Expression::StrLit { value, .. } => {
+            out.push(TraceOp::new(TraceKind::PushStr(value.clone()), pos))
+        }
+        Expression::Ref { var, env, .. } => {
             if let Some(e) = env {
                 trace(e, out);
-                out.push(TraceOp::LookupRef { var: *var, has_env: true });
+                out.push(TraceOp::new(
+                    TraceKind::LookupRef { var: *var, has_env: true },
+                    pos,
+                ));
             } else {
-                out.push(TraceOp::LookupRef { var: *var, has_env: false });
+                out.push(TraceOp::new(
+                    TraceKind::LookupRef { var: *var, has_env: false },
+                    pos,
+                ));
             }
         }
-        Expression::Let { var, env, value } => {
+        Expression::Let { var, env, value, .. } => {
             if let Some(e) = env {
                 trace(e, out);
             }
             trace(value, out);
-            out.push(TraceOp::Assign {
-                var: *var,
-                has_env: env.is_some(),
-            });
+            out.push(TraceOp::new(
+                TraceKind::Assign {
+                    var: *var,
+                    has_env: env.is_some(),
+                },
+                pos,
+            ));
         }
-        Expression::Call { receiver, method, args } => {
+        Expression::Call { receiver, method, args, .. } => {
             if let Some(r) = receiver {
                 trace(r, out);
             }
             for a in args {
                 trace(a, out);
             }
-            out.push(TraceOp::Call {
-                method: *method,
-                argc: args.len(),
-                has_recv: receiver.is_some(),
-            });
+            out.push(TraceOp::new(
+                TraceKind::Call {
+                    method: *method,
+                    argc: args.len(),
+                    has_recv: receiver.is_some(),
+                },
+                pos,
+            ));
         }
-        Expression::Proc { vargs, retval, body } => {
-            out.push(TraceOp::MakeProc {
-                vargs: vargs.clone(),
-                retval: *retval,
-                body: body.clone(),
-            });
+        Expression::Proc { vargs, retval, body, .. } => {
+            out.push(TraceOp::new(
+                TraceKind::MakeProc {
+                    vargs: vargs.clone(),
+                    retval: *retval,
+                    body: body.clone(),
+                },
+                pos,
+            ));
         }
     }
 }
@@ -147,7 +177,7 @@ pub fn step(vm: &mut Vm) -> StepResult {
         let mut ops = Vec::new();
         trace(&next_expr, &mut ops);
         if !is_last {
-            ops.push(TraceOp::Pop);
+            ops.push(TraceOp::new(TraceKind::Pop, crate::ast::POS_UNKNOWN));
         }
         let f = vm.frame_mut();
         f.operations = ops;
@@ -162,17 +192,17 @@ pub fn step(vm: &mut Vm) -> StepResult {
         f.it += 1;
         op
     };
+    vm.current_pos = op.pos;
 
-    match op {
-        TraceOp::PushStr(s) => {
+    match op.kind {
+        TraceKind::PushStr(s) => {
             let id = vm.heap.alloc_with_data(ObjData::Str(s));
-            // Set klass to String for proper method dispatch.
             let str_cls = vm.builtin.string_cls;
             vm.heap.set_slot(id, symbol::intern("klass"), str_cls);
             vm.frame_mut().local_stack.push(id);
             StepResult::Continue
         }
-        TraceOp::LookupRef { var, has_env } => {
+        TraceKind::LookupRef { var, has_env } => {
             let env = if has_env {
                 vm.frame_mut().local_stack.pop().unwrap()
             } else {
@@ -182,7 +212,7 @@ pub fn step(vm: &mut Vm) -> StepResult {
             vm.frame_mut().local_stack.push(val);
             StepResult::Continue
         }
-        TraceOp::Assign { var, has_env } => {
+        TraceKind::Assign { var, has_env } => {
             let value = vm.frame_mut().local_stack.pop().unwrap();
             let env = if has_env {
                 vm.frame_mut().local_stack.pop().unwrap()
@@ -193,8 +223,8 @@ pub fn step(vm: &mut Vm) -> StepResult {
             vm.frame_mut().local_stack.push(value);
             StepResult::Continue
         }
-        TraceOp::Call { method, argc, has_recv } => do_call(vm, method, argc, has_recv),
-        TraceOp::MakeProc { vargs, retval, body } => {
+        TraceKind::Call { method, argc, has_recv } => do_call(vm, method, argc, has_recv),
+        TraceKind::MakeProc { vargs, retval, body } => {
             let bind = vm.frame().binding;
             let proc = ProcKind::Sru(SruProc {
                 vargs,
@@ -208,7 +238,7 @@ pub fn step(vm: &mut Vm) -> StepResult {
             vm.frame_mut().local_stack.push(id);
             StepResult::Continue
         }
-        TraceOp::Pop => {
+        TraceKind::Pop => {
             vm.frame_mut().local_stack.pop();
             StepResult::Continue
         }
@@ -305,24 +335,68 @@ fn do_call(vm: &mut Vm, method: SymbolId, argc: usize, has_recv: bool) -> StepRe
 
 fn report_call_error(vm: &Vm, method: SymbolId, recv: ObjId, has_recv: bool) -> ! {
     let mname = symbol::name(method);
-    if has_recv {
-        eprintln!(
-            "Error: undefined method `{}` for {}",
+    let msg = if has_recv {
+        format!(
+            "undefined method `{}` for {}",
             mname,
             crate::builtin::io::inspect(vm, recv)
-        );
+        )
     } else {
-        eprintln!("Error: undefined function `{}`", mname);
+        format!("undefined function `{}`", mname)
+    };
+    runtime_error(vm, msg)
+}
+
+/// Abort with a runtime error message and a stack trace. If the current
+/// op has a known source position, render `<source line>` with a caret.
+pub fn runtime_error(vm: &Vm, msg: impl AsRef<str>) -> ! {
+    let pos = vm.current_pos;
+    let where_ = source_loc(vm, pos);
+    eprintln!("Error{}: {}", where_, msg.as_ref());
+    if pos != crate::ast::POS_UNKNOWN && !vm.source.is_empty() {
+        if let Some(snippet) = format_source_snippet(&vm.source, pos) {
+            eprintln!("{}", snippet);
+        }
     }
     print_stack_trace(vm);
     std::process::exit(1)
 }
 
-/// Abort with a runtime error message and a stack trace.
-pub fn runtime_error(vm: &Vm, msg: impl AsRef<str>) -> ! {
-    eprintln!("Error: {}", msg.as_ref());
-    print_stack_trace(vm);
-    std::process::exit(1)
+fn source_loc(vm: &Vm, pos: crate::ast::Pos) -> String {
+    if pos == crate::ast::POS_UNKNOWN || vm.source.is_empty() {
+        return String::new();
+    }
+    let (line, col, _) = locate_pos(&vm.source, pos);
+    format!(" at line {} col {}", line, col)
+}
+
+fn locate_pos(src: &str, pos: usize) -> (usize, usize, String) {
+    let pos = pos.min(src.len());
+    let mut line = 1usize;
+    let mut line_start = 0usize;
+    for (i, c) in src.char_indices() {
+        if i >= pos { break; }
+        if c == '\n' {
+            line += 1;
+            line_start = i + 1;
+        }
+    }
+    let line_end = src[line_start..]
+        .find('\n')
+        .map(|n| line_start + n)
+        .unwrap_or(src.len());
+    let line_text = src[line_start..line_end].to_string();
+    let col = src[line_start..pos].chars().count() + 1;
+    (line, col, line_text)
+}
+
+fn format_source_snippet(src: &str, pos: usize) -> Option<String> {
+    let (line, col, line_text) = locate_pos(src, pos);
+    let line_text = line_text.trim_end_matches('\n');
+    let header = format!("  {} | {}", line, line_text);
+    let pad = format!("  {} | ", line).chars().count() + col.saturating_sub(1);
+    let caret = format!("{}^", " ".repeat(pad));
+    Some(format!("{}\n{}", header, caret))
 }
 
 /// Walk the active frame's `upper` chain and print each frame's name to

@@ -18,14 +18,19 @@ fn decode_block(m: &Module, ops: &[Insn]) -> Vec<Expression> {
     // op list.
     let mut stack: Vec<Expression> = Vec::new();
     let mut stmts: Vec<Expression> = Vec::new();
+    let p_unknown = crate::ast::POS_UNKNOWN;
     for op in ops {
         match op {
-            Insn::Lds(k) => stack.push(Expression::StrLit(m.strings[*k as usize].clone())),
+            Insn::Lds(k) => stack.push(Expression::StrLit {
+                value: m.strings[*k as usize].clone(),
+                pos: p_unknown,
+            }),
             Insn::Ref { var, has_env } => {
                 let env = if *has_env { Some(Box::new(stack.pop().unwrap())) } else { None };
                 stack.push(Expression::Ref {
                     var: sym(m, *var),
                     env,
+                    pos: p_unknown,
                 });
             }
             Insn::Let { var, has_env } => {
@@ -35,17 +40,17 @@ fn decode_block(m: &Module, ops: &[Insn]) -> Vec<Expression> {
                     var: sym(m, *var),
                     env,
                     value,
+                    pos: p_unknown,
                 });
             }
             Insn::Call { method, argc, has_recv } => {
-                let mut args: Vec<Expression> = stack.split_off(stack.len() - *argc as usize);
-                // Already in order (push order = arg order).
-                let _ = &mut args; // appease clippy if any
+                let args: Vec<Expression> = stack.split_off(stack.len() - *argc as usize);
                 let receiver = if *has_recv { Some(Box::new(stack.pop().unwrap())) } else { None };
                 stack.push(Expression::Call {
                     receiver,
                     method: sym(m, *method),
                     args,
+                    pos: p_unknown,
                 });
             }
             Insn::Proc(k) => {
@@ -55,6 +60,7 @@ fn decode_block(m: &Module, ops: &[Insn]) -> Vec<Expression> {
                     vargs: p.vargs.iter().map(|i| sym(m, *i)).collect(),
                     retval: p.retval.map(|i| sym(m, i)),
                     body,
+                    pos: p_unknown,
                 });
             }
             Insn::Pop => {

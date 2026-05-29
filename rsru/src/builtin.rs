@@ -337,10 +337,16 @@ pub fn invoke_inline(
             f(vm, &full)
         }
         Some(2) => {
-            let (vargs, retval, body, def_bind) = {
+            let (vargs, retval, body, def_bind, src) = {
                 let bo = vm.heap.get(proc_id);
                 if let Some(ObjData::Proc(ProcKind::Sru(p))) = &bo.data {
-                    (p.vargs.clone(), p.retval, p.body.clone(), p.def_binding)
+                    (
+                        p.vargs.clone(),
+                        p.retval,
+                        p.body.clone(),
+                        p.def_binding,
+                        p.source,
+                    )
                 } else {
                     unreachable!()
                 }
@@ -356,6 +362,7 @@ pub fn invoke_inline(
             }
             let floor = crate::eval::frame_depth_of(vm.frame()) + 1;
             let mut new_frame = crate::eval::StackFrame::new(new_bind, body);
+            new_frame.source = src;
             let prev = std::mem::replace(vm.frame_mut(), crate::eval::StackFrame::new(new_bind, vec![]));
             new_frame.upper = Some(Box::new(prev));
             *vm.frame_mut() = new_frame;

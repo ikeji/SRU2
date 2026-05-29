@@ -70,6 +70,8 @@ pub struct SruProc {
     pub retval: Option<SymbolId>,
     pub body: Vec<Expression>,
     pub def_binding: ObjId,
+    /// SourceId of the source the body was parsed from.
+    pub source: crate::vm::SourceId,
 }
 
 pub type NativeFn = fn(&mut crate::vm::Vm, &[ObjId]) -> ObjId;

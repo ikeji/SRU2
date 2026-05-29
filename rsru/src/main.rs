@@ -12,12 +12,11 @@ fn main() {
     if args.len() > 1 {
         let path = &args[1];
         let bytes = fs::read(path).expect("failed to read file");
-        // Detect bytecode by magic; otherwise treat as SRU source.
         if bytes.len() >= 4 && &bytes[0..4] == b"RSBC" {
-            run_bytecode(&bytes);
+            run_bytecode(path, &bytes);
         } else {
             let src = String::from_utf8(bytes).expect("file not utf8");
-            run_source(&src);
+            run_source_named(path, &src);
         }
     } else if io::stdin().is_terminal() {
         run_repl();
@@ -28,7 +27,7 @@ fn main() {
     }
 }
 
-fn run_bytecode(bytes: &[u8]) {
+fn run_bytecode(path: &str, bytes: &[u8]) {
     let module = match rsru::bytecode::encode::decode(bytes) {
         Ok(m) => m,
         Err(e) => {
@@ -38,13 +37,15 @@ fn run_bytecode(bytes: &[u8]) {
     };
     let exprs = rsru::bytecode::decode::to_program(&module);
     let mut vm = Vm::new();
-    vm.source = module.source;
+    let sid = vm.add_source(path, module.source);
+    vm.current_frame.source = sid;
     let _ = eval::eval_program(&mut vm, exprs);
 }
 
-fn run_source(src: &str) {
+fn run_source_named(name: &str, src: &str) {
     let mut vm = Vm::new();
-    vm.source = src.to_string();
+    let sid = vm.add_source(name, src);
+    vm.current_frame.source = sid;
     let mut pos = 0;
     loop {
         let (new_pos, expr) = match parser::parse_one_statement(Some(&mut vm), src, pos) {
@@ -64,8 +65,14 @@ fn run_source(src: &str) {
     }
 }
 
+fn run_source(src: &str) {
+    run_source_named("<stdin>", src);
+}
+
 fn run_repl() {
     let mut vm = Vm::new();
+    let sid = vm.add_source("<repl>", String::new());
+    vm.current_frame.source = sid;
     let stdin = io::stdin();
     let mut stdout = io::stdout();
     let mut counter = 0usize;

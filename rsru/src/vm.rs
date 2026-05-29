@@ -8,12 +8,24 @@ pub struct Vm {
     pub current_frame: StackFrame,
     pub root_binding: ObjId,
     pub builtin: BuiltinRefs,
-    /// Source text currently being executed (set by `run_source` / `eval_source`).
-    /// Used to translate byte positions on errors into line/col + line text.
-    pub source: String,
+    /// Registered source texts indexed by `SourceId`. Each StackFrame and
+    /// SruProc remembers which entry its byte positions refer to.
+    pub sources: Vec<Source>,
     /// Byte offset of the most recently dispatched TraceOp. `POS_UNKNOWN` if
     /// no real source position is known (e.g., synthesised ops).
     pub current_pos: crate::ast::Pos,
+}
+
+pub type SourceId = u32;
+
+/// Sentinel for "no source registered". Frames that hit POS_UNKNOWN
+/// positions render without a snippet.
+pub const NO_SOURCE: SourceId = u32::MAX;
+
+#[derive(Debug, Clone)]
+pub struct Source {
+    pub name: String,
+    pub content: String,
 }
 
 /// Well-known object ids set up at boot.
@@ -41,7 +53,10 @@ pub struct BuiltinRefs {
 const PRELUDE: &str = include_str!("prelude.sru");
 
 fn load_prelude(vm: &mut Vm) {
-    vm.eval_source(PRELUDE);
+    vm.eval_source_named("<prelude>", PRELUDE);
+    // Reset current frame source so the script that runs next picks up
+    // its own source id (assigned by run_source_named / run_bytecode).
+    vm.current_frame.source = NO_SOURCE;
 }
 
 impl Vm {
@@ -54,7 +69,7 @@ impl Vm {
             current_frame: StackFrame::new(root_binding, Vec::new()),
             root_binding,
             builtin: BuiltinRefs::default(),
-            source: String::new(),
+            sources: Vec::new(),
             current_pos: crate::ast::POS_UNKNOWN,
         };
         crate::builtin::bootstrap(&mut vm);
@@ -72,8 +87,23 @@ impl Vm {
         &mut self.current_frame
     }
 
-    /// Run a string of SRU source in the root binding. Used for prelude load.
-    pub fn eval_source(&mut self, src: &str) {
+    /// Register a source and return its id. The id is used by StackFrame /
+    /// SruProc to locate the source content for error rendering.
+    pub fn add_source(&mut self, name: impl Into<String>, content: impl Into<String>) -> SourceId {
+        let id = self.sources.len() as SourceId;
+        self.sources.push(Source {
+            name: name.into(),
+            content: content.into(),
+        });
+        id
+    }
+
+    /// Run a string of SRU source under the given source name. The text is
+    /// registered as a new entry in the source map so runtime errors that
+    /// happen during this evaluation render against the right text.
+    pub fn eval_source_named(&mut self, name: &str, src: &str) {
+        let sid = self.add_source(name, src);
+        self.current_frame.source = sid;
         let mut pos = 0;
         loop {
             match crate::parser::parse_one_statement(Some(self), src, pos) {
@@ -82,9 +112,14 @@ impl Vm {
                     pos = new_pos;
                 }
                 Ok((_, None)) => break,
-                Err(e) => panic!("prelude parse error at {}: {}", e.pos, e.msg),
+                Err(e) => panic!("{} parse error at {}: {}", name, e.pos, e.msg),
             }
         }
+    }
+
+    /// Back-compat helper — wraps `eval_source_named` with a generic name.
+    pub fn eval_source(&mut self, src: &str) {
+        self.eval_source_named("<eval>", src);
     }
 
     /// Push a new SRU frame to invoke `proc_id` with `args`. The new frame
@@ -93,12 +128,13 @@ impl Vm {
     /// This is the iterative alternative to `invoke_inline` for control-flow
     /// builtins (if / while) that would otherwise grow the Rust stack.
     pub fn push_sru_frame(&mut self, proc_id: ObjId, args: Vec<ObjId>, recv: ObjId, recv_as_self: bool) -> bool {
-        let (vargs, retval, body, def_bind) = match &self.heap.get(proc_id).data {
+        let (vargs, retval, body, def_bind, src) = match &self.heap.get(proc_id).data {
             Some(crate::object::ObjData::Proc(crate::object::ProcKind::Sru(p))) => (
                 p.vargs.clone(),
                 p.retval,
                 p.body.clone(),
                 p.def_binding,
+                p.source,
             ),
             _ => return false,
         };
@@ -124,11 +160,7 @@ impl Vm {
             self.heap.set_slot(new_bind, rname, cont);
         }
         let mut new_frame = crate::eval::StackFrame::new(new_bind, body);
-        // Tail-call optimisation: if the current frame has no more work to
-        // do (and we aren't preserving it for a continuation), replace it
-        // in place so the upper chain stays bounded. Skip TCO when we
-        // captured a continuation, since that continuation expects the
-        // current frame to still exist.
+        new_frame.source = src;
         let made_cont = retval.is_some();
         let is_tail = !made_cont
             && self.current_frame.it >= self.current_frame.operations.len()

@@ -44,7 +44,9 @@ fn exit(_vm: &mut Vm, args: &[ObjId]) -> ObjId {
 }
 
 /// `load(filename)` — read the file as SRU source and eval it in the root
-/// binding. Returns true on success, false on error (matching csru).
+/// binding. Returns true on success, false on error (matching csru). The
+/// file's text is registered with its path as a named source so any
+/// runtime error in the loaded code points at the right file.
 fn load(vm: &mut Vm, args: &[ObjId]) -> ObjId {
     let path = args.get(1).copied().unwrap_or(vm.builtin.nil_id);
     let path = match &vm.heap.get(path).data {
@@ -55,7 +57,9 @@ fn load(vm: &mut Vm, args: &[ObjId]) -> ObjId {
         Ok(s) => s,
         Err(_) => return vm.builtin.false_id,
     };
-    vm.eval_source(&src);
+    let prev_source = vm.current_frame.source;
+    vm.eval_source_named(&path, &src);
+    vm.current_frame.source = prev_source;
     vm.builtin.true_id
 }
 

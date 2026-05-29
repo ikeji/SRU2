@@ -16,6 +16,9 @@ pub struct StackFrame {
     /// Name of the method or function this frame is executing, for
     /// stack-trace display. `None` for the top-level frame.
     pub name: Option<SymbolId>,
+    /// Index into `Vm::sources` for the file this frame's positions refer
+    /// to. `NO_SOURCE` means no source is registered for this frame.
+    pub source: crate::vm::SourceId,
 }
 
 impl Drop for StackFrame {
@@ -41,6 +44,7 @@ impl StackFrame {
             binding,
             upper: None,
             name: None,
+            source: crate::vm::NO_SOURCE,
         }
     }
 }
@@ -226,11 +230,13 @@ pub fn step(vm: &mut Vm) -> StepResult {
         TraceKind::Call { method, argc, has_recv } => do_call(vm, method, argc, has_recv),
         TraceKind::MakeProc { vargs, retval, body } => {
             let bind = vm.frame().binding;
+            let src = vm.frame().source;
             let proc = ProcKind::Sru(SruProc {
                 vargs,
                 retval,
                 body,
                 def_binding: bind,
+                source: src,
             });
             let id = vm.heap.alloc_with_data(ObjData::Proc(proc));
             let proc_cls = vm.builtin.proc_cls;
@@ -351,23 +357,49 @@ fn report_call_error(vm: &Vm, method: SymbolId, recv: ObjId, has_recv: bool) -> 
 /// op has a known source position, render `<source line>` with a caret.
 pub fn runtime_error(vm: &Vm, msg: impl AsRef<str>) -> ! {
     let pos = vm.current_pos;
-    let where_ = source_loc(vm, pos);
+    let src = current_source_text(vm);
+    let where_ = source_loc(vm, pos, src);
     eprintln!("Error{}: {}", where_, msg.as_ref());
-    if pos != crate::ast::POS_UNKNOWN && !vm.source.is_empty() {
-        if let Some(snippet) = format_source_snippet(&vm.source, pos) {
-            eprintln!("{}", snippet);
+    if pos != crate::ast::POS_UNKNOWN {
+        if let Some(src) = src {
+            if let Some(snippet) = format_source_snippet(src, pos) {
+                eprintln!("{}", snippet);
+            }
         }
     }
     print_stack_trace(vm);
     std::process::exit(1)
 }
 
-fn source_loc(vm: &Vm, pos: crate::ast::Pos) -> String {
-    if pos == crate::ast::POS_UNKNOWN || vm.source.is_empty() {
+fn current_source_text(vm: &Vm) -> Option<&str> {
+    let sid = vm.frame().source as usize;
+    if sid >= vm.sources.len() {
+        return None;
+    }
+    Some(&vm.sources[sid].content)
+}
+
+fn current_source_name<'a>(vm: &'a Vm) -> Option<&'a str> {
+    let sid = vm.frame().source as usize;
+    if sid >= vm.sources.len() {
+        return None;
+    }
+    Some(&vm.sources[sid].name)
+}
+
+fn source_loc(vm: &Vm, pos: crate::ast::Pos, src: Option<&str>) -> String {
+    if pos == crate::ast::POS_UNKNOWN {
         return String::new();
     }
-    let (line, col, _) = locate_pos(&vm.source, pos);
-    format!(" at line {} col {}", line, col)
+    let src = match src {
+        Some(s) if !s.is_empty() => s,
+        _ => return String::new(),
+    };
+    let (line, col, _) = locate_pos(src, pos);
+    match current_source_name(vm) {
+        Some(name) if !name.is_empty() => format!(" at {} line {} col {}", name, line, col),
+        _ => format!(" at line {} col {}", line, col),
+    }
 }
 
 fn locate_pos(src: &str, pos: usize) -> (usize, usize, String) {
@@ -518,17 +550,21 @@ pub fn invoke_named(
             StepResult::Continue
         }
         Some(2) => {
-            // SRU proc. Make a new binding parented at def_binding, bind vargs, push frame.
-            let (vargs, retval, body, def_bind) = {
+            let (vargs, retval, body, def_bind, src) = {
                 let bo = vm.heap.get(proc_id);
                 if let Some(ObjData::Proc(ProcKind::Sru(p))) = &bo.data {
-                    (p.vargs.clone(), p.retval, p.body.clone(), p.def_binding)
+                    (
+                        p.vargs.clone(),
+                        p.retval,
+                        p.body.clone(),
+                        p.def_binding,
+                        p.source,
+                    )
                 } else {
                     unreachable!()
                 }
             };
             let new_bind = vm.make_binding(def_bind);
-            // Bind each varg. (bind_args already includes recv when has_recv.)
             for (i, name) in vargs.iter().enumerate() {
                 let val = bind_args.get(i).copied().unwrap_or(vm.builtin.nil_id);
                 vm.heap.set_slot(new_bind, *name, val);
@@ -539,6 +575,7 @@ pub fn invoke_named(
             }
             let mut new_frame = StackFrame::new(new_bind, body);
             new_frame.name = name;
+            new_frame.source = src;
             StepResult::PushFrame(new_frame)
         }
         Some(3) => {
@@ -661,9 +698,10 @@ pub fn run_inline(vm: &mut Vm, floor: usize) -> ObjId {
 /// current root frame's binding, return the last value.
 pub fn eval_program(vm: &mut Vm, exprs: Vec<Expression>) -> ObjId {
     let bind = vm.frame().binding;
-    let frame = StackFrame::new(bind, exprs);
+    let src = vm.frame().source;
+    let mut frame = StackFrame::new(bind, exprs);
+    frame.source = src;
     let prev = std::mem::replace(vm.frame_mut(), frame);
-    // Stash the previous frame as upper so we restore on EndOfFrame.
     vm.frame_mut().upper = Some(Box::new(prev));
     run(vm)
 }

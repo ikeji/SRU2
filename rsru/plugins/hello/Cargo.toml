@@ -1,0 +1,12 @@
+[package]
+name = "rsru-plugin-hello"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rsru_plugin_hello"
+crate-type = ["cdylib"]
+
+# No rsru dependency — plugin uses only the C ABI exposed by
+# `SruContext` in src/lib.rs (mirroring rsru::builtin::ffi::SruContext).
+

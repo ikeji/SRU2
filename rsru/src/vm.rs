@@ -14,6 +14,11 @@ pub struct Vm {
     /// Byte offset of the most recently dispatched TraceOp. `POS_UNKNOWN` if
     /// no real source position is known (e.g., synthesised ops).
     pub current_pos: crate::ast::Pos,
+    /// The proc object currently being invoked. Native functions can read
+    /// this to recover their own ObjId (useful for FFI trampolines that
+    /// need a per-proc hidden slot). NO_SOURCE-like sentinel: `nil_id`
+    /// when no Native is active.
+    pub current_native_proc: ObjId,
 }
 
 pub type SourceId = u32;
@@ -71,6 +76,7 @@ impl Vm {
             builtin: BuiltinRefs::default(),
             sources: Vec::new(),
             current_pos: crate::ast::POS_UNKNOWN,
+            current_native_proc: ObjId(0),
         };
         crate::builtin::bootstrap(&mut vm);
         load_prelude(&mut vm);

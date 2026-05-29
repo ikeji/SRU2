@@ -528,7 +528,10 @@ pub fn invoke_named(
                 full.push(recv);
             }
             full.extend(bind_args);
+            let prev_proc = vm.current_native_proc;
+            vm.current_native_proc = proc_id;
             let r = f(vm, &full);
+            vm.current_native_proc = prev_proc;
             vm.frame_mut().local_stack.push(r);
             StepResult::Continue
         }
@@ -546,7 +549,10 @@ pub fn invoke_named(
                 full.push(recv);
             }
             full.extend(bind_args);
+            let prev_proc = vm.current_native_proc;
+            vm.current_native_proc = proc_id;
             f(vm, &full);
+            vm.current_native_proc = prev_proc;
             StepResult::Continue
         }
         Some(2) => {

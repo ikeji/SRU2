@@ -6,6 +6,7 @@ use crate::vm::Vm;
 
 mod array;
 mod boolean;
+mod ffi;
 mod hash;
 pub mod io;
 mod math;
@@ -160,6 +161,7 @@ pub fn bootstrap(vm: &mut Vm) {
     math::install(vm);
     sys::install(vm);
     hash::install(vm);
+    ffi::install(vm);
 
     // Install globals: p, puts, print, exit, etc.
     io::install(vm, root_bind);
@@ -334,7 +336,11 @@ pub fn invoke_inline(
                 full.push(recv);
             }
             full.extend(bind_args);
-            f(vm, &full)
+            let prev_proc = vm.current_native_proc;
+            vm.current_native_proc = proc_id;
+            let r = f(vm, &full);
+            vm.current_native_proc = prev_proc;
+            r
         }
         Some(2) => {
             let (vargs, retval, body, def_bind, src) = {
